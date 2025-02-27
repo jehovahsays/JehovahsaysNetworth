@@ -4,6 +4,8 @@ Multi Edit Vandalism
 <br>
 Developer mode
 <br>
+visit this site
+http://morgansbyers.scienceontheweb.net
 ------------
 <br>
 <p>use one thumb to look up, down, left, and right</p>
