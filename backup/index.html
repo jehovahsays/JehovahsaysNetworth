@@ -2,48 +2,39 @@
 <html lang="en">
 <head>
 <meta charset="charset=UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1">
+<http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1.0, maximum-scale=1.0" />
-<meta http-equiv="Cache-Control" content="private, no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0" />
-<meta http-equiv="Pragma" content="no-cache" />
-<meta http-equiv="Expires" content="0" />
-<meta http-equiv="Clear-Site-Data" content="*">
-<meta http-equiv="X-Frame-Options" content="DENY">
-<meta http-epuiv="X-XSS-Protection" content="1; mode=block">
-<meta http-equiv="X-Content-Type-Options" content="nosniff">
-<meta http-equiv="Content-Security-Policy" content="
-default-src 'self' http: https:;
-script-src 'self' 'unsafe-inline' 'unsafe-eval' http: https:;
-style-src 'self' 'unsafe-inline' http: https:;
-img-src data: http: https:;
-font-src 'self' http: https:;
-connect-src http: https:;
-frame-src 'self' http: https:;"/>
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="cyan" />
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="black" />
-<link rel="icon" type="image/png" href="./index.ico">
-<link rel="shortcut icon" href="./index.ico" media="(prefers-color-scheme: dark)"/>
-<link rel="shortcut icon" href="./index.ico" media="(prefers-color-scheme: light)" />
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="cyan" />
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="black" />
-<link 
-rel="stylesheet" 
-type="text/css" 
-href="./index.css">
-<title>index</title>
+<meta name="viewport" content="width=device-width, height=device-height, user-scalable=yes, initial-scale=1.0, maximum-scale=1.0">
+<http-equiv="Cache-Control" content="private, no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0">
+<http-equiv="Pragma" content="no-cache">
+<http-equiv="Expires" content="0">
+<http-equiv="Clear-Site-Data" content="*">
+<http-equiv="X-Frame-Options" content="DENY">
+<http-epuiv="X-XSS-Protection" content="1; mode=block">
+<http-equiv="X-Content-Type-Options" content="nosniff">
 <style>
-/* mobile */
-
-body {
-	margin: 0; 
-	overflow: hidden;
-    z-index: 1;
-}		
+.earth {
+        margin: 0px;
+		width: 300px;
+		height: 250px;
+	    position: fixed;		
+	    top: 75px;
+        left: 40px;
+		right: 0px;
+        padding: 0px;
+		opacity: 0.5;
+}
 input[type="text"] {
   font-family: monospace;
   font-size: 10px;
   color: peru;
+}
+fieldset{
+	position:absolute
+	top:0;
+	left:0;
+	width:99%;
+	height:99%;
 }
 filterInput {
         list-style: none;
@@ -57,8 +48,8 @@ filterInput {
 .titleInput {
         margin: 0px;
 	    position: absolute;		
-	    top: 50px;
-        left: 10px;
+	    top: 20px;
+        left: 250px;
         font-size: 1.0em;
         padding: 0px;
         animation: fadeIn 0.5s ease-in-out;
@@ -67,8 +58,8 @@ filterInput {
 .titleInput:last-child {        
         margin: 0px;
 	    position: absolute;		
-	    top: 50px;
-        left: 10px;
+	    top: 20px;
+        left: 250px;
         font-size: 1.0em;
         padding: 0px;
         border-bottom: none;
@@ -87,26 +78,34 @@ filterInput {
 }  
 </style>
 
+<title>
+index
+</title>
+
+<link 
+rel="stylesheet" 
+type="text/css" 
+href="../index.css">
+
+
 </head>
+<center>
 
 <body style="background-color:black;">
 
-		<div id="panel">
-
-			<div id="header">
-					<h1><a href="./#en/index">index</a>
-							</h1>
-
-				<div id="sections">
-					<span class="selected">
-					<br>
-
+<fieldset class="fieldset">
+<legend>index</legend>
+<center>
+<br>
+<div id="inputWrapper">
 <form
 id="secure-form-answer"
-action="./index.php" 
+action="../index.php" 
 method="post">	
+<div id="inputWrapper">
 <input
-id="secure-form-answer"
+style="position:absolute;top:25px;left:25px;width:220px;"
+id="filterInput"
 onkeyup="titleInput()"
 autocomplete="true"
 autocorrect="off"  
@@ -117,50 +116,19 @@ name="secure-form-answer-Human"
 maxlength="524288" 
 value=""
 aria-label="search"  
-placeholder="create pages" 
+placeholder="search database" 
 x-webkit-speech
 required>
+</div>		
+
 <noscript>
 <label 
 for="secure-form-answer-Human">
 &#x48;&#x75;&#x6D;&#x61;&#x6E;
 </label>
 </noscript>
-</form>					
-					
-<br>
-<br>					</span>
-				</div>
-
-				<div id="expandButton">
-				
-				</div>
-			</div>
-
-			<div id="panelScrim">
-			
-			</div>
-
-			<div id="contentWrapper">
-			
-				<div id="inputWrapper">
-					<input name="username" placeholder="" type="text" id="filterInput" autocorrect="off" autocapitalize="off" spellcheck="true" />
-					<div id="clearSearchButton"></div>
-					<select id="language">
-						<option value="en">en</option>
-						</select>
-				</div>
-				<br/>
-				
-				<div id="content">
-							
-				</div>
-				
-			</div>
-
-		</div>
-
-		<iframe name="viewer">	</iframe>	
+</form>
+</div>
 
 <script>
 function titleInput() {
@@ -213,7 +181,7 @@ var msg = new SpeechSynthesisUtterance(input);
 
 		async function init() {
 
-			const list = await ( await fetch( './index.json' ) ).json();
+			const list = await ( await fetch( '../index.json' ) ).json();
 
 			const hash = window.location.hash.substring( 1 );
 
@@ -570,7 +538,7 @@ var msg = new SpeechSynthesisUtterance(input);
 		function setUrl( href ) { // eslint-disable-line no-undef
 
 			// yea I know this is hacky.
-			const re = /^(\/(?:index\/|docs\/#?))(.*?)$/;
+			const re = /^(\/(?:manual\/|docs\/#?))(.*?)$/;
 			const url = new URL( href );
 
 			if ( url.origin === window.location.origin ) {
@@ -578,7 +546,7 @@ var msg = new SpeechSynthesisUtterance(input);
 				const hrefNoOrigin = url.href.slice( url.origin.length );
 				const m = re.exec( hrefNoOrigin );
 				const [ , base, path ] = m;
-				if ( base.includes( 'index' ) ) {
+				if ( base.includes( 'manual' ) ) {
 
  					const newHash = `#${ path.replace( '.html', '' ) }`;
 					// Only create new iframe if we're actually changing pages.
@@ -658,8 +626,8 @@ var msg = new SpeechSynthesisUtterance(input);
 
 			} else {
 
-				iframe.src = './en/index.html';
-				iframe.style.display = 'set';
+				iframe.src = '';
+				iframe.style.display = 'none';
 
 			}
 
@@ -709,5 +677,16 @@ var msg = new SpeechSynthesisUtterance(input);
 
 		</script>
 
-</body>
-</html>
+</center>
+<br>											
+</fieldset>	
+
+    <header>
+        <nav>
+<ul id="filterInput">
+<a href="./index.html"class="titleInput"><button>index</button></a>
+<a href="./test.html"class="titleInput"><button>test</button></a>
+<a href="./tv.html"class="titleInput"><button>tv</button></a>
+<a href="./playlist.html"class="titleInput"><button>playlist</button></a>
+<a href="./search.html"class="titleInput"><button>search</button></a>
+<a href="./$1.html"class="titleInput"><button>$1</button></a>
