@@ -38,7 +38,7 @@ foreach($_POST as $variable => $value)
 	//echo "The file $file_pointer already exists <br>"; 
 	//echo "<meta name='viewport' content='width=device-width'>Click the link to visit the webpage for the protected keyword $value<br><br><a href='./en/us/$value.html'>$value</a><br><br>";
 	echo "<script> var msg = new SpeechSynthesisUtterance('keyword already added'); window.speechSynthesis.speak(msg); </script>";
-	echo "<body onload='loadout()'><script>function loadout(){window.location.href = './en/$value.html'}</script>";	
+	echo "<body onload='loadout()'><script>function loadout(){window.location.href = './index.html?q=$value#en/$value'}</script>";	
 	//echo "<body onload='loadout()'><script>function loadout(){window.location.href = './#en/$value.html'}</script>";
 	exit();
 	}
@@ -126,7 +126,7 @@ foreach($_POST as $variable => $value)
 
 //echo "<meta name='viewport' content='width=device-width'>Click the link to visit the webpage for the protected keyword $value<br><br><a href='./en/us/$value.html'>$value</a><br><br>";
  //echo "<body onload='loadout()'><script>function loadout(){window.location.href = './#en/$value'}</script>";
- echo "<body onload='loadout()'><script>function loadout(){window.location.href = './en/$value.html'}</script>"; 
+ echo "<body onload='loadout()'><script>function loadout(){window.location.href = './index.html?q=$value#en/$value'}</script>"; 
  echo "<script> var msg = new SpeechSynthesisUtterance('keyword added to search'); window.speechSynthesis.speak(msg); </script>";		
 fclose($handle);
 //header('Location: ' . $_SERVER['HTTP_REFERER']);
