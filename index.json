@@ -1,20 +1,8 @@
-{
-	"en":
-	{
-	"index":
-	{
-	"index":"en/index",
-	"tv":"en/tv"
-,"playlist":"en/playlist"
-,"delete":"en/delete"
-,"delete":"en/delete"
-,"delete":"en/delete"
-,"delete":"en/delete"
-,"delete":"en/delete"
-,"api":"en/api"
-,"api":"en/api"
-,"book":"en/book"
-,"$1":"en/$1"
-,"case":"en/case"
-,"base":"en/base"
+,"home":"en/home"
+,"car":"en/car"
+,"car":"en/car"
+,"home":"en/home"
+,"home":"en/home"
+,"home":"en/home"
+,"match":"en/match"
 }}}

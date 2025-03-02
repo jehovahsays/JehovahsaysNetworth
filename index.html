@@ -22,15 +22,15 @@ connect-src http: https:;
 frame-src 'self' http: https:;"/>
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="cyan" />
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="black" />
-<link rel="icon" type="image/png" href="./index.ico">
-<link rel="shortcut icon" href="./index.ico" media="(prefers-color-scheme: dark)"/>
-<link rel="shortcut icon" href="./index.ico" media="(prefers-color-scheme: light)" />
+<link rel="icon" type="image/png" href="./favicon.ico">
+<link rel="shortcut icon" href="./favicon.ico" media="(prefers-color-scheme: dark)"/>
+<link rel="shortcut icon" href="./favicon.ico" media="(prefers-color-scheme: light)" />
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="cyan" />
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="black" />
 <link 
 rel="stylesheet" 
 type="text/css" 
-href="./index.css">
+href="./files/main.css" />
 <title>index</title>
 <style>
 /* mobile */
@@ -38,8 +38,31 @@ href="./index.css">
 body {
 	margin: 0; 
 	overflow: hidden;
-    z-index: 1;
 }		
+.footer {
+   position: fixed;
+   left: 0;
+   bottom: 0;
+   width: 100%;
+   color: black;
+   text-align: center;
+}	
+.search {
+        margin: 0px;
+		width: 100%;
+		height: 50px;
+	    position: fixed;		
+	    top: 15px;
+        left: 50px;
+        padding: 0px;
+		opacity: 1.5;
+}
+.dropmenu {
+	    position:fixed;		
+	    top:10px;
+        left:1px;
+}
+
 input[type="text"] {
   font-family: monospace;
   font-size: 10px;
@@ -87,26 +110,112 @@ filterInput {
 }  
 </style>
 
+<style>
+/* Dropdown container DIV */
+.dropdown {
+    position: relative;
+    display: inline-block;
+	top:1px;
+	left:10px;
+}
+
+/* Dropdown button */
+.dropbtn {
+    display: inline-block;
+    font-weight: 400;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: 1px solid transparent;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: .25rem;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    user-select: none;
+    outline: 0;
+    transition: .15s ease-in-out;
+}
+
+.dropbtn:hover {
+    background-color: #0069d9;
+}
+
+/* Dropdown menu (Hidden by Default) */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 160px;
+    padding: 8px 0;
+    background: white;
+    box-shadow: 0 1px 8px 2px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+/* Links inside the dropdown menu */
+.dropdown-menu a {
+    color: #000;
+    padding: 10px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Change bg-color of dropdown links on hover */
+.dropdown-menu a:hover {
+    background-color: #f1f1f1;
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+/* Caret */
+.caret {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    vertical-align: middle;
+    border-top: 6px dashed;
+    border-right: 6px solid transparent;
+    border-left: 6px solid transparent;
+}
+
+/* Dropdown menu Header */
+.dropdown-menu .dropdown-header {
+    color: #777;
+    font-size: .8rem;
+    padding: 8px 16px;
+}
+</style>
+
 </head>
 
 <body style="background-color:black;">
 
+<!--
+<script> var msg = new SpeechSynthesisUtterance('connected'); window.speechSynthesis.speak(msg); </script>
+-->
+
 		<div id="panel">
 
 			<div id="header">
-					<h1><a href="./#en/index">index</a>
+					<h1>
 							</h1>
-
-				<div id="sections">
-					<span class="selected">
-					<br>
-
+							
+<div id="inputWrapper">		
 <form
 id="secure-form-answer"
 action="./index.php" 
-method="post">	
+method="post">
+
 <input
-id="secure-form-answer"
+style="position:fixed;top:30px;left:150px;width:100px;"
+id="filterInput"
 onkeyup="titleInput()"
 autocomplete="true"
 autocorrect="off"  
@@ -117,17 +226,41 @@ name="secure-form-answer-Human"
 maxlength="524288" 
 value=""
 aria-label="search"  
-placeholder="create pages" 
+placeholder="search database" 
 x-webkit-speech
-required>
+required>		
+
 <noscript>
 <label 
 for="secure-form-answer-Human">
 &#x48;&#x75;&#x6D;&#x61;&#x6E;
 </label>
 </noscript>
-</form>					
-					
+</form>
+
+
+</div>
+							
+<div 
+class="dropmenu"
+>
+<div class="dropdown">
+    <button class="dropbtn">Home
+        <span class="caret"></span>
+    </button>
+    <div class="dropdown-menu">
+          <a href="./index.html">index</a>
+        <div class="dropdown-header">Choose Character</div>
+        <a href="./officercloserange.html">officer</a>
+		<a href="./player.html">player</a>
+        <div class="dropdown-header">Controls</div>
+		<a href="./about.html">about</a>
+    </div>
+</div>
+</div>
+				<div id="sections">
+					<span class="selected">
+					<br>
 <br>
 <br>					</span>
 				</div>
@@ -163,8 +296,8 @@ for="secure-form-answer-Human">
 		<iframe name="viewer">	</iframe>	
 
 <script>
-function titleInput() {
-	
+function titleInput () {
+  
   let input = document.getElementById('filterInput').value;
 
   input = input.toLowerCase();
@@ -186,12 +319,31 @@ function titleInput() {
     }
 
   }
-
-var msg = new SpeechSynthesisUtterance(input); 
-  window.speechSynthesis.speak(msg);   
   
 }
 </script>
+
+
+<script type="importmap">
+    {
+        "imports": {
+			"three": "./build/three.module.js",
+            "three": "./build/three.webgpu.js",
+            "three/webgpu": "./build/three.webgpu.js",
+            "three/tsl": "./build/three.tsl.js",
+            "three/addons/": "./examples/jsm/"
+        }
+    }
+</script>
+
+<div 
+class="footer"
+style=" 
+position: fixed;
+background-color: none;	
+font-size: 10px;
+color: white;">
+</div>
 
 		<script>
 
@@ -213,7 +365,7 @@ var msg = new SpeechSynthesisUtterance(input);
 
 		async function init() {
 
-			const list = await ( await fetch( './index.json' ) ).json();
+			const list = await ( await fetch( './js/index.json' ) ).json();
 
 			const hash = window.location.hash.substring( 1 );
 
@@ -570,7 +722,7 @@ var msg = new SpeechSynthesisUtterance(input);
 		function setUrl( href ) { // eslint-disable-line no-undef
 
 			// yea I know this is hacky.
-			const re = /^(\/(?:index\/|docs\/#?))(.*?)$/;
+			const re = /^(\/(?:manual\/|docs\/#?))(.*?)$/;
 			const url = new URL( href );
 
 			if ( url.origin === window.location.origin ) {
@@ -578,7 +730,7 @@ var msg = new SpeechSynthesisUtterance(input);
 				const hrefNoOrigin = url.href.slice( url.origin.length );
 				const m = re.exec( hrefNoOrigin );
 				const [ , base, path ] = m;
-				if ( base.includes( 'index' ) ) {
+				if ( base.includes( 'manual' ) ) {
 
  					const newHash = `#${ path.replace( '.html', '' ) }`;
 					// Only create new iframe if we're actually changing pages.
@@ -658,7 +810,7 @@ var msg = new SpeechSynthesisUtterance(input);
 
 			} else {
 
-				iframe.src = './en/index.html';
+				iframe.src = './map.html';
 				iframe.style.display = 'set';
 
 			}
