@@ -15,13 +15,13 @@ jobs:
     - name: Install dependencies
       run: composer install
     - name: Run tests
-      run: vendor/bin/phpunit --log-junit test-results.xml
+      run: vendor/bin/phpunit --log-junit tests/results/test-results.xml
     - name: Upload test results
       if: always()
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: test-results
-        path: test-results.xml
+        path: tests/results/test-results.xml
     - name: Display test results
       if: failure()
-      run: cat test-results.xml
+      run: cat tests/results/test-results.xml
