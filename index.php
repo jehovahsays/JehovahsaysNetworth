@@ -156,7 +156,29 @@ for="secure-form-answer-Human">
 
 <?php
 // Clean redirect
-header("Location: ./index.html");
+//header("Location: ./index.html");
+
+foreach($_POST as $variable => $value) 
+{
+	$value = str_replace(' ', '_', $value);	
+	$file_pointer = "./en/" . $value . ".html"; 
+	if (file_exists($file_pointer))  
+	{ 
+	echo "The file $file_pointer already exists <br>"; 
+	echo "<meta name='viewport' content='width=device-width'>Click the link to visit the webpage for the keyword $value<br><br><a href='./en/$value.html'>$value</a><br><br>";
+	echo "<script> var msg = new SpeechSynthesisUtterance('keyword already added'); window.speechSynthesis.speak(msg); </script>";
+	//echo "<body onload='loadout()'><script>function loadout(){window.location.href = './en/$value.html'}</script>";	
+	//echo "<body onload='loadout()'><script>function loadout(){window.location.href = './#en/$value.html'}</script>";
+	exit();
+	}
+}
+
+echo "<meta name='viewport' content='width=device-width'>Click the link to visit the webpage for the keyword $value<br><br><a href='./en/$value.html'>$value</a><br><br>";
+ //echo "<body onload='loadout()'><script>function loadout(){window.location.href = './#en/$value'}</script>";
+ //echo "<body onload='loadout()'><script>function loadout(){window.location.href = './en/$value.html'}</script>"; 
+ echo "<script> var msg = new SpeechSynthesisUtterance('keyword added to search'); window.speechSynthesis.speak(msg); </script>";		
+exit();
+
 
 // Clear stat cache
 clearstatcache();
