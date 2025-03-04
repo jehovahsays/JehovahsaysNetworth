@@ -47,12 +47,12 @@ a, button, input, select {
 
 @media all and ( max-width: 640px ) {
 	.lil-gui.root { 
-		right: auto;
+		right: fixed;
 		top: auto;
 		max-height: 50%;
-		max-width: 80%;
+		max-width: 40%;
 		bottom: 0;
-		left: 0;
+		left: 225px;
 	}
 }
 

@@ -19,10 +19,6 @@ header( 'Referrer-Policy:  same-origin' );
 header( 'Accept-Language: en-US,en;q=0.5' );
 header( 'Connection: Keep-alive' );
 
-$answer1 = $_POST['secure-form-answer-Human'];        
-$totalCorrect = 1;  
-if ($answer1 == "&#x48;&#x75;&#x6D;&#x61;&#x6E;") { $totalCorrect++; }            
-echo "<div id='results'>$totalCorrect /  1 correct</div>";
 
 // user has clicked a delete hyperlink
 if($_GET['action'] && $_GET['action'] == 'delete') {
@@ -30,9 +26,12 @@ if($_GET['action'] && $_GET['action'] == 'delete') {
 }
 
  //echo "<meta name='viewport' content='width=device-width'>successfully created <br> <a href='./browser.html#en/$value'>$value</a>";
- echo "<body onload='loadout()'><script>function loadout(){window.location.href = './index.html'}</script>";
- echo "<script> var msg = new SpeechSynthesisUtterance('you deleted the keyword $value'); window.speechSynthesis.speak(msg); </script>";		
+ echo "<body onload='loadout()'><script>function loadout(){window.location.href = '../index.html'}</script>";
+ echo "<script> var msg = new SpeechSynthesisUtterance('you deleted the keyword'); window.speechSynthesis.speak(msg); </script>";		
 fclose($handle);
+// Clear stat cache
 clearstatcache();
 exit();
+// End output buffering and flush the content
+ob_end_flush();
 ?>
