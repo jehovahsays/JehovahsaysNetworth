@@ -30,6 +30,12 @@ header( "Expires: 0" );
 header( "Accept-Language: en-US,en;q=0.5" );
 header( "Connection: Keep-alive" );
 
+// Allow requests from any origin (useful during development)
+// In production, you may want to restrict this to specific domains.
+
+header('Access-Control-Allow-Origin: *');
+
+
 // Start output buffering to ensure headers are sent before content
 ob_start();
 // Clear stat cache
@@ -38,17 +44,17 @@ clearstatcache();
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    
-    <!-- Security Headers in HTML -->
+ <meta charset="charset=UTF-8">
+<http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Security Headers in HTML -->  
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="X-Frame-Options" content="DENY">
     <meta http-epuiv="X-XSS-Protection" content="1; mode=block">
     <meta charset="charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="viewport" content="user-scalable=yes, initial-scale=1.0, maximum-scale=1.0" />
     <meta http-equiv="Cache-Control" content="private, no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
@@ -91,31 +97,32 @@ clearstatcache();
             margin: 50px;
         }
     </style>
+	
+	
+<link rel="stylesheet" href="./index.css">
+<script type = "text/javascript" src="./index.js"></script>	
+	
 </head>
 <body>
-
+<center>
     <h1>Secure Index.php</h1>
     <p>This page has all major security headers implemented.</p>
+	<br><p>Are you human?</p>
+	<br>
 <form
 id="secure-form-answer"
 action="./api.php" 
 method="post">
 <input
-style="position:absolute;top:5px;left:5px;width:220px;"
-id="filterInput"
-onkeyup="titleInput()"
-autocomplete="true"
-autocorrect="off"  
-autocapitalize="off" 
-spellcheck="true"
-type="text" 
+style="position:fixed;top:5px;left:5px;width:220px;"
+type="radio" 
 name="secure-form-answer-Human"
-maxlength="524288" 
-value=""
-aria-label="search"  
-placeholder="search database" 
+value="index"
 x-webkit-speech
-required>		
+required>
+<button>
+YES
+</button>		
 
 <noscript>
 <label 
@@ -123,7 +130,15 @@ for="secure-form-answer-Human">
 &#x48;&#x75;&#x6D;&#x61;&#x6E;
 </label>
 </noscript>
+
 </form>
+
+<br><br>
+<a href="./robots.txt">
+<button>
+NO
+</button>	
+</a>
 
     <!-- JavaScript Security -->
     <script>
@@ -151,34 +166,36 @@ for="secure-form-answer-Human">
                 alert("Keyboard shortcuts are disabled for security.");
             }
         });
+		</script>
+</center>
+
+<center>
+<br><br><br><br>
+<div 
+class="footer"
+style=" 
+position: fixed;
+bottom:0px;
+background-color: none;	
+font-size: 10px;
+color: white;">
+Last updated: 3-7-2025 12:38 pm est<br>
+Webmaster: Morgan Shatee byers<br><br>
+github repository: <a href="https://github.com/jehovahsays/mev">view github repository</a><br><br>
+youtube channel: <a href="https://youtube.com/@jehovahsaysnetworth?si=5DgR29Mx-y9GcEuQ">view youtube channel</a><br>
+</div>
+</center>
+
+
+		   
 </body>
 </html>
 
 <?php
 // Clean redirect
-//header("Location: ./index.html");
+//header('Location: ./index.html');
 
-foreach($_POST as $variable => $value) 
-{
-	$value = str_replace(' ', '_', $value);	
-	$file_pointer = "./en/" . $value . ".html"; 
-	if (file_exists($file_pointer))  
-	{ 
-	echo "The file $file_pointer already exists <br>"; 
-	echo "<meta name='viewport' content='width=device-width'>Click the link to visit the webpage for the keyword $value<br><br><a href='./en/$value.html'>$value</a><br><br>";
-	echo "<script> var msg = new SpeechSynthesisUtterance('keyword already added'); window.speechSynthesis.speak(msg); </script>";
-	//echo "<body onload='loadout()'><script>function loadout(){window.location.href = './en/$value.html'}</script>";	
-	//echo "<body onload='loadout()'><script>function loadout(){window.location.href = './#en/$value.html'}</script>";
-	exit();
-	}
-}
-
-echo "<meta name='viewport' content='width=device-width'>Click the link to visit the webpage for the keyword $value<br><br><a href='./en/$value.html'>$value</a><br><br>";
- //echo "<body onload='loadout()'><script>function loadout(){window.location.href = './#en/$value'}</script>";
- //echo "<body onload='loadout()'><script>function loadout(){window.location.href = './en/$value.html'}</script>"; 
- echo "<script> var msg = new SpeechSynthesisUtterance('keyword added to search'); window.speechSynthesis.speak(msg); </script>";		
 exit();
-
 
 // Clear stat cache
 clearstatcache();

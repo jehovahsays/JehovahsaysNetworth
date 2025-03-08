@@ -1,17 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="charset=UTF-8">
-<http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="viewport" content="width=device-width, height=device-height, user-scalable=yes, initial-scale=1.0, maximum-scale=1.0">
-<http-equiv="Cache-Control" content="private, no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0">
-<http-equiv="Pragma" content="no-cache">
-<http-equiv="Expires" content="0">
-<http-equiv="Clear-Site-Data" content="*">
-<http-equiv="X-Frame-Options" content="DENY">
-<http-epuiv="X-XSS-Protection" content="1; mode=block">
-<http-equiv="X-Content-Type-Options" content="nosniff">
+    <title>officer</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0">
+    
 <style>
 body { 
 		margin: 0; 
@@ -19,7 +12,7 @@ body {
 		}
 .dropmenu {
 	    position:fixed;		
-	    left:10px;
+	    right:100px;
         top:10px;
 }
 input[type="text"] {
@@ -149,25 +142,18 @@ filterInput {
 }  
 </style>
 
-<title>
-recent
-</title>
-
 </head>
-<center>
-
-<body style="background-color:white;">
-
-
-<br>
-
+<body>
+		
 <form
+class="earth"
 id="secure-form-answer"
-action="./api.php" 
-method="post">
-
+action="./officer.php" 
+method="post">	
+<div id="inputWrapper">
 <input
-style="position:fixed;top:70px;left:100px;height:30px;width:150px;"
+class="earth"
+style="position:fixed;top:10px;left:20px;width:150px;"
 id="filterInput"
 onkeyup="titleInput()"
 autocomplete="true"
@@ -179,14 +165,15 @@ name="secure-form-answer-Human"
 maxlength="524288" 
 value=""
 aria-label="search"  
-placeholder="search database" 
+placeholder="Add Keyword to protect" 
 x-webkit-speech
 required>
+</div>	
 
 <noscript>
 <label 
 for="secure-form-answer-Human">
-&#x48;&#x75;&#x6D;&#x61;&#x6E;
+Human
 </label>
 </noscript>
 </form>
@@ -217,16 +204,10 @@ function titleInput() {
 
   }
 
-var msg = new SpeechSynthesisUtterance(input); 
-  window.speechSynthesis.speak(msg);   
+var msg = new SpeechSynthesisUtterance(input); window.speechSynthesis.speak(msg);   
   
 }
 </script>
-
-<script> var msg = new SpeechSynthesisUtterance('recent'); window.speechSynthesis.speak(msg); 
-</script> 
-
-<br>
 
 <div 
 class="dropmenu"
@@ -236,22 +217,23 @@ class="dropmenu"
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu">
-        <div class="dropdown-header">Welcome back, User</div>
+        <div class="dropdown-header">Welcome back, Officer</div>
          <a href="./index.html">Home</a>
                 <div class="dropdown-header">Data Tools</div>
 		<a href="./recent.html">Recent</a>
 		<a href="./about.html">About</a>
     </div>
 </div>
-</div>											
+</div>
 
-    <header>
-        <nav>
-<ul id="filterInput">
-<br><a href="./index.html#en/"class="titleInput"><button></button></a><br>
-<br><a href="./index.html#en/tv"class="titleInput"><button>protected tv</button></a><br>
-<br><a href="./index.html#en/radio"class="titleInput"><button>protected radio</button></a><br>
-<br><a href="./index.html#/about"class="titleInput"><button>about</button></a><br>
-<br><a href="./index.html#/recent"class="titleInput"><button>recent</button></a><br>
-<br><a href="./index.html#/officer"class="titleInput"><button>officer</button></a><br>
-<br><a href="./index.html#en/"class="titleInput"><button></button></a><br>
+<center>
+<br><br><br>
+Remember,<br>
+You must first delete the page<br>
+that you need to protect<br>
+then come back to this page<br>
+to protect the page<br>
+</center>
+		
+</body>
+</html>

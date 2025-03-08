@@ -1,197 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="charset=UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1.0, maximum-scale=1.0" />
-<meta http-equiv="Cache-Control" content="private, no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0" />
-<meta http-equiv="Pragma" content="no-cache" />
-<meta http-equiv="Expires" content="0" />
-<meta http-equiv="Clear-Site-Data" content="*">
-<meta http-equiv="X-Frame-Options" content="DENY">
-<meta http-epuiv="X-XSS-Protection" content="1; mode=block">
-<meta http-equiv="X-Content-Type-Options" content="nosniff">
-<meta http-equiv="Content-Security-Policy" content="
-default-src 'self' http: https:;
-script-src 'self' 'unsafe-inline' 'unsafe-eval' http: https:;
-style-src 'self' 'unsafe-inline' http: https:;
-img-src data: http: https:;
-font-src 'self' http: https:;
-connect-src http: https:;
-frame-src 'self' http: https:;"/>
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="cyan" />
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="black" />
-<link rel="icon" type="image/png" href="./index.ico">
-<link rel="shortcut icon" href="./index.ico" media="(prefers-color-scheme: dark)"/>
-<link rel="shortcut icon" href="./index.ico" media="(prefers-color-scheme: light)" />
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="cyan" />
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="black" />
-<link 
-rel="stylesheet" 
-type="text/css" 
-href="./files/main.css" />
-<title>search</title>
-<style>
-/* mobile */
-
-body {
-	margin: 0; 
-	overflow: hidden;
-}		
-input[type="text"] {
-  font-family: monospace;
-  font-size: 10px;
-  color: peru;
-}
-filterInput {
-        list-style: none;
-        padding: 0px;
-        margin: 0px;
-		position: fixed;
-	    top: 0px;
-        left: 0px;			
-}
-
-.titleInput {
-        margin: 0px;
-	    position: absolute;		
-	    top: 50px;
-        left: 10px;
-        font-size: 1.0em;
-        padding: 0px;
-        animation: fadeIn 0.5s ease-in-out;
-} 
-
-.titleInput:last-child {        
-        margin: 0px;
-	    position: absolute;		
-	    top: 50px;
-        left: 10px;
-        font-size: 1.0em;
-        padding: 0px;
-        border-bottom: none;
-}
-
-@keyframes fadeIn {
-   from {
-        opacity: 0;
-        transform: translateY(-10px);
-}
-   to   {
-        opacity: 1;
-        transform: translateY(0);
-}
-  }
-}  
-</style>
-
-</head>
-
-<body style="background-color:black;">
-
-
-		<div id="panel">
-
-			<div id="header">
-					<h1>
-					<a href="./index.html">index</a>
-					</h1>
-
-				<div id="sections">
-					<span class="selected">
-					
-		 		 <form
-id="secure-form-answer"
-action="./api.php" 
-method="post">
-
-<input
-style="position:fixed;left:100px;height:30px;width:150px;"
-id="filterInput"
-onkeyup="titleInput()"
-autocomplete="true"
-autocorrect="off"  
-autocapitalize="off" 
-spellcheck="true"
-type="text" 
-name="secure-form-answer-Human"
-maxlength="524288" 
-value=""
-aria-label="search"  
-placeholder="search database" 
-x-webkit-speech
-required>
-
-<noscript>
-<label 
-for="secure-form-answer-Human">
-&#x48;&#x75;&#x6D;&#x61;&#x6E;
-</label>
-</noscript>
-</form>
-					</span>
-				</div>
-
-				<div id="expandButton">
-				
-				</div>
-			</div>
-
-			<div id="panelScrim">
-			
-			</div>
-
-			<div id="contentWrapper">
-			
-				<div id="inputWrapper">
-					<input name="username" placeholder="" type="text" id="filterInput" autocorrect="off" autocapitalize="off" spellcheck="true" />
-					<div id="clearSearchButton"></div>
-					<select id="language">
-						<option value="en">en</option>
-						</select>
-				</div>
-				<br/>
-				
-				<div id="content">
-							
-				</div>
-				
-			</div>
-
-		</div>
-
-		<iframe name="viewer">	</iframe>	
-
-<script>
-function titleInput () {
-  
-  let input = document.getElementById('filterInput').value;
-
-  input = input.toLowerCase();
-
-  let x = document.getElementsByClassName('titleInput');
- 
-  for (i = 0; i < x.length; i++) {
-
-    if (!x[i].innerHTML.toLowerCase().includes(input)) {
-
-      x[i].style.display = "none";
-
-    }
-
-    else {
-
-      x[i].style.display = "list-item";
-
-    }
-
-  }
-  
-}
-</script>
-
-		<script>
+// Three js short urls hash
 
 		const panel = document.querySelector( '#panel' );
 		const content = document.querySelector( '#content' );
@@ -266,7 +73,7 @@ function titleInput () {
 
 			filterInput.onfocus = function () {
 
-				panel.classList.add( 'searchFocused' );
+				panel.classList.add( 'titleInput' );
 
 			};
 
@@ -274,7 +81,7 @@ function titleInput () {
 
 				if ( filterInput.value === '' ) {
 
-					panel.classList.remove( 'searchFocused' );
+					panel.classList.remove( 'titleInput' );
 
 				}
 
@@ -314,7 +121,7 @@ function titleInput () {
 
 			if ( filterInput.value !== '' ) {
 
-				panel.classList.add( 'searchFocused' );
+				panel.classList.add( 'titleInput' );
 
 				updateFilter();
 
@@ -656,7 +463,7 @@ function titleInput () {
 
 			} else {
 
-				iframe.src = '';
+				iframe.src = ''; 
 				iframe.style.display = 'none';
 
 			}
@@ -704,8 +511,4 @@ function titleInput () {
 			'                                         / __/  /  \\__  \\',
 			'                                         \\/____/\\/_____/'
 		].join( '\n' ) );
-
-		</script>
-
-</body>
-</html>
+		

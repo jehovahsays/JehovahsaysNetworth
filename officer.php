@@ -43,7 +43,7 @@ foreach($_POST as $variable => $value)
 	{ 
 	echo "The file $file_pointer already exists <br>"; 
 	echo "<meta name='viewport' content='width=device-width, initial-scale=1'>Click the link to visit the webpage for the keyword $value<br><br><a href='./search.html?q=$value#en/$value'>$value</a><br><br>";
-	echo "<script> var msg = new SpeechSynthesisUtterance('keyword already added'); window.speechSynthesis.speak(msg); </script>";
+	echo "<script> var msg = new SpeechSynthesisUtterance('keyword already protected'); window.speechSynthesis.speak(msg); </script>";
 	echo "<body onload='loadout()'><script>function loadout(){window.location.href = './index.html#en/$value'}</script>";	
 	//echo "<body onload='loadout()'><script>function loadout(){window.location.href = './#en/$value.html'}</script>";
 	exit();
@@ -53,7 +53,29 @@ foreach($_POST as $variable => $value)
 	foreach($_POST as $variable => $value) 
 {
 	$value = str_replace(' ', '_', $value);
-	$handle = fopen("./recent.html", "a");
+	$handle = fopen("./en/database.html", "a");
+	fwrite($handle, 
+	  "<br><a href=" 
+	. "\"" 
+	. "../index.html#en/" 
+	. $value
+	. "\"" 
+	. "class=" 
+	. "\"" 
+	. "titleInput" 
+	. "\"" 
+	. ">" 
+	. "<button>"
+	. $value
+    . "</button>"	
+	. "</a><br>"
+	. "\r\n");
+}
+
+	foreach($_POST as $variable => $value) 
+{
+	$value = str_replace(' ', '_', $value);
+	$handle = fopen("./en/database.html", "a");
 	fwrite($handle, 
 	  "<br><a href=" 
 	. "\"" 
@@ -66,6 +88,7 @@ foreach($_POST as $variable => $value)
 	. "\"" 
 	. ">" 
 	. "<button>"
+	. "protected "
 	. $value
     . "</button>"	
 	. "</a><br>"
@@ -131,7 +154,7 @@ foreach($_POST as $variable => $value)
 echo "<meta name='viewport' content='width=device-width'>Click the link to visit the webpage for the keyword $value<br><br><a href='./search.html?q=$value#en/$value'>$value</a><br><br>";
  //echo "<body onload='loadout()'><script>function loadout(){window.location.href = './#en/$value'}</script>";
  echo "<body onload='loadout()'><script>function loadout(){window.location.href = './index.html#en/$value'}</script>"; 
- echo "<script> var msg = new SpeechSynthesisUtterance('keyword added to search'); window.speechSynthesis.speak(msg); </script>";		
+ echo "<script> var msg = new SpeechSynthesisUtterance('keyword protected'); window.speechSynthesis.speak(msg); </script>";		
 fclose($handle);
 exit();
 // Clear stat cache

@@ -1,4 +1,0 @@
-var texts = [
-"",
-
-];var tc = TagCloud('.content', texts);console.log(tc);
