@@ -47,7 +47,7 @@ clearstatcache();
  <meta charset="charset=UTF-8">
 <http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- Security Headers in HTML -->  
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="X-Frame-Options" content="DENY">
@@ -72,14 +72,7 @@ clearstatcache();
     font-src 'self' http: https:;
     connect-src http: https:;
     frame-src 'self' http: https:;"/>
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="cyan" />
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="black" />
-    <link rel="icon" type="image/png" href="./favicon.ico">
-    <link rel="shortcut icon" href="./favicon.ico" media="(prefers-color-scheme: dark)"/>
-    <link rel="shortcut icon" href="./favicon.ico" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="cyan" />
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="black" />
-    <meta http-equiv="Set-Cookie" content="HttpOnly">
+    <!--<meta http-equiv="Set-Cookie" content="HttpOnly">-->
     <meta http-equiv="Connection" content="Keep-alive">
     <meta http-equiv="Referer" content="same-origin">
     <meta http-equiv="Content-Type" content="text/html">
@@ -98,10 +91,6 @@ clearstatcache();
         }
     </style>
 	
-	
-<link rel="stylesheet" href="./index.css">
-<script type = "text/javascript" src="./index.js"></script>	
-	
 </head>
 <body>
 <center>
@@ -117,7 +106,7 @@ method="post">
 style="position:fixed;top:5px;left:5px;width:220px;"
 type="radio" 
 name="secure-form-answer-Human"
-value="index"
+value="multiplayer"
 x-webkit-speech
 required>
 <button>

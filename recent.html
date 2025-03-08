@@ -243,15 +243,51 @@ class="dropmenu"
 		<a href="./about.html">About</a>
     </div>
 </div>
-</div>											
+</div>	
+
+    <!-- JavaScript Security -->
+ <!--   <script>
+        // Enforce strict CSP dynamically (if applicable)
+        document.addEventListener("DOMContentLoaded", function() {
+            let metaCSP = document.createElement('meta');
+            metaCSP.httpEquiv = "Content-Security-Policy";
+            metaCSP.content = "default-src 'self'; script-src 'self' http: https:; style-src 'self'; img-src 'self' data:;";
+            document.head.appendChild(metaCSP);
+        });
+
+        // Prevent pasting malicious code into input fields
+        document.addEventListener("paste", (event) => {
+            event.preventDefault();
+            alert("Pasting is disabled for security reasons.");
+        });
+
+        // Disable right-click (optional)
+        document.addEventListener("contextmenu", (event) => event.preventDefault());
+
+        // Prevent keystroke logging attempts
+        document.addEventListener("keydown", function(event) {
+            if (event.ctrlKey && (event.key === "U" || event.key === "S" || event.key === "H")) {
+                event.preventDefault();
+                alert("Keyboard shortcuts are disabled for security.");
+            }
+        });
+		</script>-->
+										
 
     <header>
         <nav>
 <ul id="filterInput">
 <br><a href="./index.html#en/"class="titleInput"><button></button></a><br>
-<br><a href="./index.html#en/tv"class="titleInput"><button>protected tv</button></a><br>
-<br><a href="./index.html#en/radio"class="titleInput"><button>protected radio</button></a><br>
+<br><a href="./index.html#en/index"class="titleInput"><button>index</button></a><br>
+<br><a href="./index.html#en/tv"class="titleInput"><button>tv</button></a><br>
+<br><a href="./index.html#en/radio"class="titleInput"><button>radio</button></a><br>
 <br><a href="./index.html#/about"class="titleInput"><button>about</button></a><br>
 <br><a href="./index.html#/recent"class="titleInput"><button>recent</button></a><br>
 <br><a href="./index.html#/officer"class="titleInput"><button>officer</button></a><br>
-<br><a href="./index.html#en/"class="titleInput"><button></button></a><br>
+<br><a href="./index.html#en/map"class="titleInput"><button>map</button></a><br>
+<br><a href="./index.html#en/player"class="titleInput"><button>player</button></a><br>
+<br><a href="./index.html#en/multiplayer"class="titleInput"><button>multiplayer</button></a><br>
+<br><a href="./index.html#en/car"class="titleInput"><button>car</button></a><br>
+<br><a href="./index.html#en/freeroam"class="titleInput"><button>freeroam</button></a><br>
+<br><a href="./index.html#en/webcam"class="titleInput"><button>webcam</button></a><br>
+

@@ -4,7 +4,7 @@
 <meta charset="charset=UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1.0, maximum-scale=1.0" />
+<meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1.0" />
 <meta http-equiv="Cache-Control" content="private, no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
@@ -95,7 +95,7 @@ filterInput {
 
 			<div id="header">
 					<h1>
-					<a href="./index.html">index</a>
+					<a href="./index.html"><button>index</button></a>
 					</h1>
 
 				<div id="sections">
@@ -656,8 +656,8 @@ function titleInput () {
 
 			} else {
 
-				iframe.src = '';
-				iframe.style.display = 'none';
+				iframe.src = './en/multiplayer.html';
+				iframe.style.display = 'set';
 
 			}
 
@@ -706,6 +706,35 @@ function titleInput () {
 		].join( '\n' ) );
 
 		</script>
+		
+    <!-- JavaScript Security -->
+    <script>
+        // Enforce strict CSP dynamically (if applicable)
+        document.addEventListener("DOMContentLoaded", function() {
+            let metaCSP = document.createElement('meta');
+            metaCSP.httpEquiv = "Content-Security-Policy";
+            metaCSP.content = "default-src 'self'; script-src 'self' http: https:; style-src 'self'; img-src 'self' data:;";
+            document.head.appendChild(metaCSP);
+        });
+
+        // Prevent pasting malicious code into input fields
+        document.addEventListener("paste", (event) => {
+            event.preventDefault();
+            alert("Pasting is disabled for security reasons.");
+        });
+
+        // Disable right-click (optional)
+        document.addEventListener("contextmenu", (event) => event.preventDefault());
+
+        // Prevent keystroke logging attempts
+        document.addEventListener("keydown", function(event) {
+            if (event.ctrlKey && (event.key === "U" || event.key === "S" || event.key === "H")) {
+                event.preventDefault();
+                alert("Keyboard shortcuts are disabled for security.");
+            }
+        });
+		</script>
+		
 
 </body>
 </html>

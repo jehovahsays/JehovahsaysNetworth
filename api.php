@@ -82,7 +82,7 @@ foreach($_POST as $variable => $value)
      "<!DOCTYPE html>"
 	.  "<html>"
 	.   "<head>"
-	.     "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
+	.     "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">"
 	.     ""
 	.    "<link rel=\"stylesheet\" href=\"../index.css\">"
 	.    ""
@@ -128,7 +128,7 @@ foreach($_POST as $variable => $value)
     . "}}}");
 }
 
-echo "<meta name='viewport' content='width=device-width'>Click the link to visit the webpage for the keyword $value<br><br><a href='./search.html?q=$value#en/$value'>$value</a><br><br>";
+echo "<meta name='viewport' content='width=device-width, initial-scale=1.0'>Click the link to visit the webpage for the keyword $value<br><br><a href='./search.html?q=$value#en/$value'>$value</a><br><br>";
  //echo "<body onload='loadout()'><script>function loadout(){window.location.href = './#en/$value'}</script>";
  echo "<body onload='loadout()'><script>function loadout(){window.location.href = './index.html#en/$value'}</script>"; 
  echo "<script> var msg = new SpeechSynthesisUtterance('keyword added to search'); window.speechSynthesis.speak(msg); </script>";		

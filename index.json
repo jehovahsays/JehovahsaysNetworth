@@ -4,10 +4,17 @@
 	"index":
 	{
 	"":"en/",
-	"tv":"en/tv"
+	"index":"en/index"
+,"tv":"en/tv"
 ,"radio":"en/radio"
 ,"about":"/about"
 ,"recent":"/recent"
 ,"officer":"/officer"
-,"":"en/"
+,"index":"en/index"
+,"map":"en/map"
+,"player":"en/player"
+,"multiplayer":"en/multiplayer"
+,"car":"en/car"
+,"freeroam":"en/freeroam"
+,"webcam":"en/webcam"
 }}}

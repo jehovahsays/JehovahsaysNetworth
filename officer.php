@@ -49,29 +49,6 @@ foreach($_POST as $variable => $value)
 	exit();
 	}
 }
-
-	foreach($_POST as $variable => $value) 
-{
-	$value = str_replace(' ', '_', $value);
-	$handle = fopen("./en/database.html", "a");
-	fwrite($handle, 
-	  "<br><a href=" 
-	. "\"" 
-	. "../index.html#en/" 
-	. $value
-	. "\"" 
-	. "class=" 
-	. "\"" 
-	. "titleInput" 
-	. "\"" 
-	. ">" 
-	. "<button>"
-	. $value
-    . "</button>"	
-	. "</a><br>"
-	. "\r\n");
-}
-
 	foreach($_POST as $variable => $value) 
 {
 	$value = str_replace(' ', '_', $value);
