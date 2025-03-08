@@ -182,7 +182,8 @@ color: white;">
 Last updated: 3-7-2025 12:38 pm est<br>
 Webmaster: Morgan Shatee byers<br><br>
 github repository: <a href="https://github.com/jehovahsays/mev">view github repository</a><br><br>
-youtube channel: <a href="https://youtube.com/@jehovahsaysnetworth?si=5DgR29Mx-y9GcEuQ">view youtube channel</a><br>
+youtube channel: <a href="https://youtube.com/@jehovahsaysnetworth?si=5DgR29Mx-y9GcEuQ">view youtube channel</a><br><br>
+donate via cashapp: <a href="https://cash.app/$morgansbyers">view cashapp</a><br>
 </div>
 </center>
 
