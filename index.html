@@ -97,7 +97,7 @@ frame-src 'self' http: https:;"/>
 id="secure-form-answer"
 action="./api.php" 
 method="post">
-<div id="inputWrapper">
+
 <input
 style="position:fixed;top:10px;left:100px;height:35px;width:180px;"
 id="filterInput"
@@ -121,8 +121,8 @@ for="secure-form-answer-Human">
 &#x48;&#x75;&#x6D;&#x61;&#x6E;
 </label>
 </noscript>
+
 </form>
-</div>
 <br>					</span>
 				</div>
 
@@ -155,35 +155,6 @@ for="secure-form-answer-Human">
 		</div>
 
 		<iframe name="viewer">	</iframe>	
-
-<script>
-function titleInput () {
-  
-  let input = document.getElementById('filterInput').value;
-
-  input = input.toLowerCase();
-
-  let x = document.getElementsByClassName('titleInput');
- 
-  for (i = 0; i < x.length; i++) {
-
-    if (!x[i].innerHTML.toLowerCase().includes(input)) {
-
-      x[i].style.display = "none";
-
-    }
-
-    else {
-
-      x[i].style.display = "list-item";
-
-    }
-
-  }
-  
-}
-</script>
-
 
 <script>
 
@@ -650,8 +621,8 @@ function titleInput () {
 
 			} else {
 
-				iframe.src = './en/mobile.html'; 
-				iframe.style.display = 'set';
+				iframe.src = ''; 
+				iframe.style.display = 'none';
 
 			}
 
@@ -701,33 +672,7 @@ function titleInput () {
 
 		</script>
 
-<!-- JavaScript Security -->
- <!--   <script>
-        // Enforce strict CSP dynamically (if applicable)
-        document.addEventListener("DOMContentLoaded", function() {
-            let metaCSP = document.createElement('meta');
-            metaCSP.httpEquiv = "Content-Security-Policy";
-            metaCSP.content = "default-src 'self'; script-src 'self' http: https:; style-src 'self'; img-src 'self' data:;";
-            document.head.appendChild(metaCSP);
-        });
 
-        // Prevent pasting malicious code into input fields
-        document.addEventListener("paste", (event) => {
-            event.preventDefault();
-            alert("Pasting is disabled for security reasons.");
-        });
-
-        // Disable right-click (optional)
-        document.addEventListener("contextmenu", (event) => event.preventDefault());
-
-        // Prevent keystroke logging attempts
-        document.addEventListener("keydown", function(event) {
-            if (event.ctrlKey && (event.key === "U" || event.key === "S" || event.key === "H")) {
-                event.preventDefault();
-                alert("Keyboard shortcuts are disabled for security.");
-            }
-        });
-		</script>-->
 	
 
 </body>

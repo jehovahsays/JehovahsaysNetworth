@@ -3,7 +3,9 @@
 	{
 	"index":
 	{
-	"mobile":"en/mobile",
+	"":"en/",
 	"tv":"en/tv"
 ,"radio":"en/radio"
+,"mobile":"en/mobile"
+,"test":"en/test"
 }}}

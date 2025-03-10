@@ -42,9 +42,9 @@ foreach($_POST as $variable => $value)
 	if (file_exists($file_pointer))  
 	{ 
 	echo "The file $file_pointer already exists <br>"; 
-	echo "<meta name='viewport' content='width=device-width, initial-scale=1'>Click the link to visit the webpage for the keyword $value<br><br><a href='./en/mobile.html'>$value</a><br><br>";
+	echo "<meta name='viewport' content='width=device-width, initial-scale=1'>Click the link to visit the webpage for the keyword $value<br><br><a href='./en/$value.html'>$value</a><br><br>";
 	echo "<script> var msg = new SpeechSynthesisUtterance('keyword already added'); window.speechSynthesis.speak(msg); </script>";
-	echo "<body onload='loadout()'><script>function loadout(){window.location.href = './en/mobile.html'}</script>";	
+	echo "<body onload='loadout()'><script>function loadout(){window.location.href = './en/$value.html'}</script>";	
 	//echo "<body onload='loadout()'><script>function loadout(){window.location.href = './#en/$value.html'}</script>";
 	exit();
 	}
@@ -53,7 +53,7 @@ foreach($_POST as $variable => $value)
 	foreach($_POST as $variable => $value) 
 {
 	$value = str_replace(' ', '_', $value);
-	$handle = fopen("./en/mobile.html", "a");
+	$handle = fopen("./en/.html", "a");
 	fwrite($handle, 
 	  "<br><a href=" 
 	. "\"" 
@@ -286,9 +286,9 @@ foreach($_POST as $variable => $value)
 . "$value"
 . "</a>            "
 . "<a "
-. "href=\"./mobile.html\" "
+. "href=\"../index.html\" "
 . "class=\"navbar-link\">"
-. "mobile"
+. "index"
 . "</a>            "
 . "</nav>      "
 . "</div>   "
@@ -354,9 +354,9 @@ foreach($_POST as $variable => $value)
     . "}}}");
 }
 
-echo "<meta name='viewport' content='width=device-width, initial-scale=1.0'>Click the link to visit the webpage for the keyword $value<br><br><a href='./en/mobile.html'>$value</a><br><br>";
+echo "<meta name='viewport' content='width=device-width, initial-scale=1.0'>Click the link to visit the webpage for the keyword $value<br><br><a href='./en/$value.html'>$value</a><br><br>";
  //echo "<body onload='loadout()'><script>function loadout(){window.location.href = './#en/$value'}</script>";
- echo "<body onload='loadout()'><script>function loadout(){window.location.href = './en/mobile.html'}</script>"; 
+ echo "<body onload='loadout()'><script>function loadout(){window.location.href = './en/$value.html'}</script>"; 
  echo "<script> var msg = new SpeechSynthesisUtterance('keyword added to search'); window.speechSynthesis.speak(msg); </script>";		
 fclose($handle);
 exit();
