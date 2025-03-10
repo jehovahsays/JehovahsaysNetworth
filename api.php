@@ -53,7 +53,7 @@ foreach($_POST as $variable => $value)
 	foreach($_POST as $variable => $value) 
 {
 	$value = str_replace(' ', '_', $value);
-	$handle = fopen("./en/.html", "a");
+	$handle = fopen("./en/index.html", "a");
 	fwrite($handle, 
 	  "<br><a href=" 
 	. "\"" 

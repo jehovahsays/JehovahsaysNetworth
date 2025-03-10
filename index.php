@@ -112,7 +112,7 @@ spellcheck="true"
 type="radio" 
 name="secure-form-answer-Human"
 maxlength="524288" 
-value=""
+value="index"
 aria-label="search"  
 placeholder="search database" 
 x-webkit-speech
