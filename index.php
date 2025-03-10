@@ -72,7 +72,7 @@ clearstatcache();
     <!--<meta http-equiv="Expect-CT" content="max-age=86400, enforce">-->
     <!--<meta http-equiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains">-->
 
-    <title>Secure Page</title>
+    <title>index</title>
 
     <!-- Security in CSS -->
     <style>
@@ -92,11 +92,10 @@ input[type="password"] {
 <body>
 
 <center>
-    <h1>Secure Index.php</h1>
-    <p>This page has all major security headers implemented.</p>
 	<br>
 	<br>
-		 		 <form
+<br><br>
+<form
 id="secure-form-answer"
 action="./api.php" 
 method="post">
@@ -117,7 +116,8 @@ aria-label="search"
 placeholder="search database" 
 x-webkit-speech
 required>
-<button>search</button>
+<button>PLAY</button>
+
 <noscript>
 <label 
 for="secure-form-answer-Human">

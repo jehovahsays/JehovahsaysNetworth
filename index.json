@@ -3,9 +3,9 @@
 	{
 	"index":
 	{
-	"":"en/",
+	"index":"en/index",
 	"tv":"en/tv"
 ,"radio":"en/radio"
-,"mobile":"en/mobile"
-,"index":"en/index"
+,"about":"en/about"
+,"deleted":"en/deleted"
 }}}
