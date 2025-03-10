@@ -97,7 +97,7 @@ input[type="password"] {
 <br><br>
 <form
 id="secure-form-answer"
-action="./api.php" 
+action="./en/index.html" 
 method="post">
 <div id="inputWrapper">
 <input
