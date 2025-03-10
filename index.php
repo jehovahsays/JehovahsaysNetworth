@@ -95,37 +95,8 @@ input[type="password"] {
 	<br>
 	<br>
 <br><br>
-<form
-id="secure-form-answer"
-action="./en/index.html" 
-method="post">
-<div id="inputWrapper">
-<input
-style="position:fixed;top:10px;left:40px;height:25px;width:180px;"
-id="filterInput"
-onkeyup="titleInput()"
-autocomplete="true"
-autocorrect="off"  
-autocapitalize="off" 
-spellcheck="true"
-type="radio" 
-name="secure-form-answer-Human"
-maxlength="524288" 
-value="index"
-aria-label="search"  
-placeholder="search database" 
-x-webkit-speech
-required>
+<a href="./en/index.html">
 <button>PLAY</button>
-
-<noscript>
-<label 
-for="secure-form-answer-Human">
-&#x48;&#x75;&#x6D;&#x61;&#x6E;
-</label>
-</noscript>
-</form>
-
 <br><br>
 
     <!-- JavaScript Security -->
