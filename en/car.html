@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="charset=UTF-8">
+<http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Security Headers in HTML -->  
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-epuiv="X-XSS-Protection" content="1; mode=block">
+    <meta charset="charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta http-equiv="Cache-Control" content="private, no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <meta http-equiv="Clear-Site-Data" content="*">
+    <meta http-equiv="Referrer-Policy" content="same-origin">
+    <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+    <meta http-equiv="Cross-Origin-Embedder-Policy" content="require-corp">
+    <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin">
+    <meta http-equiv="Cross-Origin-Resource-Policy" content="same-site">
+	<meta http-equiv="Content-Security-Policy" content="
+    default-src 'self' http: https:;
+    script-src 'self' 'unsafe-inline' 'unsafe-eval' http: https:;
+    style-src 'self' 'unsafe-inline' http: https:;
+    img-src data: http: https:;
+    font-src 'self' http: https:;
+    connect-src http: https:;
+    frame-src 'self' http: https:;"/>
+    <!--<meta http-equiv="Set-Cookie" content="HttpOnly">-->
+    <meta http-equiv="Connection" content="Keep-alive">
+    <meta http-equiv="Referer" content="same-origin">
+    <meta http-equiv="Content-Type" content="text/html">
+    <!--<meta http-equiv="Expect-CT" content="max-age=86400, enforce">-->
+    <!--<meta http-equiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains">-->
+
+    <title>car</title>
+
+    <style>
+html { 
+height: 100% 
+}
+
+body { 
+min-height: 100% 
+}
+
+:root{
+   font-family: "Open Sans", sans-serif;
+   font-size: 16px;
+   font-weight: 400;
+}
+
+*{
+   margin: 0;
+   box-sizing: border-box;
+}
+
+.page{
+   min-height: 100vh;
+   background-color: #fff;
+   color: #000;
+}
+
+.navbar{
+   position: sticky;
+   top: 0;
+   height: 65px;
+   background-color: #212529;
+   color: #fff;
+}
+
+.navbar-inner{
+   display: flex;
+   flex-direction: row;
+   align-items: center;
+   justify-content: space-between;
+   height: 64px;
+   max-width: 1440px;
+   margin-inline: auto;
+   padding-inline: 4%;
+}
+
+.navbar-toggler,
+.navbar-toggler-check{
+   display: none;
+}
+
+.navbar-menu{
+   display: flex;
+   flex-direction: row;
+   gap: 1rem;
+}
+
+.navbar-link{
+   display: block;
+   padding: .5rem 1.25rem;
+   text-align: center;
+   text-decoration: none;
+   color: rgba(255, 255, 255, .5);
+   transition: color .15s;
+}
+
+.navbar-link:hover{
+   color: #fff;
+}
+
+.navbar-link-active{
+   color: #fff;
+   pointer-events: none;
+}
+
+.logo{
+   font-family: "Montserrat", sans-serif;
+   font-size: 1.75rem;
+   font-weight: 600;
+   letter-spacing: 1px;
+}
+
+.logo-link{
+   text-decoration: none;
+   color: inherit;
+}
+
+.button{
+   display: inline-block;
+   padding: .5rem 1.75rem;
+   text-align: center;
+   text-decoration: none;
+   background-color: #0d6efd;
+   color: #fff;
+   border-radius: 9999px;
+   transition: filter .15s;
+}
+
+.button:hover{
+   filter: brightness(.9);
+}
+
+@media only screen and (max-width:1024px) {
+   .navbar-menu{
+      gap: .5rem;
+   }
+
+   .button{
+      padding-inline: 1.5rem;
+   }
+}
+
+@media only screen and (max-width:768px) {
+   :root{
+      font-size: 15px;
+   }
+   
+   .navbar-menu{
+      position: absolute;
+      top: -100vh;
+      left: 0;
+      width: 100%;
+      flex-direction: column;
+      padding: .5rem 4% 1rem;
+      background-color: #212529;
+      z-index: -1;
+      transition: top .5s;
+   }
+
+   .navbar-toggler{
+      display: block;
+      font-size: 1.5rem;
+   }
+
+   .navbar-toggler-check:checked + .navbar-menu{
+      top: 64px;
+   }
+}
+</style>
+
+
+		<link type="text/css" rel="stylesheet" href="../examples/main.css">
+		<style>
+			body {
+				color: #bbbbbb;
+				background: #333333;
+			}
+			a {
+				color: #08f;
+			}
+			.colorPicker {
+				display: inline-block;
+				margin: 0 10px
+			}
+		</style>
+	</head>
+
+	<body>
+
+<body class="page" style="background-color:black;">   
+<header class="navbar">      
+<div class="navbar-inner">         
+<h1 class="logo"> 
+car
+</h1>
+<i 
+class="fa fa-home">
+</i>
+</a>
+		
+
+<label 
+for="navbar-toggler" 
+class="navbar-toggler">
+&#9776;
+<i class="fas fa-bars">
+</i>         
+</label>         
+<input 
+type="checkbox" 
+id="navbar-toggler" 
+class="navbar-toggler-check">         
+<nav class="navbar-menu">            
+<a 
+href="./en/car.html" 
+class="navbar-link navbar-link-active">
+car
+</a>            
+<a 
+href="./index.html" 
+class="navbar-link">
+index
+</a>            
+</nav>      
+</div>   
+</header>
+
+		<div id="info">
+			<!--<a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> car materials<br/>
+			Ferrari 458 Italia model by <a href="https://sketchfab.com/models/57bf6cc56931426e87494f554df1dab6" target="_blank" rel="noopener">vicent091036</a>
+			--><br><br><br><br><br><br>
+			<span class="colorPicker"><input id="body-color" type="color" value="#ff0000"></input><br/>Body</span>
+			<span class="colorPicker"><input id="details-color" type="color" value="#ffffff"></input><br/>Details</span>
+			<span class="colorPicker"><input id="glass-color" type="color" value="#ffffff"></input><br/>Glass</span>
+		</div>
+
+		<div id="container"></div>
+
+		<script type="importmap">
+			{
+				"imports": {
+					"three": "../examples/build/three.module.js",
+					"three/addons/": "../examples/jsm/"
+				}
+			}
+		</script>
+
+		<script type="module">
+
+			import * as THREE from 'three';
+
+			import Stats from 'three/addons/libs/stats.module.js';
+
+			import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+			import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+			import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+			import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+
+			let camera, scene, renderer;
+			let stats;
+
+			let grid;
+			let controls;
+
+			const wheels = [];
+
+			function init() {
+
+				const container = document.getElementById( 'container' );
+
+				renderer = new THREE.WebGLRenderer( { antialias: true } );
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				renderer.setAnimationLoop( animate );
+				renderer.toneMapping = THREE.ACESFilmicToneMapping;
+				renderer.toneMappingExposure = 0.85;
+				container.appendChild( renderer.domElement );
+
+				window.addEventListener( 'resize', onWindowResize );
+
+				stats = new Stats();
+				//container.appendChild( stats.dom );
+
+				//
+
+				camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 0.1, 100 );
+				camera.position.set( 4.25, 1.4, - 4.5 );
+
+				controls = new OrbitControls( camera, container );
+				controls.maxDistance = 9;
+				controls.maxPolarAngle = THREE.MathUtils.degToRad( 90 );
+				controls.target.set( 0, 0.5, 0 );
+				controls.update();
+
+				scene = new THREE.Scene();
+				scene.background = new THREE.Color( 0x333333 );
+				scene.environment = new RGBELoader().load( '../examples/textures/equirectangular/venice_sunset_1k.hdr' );
+				scene.environment.mapping = THREE.EquirectangularReflectionMapping;
+				scene.fog = new THREE.Fog( 0x333333, 10, 15 );
+
+				grid = new THREE.GridHelper( 20, 40, 0xffffff, 0xffffff );
+				grid.material.opacity = 0.2;
+				grid.material.depthWrite = false;
+				grid.material.transparent = true;
+				scene.add( grid );
+
+				// materials
+
+				const bodyMaterial = new THREE.MeshPhysicalMaterial( {
+					color: 0xff0000, metalness: 1.0, roughness: 0.5, clearcoat: 1.0, clearcoatRoughness: 0.03
+				} );
+
+				const detailsMaterial = new THREE.MeshStandardMaterial( {
+					color: 0xffffff, metalness: 1.0, roughness: 0.5
+				} );
+
+				const glassMaterial = new THREE.MeshPhysicalMaterial( {
+					color: 0xffffff, metalness: 0.25, roughness: 0, transmission: 1.0
+				} );
+
+				const bodyColorInput = document.getElementById( 'body-color' );
+				bodyColorInput.addEventListener( 'input', function () {
+
+					bodyMaterial.color.set( this.value );
+
+				} );
+
+				const detailsColorInput = document.getElementById( 'details-color' );
+				detailsColorInput.addEventListener( 'input', function () {
+
+					detailsMaterial.color.set( this.value );
+
+				} );
+
+				const glassColorInput = document.getElementById( 'glass-color' );
+				glassColorInput.addEventListener( 'input', function () {
+
+					glassMaterial.color.set( this.value );
+
+				} );
+
+				// Car
+
+				const shadow = new THREE.TextureLoader().load( '../examples/models/gltf/ferrari_ao.png' );
+
+				const dracoLoader = new DRACOLoader();
+				dracoLoader.setDecoderPath( '../examples/jsm/libs/draco/gltf/' );
+
+				const loader = new GLTFLoader();
+				loader.setDRACOLoader( dracoLoader );
+
+				loader.load( '../examples/models/gltf/ferrari.glb', function ( gltf ) {
+
+					const carModel = gltf.scene.children[ 0 ];
+
+					carModel.getObjectByName( 'body' ).material = bodyMaterial;
+
+					carModel.getObjectByName( 'rim_fl' ).material = detailsMaterial;
+					carModel.getObjectByName( 'rim_fr' ).material = detailsMaterial;
+					carModel.getObjectByName( 'rim_rr' ).material = detailsMaterial;
+					carModel.getObjectByName( 'rim_rl' ).material = detailsMaterial;
+					carModel.getObjectByName( 'trim' ).material = detailsMaterial;
+
+					carModel.getObjectByName( 'glass' ).material = glassMaterial;
+
+					wheels.push(
+						carModel.getObjectByName( 'wheel_fl' ),
+						carModel.getObjectByName( 'wheel_fr' ),
+						carModel.getObjectByName( 'wheel_rl' ),
+						carModel.getObjectByName( 'wheel_rr' )
+					);
+
+					// shadow
+					const mesh = new THREE.Mesh(
+						new THREE.PlaneGeometry( 0.655 * 4, 1.3 * 4 ),
+						new THREE.MeshBasicMaterial( {
+							map: shadow, blending: THREE.MultiplyBlending, toneMapped: false, transparent: true
+						} )
+					);
+					mesh.rotation.x = - Math.PI / 2;
+					mesh.renderOrder = 2;
+					carModel.add( mesh );
+
+					scene.add( carModel );
+
+				} );
+
+			}
+
+			function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}
+
+			function animate() {
+
+				controls.update();
+
+				const time = - performance.now() / 1000;
+
+				for ( let i = 0; i < wheels.length; i ++ ) {
+
+					wheels[ i ].rotation.x = time * Math.PI * 2;
+
+				}
+
+				grid.position.z = - ( time ) % 1;
+
+				renderer.render( scene, camera );
+
+				stats.update();
+
+			}
+
+			init();
+
+		</script>
+
+		
+		
+	</body>
+</html>
