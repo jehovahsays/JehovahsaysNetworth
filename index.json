@@ -3,19 +3,7 @@
 	{
 	"index":
 	{
-	"":"en/",
-	"index":"en/index"
-,"tv":"en/tv"
+	"mobile":"en/mobile",
+	"tv":"en/tv"
 ,"radio":"en/radio"
-,"about":"/about"
-,"recent":"/recent"
-,"officer":"/officer"
-,"index":"en/index"
-,"map":"en/map"
-,"player":"en/player"
-,"multiplayer":"en/multiplayer"
-,"car":"en/car"
-,"freeroam":"en/freeroam"
-,"webcam":"en/webcam"
-,"test":"en/test"
 }}}

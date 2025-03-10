@@ -18,7 +18,7 @@ header( 'Expires: 0' );
 header( 'Referrer-Policy:  same-origin' );
 header( 'Accept-Language: en-US,en;q=0.5' );
 header( 'Connection: Keep-alive' );
-header( 'Location: ./index.php');
+header( 'Location: ./en/mobile.html');
 
 // user has clicked a delete hyperlink
 if($_GET['action'] && $_GET['action'] == 'delete') {

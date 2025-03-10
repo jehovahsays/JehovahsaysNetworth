@@ -10,14 +10,11 @@ header("Cross-Origin-Opener-Policy: same-origin");
 header("Cross-Origin-Resource-Policy: same-site");
 //header("Expect-CT: max-age=86400, enforce");
 //header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
-
 // Prevent caching (optional security measure)
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Pragma: no-cache");
-
 // Adding some more layers of security.
 header_remove( "X-Powered-By" );
-header( "Content-Type-Options: nosniff" );
 header( "XSS-Protection: 1; mode=block" );
 header( "X-XSS-Protection: 1; mode=block" );
 header( "Vary: Accept-Encoding" );
@@ -29,13 +26,9 @@ header( "Vary: Accept-Encoding" );
 header( "Expires: 0" );
 header( "Accept-Language: en-US,en;q=0.5" );
 header( "Connection: Keep-alive" );
-
 // Allow requests from any origin (useful during development)
 // In production, you may want to restrict this to specific domains.
-
 header('Access-Control-Allow-Origin: *');
-
-
 // Start output buffering to ensure headers are sent before content
 ob_start();
 // Clear stat cache
@@ -83,51 +76,57 @@ clearstatcache();
 
     <!-- Security in CSS -->
     <style>
-        body {
+body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
-            text-align: left;
+            text-align: center;
             margin: 50px;
         }
-    </style>
+input[type="password"] {
+              font-family: Arial, sans-serif;
+}
+
+</style>
 	
 </head>
 <body>
+
 <center>
     <h1>Secure Index.php</h1>
     <p>This page has all major security headers implemented.</p>
-	<br><p>Are you human?</p>
 	<br>
-<form
+	<br>
+		 		 <form
 id="secure-form-answer"
 action="./api.php" 
 method="post">
+<div id="inputWrapper">
 <input
-style="position:fixed;top:5px;left:5px;width:220px;"
+style="position:fixed;top:10px;left:40px;height:25px;width:180px;"
+id="filterInput"
+onkeyup="titleInput()"
+autocomplete="true"
+autocorrect="off"  
+autocapitalize="off" 
+spellcheck="true"
 type="radio" 
 name="secure-form-answer-Human"
-value="multiplayer"
+maxlength="524288" 
+value="mobile"
+aria-label="search"  
+placeholder="search database" 
 x-webkit-speech
 required>
-<button>
-YES
-</button>		
-
+<button>search</button>
 <noscript>
 <label 
 for="secure-form-answer-Human">
 &#x48;&#x75;&#x6D;&#x61;&#x6E;
 </label>
 </noscript>
-
 </form>
 
 <br><br>
-<a href="./robots.txt">
-<button>
-NO
-</button>	
-</a>
 
     <!-- JavaScript Security -->
     <script>
@@ -160,30 +159,20 @@ NO
 
 <center>
 <br><br><br><br>
-<div 
-class="footer"
-style=" 
-position: fixed;
-bottom:0px;
-background-color: none;	
-font-size: 10px;
-color: white;">
-Last updated: 3-7-2025 12:38 pm est<br>
 Webmaster: Morgan Shatee byers<br><br>
 github repository: <a href="https://github.com/jehovahsays/mev">view github repository</a><br><br>
 youtube channel: <a href="https://youtube.com/@jehovahsaysnetworth?si=5DgR29Mx-y9GcEuQ">view youtube channel</a><br><br>
-donate via cashapp: <a href="https://cash.app/$morgansbyers">view cashapp</a><br>
+donate via cashapp: <a href="https://cash.app/$morgansbyers">view cashapp</a><br><br><br>
+Last updated: 3-7-2025 12:38 pm est<br>
 </div>
 </center>
-
-
 		   
 </body>
 </html>
 
 <?php
 // Clean redirect
-//header('Location: ./index.html');
+//header('Location: ./mobile.html');
 
 exit();
 

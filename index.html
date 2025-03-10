@@ -4,7 +4,7 @@
 <meta charset="charset=UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+<meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1.0, maximum-scale=1.0" />
 <meta http-equiv="Cache-Control" content="private, no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
@@ -20,6 +20,9 @@ img-src data: http: https:;
 font-src 'self' http: https:;
 connect-src http: https:;
 frame-src 'self' http: https:;"/>
+
+<link rel="stylesheet" type="text/css" href="./main.css">
+
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="cyan" />
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="black" />
 <link rel="icon" type="image/png" href="./index.ico">
@@ -27,42 +30,27 @@ frame-src 'self' http: https:;"/>
 <link rel="shortcut icon" href="./index.ico" media="(prefers-color-scheme: light)" />
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="cyan" />
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="black" />
-<link 
-rel="stylesheet" 
-type="text/css" 
-href="./files/main.css" />
-<title>search</title>
+<title>index</title>
 <style>
+
 /* mobile */
 
-body {
-	margin: 0; 
-	overflow: hidden;
-}
-button {
-	position:fixed
-	top:10px;
-	left:10px;
-}		
-input[type="text"] {
-  font-family: monospace;
-  font-size: 10px;
-  color: peru;
-}
-filterInput {
+.filterInput{
         list-style: none;
         padding: 0px;
         margin: 0px;
 		position: fixed;
-	    top: 0px;
-        left: 0px;			
+		color: black;
+	    top: 10px;
+        left: 10px;			
 }
 
-.titleInput {
+.titleInput{
         margin: 0px;
-	    position: absolute;		
-	    top: 50px;
+	    position: fixed;		
+	    top: 10px;
         left: 10px;
+		color: black;
         font-size: 1.0em;
         padding: 0px;
         animation: fadeIn 0.5s ease-in-out;
@@ -70,9 +58,10 @@ filterInput {
 
 .titleInput:last-child {        
         margin: 0px;
-	    position: absolute;		
-	    top: 50px;
+	    position: fixed;		
+	    top: 10px;
         left: 10px;
+		color: black;
         font-size: 1.0em;
         padding: 0px;
         border-bottom: none;
@@ -93,27 +82,24 @@ filterInput {
 
 </head>
 
-<body style="background-color:black;">
 		<div id="panel">
-<a href="./recent.html"><button style="position:fixed;top:10px;left:10px;">EXIT</button></a>
-</div>
 
-
-<!--			<div id="header">
+			<div id="header">
 					<h1>
-					<a href="./index.html"><button>index</button></a>
+					<a href="./index.html">index</a>
 					</h1>
 
 				<div id="sections">
 					<span class="selected">
-					
+					<br>
+<br>
 		 		 <form
 id="secure-form-answer"
 action="./api.php" 
 method="post">
-
+<div id="inputWrapper">
 <input
-style="position:fixed;left:100px;height:30px;width:150px;"
+style="position:fixed;top:10px;left:100px;height:35px;width:180px;"
 id="filterInput"
 onkeyup="titleInput()"
 autocomplete="true"
@@ -136,8 +122,9 @@ for="secure-form-answer-Human">
 </label>
 </noscript>
 </form>
-					</span>
-				</div>-->
+</div>
+<br>					</span>
+				</div>
 
 				<div id="expandButton">
 				
@@ -197,7 +184,8 @@ function titleInput () {
 }
 </script>
 
-		<script>
+
+<script>
 
 		const panel = document.querySelector( '#panel' );
 		const content = document.querySelector( '#content' );
@@ -272,7 +260,7 @@ function titleInput () {
 
 			filterInput.onfocus = function () {
 
-				panel.classList.add( 'searchFocused' );
+				panel.classList.add( 'titleInput' );
 
 			};
 
@@ -280,7 +268,7 @@ function titleInput () {
 
 				if ( filterInput.value === '' ) {
 
-					panel.classList.remove( 'searchFocused' );
+					panel.classList.remove( 'titleInput' );
 
 				}
 
@@ -320,7 +308,7 @@ function titleInput () {
 
 			if ( filterInput.value !== '' ) {
 
-				panel.classList.add( 'searchFocused' );
+				panel.classList.add( 'titleInput' );
 
 				updateFilter();
 
@@ -662,7 +650,7 @@ function titleInput () {
 
 			} else {
 
-				iframe.src = './en/multiplayer.html';
+				iframe.src = './en/mobile.html'; 
 				iframe.style.display = 'set';
 
 			}
@@ -712,9 +700,9 @@ function titleInput () {
 		].join( '\n' ) );
 
 		</script>
-		
-    <!-- JavaScript Security -->
-    <script>
+
+<!-- JavaScript Security -->
+ <!--   <script>
         // Enforce strict CSP dynamically (if applicable)
         document.addEventListener("DOMContentLoaded", function() {
             let metaCSP = document.createElement('meta');
@@ -739,8 +727,8 @@ function titleInput () {
                 alert("Keyboard shortcuts are disabled for security.");
             }
         });
-		</script>
-		
+		</script>-->
+	
 
 </body>
 </html>
