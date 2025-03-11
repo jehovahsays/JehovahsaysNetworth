@@ -505,31 +505,38 @@ index
 			
 			
 	
-    // Joystick Control
-    let joystick = document.getElementById("joystick");
-    let handle = document.getElementById("joystick-handle");
-    let touchStartX = 0, touchStartY = 0;
-    let moveX = 0, moveZ = 0;
+        // Joystick Control
+        let joystick = document.createElement('div');
+        joystick.id = "joystick";
+        document.body.appendChild(joystick);
 
-    joystick.addEventListener("touchstart", (event) => {
-        const touch = event.touches[0];
-        touchStartX = touch.clientX;
-        touchStartY = touch.clientY;
-    });
+        let handle = document.createElement('div');
+        handle.id = "joystick-handle";
+        joystick.appendChild(handle);
 
-    joystick.addEventListener("touchmove", (event) => {
-        const touch = event.touches[0];
-        moveX = (touch.clientX - touchStartX) / -50;
-        moveZ = (touch.clientY - touchStartY) / -50;
+        let touchStartX = 0, touchStartY = 0;
 
-        handle.style.transform = `translate(${moveX * 20}px, ${moveZ * 20}px)`;
-    });
+        joystick.addEventListener("touchstart", (event) => {
+            const touch = event.touches[0];
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+        });
 
-    joystick.addEventListener("touchend", () => {
-        moveX = 0;
-        moveZ = 0;
-        handle.style.transform = "translate(0px, 0px)";
-    });
+        joystick.addEventListener("touchmove", (event) => {
+            event.preventDefault(); // Prevent scrolling while using joystick
+            const touch = event.touches[0];
+            moveX = (touch.clientX - touchStartX) / -50;
+            moveZ = (touch.clientY - touchStartY) / -50;
+
+            handle.style.transform = `translate(${moveX * 20}px, ${moveZ * 20}px)`;
+        });
+
+        joystick.addEventListener("touchend", () => {
+            moveX = 0;
+            moveZ = 0;
+            handle.style.transform = "translate(0px, 0px)";
+        });
+
 
 
 			//

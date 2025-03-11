@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="charset=UTF-8">
+<http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Security Headers in HTML -->  
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-epuiv="X-XSS-Protection" content="1; mode=block">
+    <meta charset="charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta http-equiv="Cache-Control" content="private, no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <meta http-equiv="Clear-Site-Data" content="*">
+    <meta http-equiv="Referrer-Policy" content="same-origin">
+    <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+    <meta http-equiv="Cross-Origin-Embedder-Policy" content="require-corp">
+    <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin">
+    <meta http-equiv="Cross-Origin-Resource-Policy" content="same-site">
+	<meta http-equiv="Content-Security-Policy" content="
+    default-src 'self' http: https:;
+    script-src 'self' 'unsafe-inline' 'unsafe-eval' http: https:;
+    style-src 'self' 'unsafe-inline' http: https:;
+    img-src data: http: https:;
+    font-src 'self' http: https:;
+    connect-src http: https:;
+    frame-src 'self' http: https:;"/>
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="cyan" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="black" />
+    <link rel="icon" type="image/png" href="./index.ico">
+    <link rel="shortcut icon" href="./index.ico" media="(prefers-color-scheme: dark)"/>
+    <link rel="shortcut icon" href="./index.ico" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="cyan" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="black" />
+    <meta http-equiv="Set-Cookie" content="HttpOnly">
+    <meta http-equiv="Connection" content="Keep-alive">
+    <meta http-equiv="Referer" content="same-origin">
+    <meta http-equiv="Content-Type" content="text/html">
+    <!--<meta http-equiv="Expect-CT" content="max-age=86400, enforce">-->
+    <!--<meta http-equiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains">-->
+<style>
+input[type="text"] {
+  font-family: monospace;
+  font-size: 10px;
+  color: peru;
+}
+footer {
+	position:fixed;
+	bottom:60px;
+	left:0px;
+	width:100vw;
+}
+
+button {
+	position:fixed;
+	top:12px;
+	left:225px;
+	
+}
+filterInput {
+        list-style: none;
+        padding: 0px;
+        margin: 0px;
+		position: fixed;
+	    top: 0px;
+        left: 0px;			
+}
+
+.titleInput {
+        margin: 0px;
+	    position: absolute;		
+	    top: 20px;
+        left: 250px;
+        font-size: 1.0em;
+        padding: 0px;
+        animation: fadeIn 0.5s ease-in-out;
+} 
+
+.titleInput:last-child {        
+        margin: 0px;
+	    position: absolute;		
+	    top: 20px;
+        left: 250px;
+        font-size: 1.0em;
+        padding: 0px;
+        border-bottom: none;
+}
+
+@keyframes fadeIn {
+   from {
+        opacity: 0;
+        transform: translateY(-10px);
+}
+   to   {
+        opacity: 1;
+        transform: translateY(0);
+}
+  }
+}  
+</style>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      width: 100vw;
+      height: 100vh;
+    }
+  </style>
+
+<link 
+rel="stylesheet" 
+href="./index.css">
+
+<!--<link 
+rel="stylesheet" 
+type="text/css" 
+href="./examples/files/main.css">-->
+
+
+
+<title>
+index
+</title>  
+
+</head>
+
+<center>
+
+<body style="background-color:white;">
+
+<script>
+function titleInput() {
+	
+  let input = document.getElementById('filterInput').value;
+
+  input = input.toLowerCase();
+
+  let x = document.getElementsByClassName('titleInput');
+ 
+  for (i = 0; i < x.length; i++) {
+
+    if (!x[i].innerHTML.toLowerCase().includes(input)) {
+
+      x[i].style.display = "none";
+
+    }
+
+    else {
+
+      x[i].style.display = "list-item";
+
+    }
+
+  }
+  
+var msg = new SpeechSynthesisUtterance(input); 
+window.speechSynthesis.speak(msg);   
+
+  
+}
+</script>
+     		 
+<div id="panel"></div>
+
+<div id="expandButton"></div>
+			
+<div id="panelScrim"></div>
+
+<div id="contentWrapper">
+			
+<div id="inputWrapper">
+
+		 		 <form
+id="secure-form-answer"
+action="./api.php" 
+method="post">
+<div id="inputWrapper">
+<input
+style="position:fixed;top:10px;left:40px;height:25px;width:180px;"
+id="filterInput"
+onkeyup="titleInput()"
+autocomplete="true"
+autocorrect="off"  
+autocapitalize="off" 
+spellcheck="true"
+type="text" 
+name="secure-form-answer-Human"
+maxlength="524288" 
+value=""
+aria-label="search"  
+placeholder="search database" 
+x-webkit-speech
+required>
+
+<noscript>
+<label 
+for="secure-form-answer-Human">
+&#x48;&#x75;&#x6D;&#x61;&#x6E;
+</label>
+</noscript>
+</form>
+
+<iframe name="viewer" style="position:fixed;top:55px;left:0px;width:50vw;height:30vh;">
+</iframe>
+
+</div></div>										
+
+<footer>
+<div id="clearSearchButton"></div>
+
+<select id="language">
+
+<option value="en">en</option>
+
+</select>
+				
+<div id="content"></div>
+				
+</div>
+
+
+
+
+</div>
+
+<script src="./index.js"></script>
+ 
+</footer> 
+  
+</body>
+</html>
+
+</center>
+<nav>
+<ul id="filterInput">
+<br><a href="./en/.html"class="titleInput"><button></button></a><br>
+<br><a href="./en/index.html"class="titleInput"><button>index</button></a><br>
+<br><a href="./en/tv.html"class="titleInput"><button>tv</button></a><br>
+<br><a href="./en/radio.html"class="titleInput"><button>radio</button></a><br>
+<br><a href="./en/.html"class="titleInput"><button></button></a><br>
+<br><a href="./en/about.html"class="titleInput"><button>about</button></a><br>
+<br><a href="./en/.html"class="titleInput"><button></button></a><br>
+<br><a href="./en/car.html"class="titleInput"><button>car</button></a><br>
+<br><a href="./en/map.html"class="titleInput"><button>map</button></a><br>
+<br><a href="./en/character.html"class="titleInput"><button>character</button></a><br>
+<br><a href="./en/player.html"class="titleInput"><button>player</button></a><br>
+<br><a href="./en/tornado.html"class="titleInput"><button>tornado</button></a><br>
+<br><a href="./en/webcam.html"class="titleInput"><button>webcam</button></a><br>
+<br><a href="./en/multiplayer.html"class="titleInput"><button>multiplayer</button></a><br>
+<br><a href="./en/test.html"class="titleInput"><button>test</button></a><br>

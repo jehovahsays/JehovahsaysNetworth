@@ -95,7 +95,7 @@ input[type="password"] {
 	<br>
 	<br>
 <br><br>
-<a href="./en/index.html">
+<a href="./index.html">
 <button>PLAY</button>
 <br><br>
 
@@ -142,6 +142,7 @@ Last updated: 3-7-2025 12:38 pm est<br>
 </html>
 
 <?php
+
 // Clean redirect
 //header('Location: ./mobile.html');
 

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>simple buildings</title>
+    <style>
+        body { margin: 0; overflow: hidden; touch-action: none; }
+    </style>
+</head>
+<body>
+
+<script type="importmap">
+    {
+        "imports": {
+            "three": "../examples/build/three.module.js",
+            "three/addons/": "../examples/jsm/"
+        }
+    }
+</script>
+
+<script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+    let camera, scene, renderer, controls;
+
+    function init() {
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xa0a0a0);
+        scene.fog = new THREE.Fog(0xa0a0a0, 50, 200);
+
+        camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 500);
+        camera.position.set(0, 20, 50);
+        camera.lookAt(0, 0, 0);
+
+        renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+
+        const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 1.5);
+        hemiLight.position.set(0, 100, 0);
+        scene.add(hemiLight);
+
+        const dirLight = new THREE.DirectionalLight(0xffffff, 2);
+        dirLight.position.set(30, 50, -30);
+        scene.add(dirLight);
+
+        const ground = new THREE.Mesh(
+            new THREE.PlaneGeometry(200, 200),
+            new THREE.MeshPhongMaterial({ color: 0x666666, depthWrite: false })
+        );
+        ground.rotation.x = -Math.PI / 2;
+        scene.add(ground);
+
+        createCity();
+
+        window.addEventListener('resize', onWindowResize);
+        animate();
+    }
+
+    function createCity() {
+        const numBuildings = 50;
+        const material = new THREE.MeshPhongMaterial({ color: 0x555555 });
+        
+        for (let i = 0; i < numBuildings; i++) {
+            const width = Math.random() * 2 + 1;
+            const height = Math.random() * 10 + 5;
+            const depth = Math.random() * 2 + 1;
+            const geometry = new THREE.BoxGeometry(width, height, depth);
+            const building = new THREE.Mesh(geometry, material);
+            
+            building.position.set(
+                Math.random() * 100 - 50,
+                height / 2,
+                Math.random() * 100 - 50
+            );
+            scene.add(building);
+        }
+    }
+
+    function onWindowResize() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    function animate() {
+        requestAnimationFrame(animate);
+        controls.update();
+        renderer.render(scene, camera);
+    }
+
+    init();
+</script>
+
+</body>
+</html>
