@@ -10,11 +10,14 @@ header("Cross-Origin-Opener-Policy: same-origin");
 header("Cross-Origin-Resource-Policy: same-site");
 //header("Expect-CT: max-age=86400, enforce");
 //header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
+
 // Prevent caching (optional security measure)
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Pragma: no-cache");
+
 // Adding some more layers of security.
 header_remove( "X-Powered-By" );
+header( "Content-Type-Options: nosniff" );
 header( "XSS-Protection: 1; mode=block" );
 header( "X-XSS-Protection: 1; mode=block" );
 header( "Vary: Accept-Encoding" );
@@ -26,9 +29,13 @@ header( "Vary: Accept-Encoding" );
 header( "Expires: 0" );
 header( "Accept-Language: en-US,en;q=0.5" );
 header( "Connection: Keep-alive" );
+
 // Allow requests from any origin (useful during development)
 // In production, you may want to restrict this to specific domains.
+
 header('Access-Control-Allow-Origin: *');
+
+
 // Start output buffering to ensure headers are sent before content
 ob_start();
 // Clear stat cache
@@ -40,7 +47,7 @@ clearstatcache();
  <meta charset="charset=UTF-8">
 <http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Security Headers in HTML -->  
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="X-Frame-Options" content="DENY">
@@ -57,34 +64,51 @@ clearstatcache();
     <meta http-equiv="Cross-Origin-Embedder-Policy" content="require-corp">
     <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin">
     <meta http-equiv="Cross-Origin-Resource-Policy" content="same-site">
-	    <meta http-equiv="Connection" content="Keep-alive">
+	<meta http-equiv="Content-Security-Policy" content="
+    default-src 'self' http: https:;
+    script-src 'self' 'unsafe-inline' 'unsafe-eval' http: https:;
+    style-src 'self' 'unsafe-inline' http: https:;
+    img-src data: http: https:;
+    font-src 'self' http: https:;
+    connect-src http: https:;
+    frame-src 'self' http: https:;"/>
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="cyan" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="black" />
+    <link rel="icon" type="image/png" href="./favicon.ico">
+    <link rel="shortcut icon" href="./favicon.ico" media="(prefers-color-scheme: dark)"/>
+    <link rel="shortcut icon" href="./favicon.ico" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="cyan" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="black" />
+    <meta http-equiv="Set-Cookie" content="HttpOnly">
+    <meta http-equiv="Connection" content="Keep-alive">
     <meta http-equiv="Referer" content="same-origin">
     <meta http-equiv="Content-Type" content="text/html">
+    <!--<meta http-equiv="Expect-CT" content="max-age=86400, enforce">-->
+    <!--<meta http-equiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains">-->
 
-    <title>index</title>
+    <title>Secure Page</title>
 
     <!-- Security in CSS -->
     <style>
-body {
+        body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
-            text-align: center;
+            text-align: left;
             margin: 50px;
         }
-</style>
+    </style>
 	
 </head>
 <body>
-
 <center>
-	<br>
-	<br>
+    <h1>Secure Index.php</h1>
+    <p>This page has all major security headers implemented.</p>
+
 <a href="./search.html">
 <button>SEARCH</button></a>
 <br><br>or<br><br>
 <a href="./index.html">
 <button>PLAY</button></a>
-<br><br>
 
     <!-- JavaScript Security -->
     <script>
@@ -113,25 +137,23 @@ body {
             }
         });
 		</script>
-</center>
-
-<center>
-<br><br><br><br>
+		
+<br><br>
 Webmaster: Morgan Shatee byers<br><br>
 github repository: <a href="https://github.com/jehovahsays/mev">view github repository</a><br><br>
 youtube channel: <a href="https://youtube.com/@jehovahsaysnetworth?si=5DgR29Mx-y9GcEuQ">view youtube channel</a><br><br>
 donate via cashapp: <a href="https://cash.app/$morgansbyers">view cashapp</a><br><br><br>
-Last updated: 3-7-2025 12:38 pm est<br>
+Last updated: 3-12-2025 12:50 am est<br>
 </div>
 </center>
+		
 		   
 </body>
 </html>
 
 <?php
-
 // Clean redirect
-//header('Location: ./mobile.html');
+//header("Location: ./index.html");
 
 exit();
 
