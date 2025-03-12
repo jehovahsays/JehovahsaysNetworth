@@ -1,45 +1,35 @@
 MEV
 Multi Edit Vandalism
-
+<br>
 <br>
 Developer mode
 <br>
-visit this site
+Visit this website on http with more editing power.
 http://morgansbyers.scienceontheweb.net
-------------
 <br>
-<p>use one thumb to look up, down, left, and right</p>
-<p>use two thumbs to zoom in and zoom out</p>
-<p>use two thumbs to pull or push entire map</p>
-<p>up,down,left,right,forward,and backward</p>
-------------
 <br>
-real time 3d data visualization tool
+Or visit site on https with less editing power.
+https://jehovahsays.github.io/mev/
 <br>
-------------
 <br>
-mobile browser based game
-<br>
-------------
-<br>
-massive multiplayer open wolrd mobile game
-<br>
-------------
-<br>
-vandal can
-<br> 
-create and delete keyword pages
-<br>
-------------
-<br>
-officer can
-<br> 
-create, delete, and protect keyword pages
-<br>
-------------
-<br>
-military can
-delete protected keyword pages
-<br>
-------------
-<br>
+Before 
+open source developers 
+download and install this project, 
+they should understand the project's purpose, 
+licensing terms, 
+and any specific 
+prerequisites or dependencies 
+mentioned in the project's documentation, 
+ensuring that you have the necessary tools 
+and understanding before you begin to
+reverse engineering this github repository
+
+Prerequisite Check:
+<br><br>
+Operating System Compatibility:
+<br><br>
+Hardware Requirements:
+<br><br>
+Software Dependencies:
+<br><br> 
+Version Compatibility:

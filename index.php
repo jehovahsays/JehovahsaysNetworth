@@ -57,20 +57,9 @@ clearstatcache();
     <meta http-equiv="Cross-Origin-Embedder-Policy" content="require-corp">
     <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin">
     <meta http-equiv="Cross-Origin-Resource-Policy" content="same-site">
-	<meta http-equiv="Content-Security-Policy" content="
-    default-src 'self' http: https:;
-    script-src 'self' 'unsafe-inline' 'unsafe-eval' http: https:;
-    style-src 'self' 'unsafe-inline' http: https:;
-    img-src data: http: https:;
-    font-src 'self' http: https:;
-    connect-src http: https:;
-    frame-src 'self' http: https:;"/>
-    <!--<meta http-equiv="Set-Cookie" content="HttpOnly">-->
-    <meta http-equiv="Connection" content="Keep-alive">
+	    <meta http-equiv="Connection" content="Keep-alive">
     <meta http-equiv="Referer" content="same-origin">
     <meta http-equiv="Content-Type" content="text/html">
-    <!--<meta http-equiv="Expect-CT" content="max-age=86400, enforce">-->
-    <!--<meta http-equiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains">-->
 
     <title>index</title>
 
@@ -82,10 +71,6 @@ body {
             text-align: center;
             margin: 50px;
         }
-input[type="password"] {
-              font-family: Arial, sans-serif;
-}
-
 </style>
 	
 </head>
@@ -94,9 +79,11 @@ input[type="password"] {
 <center>
 	<br>
 	<br>
-<br><br>
+<a href="./search.html">
+<button>SEARCH</button></a>
+<br><br>or<br><br>
 <a href="./index.html">
-<button>PLAY</button>
+<button>PLAY</button></a>
 <br><br>
 
     <!-- JavaScript Security -->

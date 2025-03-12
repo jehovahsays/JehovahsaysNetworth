@@ -53,11 +53,34 @@ foreach($_POST as $variable => $value)
 	foreach($_POST as $variable => $value) 
 {
 	$value = str_replace(' ', '_', $value);
-	$handle = fopen("./en/index.html", "a");
+	$handle = fopen("./index.html", "a");
 	fwrite($handle, 
 	  "<br><a href=" 
 	. "\"" 
-	. "./" 
+	. "./en/" 
+	. $value
+	. ".html"
+	. "\"" 
+	. "class=" 
+	. "\"" 
+	. "titleInput" 
+	. "\"" 
+	. ">" 
+	. "<button>"
+	. $value
+    . "</button>"	
+	. "</a><br>"
+	. "\r\n");
+}
+
+	foreach($_POST as $variable => $value) 
+{
+	$value = str_replace(' ', '_', $value);
+	$handle = fopen("./search.html", "a");
+	fwrite($handle, 
+	  "<br><a href=" 
+	. "\"" 
+	. "./en/" 
 	. $value
 	. ".html"
 	. "\"" 
@@ -286,7 +309,7 @@ foreach($_POST as $variable => $value)
 . "$value"
 . "</a>            "
 . "<a "
-. "href=\"./index.html\" "
+. "href=\"../index.html\" "
 . "class=\"navbar-link\">"
 . "index"
 . "</a>            "
