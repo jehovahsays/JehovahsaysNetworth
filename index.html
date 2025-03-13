@@ -5,7 +5,13 @@
 <meta name=viewport content="width=device-width, initial-scale=1.0">
 <meta name=description content="keyword search">
 <title>index</title>
-<style>body{font-family:"Open Sans",sans-serif;font-size:16px;background-color:#fff;color:#000}.navbar{position:sticky;top:0;background-color:#212529;color:#fff;padding:10px;text-align:center}.navbar a{color:#fff;text-decoration:none;padding:10px}.navbar a:hover{color:#0d6efd}.content{text-align:center;padding:20px}img{max-width:100%;height:auto}button{background:#0d6efd;color:#fff;padding:10px 15px;border:0;border-radius:5px;cursor:pointer}button:hover{background:#0b5ed7}@media(max-width:768px){body{font-size:14px}}</style>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:;">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="X-Frame-Options" content="DENY">
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+<meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+<style>body{font-family:sans-serif;font-size:16px;background:#fff;color:#000}.navbar{position:sticky;top:0;background:#212529;color:#fff;padding:10px;text-align:center}.navbar a{color:#fff;text-decoration:none;padding:10px}.navbar a:hover{color:#0d6efd}.content{text-align:center;padding:20px}img{max-width:100%;height:auto}button{background:#0d6efd;color:#fff;padding:10px 15px;border:0;border-radius:5px;cursor:pointer}button:hover{background:#0b5ed7}@media(max-width:768px){body{font-size:14px}}</style>
+<script>if(location.protocol!=='https:'){document.body.innerHTML="<h1>Warning: This page is not secure.</h1><p>Please avoid entering sensitive data.</p>";}</script>
 </head>
 <body>
 <header class=navbar>
@@ -18,15 +24,11 @@
 <form id=secure-form action=script.php method=POST>
 <input type=text name=keyword id=keyword placeholder=search required>
 <button type=submit>Search</button>
-<noscript>
-<label for=secure-form-answer-Human>Enter "Human":</label>
-<input type=text name=secure-form-answer-Human id=secure-form-answer-Human>
-</noscript>
 </form>
 </main>
-<script>document.addEventListener("DOMContentLoaded",function(){console.log("Page Loaded")});</script>
-<script>document.addEventListener("DOMContentLoaded",function(){let metaCSP=document.createElement('meta');metaCSP.httpEquiv="Content-Security-Policy";metaCSP.content="default-src 'self'; script-src 'self' http: https:; style-src 'self'; img-src 'self' data:;";document.head.appendChild(metaCSP);var form=document.getElementById("secure-form");var honeypot=document.createElement("input");honeypot.type="hidden";honeypot.name="secure-form-answer-Human";honeypot.value="Human";form.appendChild(honeypot);var noscriptField=document.getElementById("secure-form-answer-Human");if(noscriptField){noscriptField.parentNode.removeChild(noscriptField);}});document.addEventListener("paste",(event)=>{event.preventDefault();alert("Pasting is disabled for security reasons.");});document.addEventListener("contextmenu",(event)=>event.preventDefault());document.addEventListener("keydown",function(event){if(event.ctrlKey&&(event.key==="U"||event.key==="S"||event.key==="H")){event.preventDefault();alert("Keyboard shortcuts are disabled for security.");}});</script>
+<script>document.addEventListener("DOMContentLoaded",()=>{console.log("Page Loaded")});</script>
 </body>
+</html>
 <br><a href=./en/about.html class=titleInput><button>about</button></a><br>
 <br><a href=./en/tv.html class=titleInput><button>tv</button></a><br>
 <br><a href=./en/radio.html class=titleInput><button>radio</button></a><br>
