@@ -5,7 +5,7 @@ Multi Edit Vandalism
 Developer mode
 <br>
 Visit this website on http with more editing power.
-http://morgansbyers.scienceontheweb.net
+http://morgansbyers.scienceontheweb.net/
 <br>
 <br>
 Or visit site on https with less editing power.
