@@ -1,4 +1,6 @@
 <?php
+require 'rss.php'; 
+header('Location: ./index.html');
 // Start output buffering to prevent headers already sent errors
 ob_start();
 

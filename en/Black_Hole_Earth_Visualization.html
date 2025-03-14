@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Black Hole Earth Visualization</title>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        canvas { display: block; }
+		.text {font-size: 5px;}
+    </style>
+</head>
+
+<script>
+var msg = new SpeechSynthesisUtterance('The Black Hole Earth Theory: A Cosmic Transformation [Opening Scene: The Hidden History of Earth] Narrator: What if everything we know about Earth… is only part of the story? Long before it was a planet, Earth was something far more powerful—something that defied time, space, and even reality itself. A black hole. [Scene 2: Earth as a Black Hole] Narrator: In the distant past, Earth was a singularity—a collapsed star, a gravitational force so strong that not even light could escape. It was the center of its own galaxy, consuming everything in its path. But then, something changed. [Scene 3: The Galactic Collision] Narrator: As this black hole drifted through space, it passed near the Milky Way\'s supermassive black hole. The unimaginable forces at play did something extraordinary… They turned Earth inside out. [Scene 4: The Inside-Out Transformation] Narrator: This event didn\'t destroy the black hole—it transformed it. Its core, once a singularity, became something new… something we now call Earth. But that\'s not all. [Scene 5: The Suns and the Failed Star] Narrator: When Earth was inverted, it brought a sun with it—its own internal energy source. The Sun we see today? Another star that should have been swallowed but instead remained outside the event. And Jupiter? A failed sun, a remnant of the transformation that never ignited. Everything in our solar system… is connected to this cosmic rebirth. [Scene 6: The Asteroid Belt – The Edge of a Galaxy] Narrator: The asteroid belt? Not just random space debris. It is the outer edge of the galaxy Earth once ruled, still orbiting, a cosmic fingerprint of this incredible event. [Scene 7: Life and the Singularity] Narrator: And what about life itself? What if every living thing on Earth was once pulled into the singularity… Compressed… reshaped… And then released when the black hole was turned inside out? Could this explain why life on Earth is so unique, diverse, and resilient? [Closing Scene: A New Perspective] Narrator: Our planet is more than rock, water, and atmosphere. It is the echo of a black hole\'s final transformation… A paradox… a mystery… A piece of the universe\'s deepest secrets, hidden in plain sight. [Text on Screen: "The Universe is full of mysteries… What do you believe?"]');
+window.speechSynthesis.speak(msg);
+</script>
+
+<body l style="background-color:white;">   
+
+<script type="importmap">
+    {
+        "imports": {
+			"three": "../examples/build/three.module.js",
+            "three/webgpu": "../examples/build/three.webgpu.js",
+                "three/addons/": "../examples/jsm/"
+        }
+    }
+</script>
+
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        // Scene setup
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color('gray');  // Space background
+
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 2, 5);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
+        scene.add(ambientLight);
+
+        const pointLight = new THREE.PointLight(0xffaa00, 2, 50);
+        pointLight.position.set(0, 2, 5);
+        scene.add(pointLight);
+
+        // Black Hole (Sphere with Event Horizon Effect)
+        const blackHoleGeometry = new THREE.SphereGeometry(1, 32, 32);
+        const blackHoleMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
+        const blackHole = new THREE.Mesh(blackHoleGeometry, blackHoleMaterial);
+        scene.add(blackHole);
+
+        // Accretion Disk (Rotating Particles)
+        const diskGeometry = new THREE.RingGeometry(1.2, 1.8, 64);
+        const diskMaterial = new THREE.MeshBasicMaterial({ color: 0xff5500, side: THREE.DoubleSide });
+        const accretionDisk = new THREE.Mesh(diskGeometry, diskMaterial);
+        accretionDisk.rotation.x = Math.PI / 2;
+        scene.add(accretionDisk);
+
+        // Asteroid Belt (Instanced Mesh)
+        const asteroidGeometry = new THREE.SphereGeometry(0.05, 6, 6);
+        const asteroidMaterial = new THREE.MeshBasicMaterial({ color: 0xaaaaaa });
+        const asteroidBelt = new THREE.Group();
+
+        for (let i = 0; i < 500; i++) {
+            const asteroid = new THREE.Mesh(asteroidGeometry, asteroidMaterial);
+            const angle = Math.random() * Math.PI * 2;
+            const radius = 2.5 + Math.random() * 1.5;
+            asteroid.position.set(Math.cos(angle) * radius, (Math.random() - 0.5) * 0.2, Math.sin(angle) * radius);
+            asteroidBelt.add(asteroid);
+        }
+        scene.add(asteroidBelt);
+
+        // Animation Loop
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Rotate elements
+            blackHole.rotation.y += 0.002;
+            accretionDisk.rotation.z += 0.005;
+            
+            asteroidBelt.children.forEach(asteroid => {
+                asteroid.rotation.y += 0.01;
+            });
+
+            renderer.render(scene, camera);
+        }
+
+        // Controls
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        animate();
+
+        // Handle Window Resize
+        window.addEventListener('resize', () => {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        });
+    </script>
+</body>
+</html>
