@@ -1,87 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="charset=UTF-8">
+ <meta charset="charset=UTF-8">
 <http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-  <!-- Security Headers in HTML -->  
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta http-equiv="X-Frame-Options" content="DENY">
-    <meta http-epuiv="X-XSS-Protection" content="1; mode=block">
-    <meta charset="charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta http-equiv="Cache-Control" content="private, no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <meta http-equiv="Clear-Site-Data" content="*">
-    <meta http-equiv="Referrer-Policy" content="same-origin">
-    <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
-    <meta http-equiv="Cross-Origin-Embedder-Policy" content="require-corp">
-    <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin">
-    <meta http-equiv="Cross-Origin-Resource-Policy" content="same-site">
-<style>
-input[type="text"] {
-  font-family: monospace;
-  font-size: 10px;
-  color: peru;
-}
-footer {
-	position:fixed;
-	top:250px;
-	right:55px;
-	width:15vw;
-}
-
-
-	
-}
-filterInput {
-        list-style: none;
-        padding: 0px;
-        margin: 0px;
-		position: fixed;
-	    top: 0px;
-        left: 0px;			
-}
-
-.titleInput {
-        margin: 0px;
-	    position: absolute;		
-	    top: 20px;
-        left: 250px;
-        font-size: 1.0em;
-        padding: 0px;
-        animation: fadeIn 0.5s ease-in-out;
-} 
-
-.titleInput:last-child {        
-        margin: 0px;
-	    position: absolute;		
-	    top: 20px;
-        left: 250px;
-        font-size: 1.0em;
-        padding: 0px;
-        border-bottom: none;
-}
-
-@keyframes fadeIn {
-   from {
-        opacity: 0;
-        transform: translateY(-10px);
-}
-   to   {
-        opacity: 1;
-        transform: translateY(0);
-}
-  }
-}  
-</style>
- 
-	
-	
-
+    <meta http-equiv="Clear-Site-Data" content="*">	
 	<style>
         body { margin: 0; overflow: hidden; touch-action: none; }
         
@@ -155,72 +84,13 @@ filterInput {
 }
 	</style>
 	
-	
-	
-<title>index</title>	
+<title>video game</title>	
 		
 </head>
 
 <body>  
 
 		<div id="info"></div>
-    <!-- JavaScript Security -->
-    <script>
-        // Enforce strict CSP dynamically (if applicable)
-        //document.addEventListener("DOMContentLoaded", function() {
-            //let metaCSP = document.createElement('meta');
-            //metaCSP.httpEquiv = "Content-Security-Policy";
-            //metaCSP.content = "default-src 'self'; script-src 'self' http: https:; style-src 'self'; img-src 'self' data:;";
-            //document.head.appendChild(metaCSP);
-        //});
-
-        // Prevent pasting malicious code into input fields
-        document.addEventListener("paste", (event) => {
-            event.preventDefault();
-            alert("Pasting is disabled for security reasons.");
-        });
-
-        // Disable right-click (optional)
-        document.addEventListener("contextmenu", (event) => event.preventDefault());
-
-        // Prevent keystroke logging attempts
-        document.addEventListener("keydown", function(event) {
-            if (event.ctrlKey && (event.key === "U" || event.key === "S" || event.key === "H")) {
-                event.preventDefault();
-                alert("Keyboard shortcuts are disabled for security.");
-            }
-        });
-		</script>
-				
-		 		 <form
-id="secure-form-answer"
-action="../api.php" 
-method="post">
-<input
-style="position:fixed;top:70px;left:20px;height:25px;width:180px;"
-id="filterInput"
-onkeyup="titleInput()"
-autocomplete="true"
-autocorrect="off"  
-autocapitalize="off" 
-spellcheck="true"
-type="text" 
-name="secure-form-answer-Human"
-maxlength="524288" 
-value=""
-aria-label="search"  
-placeholder="search database" 
-x-webkit-speech
-required>
-
-<noscript>
-<label 
-for="secure-form-answer-Human">
-&#x48;&#x75;&#x6D;&#x61;&#x6E;
-</label>
-</noscript>
-</form>		
-		
         
         <!-- Orbit controls info display -->
         <div id="orbit-controls-info">
@@ -948,8 +818,7 @@ window.speechSynthesis.speak(msg);
   
 }
 </script>
-	
-  
+ 
 </body>
 </html>
 

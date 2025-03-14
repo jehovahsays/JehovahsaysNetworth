@@ -4,104 +4,76 @@
     <title>My Website Feed</title>
     <link>http://localhost/</link>
     <description>Latest updates from my website</description>
-    <lastBuildDate>Fri, 14 Mar 2025 15:16:48 +0000</lastBuildDate>
-    <item>
-      <title>map</title>
-      <link>http://localhost/en/map.html</link>
-      <description>File: map.html</description>
-      <pubDate>Fri, 14 Mar 2025 15:16:23 +0000</pubDate>
-      <guid isPermaLink="false">http://localhost/en/map.html?t=1741965383</guid>
-    </item>
-    <item>
-      <title>video_game</title>
-      <link>http://localhost/en/video_game.html</link>
-      <description>File: video_game.html</description>
-      <pubDate>Fri, 14 Mar 2025 15:16:17 +0000</pubDate>
-      <guid isPermaLink="false">http://localhost/en/video_game.html?t=1741965377</guid>
-    </item>
-    <item>
-      <title>multiplayer</title>
-      <link>http://localhost/en/multiplayer.html</link>
-      <description>File: multiplayer.html</description>
-      <pubDate>Fri, 14 Mar 2025 15:16:01 +0000</pubDate>
-      <guid isPermaLink="false">http://localhost/en/multiplayer.html?t=1741965361</guid>
-    </item>
-    <item>
-      <title>Delete_misspelled_keywords_</title>
-      <link>http://localhost/en/Delete_misspelled_keywords_.html</link>
-      <description>File: Delete_misspelled_keywords_.html</description>
-      <pubDate>Fri, 14 Mar 2025 14:52:34 +0000</pubDate>
-      <guid isPermaLink="false">http://localhost/en/Delete_misspelled_keywords_.html?t=1741963954</guid>
-    </item>
+    <lastBuildDate>Fri, 14 Mar 2025 17:40:31 +0000</lastBuildDate>
     <item>
       <title>clean</title>
       <link>http://localhost/en/clean.html</link>
       <description>File: clean.html</description>
-      <pubDate>Fri, 14 Mar 2025 14:18:34 +0000</pubDate>
-      <guid isPermaLink="false">http://localhost/en/clean.html?t=1741961914</guid>
+      <pubDate>Fri, 14 Mar 2025 17:40:10 +0000</pubDate>
+      <guid isPermaLink="false">http://localhost/en/clean.html?t=1741974010</guid>
     </item>
     <item>
-      <title>automated</title>
-      <link>http://localhost/en/automated.html</link>
-      <description>File: automated.html</description>
-      <pubDate>Fri, 14 Mar 2025 14:17:59 +0000</pubDate>
-      <guid isPermaLink="false">http://localhost/en/automated.html?t=1741961879</guid>
+      <title>video game</title>
+      <link>http://localhost/en/video_game.html</link>
+      <description>File: video_game.html</description>
+      <pubDate>Fri, 14 Mar 2025 17:38:46 +0000</pubDate>
+      <guid isPermaLink="false">http://localhost/en/video_game.html?t=1741973926</guid>
+    </item>
+    <item>
+      <title>joystick and buttons</title>
+      <link>http://localhost/en/joystick_and_buttons.html</link>
+      <description>File: joystick_and_buttons.html</description>
+      <pubDate>Fri, 14 Mar 2025 17:33:05 +0000</pubDate>
+      <guid isPermaLink="false">http://localhost/en/joystick_and_buttons.html?t=1741973585</guid>
     </item>
     <item>
       <title>deleted</title>
       <link>http://localhost/en/deleted.html</link>
       <description>File: deleted.html</description>
-      <pubDate>Fri, 14 Mar 2025 14:17:41 +0000</pubDate>
-      <guid isPermaLink="false">http://localhost/en/deleted.html?t=1741961861</guid>
-    </item>
-    <item>
-      <title>auto</title>
-      <link>http://localhost/en/auto.html</link>
-      <description>File: auto.html</description>
-      <pubDate>Fri, 14 Mar 2025 14:12:19 +0000</pubDate>
-      <guid isPermaLink="false">http://localhost/en/auto.html?t=1741961539</guid>
-    </item>
-    <item>
-      <title>rss</title>
-      <link>http://localhost/en/rss.html</link>
-      <description>File: rss.html</description>
-      <pubDate>Fri, 14 Mar 2025 06:35:35 +0000</pubDate>
-      <guid isPermaLink="false">http://localhost/en/rss.html?t=1741934135</guid>
-    </item>
-    <item>
-      <title>testing</title>
-      <link>http://localhost/en/testing.html</link>
-      <description>File: testing.html</description>
-      <pubDate>Fri, 14 Mar 2025 05:40:38 +0000</pubDate>
-      <guid isPermaLink="false">http://localhost/en/testing.html?t=1741930838</guid>
-    </item>
-    <item>
-      <title>Black Hole Earth Visualization</title>
-      <link>http://localhost/en/Black_Hole_Earth_Visualization.html</link>
-      <description>File: Black_Hole_Earth_Visualization.html</description>
-      <pubDate>Fri, 14 Mar 2025 00:21:49 +0000</pubDate>
-      <guid isPermaLink="false">http://localhost/en/Black_Hole_Earth_Visualization.html?t=1741911709</guid>
-    </item>
-    <item>
-      <title>tv</title>
-      <link>http://localhost/en/tv.html</link>
-      <description>File: tv.html</description>
-      <pubDate>Wed, 12 Mar 2025 17:20:57 +0000</pubDate>
-      <guid isPermaLink="false">http://localhost/en/tv.html?t=1741800057</guid>
-    </item>
-    <item>
-      <title>radio</title>
-      <link>http://localhost/en/radio.html</link>
-      <description>File: radio.html</description>
-      <pubDate>Wed, 12 Mar 2025 17:20:09 +0000</pubDate>
-      <guid isPermaLink="false">http://localhost/en/radio.html?t=1741800009</guid>
+      <pubDate>Fri, 14 Mar 2025 17:30:32 +0000</pubDate>
+      <guid isPermaLink="false">http://localhost/en/deleted.html?t=1741973432</guid>
     </item>
     <item>
       <title>about</title>
       <link>http://localhost/en/about.html</link>
       <description>File: about.html</description>
-      <pubDate>Wed, 12 Mar 2025 16:07:57 +0000</pubDate>
-      <guid isPermaLink="false">http://localhost/en/about.html?t=1741795677</guid>
+      <pubDate>Fri, 14 Mar 2025 16:36:11 +0000</pubDate>
+      <guid isPermaLink="false">http://localhost/en/about.html?t=1741970171</guid>
+    </item>
+    <item>
+      <title>Black Hole Earth Visualization</title>
+      <link>http://localhost/en/Black_Hole_Earth_Visualization.html</link>
+      <description>File: Black_Hole_Earth_Visualization.html</description>
+      <pubDate>Fri, 14 Mar 2025 16:32:33 +0000</pubDate>
+      <guid isPermaLink="false">http://localhost/en/Black_Hole_Earth_Visualization.html?t=1741969953</guid>
+    </item>
+    <item>
+      <title>multiplayer</title>
+      <link>http://localhost/en/multiplayer.html</link>
+      <description>File: multiplayer.html</description>
+      <pubDate>Fri, 14 Mar 2025 16:32:06 +0000</pubDate>
+      <guid isPermaLink="false">http://localhost/en/multiplayer.html?t=1741969926</guid>
+    </item>
+    <item>
+      <title>radio</title>
+      <link>http://localhost/en/radio.html</link>
+      <description>File: radio.html</description>
+      <pubDate>Fri, 14 Mar 2025 16:31:17 +0000</pubDate>
+      <guid isPermaLink="false">http://localhost/en/radio.html?t=1741969877</guid>
+    </item>
+    <item>
+      <title>tv</title>
+      <link>http://localhost/en/tv.html</link>
+      <description>File: tv.html</description>
+      <pubDate>Fri, 14 Mar 2025 16:30:39 +0000</pubDate>
+      <guid isPermaLink="false">http://localhost/en/tv.html?t=1741969839</guid>
+    </item>
+    <item>
+      <title>map</title>
+      <link>http://localhost/en/map.html</link>
+      <description>File: map.html</description>
+      <pubDate>Fri, 14 Mar 2025 16:27:34 +0000</pubDate>
+      <guid isPermaLink="false">http://localhost/en/map.html?t=1741969654</guid>
     </item>
   </channel>
 </rss>

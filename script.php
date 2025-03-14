@@ -1,6 +1,4 @@
 <?php
-require 'rss.php'; 
-header('Location: ./index.html');
 // Start output buffering to prevent headers already sent errors
 ob_start();
 
@@ -136,26 +134,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge;chrome=1\">
     <meta name=\"apple-mobile-web-app-capable\" content=\"yes\">
     <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> 
-    <meta http-equiv=\"X-Content-Type-Options\" content=\"nosniff\">
-    <meta http-equiv=\"X-Frame-Options\" content=\"DENY\">
-    <meta http-equiv=\"X-XSS-Protection\" content=\"1; mode=block\">
     <meta http-equiv=\"Cache-Control\" content=\"private, no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0\">
     <meta http-equiv=\"Pragma\" content=\"no-cache\">
     <meta http-equiv=\"Expires\" content=\"0\">
     <meta http-equiv=\"Clear-Site-Data\" content=\"*\">
-    <meta http-equiv=\"Referrer-Policy\" content=\"same-origin\">
-    <meta http-equiv=\"Permissions-Policy\" content=\"geolocation=(), microphone=(), camera=()\">
-    <meta http-equiv=\"Cross-Origin-Embedder-Policy\" content=\"require-corp\">
-    <meta http-equiv=\"Cross-Origin-Opener-Policy\" content=\"same-origin\">
-    <meta http-equiv=\"Cross-Origin-Resource-Policy\" content=\"same-site\">
-    <meta http-equiv=\"Content-Security-Policy\" content=\"
-        default-src 'self';
-        script-src 'self' 'unsafe-inline';
-        style-src 'self' 'unsafe-inline';
-        img-src 'self' data:;
-        font-src 'self';
-        connect-src 'self';
-        frame-src 'self';\">
     <meta http-equiv=\"Connection\" content=\"Keep-alive\">
     <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">
     <title>" . htmlspecialchars($value, ENT_QUOTES, 'UTF-8') . "</title>
