@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <meta http-equiv="Cache-Control" content="private, no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Clear-Site-Data" content="*">
+    <meta http-equiv="Connection" content="Keep-alive">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name=description content="RSS Feed">
+    <title>rss</title>
+<script src="../rssticker.js" type="application/javascript">
+/***********************************************
+* Advanced RSS Ticker (Ajax invocation)- (c) Dynamic Drive DHTML code library (www.dynamicdrive.com)
+* Please keep this notice intact
+* Visit Dynamic Drive at http://www.dynamicdrive.com/ for this script and 100s more
+***********************************************/
+</script>
+
+<style type="text/css">
+/*Sample CSS to style the two tickers in the demo*/
+.cnnclass{
+width: 100%;
+padding: 1px;
+margin-bottom: 1em;
+filter:progid:DXImageTransform.Microsoft.alpha(opacity=80); /*Specify fade effect in IE. Remove if desired.*/
+-moz-opacity: 0.8; /*Specify fade effect in Firefox. Remove if desired.*/
+}
+.cnnclass a{
+text-decoration: none;
+width: 100%;
+}
+.bbcclass{
+width: 100%;
+padding: 6px;
+background-color: lightyellow;
+border: 1px solid #004A00;
+}
+.rsstitle{ /*shared class for all title elements in an RSS feed*/
+font-weight: bold;
+font-size: 90%;
+width: 100%;
+}
+.rssdate{ /*shared class for all date elements in an RSS feed*/
+color: gray;
+font-size: 90%;
+width: 100%;
+}
+.rssdescription{ /*shared class for all description elements in an RSS feed*/
+width: 100%;
+}
+</style>	
+    <style>
+    html { 
+        height: 100% 
+    }
+
+    body { 
+        min-height: 100% 
+    }
+
+    :root{
+        font-family: "Open Sans", sans-serif;
+        font-size: 16px;
+        font-weight: 400;
+    }
+
+    *{
+        margin: 0;
+        box-sizing: border-box;
+    }
+
+    .page{
+        min-height: 100vh;
+        background-color: #fff;
+        color: #000;
+    }
+
+    .navbar{
+        position: sticky;
+        top: 0;
+        height: 65px;
+        background-color: #212529;
+        color: #fff;
+    }
+
+    .navbar-inner{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        height: 64px;
+        max-width: 1440px;
+        margin-inline: auto;
+        padding-inline: 4%;
+    }
+
+    .navbar-toggler,
+    .navbar-toggler-check{
+        display: none;
+    }
+
+    .navbar-menu{
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+    }
+
+    .navbar-link{
+        display: block;
+        padding: .5rem 1.25rem;
+        text-align: center;
+        text-decoration: none;
+        color: rgba(255, 255, 255, .5);
+        transition: color .15s;
+    }
+
+    .navbar-link:hover{
+        color: #fff;
+    }
+
+    .navbar-link-active{
+        color: #fff;
+        pointer-events: none;
+    }
+
+    .logo{
+        font-family: "Montserrat", sans-serif;
+        font-size: 1.75rem;
+        font-weight: 600;
+        letter-spacing: 1px;
+    }
+
+    .logo-link{
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .button{
+        display: inline-block;
+        padding: .5rem 1.75rem;
+        text-align: center;
+        text-decoration: none;
+        background-color: #0d6efd;
+        color: #fff;
+        border-radius: 9999px;
+        transition: filter .15s;
+    }
+
+    .button:hover{
+        filter: brightness(.9);
+    }
+
+    @media only screen and (max-width:1024px) {
+        .navbar-menu{
+            gap: .5rem;
+        }
+
+        .button{
+            padding-inline: 1.5rem;
+        }
+    }
+
+    @media only screen and (max-width:768px) {
+        :root{
+            font-size: 15px;
+        }
+        
+        .navbar-menu{
+            position: absolute;
+            top: -100vh;
+            left: 0;
+            width: 100%;
+            flex-direction: column;
+            padding: .5rem 4% 1rem;
+            background-color: #212529;
+            z-index: -1;
+            transition: top .5s;
+        }
+
+        .navbar-toggler{
+            display: block;
+            font-size: 1.5rem;
+        }
+
+        .navbar-toggler-check:checked + .navbar-menu{
+            top: 64px;
+        }
+    }
+    </style>
+</head>
+<body class="page" style="background-color:white;">   
+    <header class="navbar">      
+        <div class="navbar-inner">         
+            <h1 class="logo">rss</h1>
+            <i class="fa fa-home"></i>
+
+            <label for="navbar-toggler" class="navbar-toggler">&#9776;
+                <i class="fas fa-bars"></i>         
+            </label>         
+            
+            <input type="checkbox" id="navbar-toggler" class="navbar-toggler-check">         
+            <nav class="navbar-menu">            
+                <a href="./rss.html" class="navbar-link navbar-link-active">rss</a>            
+                <a href="../index.html" class="navbar-link">index</a>            
+            </nav>      
+        </div>   
+    </header>
+
+    <center>
+	<br><br><br>
+		<div style="height: 100%; width: 100%;">
+<script type="text/javascript">
+//rssticker_ajax(RSS_id, cachetime, divId, divClass, delay, optionalswitch)
+//1) RSS_id: "Array key of RSS feed in PHP script"
+//2) cachetime: Time to cache the feed in minutes (0 for no cache)
+//3) divId: "ID of DIV to display ticker in. DIV dynamically created"
+//4) divClass: "Class name of this ticker, for styling purposes"
+//5) delay: delay between message change, in milliseconds
+//6) optionalswitch: "optional arbitrary" string to create additional logic in call back function
+document.write("")
+new rssticker_ajax("localhost", 0, "cnnbox", "cnnclass", 3000, "date+description")
+//document.write("<br />BBC News: (Title+date+description shown)")
+//new rssticker_ajax("BBC", 1200, "ddbox", "bbcclass", 3500, "date+description")
+</script></div>     
+        <script> 
+            // Use try-catch for better error handling with speech synthesis
+            try {
+                var msg = new SpeechSynthesisUtterance('rss'); 
+                window.speechSynthesis.speak(msg); 
+            } catch(e) {
+                console.error('Speech synthesis not supported:', e);
+            }
+        </script>
+
+    </center>
+</body>
+</html>

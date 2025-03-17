@@ -5,10 +5,10 @@
 // -------------------------------------------------------------------
 
 //Relative URL syntax:
-var lastrssbridgeurl="lastrss/bridge.php"
+//var lastrssbridgeurl="lastrss/bridge.php"
 
 //Absolute URL syntax. Uncomment below line if you wish to use an absolute reference:
-//var lastrssbridgeurl="http://"+window.location.hostname+"/lastrss/bridge.php"
+var lastrssbridgeurl="http://"+window.location.hostname+"/lastrss/bridge.php"
 
 ////////////No need to edit beyond here//////////////
 

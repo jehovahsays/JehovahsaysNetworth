@@ -1,59 +1,1381 @@
 <!DOCTYPE html>
-<html lang=en>
+<html lang="en">
 <head>
-<meta charset=UTF-8>
-<meta name=viewport content="width=device-width, initial-scale=1.0">
-<meta name=description content="keyword search">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="keyword search">
 <title>index</title>
-<!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; unsafe-inline; img-src 'self' data:;"> -->
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta http-equiv="X-Frame-Options" content="DENY">
 <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
 <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
-<style>body{font-family:sans-serif;font-size:16px;background:#fff;color:#000}.navbar{position:sticky;top:0;background:#212529;color:#fff;padding:10px;text-align:center}.navbar a{color:#fff;text-decoration:none;padding:10px}.navbar a:hover{color:#0d6efd}.content{text-align:center;padding:20px}img{max-width:100%;height:auto}button{background:#0d6efd;color:#fff;padding:10px 15px;border:0;border-radius:5px;cursor:pointer}button:hover{background:#0b5ed7}@media(max-width:768px){body{font-size:14px}}</style>
+<meta http-equiv="X-XSS-Protection" content="1; mode=block">
+<meta http-equiv="Cache-Control" content="private, no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+<meta http-equiv="Clear-Site-Data" content="*">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      width: 100vw;
+      height: 100vh;
+    }
+	html {
+      width: 100vw;
+      height: 100vh;		
+	}
+  </style>
+
+<style>
+body{font-family:sans-serif;font-size:16px;background:#fff;color:#000}
+.navbar{position:sticky;top:0;background:#212529;color:#fff;padding:10px;text-align:center}
+.navbar a{color:#fff;text-decoration:none;padding:10px}
+.navbar a:hover{color:#0d6efd}
+.content{text-align:center;padding:20px}
+img{max-width:100%;height:auto}
+button{background:#0d6efd;color:#fff;padding:10px 15px;border:0;border-radius:5px;cursor:pointer}
+button:hover{background:#0b5ed7}
+@media(max-width:768px){body{font-size:14px}}
+</style>
+
+<style>
+input[type="text"] {
+  font-family: monospace;
+  font-size: 10px;
+  color: peru;
+}
+
+footer {
+	position:absolute;
+	left:80px;
+	top:55px;
+	width:50vw;
+	height:50vh;	
+}
+
+button {
+	position:fixed;
+	top:10px;
+	left:20px;
+}
+filterInput {
+        list-style: none;
+        padding: 0px;
+        margin: 0px;
+		position: fixed;
+	    top: 20px;
+        left: 20px;			
+}
+
+.titleInput {
+        margin: 0px;
+	    position: fixed;		
+	    top: 20px;
+        left: 20px;
+        font-size: 1.0em;
+        padding: 0px;
+        animation: fadeIn 0.5s ease-in-out;
+} 
+
+.titleInput:last-child {        
+        margin: 0px;
+	    position: fixed;		
+	    top: 20px;
+        left: 20px;
+        font-size: 1.0em;
+        padding: 0px;
+        border-bottom: none;
+}
+
+@keyframes fadeIn {
+   from {
+        opacity: 0;
+        transform: translateY(-10px);
+   }
+   to   {
+        opacity: 1;
+        transform: translateY(0);
+   }
+}
+</style>
+
+<style>
+:root {
+	color-scheme: light dark;
+
+	--background-color: #fff;
+	--secondary-background-color: #f7f7f7;
+
+	--color-blue: #049EF4;
+	--text-color: #444;
+	--secondary-text-color: #9e9e9e;
+
+	--font-size: 16px;
+	--line-height: 26px;
+
+	--border-style: 1px solid #E8E8E8;
+	--header-height: 48px;
+	--panel-width: 300px;
+	--panel-padding: 16px;
+	--icon-size: 20px;
+}
+
+@media (prefers-color-scheme: dark) {
+
+	:root {
+		--background-color: #222;
+		--secondary-background-color: #2e2e2e;
+
+		--text-color: #bbb;
+		--secondary-text-color: #666;
+
+		--border-style: 1px solid #444;
+	}
+
+	#previewsToggler {
+		filter: invert(100%);
+	}
+
+}
+
+@font-face {
+	font-family: 'Roboto Mono';
+	src: local('Roboto Mono'), local('RobotoMono-Regular'), url('./files/RobotoMono-Regular.woff2') format('woff2');
+	font-style: normal;
+	font-weight: 400;
+}
+
+@font-face {
+	font-family: 'Roboto Mono';
+	src: local('Roboto Mono Medium'), local('RobotoMono-Medium'), url('./files/RobotoMono-Medium.woff2') format('woff2');
+	font-style: normal;
+	font-weight: 500;
+}
+
+* {
+	box-sizing: border-box;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+html, body {
+	height: 100%;
+}
+
+html {
+	font-size: calc(var(--font-size) - 1px);
+	line-height: calc(var(--line-height) - 1px);
+}
+
+body {
+	font-family: 'Roboto Mono', monospace;
+	margin: 0px;
+	color: var(--text-color);
+	background-color: var(--background-color);
+}
+
+a {
+	text-decoration: none;
+}
+
+h1 {
+	font-size: 18px;
+	line-height: 24px;
+	font-weight: 500;
+}
+
+h2 {
+	padding: 0;
+	margin: 16px 0;
+	font-size: calc(var(--font-size) - 1px);
+	line-height: var(--line-height);
+	font-weight: 500;
+	color: var(--color-blue);
+}
+
+h3 {
+	margin: 0;
+	font-weight: 500;
+	font-size: calc(var(--font-size) - 1px);
+	line-height: var(--line-height);
+	color: var(--secondary-text-color);
+}
+
+h1 a {
+	color: var(--color-blue);
+}
+
+#header {
+	display: flex;
+	height: var(--header-height);
+	border-bottom: var(--border-style);
+	align-items: center;
+}
+#header h1 {
+	padding-left: var(--panel-padding);
+	flex: 1;
+	display: flex;
+	align-items: center;
+	color: var(--color-blue);
+}
+#header #version {
+	border: 1px solid var(--color-blue);
+	color: var(--color-blue);
+	border-radius: 4px;
+	line-height: 16px;
+	padding: 0px 2px;
+	margin-left: 6px;
+	font-size: .9rem;
+}
+#panel {
+	position: fixed;
+	z-index: 100;
+	left: 0px;
+	width: var(--panel-width);
+	height: 100%;
+	overflow: auto;
+	border-right: var(--border-style);
+	display: flex;
+	flex-direction: column;
+	transition: 0s 0s height;
+}
+
+	#panel #clearSearchButton {
+		width: 48px;
+		height: 48px;
+		display: none;
+		background-color: var(--text-color);
+		background-size: var(--icon-size);
+		-webkit-mask-image: url(./files/ic_close_black_24dp.svg);
+		-webkit-mask-position: 50% 50%;
+		-webkit-mask-repeat: no-repeat;
+		mask-image: url(./files/ic_close_black_24dp.svg);
+		mask-position: 50% 50%;
+		mask-repeat: no-repeat;
+		cursor: pointer;
+		margin-right: 0px;
+	}
+
+	#panel.searchFocused #clearSearchButton {
+		display: block;
+	}
+
+	#panel.searchFocused #language {
+		display: none;
+	}
+
+	#panel.searchFocused #nodes {
+		-webkit-mask-image: none;
+		mask-image: none;
+		background-color: inherit;
+		padding-left: 0;
+	}
+
+	#panel #expandButton {
+		width: 48px;
+		height: 48px;
+		margin-right: 4px;
+		margin-left: 4px;
+		display: none;
+		cursor: pointer;
+		background-color: var(--text-color);
+		background-size: var(--icon-size);
+		-webkit-mask-image: url(./files/ic_menu_black_24dp.svg);
+		-webkit-mask-position: 50% 50%;
+		-webkit-mask-repeat: no-repeat;
+		mask-image: url(./files/ic_menu_black_24dp.svg);
+		mask-position: 50% 50%;
+		mask-repeat: no-repeat;
+	}
+
+	#panel #sections {
+		display: flex;
+		justify-content: center;
+		z-index: 1000;
+		position: relative;
+		height: 100%;
+		align-items: center;
+		font-weight: 500;
+	}
+
+	#panel #sections * {
+		padding: 0 var(--panel-padding);
+		height: 100%;
+		position: relative;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	#panel #sections .selected:after {
+		content: "";
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: -1px;
+		border-bottom: 1px solid var(--text-color);
+	}
+	#panel #sections a {
+		color: var(--secondary-text-color);
+	}
+
+	body.home #panel #sections {
+		display: none;
+	}
+
+
+#panel #inputWrapper {
+	display: flex;
+	align-items: center;
+	height: var(--header-height);
+	padding: 0 0 0 var(--panel-padding);
+	position: relative;
+	background: var(--background-color);
+}
+#panel #inputWrapper:after {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	border-bottom: var(--border-style);
+	content: "";
+}
+
+	#panel #nodes {
+		flex: 1;
+		width: 100%;
+		font-size: 1rem;
+		font-weight: 500;
+		color: var(--text-color);
+		outline: none;
+		border: 0px;
+		background-color: var(--text-color);
+		background-size: var(--icon-size);
+		-webkit-mask-image: url(./files/ic_search_black_24dp.svg);
+		-webkit-mask-position: 0 50%;
+		-webkit-mask-repeat: no-repeat;
+		mask-image: url(./files/ic_search_black_24dp.svg);
+		mask-position: 0 50%;
+		mask-repeat: no-repeat;
+		font-family: 'Roboto Mono', monospace;
+	}
+
+	#panel #language {
+		font-family: 'Roboto Mono', monospace;
+		font-size: 1rem;
+		font-weight: 500;
+		color: var(--text-color);
+		border: 0px;
+		background-image: url(ic_arrow_drop_down_black_24dp.svg);
+		background-size: var(--icon-size);
+		background-repeat: no-repeat;
+		background-position: right center;
+		background-color: var(--background-color);
+		padding: 2px 24px 4px 24px;
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		appearance: none;
+		margin-right: 10px;
+		text-align-last: right;
+	}
+
+		#panel #language:focus {
+			outline: none;
+		}
+
+	#contentWrapper {
+		flex: 1;
+		overflow: hidden;
+		display: flex;
+		flex-direction: column;
+	}
+
+	#panel #content {
+		flex: 1;
+		overflow-y: auto;
+		overflow-x: hidden;
+		-webkit-overflow-scrolling: touch;
+		padding: 0 var(--panel-padding) var(--panel-padding) var(--panel-padding);
+	}
+
+		#panel #content ul {
+			list-style-type: none;
+			padding: 0px;
+			margin: 0px 0 20px 0;
+		}
+		#panel #content ul li {
+			margin: 1px 0;
+		}
+
+		#panel #content h2:not(.hidden) {
+			margin-top: 16px;
+			border-top: none;
+			padding-top: 0;
+		}
+
+		#panel #content h2:not(.hidden) ~ h2 {
+			margin-top: 32px;
+			border-top: var(--border-style);
+			padding-top: 12px;
+		}
+
+	        #panel #content h3 {
+			color: var(--text-color);
+			font-weight: 900;
+		}
+
+		#panel #content a {
+			position: relative;
+			color: var(--text-color);
+		}
+
+		#panel #content a:hover,
+		#panel #content a:hover .spacer,
+		#panel #content .selected {
+			color: var(--color-blue);
+		}
+
+		#panel #content .selected {
+			text-decoration: underline;
+		}
+
+		#panel #content .hidden {
+			display: none !important;
+		}
+
+		#panel #content #previewsToggler {
+			cursor: pointer;
+			float: right;
+			margin-top: 18px;
+			margin-bottom: -18px;
+			opacity: 0.25;
+		}
+
+		#panel #content.minimal .card {
+			background-color: transparent;
+			margin-bottom: 4px;
+		}
+
+		#panel #content.minimal .cover {
+			display: none;
+		}
+
+		#panel #content.minimal .title {
+			padding: 0;
+		}
+
+		#panel #content.minimal #previewsToggler {
+			opacity: 1;
+		}
+
+		body.home #panel #content h2 {
+			margin-bottom: 2px;
+			padding-bottom: 0px;
+			margin-top: 18px;
+			border-top: none;
+			padding-top: 6px;
+		}
+
+.spacer {
+	color: var(--secondary-text-color);
+	margin-left: 2px;
+	padding-right: 2px;
+}
+
+#viewer,
+iframe {
+	position: absolute;
+	border: 0px;
+	left: 0;
+	right: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+iframe#viewer {
+	display: none; /* Workaround: The iframe has white background in Chrome for some reason */
+}
+
+#viewer {
+	padding-left: var(--panel-width);
+}
+
+#button {
+	position: fixed;
+	bottom: 16px;
+	right: 16px;
+
+	padding: 12px;
+	border-radius: 50%;
+	margin-bottom: 0px;
+
+	background-color: #FFF;
+	opacity: .9;
+	z-index: 999;
+
+	box-shadow: 0 0 4px rgba(0,0,0,.15);
+}
+	#button:hover {
+		cursor: pointer;
+		opacity: 1;
+	}
+	#button img {
+		display: block;
+		width: var(--icon-size);
+	}
+
+	#button.text {
+		border-radius: 25px;
+		padding-right: 20px;
+		padding-left: 20px;
+		color: var(--color-blue);
+		opacity: 1;
+		font-weight: 500;
+	}
+
+
+#projects {
+	display: grid;
+	grid-template-columns: repeat(6, 1fr);
+	line-height: 0;
+}
+#projects a {
+	overflow: hidden;
+}
+#projects a img {
+	width: 100%;
+	transform: scale(1.0);
+	transition: 0.15s transform;
+}
+#projects a:hover img {
+	transform: scale(1.08);
+}
+
+
+
+@media all and ( min-width: 1500px ) {
+	#projects {
+		grid-template-columns: repeat(7, 1fr);
+	}
+}
+
+@media all and ( min-width: 1700px ) {
+	:root {
+		--panel-width: 360px;
+		--font-size: 18px;
+		--line-height: 28px;
+		--header-height: 56px;
+		--icon-size: 24px;
+	}
+	#projects {
+		grid-template-columns: repeat(8, 1fr);
+	}
+}
+
+@media all and ( min-width: 1900px ) {
+
+	#projects {
+		grid-template-columns: repeat(9, 1fr);
+	}
+
+}
+
+@media all and ( max-width: 1300px ) {
+	#projects {
+		grid-template-columns: repeat(6, 1fr);
+	}
+}
+
+@media all and ( max-width: 1100px ) {
+	#projects {
+		grid-template-columns: repeat(5, 1fr);
+	}
+}
+
+@media all and ( max-width: 900px ) {
+	#projects {
+		grid-template-columns: repeat(4, 1fr);
+	}
+}
+
+@media all and ( max-width: 700px ) {
+	#projects {
+		grid-template-columns: repeat(3, 1fr);
+	}
+}
+
+
+.card {
+	border-radius: 3px;
+	overflow: hidden;
+	background-color: var(--secondary-background-color);
+	padding-bottom: 6px;
+	margin-bottom: 16px;
+}
+
+.card.selected {
+	box-shadow: 0 0 0 3px var(--color-blue);
+	text-decoration: none !important;
+}
+
+.card .cover {
+	padding-bottom: 56.25%; /* 16:9 aspect ratio */
+	position: relative;
+	overflow: hidden;
+}
+
+.card .cover img {
+	position: absolute;
+	width: 100%;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.card .title {
+	padding: 8px 12px 4px;
+	font-size: calc(var(--font-size) - 1px);
+	font-weight: 500;
+	line-height: calc(var(--line-height) - 6px);
+}
+
+.card .tag {
+	background-color: var(--background-color);
+	color: var(--color-blue);
+	margin-left: 6px;
+	padding: 1px 6px 2px;
+	border-radius: 2px;
+	font-size: calc(var(--font-size) - 2px);
+	line-height: calc(var(--line-height) - 6px);
+}
+
+/* mobile */
+
+@media all and ( max-width: 640px ) {
+
+	:root {
+		--header-height: 56px;
+		--icon-size: 24px;
+	}
+
+	#projects {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	#panel #expandButton {
+		display: block;
+	}
+	#panel {
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 100%;
+		right: 0;
+		z-index: 1000;
+		overflow-x: hidden;
+		transition: 0s 0s height;
+		border: none;
+		height: var(--header-height);
+		transition: 0s 0.2s height;
+	}
+	#panel.open {
+		height: 100%;
+		transition: 0s 0s height;
+	}
+
+	#panelScrim {
+		pointer-events: none;
+		background-color: rgba(0,0,0,0);
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		z-index: 1000;
+		pointer-events: none;
+		transition: .2s background-color;
+	}
+	#panel.open #panelScrim {
+		pointer-events: auto;
+		background-color: rgba(0,0,0,0.4);
+	}
+
+	#contentWrapper {
+		position: absolute;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		background: var(--background-color);
+		box-shadow: 0 0 8px rgba(0,0,0,.1);
+		width: calc(100vw - 60px);
+		max-width: 360px;
+		z-index: 10000;
+		transition: .25s transform;
+		overflow-x: hidden;
+		margin-right: -380px;
+		line-height: 2rem;
+	}
+	#panel.open #contentWrapper {
+		transform: translate3d(-380px, 0 ,0);
+	}
+	#viewer,
+	iframe {
+		left: 0;
+		top: var(--header-height);
+		width: 100%;
+		height: calc(100% - var(--header-height));
+	}
+	#viewer {
+		padding-left: 0;
+	}
+}
+</style>
+
 <script>if(location.protocol!=='https:'){document.body.innerHTML="<h1>Warning: This page is not secure.</h1><p>Please avoid entering sensitive data.</p>";}</script>
+
 </head>
-<body>
-<header class=navbar>
+
+<center>
+<body style="background-color:white;">
+
+<header class="navbar">
 <nav aria-label="Main navigation">
-<a href=index.html>Home</a><br><br>
-<a href=rss.html>RSS Feed</a>
+<br><br>
+<a href="https://cash.app/$morgansbyers">
+ Donate to my cash app
+</a>
+
 </nav>
 </header>
-<main class=content>
-<h1>Search Keywords</h1>
-<form id=secure-form action=script.php method=POST>
-<input type=text name=keyword id=keyword placeholder=search required>
-<button type=submit>Search</button>
-</form>
-</main>
-<script>document.addEventListener("DOMContentLoaded",()=>{console.log("Page Loaded")});</script>
-<center>
 
-Webmaster: Morgan Shatee byers<br><br>
-github repository: <a href="https://github.com/jehovahsays/mev">view github repository</a><br><br>
-youtube channel: <a href="https://youtube.com/@jehovahsaysnetworth?si=5DgR29Mx-y9GcEuQ">view youtube channel</a><br><br>
-donate via cashapp: <a href="https://cash.app/$morgansbyers">view cashapp</a><br><br><br>
-Last updated: 3-14-2025 11:28 am est<br>
+<main class="content">
+<script>
+function titleInput() {
+	
+  let input = document.getElementById('filterInput').value;
+
+  input = input.toLowerCase();
+
+  let x = document.getElementsByClassName('titleInput');
+ 
+  for (i = 0; i < x.length; i++) {
+
+    if (!x[i].innerHTML.toLowerCase().includes(input)) {
+
+      x[i].style.display = "none";
+
+    }
+
+    else {
+
+      x[i].style.display = "list-item";
+
+    }
+
+  }
+  
+var msg = new SpeechSynthesisUtterance(input); 
+window.speechSynthesis.speak(msg);   
+  
+}
+</script>    
+
+<div id="panel"></div>
+
+<div id="expandButton"></div>
+			
+<div id="panelScrim"></div>
+
+<div id="contentWrapper" >
+			
+<div id="inputWrapper">
+
+<form id="secure-form" action="script.php" method="POST">
+<div id="inputWrapper">
+
+<input 
+style="position:fixed;top:15px;left:100px;height:25px;width:180px;"
+id="filterInput"
+onkeyup="titleInput()"
+type="text" 
+name="keyword" 
+placeholder="search" 
+autocomplete="true" 
+autocorrect="off" 
+autocapitalize="off" 
+spellcheck="true" 
+aria-label="search" 
+required>
+<button style="position:fixed;top:10px;left:290px;" type="submit">Search</button>
+</form>
+
 </div>
-</center>
+</div>										
+
+<footer>
+<div id="clearSearchButton"></div>
+
+<select id="language">
+<option value="en">en</option>
+</select>
+				
+<div id="content"></div>
+</div>
+</div>
+
+<iframe name="viewer" style="position:fixed;top:90px;width:380px;left:0px;background-color:gray;"></iframe>	
+
+<a rel="nofollow" style="display:none;" href="/blackhole/">
+
+
+<script>
+// Three js short urls hash
+
+		const panel = document.querySelector( '#panel' );
+		const content = document.querySelector( '#content' );
+		const expandButton = document.querySelector( '#expandButton' );
+		const clearSearchButton = document.querySelector( '#clearSearchButton' );
+		const panelScrim = document.querySelector( '#panelScrim' );
+		const filterInput = document.querySelector( '#filterInput' );
+		let iframe = document.querySelector( 'iframe' );
+
+		const pageProperties = {};
+		const titles = {};
+		const categoryElements = [];
+
+		let navigation;
+
+		init();
+
+		async function init() {
+
+			const list = await ( await fetch( './index.json' ) ).json();
+
+			const hash = window.location.hash.substring( 1 );
+
+			// Localization
+
+			let language = 'en';
+
+			const hashLanguage = /^(.*?)\//.exec( hash );
+
+			if ( hashLanguage ) {
+
+				language = hashLanguage[ 1 ];
+
+			}
+
+			const languageSelect = document.querySelector( '#language' );
+			languageSelect.value = language;
+			languageSelect.addEventListener( 'change', function () {
+
+				setLanguage( this.value );
+
+			} );
+
+			function setLanguage( value ) {
+
+				language = value;
+
+				createNavigation( list, language );
+				updateFilter();
+				autoChangeUrlLanguage( language );
+
+			}
+
+			// Functionality for hamburger button (on small devices)
+
+			expandButton.onclick = function ( event ) {
+
+				event.preventDefault();
+				panel.classList.toggle( 'open' );
+
+			};
+
+			panelScrim.onclick = function ( event ) {
+
+				event.preventDefault();
+				panel.classList.toggle( 'open' );
+
+			};
+
+
+			// Functionality for search/filter input field
+
+			filterInput.onfocus = function () {
+
+				panel.classList.add( 'titleInput' );
+
+			};
+
+			filterInput.onblur = function () {
+
+				if ( filterInput.value === '' ) {
+
+					panel.classList.remove( 'titleInput' );
+
+				}
+
+			};
+
+			filterInput.oninput = function () {
+
+				updateFilter();
+
+			};
+
+			clearSearchButton.onclick = function () {
+
+				filterInput.value = '';
+				updateFilter();
+				filterInput.focus();
+
+			};
+
+			// Activate content and title change on browser navigation
+
+			window.onpopstate = function () {
+
+				updateNavigation();
+				createNewIframe();
+
+			};
+
+			// Create the navigation panel and configure the iframe
+
+			createNavigation( list, language );
+			createNewIframe();
+
+			// Handle search query
+
+			filterInput.value = extractQuery();
+
+			if ( filterInput.value !== '' ) {
+
+				panel.classList.add( 'titleInput' );
+
+				updateFilter();
+
+			}
+
+		}
+
+		// Navigation Panel
+
+		function createLink( pageName, pageURL ) {
+
+			const link = document.createElement( 'a' );
+			const url = new URL( pageURL, window.location.href );
+			url.pathname += '.html';
+			link.href = url.href;
+			link.textContent = pageName;
+			link.setAttribute( 'target', 'viewer' );
+			link.addEventListener( 'click', function ( event ) {
+
+				if ( event.button !== 0 || event.ctrlKey || event.altKey || event.metaKey ) return;
+
+				window.location.hash = pageURL;
+				panel.classList.remove( 'open' );
+
+				updateNavigation();
+
+			} );
+
+			return link;
+
+		}
+
+		function createNavigation( list, language ) {
+
+			if ( navigation !== undefined ) {
+
+				content.removeChild( navigation );
+
+			}
+
+			// Create the navigation panel using data from list.js
+
+			navigation = document.createElement( 'div' );
+			content.appendChild( navigation );
+
+			if ( language === 'ar' ) {
+
+				navigation.style.direction = 'rtl';
+
+			}
+
+			const categories = list[ language ];
+			const selectedPage = window.location.hash.substring( 1 ).replace( /\.html$/, '' );
+
+			for ( const category in categories ) {
+
+				// Create categories
+
+				const pages = categories[ category ];
+
+				const categoryContainer = document.createElement( 'div' );
+				navigation.appendChild( categoryContainer );
+
+				const categoryHead = document.createElement( 'h3' );
+				categoryHead.textContent = category;
+				categoryContainer.appendChild( categoryHead );
+
+				const categoryContent = document.createElement( 'ul' );
+				categoryContainer.appendChild( categoryContent );
+
+				for ( const pageName in pages ) {
+
+					// Create page links
+
+					const pageURL = pages[ pageName ];
+
+					// Localisation
+
+					const listElement = document.createElement( 'li' );
+					categoryContent.appendChild( listElement );
+
+					const linkElement = createLink( pageName, pageURL );
+					listElement.appendChild( linkElement );
+
+					// select current page
+
+					if ( pageURL === selectedPage ) {
+
+						linkElement.classList.add( 'selected' );
+
+					}
+
+					// Gather the main properties for the current subpage
+
+					pageProperties[ pageName ] = {
+						category: category,
+						pageURL: pageURL,
+						linkElement: linkElement
+					};
+
+					// Gather the document titles (used for easy access on browser navigation)
+
+					titles[ pageURL ] = pageName;
+
+				}
+
+				// Gather the category elements for easy access on filtering
+
+				categoryElements.push( categoryContent );
+
+			}
+
+		}
+
+		function updateNavigation() {
+
+			const selectedPage = window.location.hash.substring( 1 ).replace( /\.html$/, '' );
+
+			content.querySelectorAll( 'a' ).forEach( function ( item ) {
+
+				if ( item.href.includes( selectedPage ) ) {
+
+					item.classList.add( 'selected' );
+
+				} else {
+
+					item.classList.remove( 'selected' );
+
+				}
+
+			} );
+
+		}
+
+		// Auto change language url. If a reader open a document in English, when they click "zh", the document they read will auto change into Chinese version
+
+		function autoChangeUrlLanguage( language ) {
+
+			const hash = location.hash;
+			if ( hash === '' ) return;
+			const docLink = hash.slice( hash.indexOf( '/' ) );
+			location.href = '#' + language + docLink;
+
+		}
+
+		// Filtering
+
+		function extractQuery() {
+
+			const search = window.location.search;
+
+			if ( search.indexOf( '?q=' ) !== - 1 ) {
+
+				return decodeURI( search.slice( 3 ) );
+
+			}
+
+			return '';
+
+		}
+
+		function updateFilter() {
+
+			let v = filterInput.value.trim();
+			v = v.replace( /\s+/gi, ' ' ); // replace multiple whitespaces with a single one
+
+			if ( v !== '' ) {
+
+				window.history.replaceState( {}, '', '?q=' + v + window.location.hash );
+
+			} else {
+
+				window.history.replaceState( {}, '', window.location.pathname + window.location.hash );
+
+			}
+
+			//
+
+			const regExp = new RegExp( filterInput.value, 'gi' );
+
+			for ( let pageName in pageProperties ) {
+
+				const linkElement = pageProperties[ pageName ].linkElement;
+				const categoryClassList = linkElement.parentElement.classList;
+				const filterResults = pageName.match( regExp );
+
+				if ( filterResults !== null && filterResults.length > 0 ) {
+
+					pageName = pageName.replaceAll( regExp, '<b>$&</b>' );
+
+					categoryClassList.remove( 'hidden' );
+					linkElement.innerHTML = pageName;
+
+				} else {
+
+					// Hide all non-matching page names
+
+					categoryClassList.add( 'hidden' );
+
+				}
+
+			}
+
+			displayFilteredPanel();
+
+		}
+
+		function displayFilteredPanel() {
+
+			// Show/hide categories depending on their content
+			// First check if at least one page in this category is not hidden
+
+			categoryElements.forEach( function ( category ) {
+
+				const pages = category.children;
+				const pagesLength = pages.length;
+				const sectionClassList = category.parentElement.classList;
+
+				let hideCategory = true;
+
+				for ( let i = 0; i < pagesLength; i ++ ) {
+
+					const pageClassList = pages[ i ].classList;
+
+					if ( ! pageClassList.contains( 'hidden' ) ) {
+
+						hideCategory = false;
+
+					}
+
+				}
+
+				// If and only if all page names are hidden, hide the whole category
+
+				if ( hideCategory ) {
+
+					sectionClassList.add( 'hidden' );
+
+				} else {
+
+					sectionClassList.remove( 'hidden' );
+
+				}
+
+			} );
+
+		}
+
+		// Routing
+
+		function setUrl( href ) { // eslint-disable-line no-undef
+
+			// yea I know this is hacky.
+			const re = /^(\/(?:index\/|docs\/#?))(.*?)$/;
+			const url = new URL( href );
+
+			if ( url.origin === window.location.origin ) {
+
+				const hrefNoOrigin = url.href.slice( url.origin.length );
+				const m = re.exec( hrefNoOrigin );
+				const [ , base, path ] = m;
+				if ( base.includes( 'index' ) ) {
+
+ 					const newHash = `#${ path.replace( '.html', '' ) }`;
+					// Only create new iframe if we're actually changing pages.
+					// We could just be going to an anchor on the same page.
+					const newPrefix = newHash.split( '#' )[ 1 ];
+					const oldPrefix = window.location.hash.split( '#' )[ 1 ];
+
+					if ( newPrefix === oldPrefix ) {
+
+						const newUrl = new URL( window.location.href );
+						newUrl.hash = newHash;
+						window.history.pushState( {}, '', newUrl.href );
+
+					} else {
+
+						window.location.hash = newHash;
+						updateNavigation();
+						createNewIframe();
+
+					}
+
+					return;
+
+				}
+
+			}
+
+			window.location.href = href;
+
+		}
+
+		function setTitle( title ) { // eslint-disable-line no-undef
+
+			document.title = `${title} - index.html root`;
+
+		}
+
+		function createNewIframe() {
+
+			// Change the content displayed in the iframe
+			// First separate the member part of the fragment (if existing)
+
+			const hash = window.location.hash.substring( 1 );
+			const splitHash = decomposePageName( hash, '.', '#' );
+
+			// Creating a new Iframe instead of assigning a new src is
+			// a cross-browser solution to allow normal browser navigation;
+			// - only assigning a new src would result in two history states each time.
+
+			// Note: iframe.contentWindow.location.replace(hash) should work, too,
+			// but it doesn't work in Edge with links from the subpages!
+
+			const oldIframe = iframe;
+			iframe = oldIframe.cloneNode();
+
+			if ( hash ) {
+
+				// We can have 2 hashes. One for the main page, one for the page it's referencing
+				// In other words
+				//	 #en/somePage#someSectionOfPage
+				const subHash = splitHash[ 0 ].indexOf( '#' );
+				let src;
+				if ( subHash >= 0 ) {
+
+					const beforeSubHash = splitHash[ 0 ].slice( 0, subHash );
+					const afterSubHash = splitHash[ 0 ].slice( subHash );
+					src = `${beforeSubHash}.html${afterSubHash}${splitHash[ 1 ]}`;
+		
+				} else {
+
+					src = splitHash[ 0 ] + '.html' + splitHash[ 1 ];
+		
+				}
+
+				iframe.src = src; // lgtm[js/client-side-unvalidated-url-redirection]
+				iframe.style.display = 'unset';
+
+			} else {
+
+				iframe.src = ''; 
+				iframe.style.display = 'unset';
+
+			}
+
+			document.body.replaceChild( iframe, oldIframe );
+
+		}
+
+		function decomposePageName( pageName, oldDelimiter, newDelimiter ) {
+
+			// Helper function for separating the member (if existing) from the pageName
+			// For example: 'Geometry.morphTarget' can be converted to
+			// ['Geometry', '.morphTarget'] or ['Geometry', '#morphTarget']
+			// Note: According RFC 3986 no '#' allowed inside of an URL fragment!
+
+			let parts = [];
+
+			const dotIndex = pageName.indexOf( oldDelimiter );
+
+			if ( dotIndex !== - 1 ) {
+
+				parts = pageName.split( oldDelimiter );
+				parts[ 1 ] = newDelimiter + parts[ 1 ];
+
+			} else {
+
+				parts[ 0 ] = pageName;
+				parts[ 1 ] = '';
+
+			}
+
+			return parts;
+
+		}
+
+		//
+
+		console.log( [
+			'    __     __',
+			' __/ __\\  / __\\__   ____   _____   _____',
+			'/ __/  /\\/ /  /___\\/ ____\\/ _____\\/ _____\\',
+			'\\/_   __/ /   _   / /  __/ / __  / / __  /_   __   _____',
+			'/ /  / / /  / /  / /  / / /  ___/ /  ___/\\ _\\/ __\\/ _____\\',
+			'\\/__/  \\/__/\\/__/\\/__/  \\/_____/\\/_____/\\/__/ /  / /  ___/',
+			'                                         / __/  /  \\__  \\',
+			'                                         \\/____/\\/_____/'
+		].join( '\n' ) );
+		
+</script>
+
+</footer> 
+
+
+</main>
+
+<script>document.addEventListener("DOMContentLoaded",()=>{console.log("Page Loaded")});</script>
+
 </body>
 </html>
-    <!-- <marquee direction="down" scrollamount="3"> -->
-	<center>
+
+</center>
+
+<nav>
+<ul id="filterInput">
 <br><a href="./en/about.html" class="titleInput"><button>about</button></a><br>
 <br><a href="./en/tv.html" class="titleInput"><button>tv</button></a><br>
 <br><a href="./en/radio.html" class="titleInput"><button>radio</button></a><br>
 <br><a href="./en/deleted.html" class="titleInput"><button>deleted</button></a><br>
-<br><a href="./en/Black_Hole_Earth_Visualization.html" class="titleInput"><button>Black_Hole_Earth_Visualization</button></a><br>
+
+</ul>
+</nav>
 
 
-
-
-
-<br><a href="./en/multiplayer.html" class="titleInput"><button>multiplayer</button></a><br>
-<br><a href="./en/video_game.html" class="titleInput"><button>video_game</button></a><br>
-<br><a href="./en/map.html" class="titleInput"><button>map</button></a><br>
-<br><a href="./en/joystick_and_buttons.html" class="titleInput"><button>joystick_and_buttons</button></a><br>
-
-<br><a href="./en/clean.html" class="titleInput"><button>clean</button></a><br>
+<br><a href="./en/rss.html" class="titleInput"><button>rss</button></a><br>
+<br><a href="./en/rss.html" class="titleInput"><button>rss</button></a><br>
+<br><a href="./en/rss.html" class="titleInput"><button>rss</button></a><br>
+<br><a href="./en/rss.html" class="titleInput"><button>rss</button></a><br>
+<br><a href="./en/rss.html" class="titleInput"><button>rss</button></a><br>
+<br><a href="./en/rss.html" class="titleInput"><button>rss</button></a><br>
+<br><a href="./en/tv.html" class="titleInput"><button>tv</button></a><br>

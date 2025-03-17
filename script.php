@@ -1,82 +1,153 @@
 <?php
+// Halts bad bots from entering webpage if on php action file stops edits also.
+include(realpath(getenv('DOCUMENT_ROOT')) .'/blackhole/blackhole.php');
 // Start output buffering to prevent headers already sent errors
 ob_start();
 
-// Basic input validation and sanitization
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Securing HTTP Security Headers - consolidated and consistent
-    header_remove('X-Powered-By');
-    
-    // Security headers - properly formatted and organized
-    header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
-    header('Pragma: no-cache');
-    header('Expires: 0');
-    
-    // Content type security
-    header('X-Content-Type-Options: nosniff');
-    header('X-XSS-Protection: 1; mode=block');
-    
-    // Referrer policy
-    header('Referrer-Policy: same-origin');
-    
-    // Frame protection
-    header('X-Frame-Options: DENY');
-    
-    // Connection and language headers
-    header('Connection: Keep-alive');
-    header('Accept-Language: en-US,en;q=0.5');
-    header('Vary: Accept-Encoding');
-    
-    // CORS - Consider restricting this in production
-    header('Access-Control-Allow-Origin: *');
-    
-    // Content-type must be set correctly
-    header('Content-Type: text/html; charset=UTF-8');
-    
-    // Secure form verification with proper validation
-    $answer1 = isset($_POST['secure-form-answer-Human']) ? htmlspecialchars($_POST['secure-form-answer-Human'], ENT_QUOTES, 'UTF-8') : '';
-    $totalCorrect = 0;
-    
-    if ($answer1 === "&#x48;&#x75;&#x6D;&#x61;&#x6E;") { 
-        $totalCorrect++; 
-    }
-    
-    echo "<div id='results'>$totalCorrect / 1 correct</div>";
+/**
+ * Get the current site URL
+ */
+function getSiteURL() {
+    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
+    $domainName = $_SERVER['HTTP_HOST'];
 
-    // Process POST data with proper sanitization
-    foreach ($_POST as $variable => $value) {
-        // Skip empty values and the form verification field
-        if (empty($value) || $variable === 'secure-form-answer-Human') {
-            continue;
+    // Remove script name from the path if present
+    $path = dirname($_SERVER['SCRIPT_NAME']);
+
+    // Ensure path ends with a slash
+    if (substr($path, -1) !== '/') {
+        $path .= '/';
+    }
+
+    return $protocol . $domainName . $path;
+}
+
+/**
+ * Extract file information for RSS feed
+ */
+function getFileInfo($filePath, $fileName, $baseURL) {
+    $timestamp = filemtime($filePath);
+    $pubDate = date(DATE_RSS, $timestamp);
+    $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
+    
+    // Create a unique link to the file
+    $link = $baseURL . 'en/' . rawurlencode($fileName);
+    $guid = $baseURL . 'en/' . rawurlencode($fileName) . '?t=' . $timestamp;
+    
+    // Extract a meaningful title from the filename
+    $title = str_replace(['_', '-'], ' ', pathinfo($fileName, PATHINFO_FILENAME));
+    $description = "File: " . $fileName;
+    
+    // If it's an HTML file, extract its title and meta description
+    if ($fileExtension === 'html' || $fileExtension === 'htm') {
+        $content = file_get_contents($filePath);
+        
+        preg_match('/<title>(.*?)<\/title>/i', $content, $titleMatches);
+        if (!empty($titleMatches[1])) {
+            $title = trim($titleMatches[1]);
         }
         
-        // Sanitize filename - only allow alphanumeric, underscores and hyphens
-        $value = preg_replace('/[^a-zA-Z0-9_-]/', '_', $value);
-        
-        // Check for directory traversal attempts
-        if (strpos($value, '..') !== false || empty($value)) {
-            die("Invalid input detected");
-        }
-        
-        // Set up file paths with proper directory validation
-        $file_pointer = "./en/" . $value . ".html";
-        
-        // Directory check
-        if (!is_dir("./en/")) {
-            if (!mkdir("./en/", 0755, true)) {
-                die("Failed to create directory structure");
+        preg_match('/<meta\s+name=["\']description["\']\s+content=["\']([^"\']+)["\']/i', $content, $descMatches);
+        if (!empty($descMatches[1])) {
+            $description = trim($descMatches[1]);
+        } else {
+            // If no meta description, extract the first paragraph
+            preg_match('/<p>(.*?)<\/p>/is', $content, $paraMatches);
+            if (!empty($paraMatches[1])) {
+                $description = strip_tags(trim($paraMatches[1]));
+                if (strlen($description) > 200) {
+                    $description = substr($description, 0, 197) . '...';
+                }
             }
         }
-        
-        // Check if file exists before creating
-        if (file_exists($file_pointer)) {
-            echo "The file $file_pointer already exists <br>";
-            echo "<meta name='viewport' content='width=device-width, initial-scale=1.0'>Click the link to visit the webpage for the keyword $value<br><br><a href='./en/$value.html'>$value</a><br><br>";
-            exit();
+    }
+    
+    return [
+        'title' => $title,
+        'link' => $link,
+        'description' => $description,
+        'pubDate' => $pubDate,
+        'guid' => $guid,
+        'timestamp' => $timestamp
+    ];
+}
+
+/**
+ * Generate or update the RSS feed file
+ */
+function generateRSSFeed() {
+    $folder = "./en/"; // The folder to monitor
+    $rssFile = "rss.xml"; // RSS feed file name
+    $siteURL = getSiteURL(); // Get the site URL dynamically
+    $feedTitle = "My Website Feed";
+    $feedDescription = "Latest updates from my website";
+    
+    if (!file_exists($folder)) {
+        mkdir($folder, 0777, true);
+        return false;
+    }
+    
+    $files = array_diff(scandir($folder), array('.', '..'));
+    $entries = [];
+    
+    foreach ($files as $file) {
+        $filePath = $folder . $file;
+        if (is_file($filePath)) {
+            $fileInfo = getFileInfo($filePath, $file, $siteURL);
+            if ($fileInfo) {
+                $entries[] = $fileInfo;
+            }
         }
     }
 
-    // Update index.html - with error handling
+    usort($entries, fn($a, $b) => $b['timestamp'] - $a['timestamp']);
+
+    $rss = '<?xml version="1.0" encoding="UTF-8" ?>' . PHP_EOL;
+    $rss .= '<rss version="2.0">' . PHP_EOL;
+    $rss .= '  <channel>' . PHP_EOL;
+    $rss .= '    <title>' . htmlspecialchars($feedTitle) . '</title>' . PHP_EOL;
+    $rss .= '    <link>' . htmlspecialchars($siteURL) . '</link>' . PHP_EOL;
+    $rss .= '    <description>' . htmlspecialchars($feedDescription) . '</description>' . PHP_EOL;
+    $rss .= '    <lastBuildDate>' . date(DATE_RSS) . '</lastBuildDate>' . PHP_EOL;
+
+    foreach ($entries as $entry) {
+        $rss .= '    <item>' . PHP_EOL;
+        $rss .= '      <title>' . htmlspecialchars($entry['title']) . '</title>' . PHP_EOL;
+        $rss .= '      <link>' . htmlspecialchars($entry['link']) . '</link>' . PHP_EOL;
+        $rss .= '      <description>' . htmlspecialchars($entry['description']) . '</description>' . PHP_EOL;
+        $rss .= '      <pubDate>' . $entry['pubDate'] . '</pubDate>' . PHP_EOL;
+        $rss .= '      <guid isPermaLink="false">' . htmlspecialchars($entry['guid']) . '</guid>' . PHP_EOL;
+        $rss .= '    </item>' . PHP_EOL;
+    }
+
+    $rss .= '  </channel>' . PHP_EOL;
+    $rss .= '</rss>';
+
+    file_put_contents($rssFile, $rss);
+    return true;
+}
+
+/**
+ * Update index.json with new entries
+ */
+function updateIndexJson($value) {
+    $jsonFile = "./index.json";
+
+    if (!file_exists($jsonFile)) {
+        file_put_contents($jsonFile, json_encode(["en" => ["index" => []]], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+    }
+
+    $jsonData = json_decode(file_get_contents($jsonFile), true);
+    if ($jsonData === null) {
+        die("Error reading JSON file");
+    }
+
+    $jsonData["en"]["index"][$value] = "en/$value";
+
+    file_put_contents($jsonFile, json_encode($jsonData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+}
+
+  // Update index.html - with error handling
     foreach($_POST as $variable => $value) {
         if (empty($value) || $variable === 'secure-form-answer-Human') {
             continue;
@@ -103,31 +174,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         fclose($handle);
     }
 
-    // Create HTML template page - with error handling
-    foreach($_POST as $variable => $value) {
-        if (empty($value) || $variable === 'secure-form-answer-Human') {
-            continue;
-        }
+
+// Process POST data
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    foreach ($_POST as $variable => $value) {
+        if (empty($value)) continue;
         
         $value = preg_replace('/[^a-zA-Z0-9_-]/', '_', $value);
-        
+        $file_pointer = "./en/" . $value . ".html";
+
         if (!is_dir("./en/")) {
-            if (!mkdir("./en/", 0755, true)) {
-                die("Failed to create directory structure");
-            }
+            mkdir("./en/", 0755, true);
         }
-        
-        if (file_exists("./en/$value.html") && !is_writable("./en/$value.html")) {
-            die("Cannot write to ./en/$value.html - check permissions");
-        }
-        
-        $handle = fopen("./en/$value.html", "w"); // Use 'w' instead of 'a' to prevent duplicate content
-        if (!$handle) {
-            die("Failed to open ./en/$value.html for writing");
-        }
-        
-        // HTML template with consistent CSP policy and security measures
-        $html_template = "<!DOCTYPE html>
+
+if (!file_exists($file_pointer)) {
+    $html_template = "<!DOCTYPE html>
 <html lang=\"en\">
 <head>
     <meta charset=\"UTF-8\">
@@ -341,33 +402,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </center>
 </body>
 </html>";
-        
-        if (fwrite($handle, $html_template) === false) {
-            fclose($handle);
-            die("Failed to write to ./en/$value.html");
-        }
-        
-        fclose($handle);
+
+    file_put_contents($file_pointer, $html_template);
+}
+
+        updateIndexJson($value);
     }
 
-    // Final output and redirect
-    foreach($_POST as $variable => $value) {
-        if (empty($value) || $variable === 'secure-form-answer-Human') {
-            continue;
-        }
-        
-        $value = preg_replace('/[^a-zA-Z0-9_-]/', '_', $value);
-        
-        echo "<meta name='viewport' content='width=device-width, initial-scale=1.0'>Click the link to visit the webpage for the keyword $value<br><br><a href='./en/$value.html'>$value</a><br><br>";
-                
-        // Exit after processing one valid entry
-        break;
+    generateRSSFeed();
+
+    // Redirect the user to the created page
+    if (!empty($value)) {
+        header("Location: ./en/$value.html");
+        exit();
     }
 }
 
-// Clear stat cache
-clearstatcache();
-
-// End output buffering and flush the content
 ob_end_flush();
 ?>

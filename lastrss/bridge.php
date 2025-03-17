@@ -23,8 +23,8 @@ $rsslist=array(
 "Google" => "https://news.google.com/?output=rss",
 "BBC" => "https://newsrss.bbc.co.uk/rss/newsonline_uk_edition/front_page/rss.xml",
 "news.com" => "https://news.com.com/2547-1_3-0-5.xml",
-"slashdot" => "https://rss.slashdot.org/Slashdot/slashdot",
-"localhost" => "http://localhost/rss.xml"
+"morgansbyers" => "http://morgansbyers.scienceontheweb.net/rss.xml.rss",
+"localhost" => "http://localhost/rss.xml.rss"
 );
 
 ////Beginners don't need to configure past here////////////////////

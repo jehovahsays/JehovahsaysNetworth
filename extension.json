@@ -1,0 +1,14 @@
+{
+	"name": "WikiBanHammer",
+	"author": "Morgan Shatee Byers",
+	"url": "https://www.mediawiki.org/wiki/Extension:WikiBanHammer",
+	"description": "Automatically trap and block bots that do not obey robots.txt rules",
+	"version": "1.1",
+	"type": "antispam",
+	"license-name": "GPL-2.0+",
+	"callback": "WikiBanHammer::registerExtension",
+	"manifest_version": 1
+}
+
+
+

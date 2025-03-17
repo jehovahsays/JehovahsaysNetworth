@@ -1,0 +1,11 @@
+{
+    "en": {
+        "index": {
+            "about": "en/about",
+            "tv": "en/tv",
+            "radio": "en/radio",
+            "deleted": "en/deleted",
+            "rss": "en/rss"
+        }
+    }
+}

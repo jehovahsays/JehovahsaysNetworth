@@ -1,25 +1,10 @@
 <?php
-// Keep the original JSON output functionality
-if (isset($_GET['format']) && $_GET['format'] === 'json') {
-    header("Content-Type: application/json");
-    
-    $folder = "./en/"; // Change this to the folder you want to monitor
-    if (!file_exists($folder)) {
-        mkdir($folder, 0777, true); // Create the folder if it doesn't exist
-    }
-    
-    $files = array_diff(scandir($folder), array('.', '..')); // Get files excluding . and ..
-    echo json_encode(array_values($files));
-    exit;
-}
-
 /**
  * Generate or update the RSS feed file
  */
 function generateRSSFeed() {
     $folder = "./en/"; // The folder to monitor
     $rssFile = "rss.xml"; // RSS feed file name
-    $rssRssFile = "rss.xml.rss"; // Secondary RSS feed file
     $siteURL = getSiteURL(); // Get the site URL dynamically
     $feedTitle = "My Website Feed"; // Change this to your feed title
     $feedDescription = "Latest updates from my website"; // Change this to your feed description
@@ -73,9 +58,12 @@ function generateRSSFeed() {
     $rss .= '  </channel>' . PHP_EOL;
     $rss .= '</rss>';
     
-    // Write to both files
+    // Write to file
     file_put_contents($rssFile, $rss);
-    file_put_contents($rssRssFile, $rss);
+    
+    // Create a copy with .rss extension for compatibility
+    file_put_contents($rssFile . '.rss', $rss);
+    
     return true;
 }
 
@@ -87,14 +75,9 @@ function getFileInfo($filePath, $fileName, $baseURL) {
     $pubDate = date(DATE_RSS, $timestamp);
     $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
     
-    // Make sure baseURL is http:// only
-    $baseURL = ensureHttpProtocol($baseURL);
-    
-    // Create absolute URLs for the files
-    // Make sure we use consistent slashes and don't duplicate them
-    $baseURL = rtrim($baseURL, '/');
-    $link = $baseURL . '/en/' . rawurlencode($fileName);
-    $guid = $baseURL . '/en/' . rawurlencode($fileName) . '?t=' . $timestamp;
+    // Create a unique link to the file
+    $link = $baseURL . 'en/' . rawurlencode($fileName);
+    $guid = $baseURL . 'en/' . rawurlencode($fileName) . '?t=' . $timestamp;
     
     // Try to extract a better title from HTML files
     $title = str_replace(['_', '-'], ' ', pathinfo($fileName, PATHINFO_FILENAME));
@@ -141,49 +124,40 @@ function getFileInfo($filePath, $fileName, $baseURL) {
  */
 function getSiteURL() {
     // Force HTTP protocol no matter what
-    $protocol = "http://";    
-	// Get server name or host
-    $domainName = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'];
+    $protocol = "http://";
+    $domainName = $_SERVER['HTTP_HOST'];
     
-    // Get the base directory
-    $basePath = '';
-    
-    // Calculate the base directory by comparing SCRIPT_NAME and REQUEST_URI
-    $scriptPath = dirname($_SERVER['SCRIPT_NAME']);
-    if ($scriptPath !== '/' && $scriptPath !== '\\') {
-        $basePath = $scriptPath;
+    // Remove script name from the path if present
+    $path = $_SERVER['REQUEST_URI'];
+    $scriptName = $_SERVER['SCRIPT_NAME'];
+    if (strpos($path, $scriptName) === 0) {
+        $path = dirname($scriptName);
+    } else {
+        $path = dirname($path);
     }
     
-    // Ensure base path doesn't have trailing slash
-    $basePath = rtrim($basePath, '/');
+    // Ensure path ends with a slash
+    if (substr($path, -1) !== '/') {
+        $path .= '/';
+    }
     
-    // Build the base URL
-    $baseURL = $protocol . $domainName . $basePath;
+    $url = $protocol . $domainName . $path;
     
-    return $baseURL;
-}
-
-/**
- * Ensure URL uses HTTP protocol
- */
-function ensureHttpProtocol($url) {
-    // Replace https:// with http://
+    // Ensure URL starts with http:// and not https://
+    // This is a safety measure in case of server rewrites or other interference
     if (strpos($url, 'https://') === 0) {
-        return 'http://' . substr($url, 8);
+        $url = 'http://' . substr($url, 8);
     }
-    // Ensure http:// is added if no protocol
-    elseif (strpos($url, 'http://') !== 0) {
-        return 'http://' . $url;
-    }
+    
     return $url;
 }
 
 /**
  * Check if RSS feed needs to be updated
  */
-function needsUpdate($rssFile, $rssRssFile, $folder) {
-    // If RSS files don't exist, they need to be created
-    if (!file_exists($rssFile) || !file_exists($rssRssFile)) {
+function needsUpdate($rssFile, $folder) {
+    // If RSS file doesn't exist, it needs to be created
+    if (!file_exists($rssFile)) {
         return true;
     }
     
@@ -191,12 +165,6 @@ function needsUpdate($rssFile, $rssRssFile, $folder) {
     
     // Get the latest modification time from the folder
     $latestModTime = 0;
-    
-    // Make sure the folder exists
-    if (!file_exists($folder)) {
-        return true;
-    }
-    
     $files = array_diff(scandir($folder), array('.', '..'));
     
     foreach ($files as $file) {
@@ -213,28 +181,6 @@ function needsUpdate($rssFile, $rssRssFile, $folder) {
     return $latestModTime > $rssModTime;
 }
 
-// Main execution
-
-$rssFile = "rss.xml";
-$rssRssFile = "rss.xml.rss";
-$folder = "./en/";
-
-// Check if we need to update the RSS files
-if (needsUpdate($rssFile, $rssRssFile, $folder)) {
-    generateRSSFeed();
-}
-
-// Determine output format
-if (isset($_GET['format']) && $_GET['format'] === 'rss') {
-    // Serve the RSS feed
-    header('Content-Type: application/rss+xml');
-    if (file_exists($rssFile)) {
-        readfile($rssFile);
-    } else {
-        echo '<?xml version="1.0" encoding="UTF-8" ?><rss version="2.0"><channel><title>Error</title><description>RSS feed not available</description></channel></rss>';
-    }
-} else {
-    // Redirect to the RSS feed by default
-    header('Location: ' . $rssFile);
-}
+// Don't include the format checking and main execution here
+// Those should be in a separate file or not included at all
 ?>
