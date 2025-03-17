@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SECURITY HEADERS -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' 'nonce-randomString';
+        style-src 'self' 'unsafe-inline';
+        img-src 'self' data:;
+        object-src 'none';
+        frame-ancestors 'none';
+        base-uri 'self';
+        form-action 'self';
+        upgrade-insecure-requests;
+    ">
+
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Permissions-Policy" content="
+        geolocation=(), microphone=(), camera=(), payment=(), fullscreen=()
+    ">
+
+    <title>Secure Page</title>
+
+    <script src="secure.js" nonce="randomString"></script> <!-- Secure JS functions -->
+</head>
+<body>
+
+    <h1>Secure Web Page</h1>
+    <p>Your connection is protected with security best practices.</p>
+
+    <!-- Secure Forms (Prevent CSRF)
+    <form id="secureForm" method="POST" action="/submit">
+        <input type="hidden" name="csrf_token" id="csrf_token">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+        <button type="submit">Submit</button>
+    </form> -->
+
+    <script nonce="randomString">
+        "use strict";
+
+        // Prevent form submission without CSRF token
+        document.getElementById("csrf_token").value = generateCSRFToken();
+
+        function generateCSRFToken() {
+            return btoa(new Uint8Array(16).map(() => Math.floor(Math.random() * 256)).join(''));
+        }
+
+        // Disable right-click to prevent basic inspection (not a strong security measure)
+        document.addEventListener("contextmenu", (event) => event.preventDefault());
+
+        // Prevent clipboard copy of sensitive information
+        document.addEventListener("copy", (event) => {
+            event.preventDefault();
+            alert("Copying is disabled for security reasons.");
+        });
+
+        // Secure Fetch Requests (Disable third-party access)
+        async function secureFetch(url, options = {}) {
+            const defaultOptions = {
+                method: "GET",
+                credentials: "same-origin",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-Token": document.getElementById("csrf_token").value
+                }
+            };
+            const response = await fetch(url, { ...defaultOptions, ...options });
+            return response.ok ? response.json() : Promise.reject("Request failed");
+        }
+    </script>
+
+</body>
+</html>
