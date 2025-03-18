@@ -5,7 +5,10 @@
             "tv": "en/tv",
             "radio": "en/radio",
             "deleted": "en/deleted",
-            "rss": "en/rss"
+            "rss": "en/rss",
+            "map": "en/map",
+            "freeroam": "en/freeroam",
+            "FPS": "en/FPS"
         }
     }
 }
