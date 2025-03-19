@@ -4,36 +4,13 @@
     <title>My Website Feed</title>
     <link>https://localhost/</link>
     <description>Latest updates from my website</description>
-    <lastBuildDate>Tue, 18 Mar 2025 02:00:38 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 19 Mar 2025 22:10:21 +0000</lastBuildDate>
     <item>
-      <title>video game</title>
-      <link>https://localhost/en/freeroam.html</link>
-      <description>File: freeroam.html</description>
-      <pubDate>Tue, 18 Mar 2025 01:52:48 +0000</pubDate>
-      <guid isPermaLink="false">https://localhost/en/freeroam.html?t=1742262768</guid>
-    </item>
-    <item>
-      <title>map</title>
-      <link>https://localhost/en/map.html</link>
-      <description>when you create a page
-a new building will appear on map
-Real-Time 3D Website Data Visualization</description>
-      <pubDate>Tue, 18 Mar 2025 01:36:38 +0000</pubDate>
-      <guid isPermaLink="false">https://localhost/en/map.html?t=1742261798</guid>
-    </item>
-    <item>
-      <title>multiplayer</title>
-      <link>https://localhost/en/FPS.html</link>
-      <description>File: FPS.html</description>
-      <pubDate>Tue, 18 Mar 2025 01:20:54 +0000</pubDate>
-      <guid isPermaLink="false">https://localhost/en/FPS.html?t=1742260854</guid>
-    </item>
-    <item>
-      <title>rss</title>
-      <link>https://localhost/en/rss.html</link>
-      <description>File: rss.html</description>
-      <pubDate>Mon, 17 Mar 2025 16:36:28 +0000</pubDate>
-      <guid isPermaLink="false">https://localhost/en/rss.html?t=1742229388</guid>
+      <title>update</title>
+      <link>https://localhost/en/update.html</link>
+      <description>File: update.html</description>
+      <pubDate>Wed, 19 Mar 2025 21:32:22 +0000</pubDate>
+      <guid isPermaLink="false">https://localhost/en/update.html?t=1742419942</guid>
     </item>
     <item>
       <title>radio</title>

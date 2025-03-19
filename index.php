@@ -10,8 +10,6 @@ header("Permissions-Policy: geolocation=(), microphone=(), camera=()");
 header("Cross-Origin-Embedder-Policy: require-corp");
 header("Cross-Origin-Opener-Policy: same-origin");
 header("Cross-Origin-Resource-Policy: same-site");
-//header("Expect-CT: max-age=86400, enforce");
-//header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
 
 // Prevent caching (optional security measure)
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
