@@ -17,157 +17,22 @@
 
 <!-- Consolidated Styles for Mobile Support -->
 <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-  
     body, html {
-      width: 100%;
-      height: 100%;
-      font-family: 'Roboto Mono', monospace;
-      font-size: 16px;
-      background-color: #fff;
-      color: #000;
-    }
-
-    .navbar {
-      position: sticky;
-      top: 0;
-      background: #212529;
-      color: #fff;
-      padding: 10px;
-      text-align: center;
-      z-index: 1000;
-    }
-
-    .navbar a {
-      color: #fff;
-      text-decoration: none;
-      padding: 10px;
-    }
-
-    .navbar a:hover {
-      color: #0d6efd;
-    }
-
-    .content {
-      text-align: center;
-      padding: 20px;
-    }
-
-    button {
-      background: #0d6efd;
-      color: #fff;
-      padding: 10px 15px;
-      border: 0;
-      border-radius: 5px;
-      cursor: pointer;
-      margin: 5px;
-    }
-
-    button:hover {
-      background: #0b5ed7;
-    }
-
-    input[type="text"] {
-      font-size: 14px; 
-      color: peru;
-      padding: 5px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
+	  position:fixed;
+      width: 100vw;
+      height: 100vh;
     }
 
     footer {
       position: fixed;
       bottom: 0;
       left: 0;
-      width: 100%;
+      width: 95vw;
       text-align: center;
       padding: 10px;
       background: #f1f1f1;
     }
-
-    @media (max-width: 768px) {
-      body {
-        font-size: 14px;
-      }
-
-      button {
-        width: 100%;
-      }
-
-      .navbar a {
-        display: block;
-        padding: 5px;
-      }
-    }
 </style>
-
-<!-- Security Fix: Warning Banner Instead of Overriding Content -->
-<script>
-    if (location.protocol !== 'https:') {
-        document.addEventListener("DOMContentLoaded", function() {
-            let warning = document.createElement("div");
-            warning.innerHTML = "<strong>Welcome:</strong> This page http";
-            warning.style.cssText = "background: red; color: white; padding: 10px; text-align: center;";
-            document.body.insertBefore(warning, document.body.firstChild);
-        });
-    }
-</script>
-
-</head>
-
-<body style="background-color:gray;">
-
-
-<header class="navbar">
-    <nav aria-label="Main navigation">
-        <a href="https://cash.app/$morgansbyers">Donate to my cash app</a>
-    </nav>
-</header>
-
-<main class="content">
-    <h1>Welcome</h1>
-    <p>Search for something:</p>
-
-<br><br>
-
-<form
-id="secure-form-answer"
-action="./script.php" 
-method="post">
-<input
-style="position:absolute;top:185px;left:10px;height:50px;width:95vw;"
-id="filterInput"
-onkeyup="titleInput()"
-autocomplete="true"
-autocorrect="off"  
-autocapitalize="off" 
-spellcheck="true"
-type="text" 
-name="secure-form-answer-Human"
-maxlength="524288" 
-value=""
-aria-label="search"  
-placeholder="search database" 
-x-webkit-speech
-required>
-
-<noscript>
-<label 
-for="secure-form-answer-Human">
-&#x48;&#x75;&#x6D;&#x61;&#x6E;
-</label>
-<a 
-rel="nofollow" 
-style="display:none;" 
-href="/blackhole/">
-</noscript>
-</form>
-
-<br><br>
 
     <script>
         function titleInput() {
@@ -183,24 +48,57 @@ href="/blackhole/">
         }
     </script>
 
-<script>document.addEventListener("DOMContentLoaded",()=>{console.log("Page Loaded")});</script>
 
+</head>
+
+<body style="position:fixed;background-color:gray;">
+
+<center><button>
+<a href="https://cash.app/$morgansbyers">Donate to my cash app</a>
+</button></center>
+<form
+id="secure-form-answer"
+action="./script.php" 
+method="post">
+<input
+style="position:fixed;top:50px;left:50px;height:50px;width:75vw;"
+id="filterInput"
+onkeyup="titleInput()"
+autocomplete="true"
+autocorrect="off"  
+autocapitalize="off" 
+spellcheck="true"
+type="text" 
+name="secure-form-answer-Human"
+maxlength="524288" 
+value=""
+aria-label="search"  
+placeholder="search database" 
+x-webkit-speech
+required>
+<noscript>
+<label 
+for="secure-form-answer-Human">
+&#x48;&#x75;&#x6D;&#x61;&#x6E;
+</label>
+<a 
+rel="nofollow" 
+style="display:none;" 
+href="/blackhole/">
+</noscript>
+</form>
+
+</center>
 
 <!-- Footer -->
 <footer>
     <p>© 2025 Morgan Shatee Byers</p>
-</footer>
 
-</body>
-</html>
-
-<nav>
 <ul id="filterInput">
 <br><a href="./en/about.html" class="titleInput"><button>about</button></a><br>
 <br><a href="./en/tv.html" class="titleInput"><button>tv</button></a><br>
 <br><a href="./en/radio.html" class="titleInput"><button>radio</button></a><br>
 <br><a href="./en/deleted.html" class="titleInput"><button>deleted</button></a><br>
 
-</ul>
-</nav>
+
 
