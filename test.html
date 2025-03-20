@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="keyword search">
+<title>index</title>
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="X-Frame-Options" content="DENY">
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+<meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+<meta http-equiv="X-XSS-Protection" content="1; mode=block">
+<meta http-equiv="Cache-Control" content="private, no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+<meta http-equiv="Clear-Site-Data" content="*">
+<!-- Consolidated Styles for Mobile Support -->
+<style>
+    body, html {
+	  position:fixed;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 95vw;
+      text-align: center;
+      padding: 10px;
+      background: #f1f1f1;
+    }
+</style>
+
+</head>
+
+<body style="position:fixed;background-color:gray;">
+
+<p>I use this form on this page
+to test script.php response
+to forms that are not authorized
+to use php functions.
+</p>
+<p>
+if you can create a page
+from this input box
+then script.php has failed test to halt
+incoming request to create pages with php functions.
+</p>
+<p>
+if you can not create a page
+from this input box
+then script.php has passed test to halt
+incoming request to create pages with php functions.
+</p>
+
+<form
+action="./script.php" 
+method="post">
+<input
+style="position:fixed;top:250px;left:50px;height:50px;width:75vw;"
+id="filterInput"
+onkeyup="titleInput()"
+autocomplete="true"
+autocorrect="off"  
+autocapitalize="off" 
+spellcheck="true"
+type="text"
+maxlength="5" 
+value=""
+aria-label="search"  
+placeholder="search database" 
+required>
+<noscript>
+<a 
+rel="nofollow" 
+style="display:none;" 
+href="/blackhole/">
+</noscript>
+</form>
+
+</center>
+
+<!-- Footer -->
+<footer>
+    <p>© 2025 Morgan Shatee Byers</p>
+</footer>
