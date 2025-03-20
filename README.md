@@ -1,6 +1,18 @@
 # **MEV**  
 ### **Multi Edit Vandalism**  
 
+[![PHPMD](https://github.com/jehovahsays/mev/actions/workflows/phpmd.yml/badge.svg)](https://github.com/jehovahsays/mev/actions/workflows/phpmd.yml)
+
+---
+
+[![PHP CI](https://github.com/jehovahsays/mev/actions/workflows/php.yml/badge.svg)](https://github.com/jehovahsays/mev/actions/workflows/php.yml)
+
+---
+
+[![CodeQL](https://github.com/jehovahsays/mev/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/jehovahsays/mev/actions/workflows/github-code-scanning/codeql)
+
+---
+
 ## **Developer Mode**  
 - Visit the website on **HTTP** for more editing power:  
   [http://morgansbyers.scienceontheweb.net/](http://morgansbyers.scienceontheweb.net/)  
