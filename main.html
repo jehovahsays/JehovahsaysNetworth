@@ -20,14 +20,15 @@
     body, html {
 	  position:fixed;
       width: 100vw;
-      height: 100vh;
+      height: 80vh;
     }
 
-    footer {
+    box {
       position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 95vw;
+      top: 150px;
+      left: 0px;
+	  width: 100vw;
+	  height: 100vh;
       text-align: center;
       padding: 10px;
       background: #f1f1f1;
@@ -36,11 +37,9 @@
 
 </head>
 
-<body style="position:fixed;background-color:gray;">
+<body style="background-color:gray;">
 
-<center><button>
-<a href="https://cash.app/$morgansbyers">Donate to my cash app</a>
-</button></center>
+
 <form
 id="secure-form-answer"
 action="./script.php" 
@@ -72,13 +71,7 @@ style="display:none;"
 href="/blackhole/">
 </noscript>
 </form>
-
-</center>
-
-<!-- Footer -->
-<footer>
-    <p>Webmaster: Morgan Shatee Byers</p>
-	
+    
 	    <script>
         function titleInput() {
             let input = document.getElementById('filterInput').value.trim().toLowerCase();
@@ -93,11 +86,12 @@ href="/blackhole/">
         }
     </script>
 
+<box>
 <ul id="filterInput">
 <br><a href="./en/about.html" class="titleInput"><button>about</button></a><br>
 <br><a href="./en/tv.html" class="titleInput"><button>tv</button></a><br>
 <br><a href="./en/radio.html" class="titleInput"><button>radio</button></a><br>
 <br><a href="./en/deleted.html" class="titleInput"><button>deleted</button></a><br>
-
+</box>
 
 

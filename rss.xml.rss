@@ -2,66 +2,36 @@
 <rss version="2.0">
   <channel>
     <title>My Website Feed</title>
-    <link>http://localhost</link>
+    <link>http://localhost/</link>
     <description>Latest updates from my website</description>
-    <lastBuildDate>Tue, 18 Mar 2025 01:59:54 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 22 Mar 2025 20:42:09 +0000</lastBuildDate>
     <item>
-      <title>video game</title>
-      <link>http://localhost/en/freeroam.html</link>
-      <description>File: freeroam.html</description>
-      <pubDate>Tue, 18 Mar 2025 01:52:48 +0000</pubDate>
-      <guid isPermaLink="false">http://localhost/en/freeroam.html?t=1742262768</guid>
-    </item>
-    <item>
-      <title>map</title>
-      <link>http://localhost/en/map.html</link>
-      <description>when you create a page
-a new building will appear on map
-Real-Time 3D Website Data Visualization</description>
-      <pubDate>Tue, 18 Mar 2025 01:36:38 +0000</pubDate>
-      <guid isPermaLink="false">http://localhost/en/map.html?t=1742261798</guid>
-    </item>
-    <item>
-      <title>multiplayer</title>
-      <link>http://localhost/en/FPS.html</link>
-      <description>File: FPS.html</description>
-      <pubDate>Tue, 18 Mar 2025 01:20:54 +0000</pubDate>
-      <guid isPermaLink="false">http://localhost/en/FPS.html?t=1742260854</guid>
-    </item>
-    <item>
-      <title>rss</title>
-      <link>http://localhost/en/rss.html</link>
-      <description>File: rss.html</description>
-      <pubDate>Mon, 17 Mar 2025 16:36:28 +0000</pubDate>
-      <guid isPermaLink="false">http://localhost/en/rss.html?t=1742229388</guid>
+      <title>about</title>
+      <link>http://localhost/en/about.html</link>
+      <description>File: about.html</description>
+      <pubDate>Sat, 22 Mar 2025 18:58:10 +0000</pubDate>
+      <guid isPermaLink="false">http://localhost/en/about.html?t=1742669890</guid>
     </item>
     <item>
       <title>radio</title>
       <link>http://localhost/en/radio.html</link>
       <description>File: radio.html</description>
-      <pubDate>Sun, 16 Mar 2025 23:18:39 +0000</pubDate>
-      <guid isPermaLink="false">http://localhost/en/radio.html?t=1742167119</guid>
+      <pubDate>Sat, 22 Mar 2025 00:47:05 +0000</pubDate>
+      <guid isPermaLink="false">http://localhost/en/radio.html?t=1742604425</guid>
     </item>
     <item>
       <title>tv</title>
       <link>http://localhost/en/tv.html</link>
       <description>File: tv.html</description>
-      <pubDate>Sun, 16 Mar 2025 23:18:09 +0000</pubDate>
-      <guid isPermaLink="false">http://localhost/en/tv.html?t=1742167089</guid>
+      <pubDate>Sat, 22 Mar 2025 00:46:12 +0000</pubDate>
+      <guid isPermaLink="false">http://localhost/en/tv.html?t=1742604372</guid>
     </item>
     <item>
       <title>deleted</title>
       <link>http://localhost/en/deleted.html</link>
       <description>File: deleted.html</description>
-      <pubDate>Sun, 16 Mar 2025 19:04:15 +0000</pubDate>
-      <guid isPermaLink="false">http://localhost/en/deleted.html?t=1742151855</guid>
-    </item>
-    <item>
-      <title>about</title>
-      <link>http://localhost/en/about.html</link>
-      <description>File: about.html</description>
-      <pubDate>Sun, 16 Mar 2025 18:14:33 +0000</pubDate>
-      <guid isPermaLink="false">http://localhost/en/about.html?t=1742148873</guid>
+      <pubDate>Fri, 21 Mar 2025 21:09:33 +0000</pubDate>
+      <guid isPermaLink="false">http://localhost/en/deleted.html?t=1742591373</guid>
     </item>
   </channel>
 </rss>

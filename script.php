@@ -146,14 +146,14 @@ function generateRSSFeed() {
 		if (file_exists($file_pointer))  
 		{ 
 		echo "The file $file_pointer already exists <br>"; 
-		echo "<meta name='viewport' content='width=device-width'><a href='./en/$value.html'>$value already exists.</a>";
+		echo "<meta name='viewport' content='width=device-width'><br><br><a href='./en/$value.html'>$value already exists.</a>";
 		// speaks file location when found.
 		echo "<script> var msg = new SpeechSynthesisUtterance('$value already exists.'); window.speechSynthesis.speak(msg); </script>";
 		//echo "<body onload='loadout()'><script>function loadout(){window.location.href = './index.html'}</script>";
 		exit();
 		}
 		// This function is replaced with SpeechSynthesisUtterance. Understand that the file that should not exist is created for the visitor when searched by visitor.
-		echo "<meta name='viewport' content='width=device-width, initial-scale=1.0'><a href='./en/$value.html'>$value</a> was created";
+		echo "<meta name='viewport' content='width=device-width, initial-scale=1.0'><br><br><a href='./en/$value.html'>$value</a> was created";
         //echo "<body onload='loadout()'><script>function loadout(){window.location.href = './#en/$value'}</script>";
         //echo "<body onload='loadout()'><script>function loadout(){window.location.href = './en/$value.html'}</script>"; 
         echo "<script> var msg = new SpeechSynthesisUtterance('sir, searching a keyword creates the word in the database.'); window.speechSynthesis.speak(msg); </script>";		
@@ -206,8 +206,26 @@ function updateIndexJson($value) {
         
         fclose($handle);
     }
-
-
+	
+foreach($_POST as $variable => $value) 
+{
+	$handle = fopen("./elizadata.js", "a");
+	// load the data and delete the line from the array 
+	$lines = file('./elizadata.js'); 
+	$last = sizeof($lines) - 1 ; 
+	unset($lines[$last]); 
+	// write the new data to the file 
+	file_put_contents('./elizadata.js', $lines); 
+	fwrite($handle, 
+	  ","	
+	. "\""
+	. "en/"
+	. $value
+	. "\""
+	. "\n"
+	. "];");
+}
+	
 // Process POST data
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     foreach ($_POST as $variable => $value) {

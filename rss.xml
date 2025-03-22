@@ -2,43 +2,36 @@
 <rss version="2.0">
   <channel>
     <title>My Website Feed</title>
-    <link>https://localhost/</link>
+    <link>http://localhost/</link>
     <description>Latest updates from my website</description>
-    <lastBuildDate>Wed, 19 Mar 2025 22:10:21 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 22 Mar 2025 20:42:09 +0000</lastBuildDate>
     <item>
-      <title>update</title>
-      <link>https://localhost/en/update.html</link>
-      <description>File: update.html</description>
-      <pubDate>Wed, 19 Mar 2025 21:32:22 +0000</pubDate>
-      <guid isPermaLink="false">https://localhost/en/update.html?t=1742419942</guid>
+      <title>about</title>
+      <link>http://localhost/en/about.html</link>
+      <description>File: about.html</description>
+      <pubDate>Sat, 22 Mar 2025 18:58:10 +0000</pubDate>
+      <guid isPermaLink="false">http://localhost/en/about.html?t=1742669890</guid>
     </item>
     <item>
       <title>radio</title>
-      <link>https://localhost/en/radio.html</link>
+      <link>http://localhost/en/radio.html</link>
       <description>File: radio.html</description>
-      <pubDate>Sun, 16 Mar 2025 23:18:39 +0000</pubDate>
-      <guid isPermaLink="false">https://localhost/en/radio.html?t=1742167119</guid>
+      <pubDate>Sat, 22 Mar 2025 00:47:05 +0000</pubDate>
+      <guid isPermaLink="false">http://localhost/en/radio.html?t=1742604425</guid>
     </item>
     <item>
       <title>tv</title>
-      <link>https://localhost/en/tv.html</link>
+      <link>http://localhost/en/tv.html</link>
       <description>File: tv.html</description>
-      <pubDate>Sun, 16 Mar 2025 23:18:09 +0000</pubDate>
-      <guid isPermaLink="false">https://localhost/en/tv.html?t=1742167089</guid>
+      <pubDate>Sat, 22 Mar 2025 00:46:12 +0000</pubDate>
+      <guid isPermaLink="false">http://localhost/en/tv.html?t=1742604372</guid>
     </item>
     <item>
       <title>deleted</title>
-      <link>https://localhost/en/deleted.html</link>
+      <link>http://localhost/en/deleted.html</link>
       <description>File: deleted.html</description>
-      <pubDate>Sun, 16 Mar 2025 19:04:15 +0000</pubDate>
-      <guid isPermaLink="false">https://localhost/en/deleted.html?t=1742151855</guid>
-    </item>
-    <item>
-      <title>about</title>
-      <link>https://localhost/en/about.html</link>
-      <description>File: about.html</description>
-      <pubDate>Sun, 16 Mar 2025 18:14:33 +0000</pubDate>
-      <guid isPermaLink="false">https://localhost/en/about.html?t=1742148873</guid>
+      <pubDate>Fri, 21 Mar 2025 21:09:33 +0000</pubDate>
+      <guid isPermaLink="false">http://localhost/en/deleted.html?t=1742591373</guid>
     </item>
   </channel>
 </rss>
