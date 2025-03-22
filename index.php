@@ -124,7 +124,7 @@ NO
 
 <?php
 // Global IP wave ban
-//header('Location: ./blackhole/');
+header('Location: ./blackhole/index.html');
 
 exit();
 
