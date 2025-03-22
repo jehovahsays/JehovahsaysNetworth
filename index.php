@@ -83,16 +83,13 @@ clearstatcache();
 YES
 </button>		
 
-<a rel="nofollow" style="display:none;" href="/blackhole/">
-
-
-
 <br><br>
 <a href="./robots.txt">
 <button>
 NO
 </button>	
 </a>
+<a rel="nofollow" style="display:none;" href="/blackhole/">
 
     <!-- JavaScript Security -->
     <script>
