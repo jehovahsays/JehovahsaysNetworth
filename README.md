@@ -13,6 +13,20 @@
 
 ---
 
+[![Dependabot Updates](https://github.com/jehovahsays/mev/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/jehovahsays/mev/actions/workflows/dependabot/dependabot-updates)
+
+---
+
+[![pages-build-deployment](https://github.com/jehovahsays/mev/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/jehovahsays/mev/actions/workflows/pages/pages-build-deployment)
+
+---
+
+[![Jekyll site CI](https://github.com/jehovahsays/mev/actions/workflows/jekyll-docker.yml/badge.svg)](https://github.com/jehovahsays/mev/actions/workflows/jekyll-docker.yml)
+
+---
+
+
+
 ## **Developer Mode**  
 - Visit the website on **HTTP** for more editing power:  
   [http://morgansbyers.scienceontheweb.net/](http://morgansbyers.scienceontheweb.net/)  
