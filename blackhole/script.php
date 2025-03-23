@@ -1,6 +1,4 @@
 <?php
-// Halts bad bots from entering webpage if on php action file stops edits also.
-include(realpath(getenv('DOCUMENT_ROOT')) .'/blackhole/blackhole.php');
 // Start output buffering to prevent headers already sent errors
 ob_start();
 
@@ -148,13 +146,13 @@ function generateRSSFeed() {
 		echo "The file $file_pointer already exists <br>"; 
 		echo "<meta name='viewport' content='width=device-width'><br><br><a href='./en/$value.html'>$value already exists.</a>";
 		// speaks file location when found.
-		echo "<script> var msg = new SpeechSynthesisUtterance('$value already exists.'); window.speechSynthesis.speak(msg); </script>";
-		//echo "<body onload='loadout()'><script>function loadout(){window.location.href = './index.html'}</script>";
+		//echo "<script> var msg = new SpeechSynthesisUtterance('$value already exists.'); window.speechSynthesis.speak(msg); </script>";
+		echo "<body onload='loadout()'><script>function loadout(){window.location.href = './index.html'}</script>";
 		exit();
 		}
 		// This function is replaced with SpeechSynthesisUtterance. Understand that the file that should not exist is created for the visitor when searched by visitor.
 		echo "<meta name='viewport' content='width=device-width, initial-scale=1.0'><br><br><a href='./en/$value.html'>$value</a> was created";
-        //echo "<body onload='loadout()'><script>function loadout(){window.location.href = './#en/$value'}</script>";
+        echo "<body onload='loadout()'><script>function loadout(){window.location.href = './en/$value.html'}</script>";
         //echo "<body onload='loadout()'><script>function loadout(){window.location.href = './en/$value.html'}</script>"; 
         echo "<script> var msg = new SpeechSynthesisUtterance('sir, searching a keyword creates the word in the database.'); window.speechSynthesis.speak(msg); </script>";		
 
@@ -180,52 +178,7 @@ function updateIndexJson($value) {
     file_put_contents($jsonFile, json_encode($jsonData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
 }
 
-  // Update index.html - with error handling
-    foreach($_POST as $variable => $value) {
-        if (empty($value) || $variable === 'secure-form-answer-Human') {
-            continue;
-        }
-        
-        $value = preg_replace('/[^a-zA-Z0-9_-]/', '_', $value);
-        
-        if (!is_writable("./index.html")) {
-            die("Cannot write to index.html - check permissions");
-        }
-        
-        $handle = fopen("./index.html", "a");
-        if (!$handle) {
-            die("Failed to open index.html for writing");
-        }
-        
-        $link_content = "<br><a href=\"./en/$value.html\" class=\"titleInput\"><button>$value</button></a><br>\r\n";
-        
-        if (fwrite($handle, $link_content) === false) {
-            fclose($handle);
-            die("Failed to write to index.html");
-        }
-        
-        fclose($handle);
-    }
-	
-foreach($_POST as $variable => $value) 
-{
-	$handle = fopen("./elizadata.js", "a");
-	// load the data and delete the line from the array 
-	$lines = file('./elizadata.js'); 
-	$last = sizeof($lines) - 1 ; 
-	unset($lines[$last]); 
-	// write the new data to the file 
-	file_put_contents('./elizadata.js', $lines); 
-	fwrite($handle, 
-	  ","	
-	. "\""
-	. "en/"
-	. $value
-	. "\""
-	. "\n"
-	. "];");
-}
-	
+  
 // Process POST data
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     foreach ($_POST as $variable => $value) {
@@ -407,7 +360,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	<a href=\"./" . htmlspecialchars($value, ENT_QUOTES, 'UTF-8') . ".html\" class=\"navbar-link navbar-link-active\">" . 
 	htmlspecialchars($value, ENT_QUOTES, 'UTF-8') . 
 	"</a>            
-	<a href=\"../main.html\" class=\"navbar-link\">index</a>            
+	<a href=\"../index.html\" class=\"navbar-link\">index</a>            
 	</nav>      
 	</div>   
     </header>
@@ -439,6 +392,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 	
     generateRSSFeed();
+	
+	// Update index.html - with error handling
+    foreach($_POST as $variable => $value) {
+        if (empty($value) || $variable === 'secure-form-answer-Human') {
+		continue;
+        }
+        
+		
+		foreach($_POST as $variable => $value) 
+		{
+		$value = preg_replace('/[^a-zA-Z0-9_-]/', '_', $value);
+		$handle = fopen("./en/index.html", "a");
+		fwrite($handle, 
+		"<br><a href=" 
+		. "\"" 
+		. "./index.html#en/" 
+		. $value
+		. "\"" 
+		. "class=" 
+		. "\"" 
+		. "titleInput" 
+		. "\"" 
+		. ">" 
+		. "<button>"
+		. $value
+		. "</button>"	
+		. "</a><br>"
+		. "\r\n");
+        
+		fclose($handle);
+		exit;
+		}
+	}		
 		
     // Redirect the user to the created page if user input value empty
     //if (!empty($value)) {

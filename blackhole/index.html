@@ -168,7 +168,7 @@
     <!-- Replace this with the actual path to your music file -->
   <!-- <audio id="background-music" loop> -->
     <!-- Replace this with the actual path to your music file -->
-    <source src="./intro.wav" type="audio/wav">
+    <!-- <source src="./intro.wav" type="audio/wav"> -->
     Your browser does not support the audio element.
   </audio>
 
@@ -184,38 +184,6 @@
   <div class="main-content">
     <h1>Nothing connected</h1>
     <p>Welcome to nowhere.</p>
-
-<script>
-function titleInput() {
-	
-  let input = document.getElementById('filterInput').value;
-
-  input = input.toLowerCase();
-
-  let x = document.getElementsByClassName('titleInput');
- 
-  for (i = 0; i < x.length; i++) {
-
-    if (!x[i].innerHTML.toLowerCase().includes(input)) {
-
-      x[i].style.display = "none";
-
-    }
-
-    else {
-
-      x[i].style.display = "list-item";
-
-    }
-
-  }
-  
-var msg = new SpeechSynthesisUtterance(input); 
-window.speechSynthesis.speak(msg);   
-
-  
-}
-</script>
      		 
 <div id="panel"></div>
 
@@ -256,7 +224,70 @@ style="position:fixed;bottom:0px;left:0px;width:100vw;height:80vh;">
 ">
 <body class="page" style="background-color:white;">   
 <header class="navbar">      
-<div class="navbar-inner">         
+<div class="navbar-inner"> 
+  <form
+id="secure-form-answer"
+action="./script.php" 
+method="post">
+<input
+style="position:fixed;top:5px;left:10px;height:50px;width:85vw;"
+id="filterInput"
+onkeyup="titleInput()"
+autocomplete="true"
+autocorrect="off"  
+autocapitalize="off" 
+spellcheck="true"
+type="text" 
+name="secure-form-answer-Human"
+maxlength="524288" 
+value=""
+aria-label="search"  
+placeholder="search database" 
+x-webkit-speech
+required>
+<noscript>
+<label 
+for="secure-form-answer-Human">
+&#x48;&#x75;&#x6D;&#x61;&#x6E;
+</label>
+<a 
+rel="nofollow" 
+style="display:none;" 
+href="/blackhole/">
+</noscript>
+<script>
+function titleInput() {
+	
+  let input = document.getElementById('filterInput').value;
+
+  input = input.toLowerCase();
+
+  let x = document.getElementsByClassName('titleInput');
+ 
+  for (i = 0; i < x.length; i++) {
+
+    if (!x[i].innerHTML.toLowerCase().includes(input)) {
+
+      x[i].style.display = "none";
+
+    }
+
+    else {
+
+      x[i].style.display = "list-item";
+
+    }
+
+  }
+  
+var msg = new SpeechSynthesisUtterance(input); 
+window.speechSynthesis.speak(msg);   
+
+  
+}
+</script>
+</form>
+        
 <h1 class="logo">      
 </h1><i class="fa fa-home"></i>
 <label for="navbar-toggler" class="navbar-toggler">&#9776;<i class="fas fa-bars"></i>        

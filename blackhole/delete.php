@@ -1,6 +1,6 @@
 <?php
 // Halts bad bots from entering webpage if on php action file stops edits also.
-include(realpath(getenv('DOCUMENT_ROOT')) .'/blackhole/blackhole.php');
+include(realpath(getenv('DOCUMENT_ROOT')) .'/balckhole/blackhole.php');
 // Start output buffering
 ob_start();
 
