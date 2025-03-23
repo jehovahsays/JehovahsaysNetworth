@@ -1,0 +1,67 @@
+# Security Headers for HTTP-only server
+# Enable mod_headers if not already enabled
+<IfModule mod_headers.c>
+    # Content Security Policy (CSP)
+    # Restricts resources to same origin, preventing XSS attacks
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';"
+
+    # Prevent browsers from MIME-sniffing
+    Header always set X-Content-Type-Options "nosniff"
+
+    # Protect against clickjacking
+    Header always set X-Frame-Options "DENY"
+
+    # Enable browser's XSS protection
+    Header always set X-XSS-Protection "1; mode=block"
+
+    # Control how much referrer information is included with requests
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+    # Control which browser features and APIs can be used
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), interest-cohort=(), payment=(), usb=(), screen-wake-lock=(), ambient-light-sensor=(), accelerometer=(), gyroscope=(), magnetometer=(), midi=(), sync-xhr=(), autoplay=(), display-capture=(), document-domain=(), encrypted-media=(), fullscreen=(), publickey-credentials-get=(), speaker=(), vr=(), xr-spatial-tracking=()"
+
+    # Remove the X-Powered-By header if it exists
+    Header unset X-Powered-By
+
+    # Add the Cross-Origin-Resource-Policy header to prevent cross-origin resource access
+    Header always set Cross-Origin-Resource-Policy "same-origin"
+
+    # Add Cross-Origin-Opener-Policy to control what cross-origin pages can open this page in a window 
+    Header always set Cross-Origin-Opener-Policy "same-origin"
+
+    # Add Cross-Origin-Embedder-Policy to ensure that your document can only load resources from the same origin
+    Header always set Cross-Origin-Embedder-Policy "require-corp"
+</IfModule>
+
+# Disable directory browsing
+Options -Indexes
+
+# Disable server signature
+ServerSignature Off
+
+# Protect .htaccess and .htpasswd files
+<FilesMatch "^\.ht">
+    Require all denied
+</FilesMatch>
+
+# Protect against common vulnerabilities by blocking suspicious request methods
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK|OPTIONS|HEAD)
+    RewriteRule .* - [F]
+</IfModule>
+
+# Enable protection against malicious file uploads
+<FilesMatch "(?i)\.(php|phtml|php3|php4|php5|php7|phar|phps)$">
+    # If you're not using these file types, you can deny access
+    # Uncomment the following line if you don't use PHP
+    # Require all denied
+</FilesMatch>
+
+# Disable execution of scripts in upload directories
+# Customize this path to match your upload directory
+#<Directory "/path/to/uploads">
+#    <FilesMatch "\.php$">
+#        Require all denied
+#    </FilesMatch>
+#</Directory>
