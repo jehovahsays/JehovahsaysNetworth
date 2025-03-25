@@ -195,24 +195,19 @@
 			
 <div id="inputWrapper">
 
-<form id="secure-form-answer">
-<input
-style="display:none;position:fixed;top:470px;left:120px;height:25px;width:140px;"
-id="filterInput"
-onkeyup="titleInput()"
-autocomplete="true"
-autocorrect="off"  
-autocapitalize="off" 
-spellcheck="true"
-type="text" 
-name="secure-form-answer"
-maxlength="524288" 
-value=""
-aria-label="search"  
-placeholder="search database" 
-x-webkit-speech
-required>
-</form>
+	    <script>
+        function titleInput() {
+            let input = document.getElementById('filterInput').value.trim().toLowerCase();
+            let items = document.getElementsByClassName('titleInput');
+            for (let i = 0; i < items.length; i++) {
+                items[i].style.display = items[i].innerHTML.toLowerCase().includes(input) ? "list-item" : "none";
+            }
+            if (input !== "titleInput") {
+                let msg = new SpeechSynthesisUtterance(input);
+                window.speechSynthesis.speak(msg);
+            }
+        }
+    </script>
 
 <iframe name="viewer"
 style="position:fixed;bottom:0px;left:0px;width:100vw;height:80vh;">
@@ -255,37 +250,7 @@ rel="nofollow"
 style="display:none;" 
 href="/blackhole/">
 </noscript>
-<script>
-function titleInput() {
-	
-  let input = document.getElementById('filterInput').value;
 
-  input = input.toLowerCase();
-
-  let x = document.getElementsByClassName('titleInput');
- 
-  for (i = 0; i < x.length; i++) {
-
-    if (!x[i].innerHTML.toLowerCase().includes(input)) {
-
-      x[i].style.display = "none";
-
-    }
-
-    else {
-
-      x[i].style.display = "list-item";
-
-    }
-
-  }
-  
-var msg = new SpeechSynthesisUtterance(input); 
-window.speechSynthesis.speak(msg);   
-
-  
-}
-</script>
 </form>
         
 <h1 class="logo">      

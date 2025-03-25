@@ -5,7 +5,8 @@
             "tv": "en/tv",
             "radio": "en/radio",
             "deleted": "en/deleted",
-            "index": "en/index"
+            "index": "en/index",
+            "created": "en/created"
         }
     }
 }

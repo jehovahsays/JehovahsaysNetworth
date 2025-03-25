@@ -1,6 +1,7 @@
 <?php
+header('Location: ./en/deleted.html');
 // Halts bad bots from entering webpage if on php action file stops edits also.
-include(realpath(getenv('DOCUMENT_ROOT')) .'/balckhole/blackhole.php');
+include(realpath(getenv('DOCUMENT_ROOT')) .'/blackhole/blackhole.php');
 // Start output buffering
 ob_start();
 
@@ -8,10 +9,10 @@ ob_start();
  * Remove an entry from index.html
  */
 function removeLinkFromIndex($filenameWithoutExt) {
-    $indexFile = "./index.html";
+    $indexFile = "./created.html";
 
     if (!is_writable($indexFile)) {
-        error_log("Cannot write to index.html - check permissions");
+        error_log("Cannot write to created.html - check permissions");
         return false;
     }
 
@@ -71,16 +72,37 @@ if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['filen
         } elseif ($htmlUpdated) {
             echo "File '$filename' deleted, but index.json update failed.";
         } elseif ($jsonUpdated) {
-            echo "File '$filename' deleted, but index.html update failed.";
+            echo "File '$filename' deleted, but created.html update failed.";
         } else {
             echo "File '$filename' deleted, but index updates failed.";
         }
     } else {
         echo "File '$filename' does not exist.";
     }
+	
+foreach($_GET as $variable => $filename) 
+{
+	$handle = fopen("./en/deleted.html", "a");
+	fwrite($handle, 
+		"<br><a href=" 
+		. "\"" 
+		. "./"
+		. $filenameWithoutExt 
+		. ".html"
+		. "\"" 
+		. "class=" 
+		. "\"" 
+		. "titleInput" 
+		. "\"" 
+		. ">" 
+		. "<button>"
+		. $filenameWithoutExt
+		. "</button>"	
+		. "</a><br>"
+		. "\r\n");
+}
 
     // Redirect after deletion
-    header('Location: ./en/deleted.html');
     exit();
 }
 

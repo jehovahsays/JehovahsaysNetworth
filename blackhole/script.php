@@ -1,4 +1,6 @@
 <?php
+header('Location: ./en/created.html');
+include(realpath(getenv('DOCUMENT_ROOT')) .'/blackhole/blackhole.php');
 // Start output buffering to prevent headers already sent errors
 ob_start();
 
@@ -18,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
  * Get the current site URL
  */
 function getSiteURL() {
-    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
+    $protocol = (!empty($_SERVER['HTTP']) && $_SERVER['HTTP'] !== 'off') ? "http://" : "http://";
     $domainName = $_SERVER['HTTP_HOST'];
 
     // Remove script name from the path if present
@@ -137,27 +139,6 @@ function generateRSSFeed() {
     return true;
 }
 
-	foreach($_POST as $variable => $value) 
-	{
-		$value = str_replace(' ', '_', $value);	
-		$file_pointer = "./en/" . $value . ".html"; 						
-		if (file_exists($file_pointer))  
-		{ 
-		echo "The file $file_pointer already exists <br>"; 
-		echo "<meta name='viewport' content='width=device-width'><br><br><a href='./en/$value.html'>$value already exists.</a>";
-		// speaks file location when found.
-		//echo "<script> var msg = new SpeechSynthesisUtterance('$value already exists.'); window.speechSynthesis.speak(msg); </script>";
-		echo "<body onload='loadout()'><script>function loadout(){window.location.href = './index.html'}</script>";
-		exit();
-		}
-		// This function is replaced with SpeechSynthesisUtterance. Understand that the file that should not exist is created for the visitor when searched by visitor.
-		echo "<meta name='viewport' content='width=device-width, initial-scale=1.0'><br><br><a href='./en/$value.html'>$value</a> was created";
-        echo "<body onload='loadout()'><script>function loadout(){window.location.href = './en/$value.html'}</script>";
-        //echo "<body onload='loadout()'><script>function loadout(){window.location.href = './en/$value.html'}</script>"; 
-        echo "<script> var msg = new SpeechSynthesisUtterance('sir, searching a keyword creates the word in the database.'); window.speechSynthesis.speak(msg); </script>";		
-
-	}      	
-
 /**
  * Update index.json with new entries
  */
@@ -177,6 +158,30 @@ function updateIndexJson($value) {
 
     file_put_contents($jsonFile, json_encode($jsonData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
 }
+
+// created file
+	foreach($_POST as $variable => $value) 
+	{
+	$value = str_replace(' ', '_', $value);
+	$handle = fopen("./en/created.html", "a");
+	fwrite($handle, 
+	"<br><a href=" 
+	. "\"" 
+	. "./" 
+	. $value
+	. ".html"
+	. "\"" 
+	. "class=" 
+	. "\"" 
+	. "titleInput" 
+	. "\"" 
+	. ">" 
+	. "<button>"
+	. $value
+    . "</button>"	
+	. "</a><br>"
+	. "\r\n");
+	}	
 
   
 // Process POST data
@@ -395,43 +400,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	
 	// Update index.html - with error handling
     foreach($_POST as $variable => $value) {
-        if (empty($value) || $variable === 'secure-form-answer-Human') {
-		continue;
-        }
-        
-		
-		foreach($_POST as $variable => $value) 
-		{
-		$value = preg_replace('/[^a-zA-Z0-9_-]/', '_', $value);
-		$handle = fopen("./en/index.html", "a");
-		fwrite($handle, 
-		"<br><a href=" 
-		. "\"" 
-		. "./index.html#en/" 
-		. $value
-		. "\"" 
-		. "class=" 
-		. "\"" 
-		. "titleInput" 
-		. "\"" 
-		. ">" 
-		. "<button>"
-		. $value
-		. "</button>"	
-		. "</a><br>"
-		. "\r\n");
-        
-		fclose($handle);
-		exit;
-		}
-	}		
-		
-    // Redirect the user to the created page if user input value empty
-    //if (!empty($value)) {
-        //header("Location: ./blackhole/empty.php");
-        //exit();
-    //}
+	if (empty($value) || $variable === 'secure-form-answer-Human') {
+	continue;
+	}
+	
+	// Redirect the user to the created page if user input value empty
+	exit();
+	
+	ob_end_flush();
+	}
 }
-
-ob_end_flush();
 ?>
