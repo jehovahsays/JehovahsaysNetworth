@@ -23,7 +23,7 @@ header( "Expires: 0" );
 header( "Accept-Language: en-US,en;q=0.5" );
 header( "Connection: Keep-alive" );
 header( 'Access-Control-Allow-Origin: *');
-header( 'Location: ./index.html');
+//header( 'Location: ./index.html');
 ob_start();
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     foreach ($_POST as $variable => $value) {
@@ -122,34 +122,9 @@ index
 name="description" 
 content="keyword search">
 </head>
-<button>
 <body>
-<form
-id="secure-form-answer"
-action="./blackhole/script.php" 
-method="post">
-<input
-style="position:fixed;top:50px;left:50px;
-height:50px;width:75vw;"
-id="filterInput"
-onkeyup="titleInput()"
-autocomplete="true"
-autocorrect="off"  
-autocapitalize="off" 
-spellcheck="true"
-type="text" 
-name="secure-form-answer-Human"
-maxlength="524288" 
-value=""
-aria-label="search"  
-placeholder="search database" 
-x-webkit-speech
-required>
-<noscript>
-<label 
-for="secure-form-answer-Human">
-&#x48;&#x75;&#x6D;&#x61;&#x6E;
-</label>
+
+
 <a 
 rel="nofollow" 
 style="display:none;" 
@@ -184,11 +159,11 @@ href="/blackhole/">
 </script>
 </form>
 <br><br>
-<a href="./blackhole/index.html">
+<a href="./index.html">
 Click here to explore this website
 </a>
 </body>
-</button>
+
 </html>
 <?PHP
 	// Update index.html - with error handling
