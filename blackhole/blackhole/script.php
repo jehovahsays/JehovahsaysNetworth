@@ -1,5 +1,5 @@
 <?php
-header('Location: ../index.html');
+header('Location: ./en/created.html');
 include(realpath(getenv('DOCUMENT_ROOT')) .'/blackhole/blackhole.php');
 // Start output buffering to prevent headers already sent errors
 ob_start();
@@ -34,15 +34,140 @@ function getSiteURL() {
     return $protocol . $domainName . $path;
 }
 
-     // created link on file
+/**
+ * Extract file information for RSS feed
+ */
+function getFileInfo($filePath, $fileName, $baseURL) {
+    $timestamp = filemtime($filePath);
+    $pubDate = date(DATE_RSS, $timestamp);
+    $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
+    
+    // Create a unique link to the file
+    $link = $baseURL . 'en/' . rawurlencode($fileName);
+    $guid = $baseURL . 'en/' . rawurlencode($fileName) . '?t=' . $timestamp;
+    
+    // Extract a meaningful title from the filename
+    $title = str_replace(['_', '-'], ' ', pathinfo($fileName, PATHINFO_FILENAME));
+    $description = "File: " . $fileName;
+    
+    // If it's an HTML file, extract its title and meta description
+    if ($fileExtension === 'html' || $fileExtension === 'htm') {
+        $content = file_get_contents($filePath);
+        
+        preg_match('/<title>(.*?)<\/title>/i', $content, $titleMatches);
+        if (!empty($titleMatches[1])) {
+            $title = trim($titleMatches[1]);
+        }
+        
+        preg_match('/<meta\s+name=["\']description["\']\s+content=["\']([^"\']+)["\']/i', $content, $descMatches);
+        if (!empty($descMatches[1])) {
+            $description = trim($descMatches[1]);
+        } else {
+            // If no meta description, extract the first paragraph
+            preg_match('/<p>(.*?)<\/p>/is', $content, $paraMatches);
+            if (!empty($paraMatches[1])) {
+                $description = strip_tags(trim($paraMatches[1]));
+                if (strlen($description) > 200) {
+                    $description = substr($description, 0, 197) . '...';
+                }
+            }
+        }
+    }
+    
+    return [
+        'title' => $title,
+        'link' => $link,
+        'description' => $description,
+        'pubDate' => $pubDate,
+        'guid' => $guid,
+        'timestamp' => $timestamp
+    ];
+}
+
+/**
+ * Generate or update the RSS feed file
+ */
+function generateRSSFeed() {
+    $folder = "./en/"; // The folder to monitor
+    $rssFile = "rss.xml"; // RSS feed file name
+    $siteURL = getSiteURL(); // Get the site URL dynamically
+    $feedTitle = "My Website Feed";
+    $feedDescription = "Latest updates from my website";
+    
+    if (!file_exists($folder)) {
+        mkdir($folder, 0777, true);
+        return false;
+    }
+    
+    $files = array_diff(scandir($folder), array('.', '..'));
+    $entries = [];
+    
+    foreach ($files as $file) {
+        $filePath = $folder . $file;
+        if (is_file($filePath)) {
+            $fileInfo = getFileInfo($filePath, $file, $siteURL);
+            if ($fileInfo) {
+                $entries[] = $fileInfo;
+            }
+        }
+    }
+
+    usort($entries, fn($a, $b) => $b['timestamp'] - $a['timestamp']);
+
+    $rss = '<?xml version="1.0" encoding="UTF-8" ?>' . PHP_EOL;
+    $rss .= '<rss version="2.0">' . PHP_EOL;
+    $rss .= '  <channel>' . PHP_EOL;
+    $rss .= '    <title>' . htmlspecialchars($feedTitle) . '</title>' . PHP_EOL;
+    $rss .= '    <link>' . htmlspecialchars($siteURL) . '</link>' . PHP_EOL;
+    $rss .= '    <description>' . htmlspecialchars($feedDescription) . '</description>' . PHP_EOL;
+    $rss .= '    <lastBuildDate>' . date(DATE_RSS) . '</lastBuildDate>' . PHP_EOL;
+
+    foreach ($entries as $entry) {
+        $rss .= '    <item>' . PHP_EOL;
+        $rss .= '      <title>' . htmlspecialchars($entry['title']) . '</title>' . PHP_EOL;
+        $rss .= '      <link>' . htmlspecialchars($entry['link']) . '</link>' . PHP_EOL;
+        $rss .= '      <description>' . htmlspecialchars($entry['description']) . '</description>' . PHP_EOL;
+        $rss .= '      <pubDate>' . $entry['pubDate'] . '</pubDate>' . PHP_EOL;
+        $rss .= '      <guid isPermaLink="false">' . htmlspecialchars($entry['guid']) . '</guid>' . PHP_EOL;
+        $rss .= '    </item>' . PHP_EOL;
+    }
+
+    $rss .= '  </channel>' . PHP_EOL;
+    $rss .= '</rss>';
+
+    file_put_contents($rssFile, $rss);
+    return true;
+}
+
+/**
+ * Update index.json with new entries
+ */
+function updateIndexJson($value) {
+    $jsonFile = "./index.json";
+
+    if (!file_exists($jsonFile)) {
+        file_put_contents($jsonFile, json_encode(["en" => ["index" => []]], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+    }
+
+    $jsonData = json_decode(file_get_contents($jsonFile), true);
+    if ($jsonData === null) {
+        die("Error reading JSON file");
+    }
+
+    $jsonData["en"]["index"][$value] = "en/$value";
+
+    file_put_contents($jsonFile, json_encode($jsonData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+}
+
+// created file
 	foreach($_POST as $variable => $value) 
 	{
 	$value = str_replace(' ', '_', $value);
-	$handle = fopen("../index.html", "a");
+	$handle = fopen("./en/created.html", "a");
 	fwrite($handle, 
 	"<br><a href=" 
 	. "\"" 
-	. "./blackhole/en/" 
+	. "./" 
 	. $value
 	. ".html"
 	. "\"" 
@@ -268,6 +393,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     file_put_contents($file_pointer, $html_template);
 	}
 	
+	updateIndexJson($value);
+    }
+	
+    generateRSSFeed();
+	
 	// Update index.html - with error handling
     foreach($_POST as $variable => $value) {
 	if (empty($value) || $variable === 'secure-form-answer-Human') {
@@ -279,6 +409,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	
 	ob_end_flush();
 	}
-  }
 }
 ?>

@@ -1,242 +1,205 @@
-<?php 
-/*
+<?php
+header_remove( "X-Powered-By" );
+include(realpath(getenv('DOCUMENT_ROOT')) .'/blackhole/blackhole.php');
+header( "Content-Security-Policy: default-src 'self'; script-src 'self' http: https:; style-src 'self'; img-src 'self' data:;");
+header( "X-Content-Type-Options: nosniff");
+header( "X-Frame-Options: DENY");
+header( "Referrer-Policy: same-origin");
+header( "Permissions-Policy: geolocation=(), microphone=(), camera=()");
+header( "Cross-Origin-Embedder-Policy: require-corp");
+header( "Cross-Origin-Opener-Policy: same-origin");
+header( "Cross-Origin-Resource-Policy: same-site");
+header( "Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header( "Pragma: no-cache");
+header( "Content-Type-Options: nosniff" );
+header( "XSS-Protection: 1; mode=block" );
+header( "X-XSS-Protection: 1; mode=block" );
+header( "Vary: Accept-Encoding" );
+header( "viewport: width=device-width, initial-scale=1.0" );
+header( "Host: index" );
+header( "description: index" );
+header( "keywords: index" );
+header( "Expires: 0" );
+header( "Accept-Language: en-US,en;q=0.5" );
+header( "Connection: Keep-alive" );
+header( 'Access-Control-Allow-Origin: *');
+//header( 'Location: ./index.html');
+ob_start();
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    foreach ($_POST as $variable => $value) {
+        if (empty($value) || $variable === 'secure-form-answer-Human') {
+            continue;
+        }
 
-Mediawiki Extension:WikiBanHammer
+        // Sanitize value
+        $value = preg_replace('/[^a-zA-Z0-9_-]/', '_', $value);
 
-Author: Morgan Shatee Byers
-
-Recreated from PHP scripts found online
-Much of the credit goes to everyone below this line.
-
-----------------------------------------------------
-
-Title: Blackhole for Bad Bots
-Description: Automatically trap and block bots that don't obey robots.txt rules
-Project URL: http://perishablepress.com/blackhole-bad-bots/
-Author: Jeff Starr (aka Perishable)
-Version: 3.1
-License: GPLv2 or later
-
-This program is free software; you can redistribute it and/or modify it under the 
-terms of the GNU General Public License as published by the Free Software Foundation; 
-either version 2 of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
-without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
-See the GNU General Public License for more details.
-
-Credits: The Blackhole includes customized/modified versions of these fine scripts:
- - Network Query Tool @ http://www.drunkwerks.com/docs/NetworkQueryTool/
- - Kloth.net Bot Trap @ http://www.kloth.net/internet/bottrap.php
-
-*/
-
-
-
-// edit as needed
-$from      = 'admin@127.0.0.1'; // from address
-$recip     = 'admin@127.0.0.1'; // to address
-$subject   = 'Bad Bot Alert!';
-$filename  = realpath(getenv('DOCUMENT_ROOT')) .'/blackhole.dat';
-
-
-
-// DO NOT EDIT BELOW THIS LINE
-
-
-
-// variables
-$version   = '3.1';
-$message   = '';
-$badbot    = 0;
-
-$request   = sanitize($_SERVER['REQUEST_URI']);
-$ipaddress = sanitize($_SERVER['REMOTE_ADDR']);
-$useragent = sanitize($_SERVER['HTTP_USER_AGENT']);
-$protocol  = sanitize($_SERVER['SERVER_PROTOCOL']);
-$method    = sanitize($_SERVER['REQUEST_METHOD']);
-
-
-
-// date and time
-date_default_timezone_set('UTC');
-$date = date('l, F jS Y @ H:i:s');
-$time = time();
-
-
-
-// sanitize
-function sanitize($string) {
-	$string = trim($string); 
-	$string = strip_tags($string);
-	$string = htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
-	$string = str_replace("\n", "", $string);
-	$string = trim($string); 
-	return $string;
+    }
 }
-
-
-
-// whois lookup
-function shapeSpace_whois_lookup($ipaddress) {
-	
-	$msg = '';
-	$extra = '';
-	$server = 'whois.arin.net';
-	
-	if (!$ipaddress = gethostbyname($ipaddress)) {
-		
-		$msg .= 'Can&rsquo;t perform lookup without an IP address.'. "\n\n";
-		
-	} else {
-		
-		if (!$sock = fsockopen($server, 43, $num, $error, 20)) {
-			
-			unset($sock);
-			$msg .= 'Timed-out connecting to $server (port 43).'. "\n\n";
-			
-		} else {
-			
-			// fputs($sock, "$ipaddress\n");
-			fputs($sock, "n $ipaddress\n");
-			$buffer = '';
-			while (!feof($sock)) $buffer .= fgets($sock, 10240); 
-			fclose($sock);
-			
-		}
-		
-		if (stripos($buffer, 'ripe.net')) {
-			
-			$nextServer = 'whois.ripe.net';
-			
-		} elseif (stripos($buffer, 'nic.ad.jp')) {
-			
-			$nextServer = 'whois.nic.ad.jp';
-			$extra = '/e'; // suppress JaPaNIC characters
-			
-		} elseif (stripos($buffer, 'registro.br')) {
-			
-			$nextServer = 'whois.registro.br';
-			
-		}
-		
-		if (isset($nextServer)) {
-			
-			$buffer = '';
-			$msg .= 'Deferred to specific whois server: '. $nextServer .'...'. "\n\n";
-			
-			if (!$sock = fsockopen($nextServer, 43, $num, $error, 10)) {
-				
-				unset($sock);
-				$msg .= 'Timed-out connecting to '. $nextServer .' (port 43)'. "\n\n";
-				
-			} else {
-				
-				fputs($sock, $ipaddress . $extra . "\n");
-				while (!feof($sock)) $buffer .= fgets($sock, 10240);
-				fclose($sock);
-				
-			}
-		}
-		
-		$replacements = array("\n", "\n\n", "");
-		$patterns = array("/\\n\\n\\n\\n/i", "/\\n\\n\\n/i", "/#(\s)?/i");
-		$buffer = preg_replace($patterns, $replacements, $buffer);
-		$buffer = htmlentities(trim($buffer), ENT_QUOTES, 'UTF-8');
-		
-		// $msg .= nl2br($buffer);
-		$msg .= $buffer;
-		
-	}
-	
-	return $msg;
-}
-
-$whois = shapeSpace_whois_lookup($ipaddress);
-
-
-
-// check ip address
-if (!$ipaddress || !preg_match("/^[\w\d\.\-]+\.[\w\d]{1,4}$/i", $ipaddress)) { 
-	exit('Error: Invalid Address');
-}
-
-
-
-// whitelist bots
-if (preg_match("/(adsbot-google|googlebot|mediapartners-google)/i", $useragent)) {
-	header('Location: /', true, 302);
-	exit;
-}
-
-
-
-// check bot
-$fp = fopen($filename, 'r') or die('<p>Error: Data File</p>');
-while ($line = fgets($fp)) {
-	
-	$u = explode(' ', $line);
-	
-	if ($u[0] === $ipaddress) {
-		
-		++$badbot;
-		break;
-		
-	}
-	
-}
-fclose($fp);
-
-
-
-// log bot & display message
-if ($badbot === 0) {
-	
-	$fp = fopen($filename, 'a+');
-	fwrite($fp, $ipaddress .' - '. $method .' - '. $protocol .' - '. $date .' - '. $useragent . "\n");
-	fclose($fp);
-	
-	
-	
-// 1st visit (warning) ?>
+?>
 <!DOCTYPE html>
-	<title>http://localhost/</title>
-	<style>
-		body { color: #fff; background-color: #851507; font: 14px/1.5 Helvetica, Arial, sans-serif; }
-		#blackhole { margin: 20px auto; width: 700px; }
-		pre { padding: 20px; white-space: pre-line; border-radius: 10px; background-color: #b34334; }
-		a { color: #fff; }
-	</style>
-	<body>
-		<div id="blackhole">
-			<h1>You have been banned!</h1>
-			<p>
-				This site&rsquo;s <a href="/robots.txt">robots.txt</a> file explicitly forbids your presence at this location. 
-				The following Whois data has been reviewed carefully. it is determined that your are not allowed to visit this website & you are banned from this site. 
-				If you think this is a mistake, <em>now</em> is the time to <a href="https://127.0.0.1">contact the administrator</a>.
-			</p>
-			<h3>Your IP Address is <?php echo $ipaddress; ?></h3>
-			<pre>WHOIS Lookup for <?php echo $ipaddress ."\n". $date ."\n\n". $whois; ?></pre>
-		</div>
-	</body>
-</html><?php 
-
-
-
-// 2nd+ visit (banned)
-} elseif ($badbot > 0) {
-	
-	$message   = $date . "\n\n";
-	$message  .= 'URL Request: '. $request . "\n";
-	$message  .= 'IP Address: '. $ipaddress . "\n";
-	$message  .= 'User Agent: '. $useragent . "\n\n";
-	$message  .= 'Whois Lookup: '. "\n\n" . $whois . "\n";
-	
-	mail($recip, $subject, $message, 'From: '. $from);
-	
-	echo '<h1>You have been banned from this domain</h1>';
-	echo '<p>If you think there has been a mistake, <a href="http://localhost/">contact the administrator</a> via proxy server.</p>';
-	
+<html 
+lang="en">
+<head>
+<meta 
+charset="UTF-8">
+<meta 
+http-equiv="X-UA-Compatible" 
+content="IE=Edge;chrome=1">
+<meta 
+name="apple-mobile-web-app-capable" 
+content="yes">
+<meta 
+name="viewport" 
+content="width=device-width, 
+initial-scale=1.0">
+<meta 
+http-equiv="X-Content-Type-Options" 
+content="nosniff">
+<meta 
+http-equiv="X-Frame-Options" 
+content="DENY">
+<meta 
+http-equiv="Referrer-Policy" 
+content="strict-origin-when-cross-origin">
+<meta 
+http-equiv="Permissions-Policy" 
+content="geolocation=(), microphone=(), 
+camera=()">
+<meta 
+http-equiv="X-XSS-Protection" 
+content="1; mode=block">
+<meta 
+http-equiv="Cache-Control" 
+content="private, no-store, no-cache, 
+must-revalidate, proxy-revalidate, 
+max-age=0" />
+<meta 
+http-equiv="Pragma" 
+content="no-cache">
+<meta 
+http-equiv="Expires" 
+content="0">
+<meta 
+http-equiv="Clear-Site-Data" 
+content="*">
+<!-- Security in CSS -->
+<style>
+body {
+font-family: 
+Arial, 
+sans-serif;
+background-color: 
+gray;
+text-align: 
+left;
+margin: 
+50px;
 }
+input[type=text] {
+	width: 100%;
+	height: 1px;
+	padding: 12px 20px;
+	margin: 8px 0;
+	box-sizing: border-box;
+	border: none;
+	background-color: black;
+	color: white;
+}
+button {
+	position:fixed;
+	top:0px;
+	left:0px;
+	width:100vw;
+	height:100vh;
+	background-color: gray;
+}
+</style>
+<title>
+index
+</title>
+<meta 
+name="description" 
+content="keyword search">
+</head>
+<button>
+<body>
+<form
+id="secure-form-answer"
+action="./blackhole/script.php" 
+method="post">
+<input
+style="position:fixed;top:50px;left:50px;
+height:50px;width:75vw;"
+id="filterInput"
+onkeyup="titleInput()"
+autocomplete="true"
+autocorrect="off"  
+autocapitalize="off" 
+spellcheck="true"
+type="text" 
+name="secure-form-answer-Human"
+maxlength="524288" 
+value=""
+aria-label="search"  
+placeholder="search database" 
+x-webkit-speech
+required>
+<noscript>
+<label 
+for="secure-form-answer-Human">
+&#x48;&#x75;&#x6D;&#x61;&#x6E;
+</label>
+<a 
+rel="nofollow" 
+style="display:none;" 
+href="/blackhole/">
+</noscript>
+<!-- JavaScript Security -->
+<script>
+        // Enforce strict CSP dynamically (if applicable)
+        document.addEventListener("DOMContentLoaded", function() {
+            let metaCSP = document.createElement('meta');
+            metaCSP.httpEquiv = "Content-Security-Policy";
+            metaCSP.content = "default-src 'self'; script-src 'self';  style-src 'self'; img-src 'self' data:;";
+            document.head.appendChild(metaCSP);
+        });
 
-exit;
+        // Prevent pasting malicious code into input fields
+        document.addEventListener("paste", (event) => {
+            event.preventDefault();
+            alert("Pasting is disabled for security reasons.");
+        });
+
+        // Disable right-click (optional)
+        document.addEventListener("contextmenu", (event) => event.preventDefault());
+
+        // Prevent keystroke logging attempts
+        document.addEventListener("keydown", function(event) {
+            if (event.ctrlKey && (event.key === "U" || event.key === "S" || event.key === "H")) {
+                event.preventDefault();
+                alert("Keyboard shortcuts are disabled for security.");
+            }
+        });
+</script>
+</form>
+<br><br>
+<a href="./blackhole/index.html">
+Click here to explore this website
+</a>
+</body>
+</button>
+</html>
+<?PHP
+	// Update index.html - with error handling
+    foreach($_POST as $variable => $value) {
+	if (empty($value) || $variable === 'secure-form-answer-Human') {
+	continue;
+	}
+	
+	// Redirect the user to the created page if user input value empty
+	exit();
+	
+	ob_end_flush();
+	}
+?>

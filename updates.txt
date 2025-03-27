@@ -1,0 +1,43 @@
+
+127.0.0.1:80
+index.html
+robot.txt
+
+fallback for users that 
+do not allow javascript
+This index page must be able to collect 
+user input value using only html and css
+all browser must be able to identify
+http security headers
+even if http security headers are not 
+set in back end of server.
+user must stay on index.html
+
+update javascript for users who allow it
+make this design of this html page into
+command line window with an large X button 
+at the top of the screen just like many 
+CLI box windows
+make the exit button clean browser cache and 
+close browser
+
+the input box should be able to recieve cli
+commands from the user input box
+and sends the input value to html page
+that emulates artificial three.js scene
+of the cli commands.
+
+remember these cli commands are just defining 
+to three.js tool what a computer would display
+if given the command in this case three.js
+should just be able to simulate it on the 
+page.
+
+if the machine can not achieve this use 
+html css js and php to simulate the 
+artificial emulation of the computer
+response that is not real.
+
+
+
+

@@ -23,7 +23,7 @@ header( "Expires: 0" );
 header( "Accept-Language: en-US,en;q=0.5" );
 header( "Connection: Keep-alive" );
 header( 'Access-Control-Allow-Origin: *');
-//header( 'Location: ./index.html');
+header( 'Location: ./index.html');
 ob_start();
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     foreach ($_POST as $variable => $value) {
