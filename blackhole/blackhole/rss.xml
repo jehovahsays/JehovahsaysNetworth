@@ -2,50 +2,50 @@
 <rss version="2.0">
   <channel>
     <title>My Website Feed</title>
-    <link>http://localhost/blackhole/</link>
+    <link>http://localhost/blackhole/blackhole/</link>
     <description>Latest updates from my website</description>
-    <lastBuildDate>Tue, 25 Mar 2025 03:17:14 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 27 Mar 2025 16:10:13 +0000</lastBuildDate>
     <item>
       <title>created</title>
-      <link>http://localhost/blackhole/en/created.html</link>
+      <link>http://localhost/blackhole/blackhole/en/created.html</link>
       <description>File: created.html</description>
-      <pubDate>Tue, 25 Mar 2025 03:17:14 +0000</pubDate>
-      <guid isPermaLink="false">http://localhost/blackhole/en/created.html?t=1742872634</guid>
+      <pubDate>Thu, 27 Mar 2025 16:10:13 +0000</pubDate>
+      <guid isPermaLink="false">http://localhost/blackhole/blackhole/en/created.html?t=1743091813</guid>
     </item>
     <item>
-      <title>written</title>
-      <link>http://localhost/blackhole/en/written.html</link>
-      <description>File: written.html</description>
-      <pubDate>Tue, 25 Mar 2025 03:17:14 +0000</pubDate>
-      <guid isPermaLink="false">http://localhost/blackhole/en/written.html?t=1742872634</guid>
+      <title>update</title>
+      <link>http://localhost/blackhole/blackhole/en/update.html</link>
+      <description>File: update.html</description>
+      <pubDate>Thu, 27 Mar 2025 16:10:13 +0000</pubDate>
+      <guid isPermaLink="false">http://localhost/blackhole/blackhole/en/update.html?t=1743091813</guid>
     </item>
     <item>
       <title>deleted</title>
-      <link>http://localhost/blackhole/en/deleted.html</link>
+      <link>http://localhost/blackhole/blackhole/en/deleted.html</link>
       <description>File: deleted.html</description>
-      <pubDate>Tue, 25 Mar 2025 03:06:29 +0000</pubDate>
-      <guid isPermaLink="false">http://localhost/blackhole/en/deleted.html?t=1742871989</guid>
+      <pubDate>Tue, 25 Mar 2025 03:18:06 +0000</pubDate>
+      <guid isPermaLink="false">http://localhost/blackhole/blackhole/en/deleted.html?t=1742872686</guid>
     </item>
     <item>
       <title>radio</title>
-      <link>http://localhost/blackhole/en/radio.html</link>
+      <link>http://localhost/blackhole/blackhole/en/radio.html</link>
       <description>File: radio.html</description>
       <pubDate>Sun, 23 Mar 2025 04:58:38 +0000</pubDate>
-      <guid isPermaLink="false">http://localhost/blackhole/en/radio.html?t=1742705918</guid>
+      <guid isPermaLink="false">http://localhost/blackhole/blackhole/en/radio.html?t=1742705918</guid>
     </item>
     <item>
       <title>tv</title>
-      <link>http://localhost/blackhole/en/tv.html</link>
+      <link>http://localhost/blackhole/blackhole/en/tv.html</link>
       <description>File: tv.html</description>
       <pubDate>Sun, 23 Mar 2025 04:58:27 +0000</pubDate>
-      <guid isPermaLink="false">http://localhost/blackhole/en/tv.html?t=1742705907</guid>
+      <guid isPermaLink="false">http://localhost/blackhole/blackhole/en/tv.html?t=1742705907</guid>
     </item>
     <item>
       <title>about</title>
-      <link>http://localhost/blackhole/en/about.html</link>
+      <link>http://localhost/blackhole/blackhole/en/about.html</link>
       <description>File: about.html</description>
       <pubDate>Sun, 23 Mar 2025 04:57:25 +0000</pubDate>
-      <guid isPermaLink="false">http://localhost/blackhole/en/about.html?t=1742705845</guid>
+      <guid isPermaLink="false">http://localhost/blackhole/blackhole/en/about.html?t=1742705845</guid>
     </item>
   </channel>
 </rss>
