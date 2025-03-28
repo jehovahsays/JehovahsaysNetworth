@@ -1,56 +1,35 @@
 body {
-    background: url('background.jpg') no-repeat center center fixed;
-    background-size: cover;
+    background-color: black;
+    color: cyan;
     font-family: monospace;
+    text-align: center;
+    padding-top: 50px;
+}
+
+.bios-container {
+    display: inline-block;
+    text-align: left;
+    border: 2px solid cyan;
+    padding: 20px;
+    width: 300px;
+}
+
+h1, h2 {
+    text-align: center;
     margin: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
 }
 
-.cli-window {
-    width: 90%;
-    max-width: 500px;
-    height: 60vh;
-    background: rgba(0, 0, 0, 0.9);
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    position: fixed;
-    bottom: 5%;
-    left: 50%;
-    transform: translateX(-50%);
+table {
+    width: 100%;
+    border-spacing: 5px;
 }
 
-.cli-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: linear-gradient(to right, #222, #444);
-    color: white;
-    padding: 10px;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    font-size: 16px;
+td {
+    padding: 3px;
 }
 
-#cli-output {
-    flex-grow: 1;
-    background: black;
-    color: lime;
-    padding: 10px;
+.footer {
+    margin-top: 20px;
+    text-align: center;
     font-size: 14px;
-    overflow-y: auto;
-}
-
-#cli-input {
-    flex-grow: 1;
-    background: transparent;
-    color: lime;
-    border: none;
-    font-size: 18px;
-    padding: 5px;
 }
