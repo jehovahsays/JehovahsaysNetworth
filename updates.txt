@@ -1,7 +1,12 @@
 
+
+localhost
 127.0.0.1:80
 index.html
-robot.txt
+index.php
+robots.txt
+
+
 
 fallback for users that 
 do not allow javascript
