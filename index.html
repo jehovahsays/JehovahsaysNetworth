@@ -37,9 +37,12 @@
 <body>
 
 <pre id="bootText"></pre>
-<span class="blinking-cursor"></span>
+<span class="blinking-cursor">
+<a href='index.htm'>Skip this page</a>
+</span>
 
 <script>
+
     const bootLines = [
         "Initializing BIOS...",
         "Checking system integrity...",
@@ -49,15 +52,18 @@
         "Performing security checks...",
         "System Ready.",
         "-----------------------------",
-        "Would you like to continue? (yes / no)"
+        "Type yes to continue or no to exit to 3rd party search engine? (yes / no)"
     ];
 
     const asciiArt = [
-        "  .----.  ",
+	    "       /   ",
+	    "      .    ",
+	    "    /  /   ",
+        "  .----.   ",
         " /      \\ ",
-        "| 0  0  |",
-        "|   --   |",
-        " \\______/"
+        " | 0  0  | ",
+        " |   --  | ",
+        " \\_____/  "
     ];
 
     let bootTextEl = document.getElementById("bootText");
@@ -74,10 +80,10 @@
     }
 
     function askForContinuation() {
-        let input = prompt("Continue? (yes / no)").toLowerCase();
+        let input = prompt("Type yes to continue? (yes / no)").toLowerCase();
         if (input === "yes") {
-			window.location.href = "index.htm"; // Entrance into website
-            //showASCIIArt();
+			//window.location.href = "index.htm"; // Entrance into website
+            showASCIIArt();
         } else {
             window.location.href = "https://www.google.com"; // Change this to the actual safe exit page
         }
@@ -93,6 +99,8 @@
     }
 
     showBootText();
+	
+	
 </script>
 
 </body>
