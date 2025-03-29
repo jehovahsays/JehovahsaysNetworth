@@ -106,57 +106,60 @@ input[type=text] {
 	background-color: black;
 	color: white;
 }
-button {
-	position:fixed;
-	top:0px;
-	left:0px;
-	width:100vw;
-	height:100vh;
-	background-color: gray;
-}
 </style>
-<title>
-index
-</title>
-<meta 
-name="description" 
-content="keyword search">
+<style>html { height: 100% }body { min-height: 100% }:root{   font-family: "Open Sans", sans-serif;   font-size: 16px;   font-weight: 400;}*{   margin: 0;   box-sizing: border-box;}.page{   min-height: 100vh;   background-color: #fff;   color: #000;}.navbar{   position: sticky;   top: 0;   height: 65px;   background-color: #212529;   color: #fff;}.navbar-inner{   display: flex;   flex-direction: row;   align-items: center;   justify-content: space-between;   height: 64px;   max-width: 1440px;   margin-inline: auto;   padding-inline: 4%;}.navbar-toggler,.navbar-toggler-check{   display: none;}.navbar-menu{   display: flex;   flex-direction: row;   gap: 1rem;}.navbar-link{   display: block;   padding: .5rem 1.25rem;   text-align: center;   text-decoration: none;   color: rgba(255, 255, 255, .5);   transition: color .15s;}.navbar-link:hover{   color: #fff;}.navbar-link-active{   color: #fff;   pointer-events: none;}.logo{   font-family: "Montserrat", sans-serif;   font-size: 1.75rem;   font-weight: 600;   letter-spacing: 1px;}.logo-link{   text-decoration: none;   color: inherit;}.button{   display: inline-block;   padding: .5rem 1.75rem;   text-align: center;   text-decoration: none;   background-color: #0d6efd;   color: #fff;   border-radius: 9999px;   transition: filter .15s;}.button:hover{   filter: brightness(.9);}@media only screen and (max-width:1024px) {   .navbar-menu{      gap: .5rem;   }   .button{      padding-inline: 1.5rem;   }}@media only screen and (max-width:768px) {   :root{      font-size: 15px;   }      .navbar-menu{      position: absolute;      top: -100vh;      left: 0;      width: 100%;      flex-direction: column;      padding: .5rem 4% 1rem;      background-color: #212529;      z-index: -1;      transition: top .5s;   }   .navbar-toggler{      display: block;      font-size: 1.5rem;   }   .navbar-toggler-check:checked + .navbar-menu{      top: 64px;   }}</style>
+    <title>BIOS Setup Utility</title>
+    <link rel="stylesheet" href="../styles.css">
 </head>
-<button>
-<body>
-<form
-id="secure-form-answer"
-action="./blackhole/script.php" 
-method="post">
-<input
-style="position:fixed;top:50px;left:50px;
-height:50px;width:75vw;"
-id="filterInput"
-onkeyup="titleInput()"
-autocomplete="true"
-autocorrect="off"  
-autocapitalize="off" 
-spellcheck="true"
-type="text" 
-name="secure-form-answer-Human"
-maxlength="524288" 
-value=""
-aria-label="search"  
-placeholder="search database" 
-x-webkit-speech
-required>
-<noscript>
-<label 
-for="secure-form-answer-Human">
-&#x48;&#x75;&#x6D;&#x61;&#x6E;
-</label>
-<a 
-rel="nofollow" 
-style="display:none;" 
-href="/blackhole/">
-</noscript>
-<!-- JavaScript Security -->
+
+<footer style="position:fixed;top:0px;right:0px;height:5vh;width:100vw;text-align:center;background: blue;
+">
+
+<body class="page" style="background-color:white;">   
+<header class="navbar">      
+<div class="navbar-inner"> 
+<h1 class="logo">      
+</h1><i class="fa fa-home"></i>
+<label for="navbar-toggler" class="navbar-toggler">&#9776;<i class="fas fa-bars"></i>        
+ </label>   
+ 
+ <input type="checkbox" id="navbar-toggler" class="navbar-toggler-check">       
+ <nav class="navbar-menu">   
+ <a href="././blackhole/index.html">open command line interface</a>
+</div>
+
+    <div class="bios-container">
+        <h1>BIOS Setup Utility</h1>
+        <h2>System Information</h2>
+        <table>
+            <tr><td>BIOS Version:</td><td><?php echo "v0.00"; ?></td></tr>
+            <tr><td>Processor:</td><td><?php echo "0.00 GHz"; ?></td></tr>
+            <tr><td>Memory Installed:</td><td><?php echo "0MB DDR RAM"; ?></td></tr>
+            <tr><td>Hard Disk:</td><td><?php echo "0GB IDE HDD"; ?></td></tr>
+            <tr><td>Video Card:</td><td><?php echo "MX 0"; ?></td></tr>
+            <tr><td>Boot Order:</td><td><?php echo "1. Floppy Drive<br>2. Hard Disk<br>3. CD-ROM"; ?></td></tr>
+        </table>
+        <div >
+            <p><a href="./blackhole/index.html">[ ↑ ↓ ]</a> Navigate | <a href="./blackhole/index.html">[Enter]</a> Select | <a href="./blackhole/index.html">[ESC]</a> Exit</p>
+        </div>
+    </div>
+</footer>
 <script>
+        function titleInput() {
+            let input = document.getElementById('filterInput').value.trim().toLowerCase();
+            let items = document.getElementsByClassName('titleInput');
+            for (let i = 0; i < items.length; i++) {
+                items[i].style.display = items[i].innerHTML.toLowerCase().includes(input) ? "list-item" : "none";
+            }
+            if (input !== "titleInput") {
+                let msg = new SpeechSynthesisUtterance(input);
+                window.speechSynthesis.speak(msg);
+            }
+        }
+    </script>
+	
+<!-- JavaScript Security -->
+    <script>
         // Enforce strict CSP dynamically (if applicable)
         document.addEventListener("DOMContentLoaded", function() {
             let metaCSP = document.createElement('meta');
@@ -181,14 +184,9 @@ href="/blackhole/">
                 alert("Keyboard shortcuts are disabled for security.");
             }
         });
-</script>
-</form>
-<br><br>
-<a href="./blackhole/index.html">
-Click here to explore this website
-</a>
+		</script>
+		
 </body>
-</button>
 </html>
 <?PHP
 	// Update index.html - with error handling

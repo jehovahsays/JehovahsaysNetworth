@@ -67,14 +67,6 @@ input[type=text] {
 	background-color: black;
 	color: white;
 }
-button {
-	position:fixed;
-	top:0px;
-	left:0px;
-	width:100vw;
-	height:100vh;
-	background-color: gray;
-}
 </style>
 <title>
 index
@@ -83,39 +75,7 @@ index
 name="description" 
 content="keyword search">
 </head>
-<button>
 <body>
-<form
-id="secure-form-answer"
-action="./blackhole/script.php" 
-method="post">
-<input
-style="position:fixed;top:50px;left:50px;
-height:50px;width:75vw;"
-id="filterInput"
-onkeyup="titleInput()"
-autocomplete="true"
-autocorrect="off"  
-autocapitalize="off" 
-spellcheck="true"
-type="text" 
-name="secure-form-answer-Human"
-maxlength="524288" 
-value=""
-aria-label="search"  
-placeholder="search database" 
-x-webkit-speech
-required>
-<noscript>
-<label 
-for="secure-form-answer-Human">
-&#x48;&#x75;&#x6D;&#x61;&#x6E;
-</label>
-<a 
-rel="nofollow" 
-style="display:none;" 
-href="/blackhole/">
-</noscript>
 <!-- JavaScript Security -->
     <script>
         // Enforce strict CSP dynamically (if applicable)
@@ -143,10 +103,11 @@ href="/blackhole/">
             }
         });
 		</script>
-</form>
+
 <a href="./blackhole/index.html">
+<button>
 Click here to explore this website
+</button>
 </a>
 </body>
-</button>
 </html>
