@@ -22,7 +22,7 @@ header( "Expires: 0" );
 header( "Accept-Language: en-US,en;q=0.5" );
 header( "Connection: Keep-alive" );
 header( 'Access-Control-Allow-Origin: *');
-//header( 'Location: ./index.html');
+//header( 'Location: ./blackhole/index.php');
 ob_start();
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     foreach ($_POST as $variable => $value) {
@@ -82,106 +82,85 @@ content="0">
 <meta 
 http-equiv="Clear-Site-Data" 
 content="*">
-    <title>Boot Screen Simulation</title>
-    <style>
-        body {
-            background-color: black;
-            color: limegreen;
-            font-family: monospace;
-            padding: 20px;
-            white-space: pre-wrap;
-            font-size: 16px;
-        }
-        #bootText {
-            display: block;
-            min-height: 400px;
-        }
-        .blinking-cursor {
-            display: inline-block;
-            width: 10px;
-            height: 16px;
-            background-color: limegreen;
-            animation: blink 1s infinite;
-        }
-        @keyframes blink {
-            0% { opacity: 1; }
-            50% { opacity: 0; }
-            100% { opacity: 1; }
-        }
-        .hidden {
-            display: none;
-        }
-    </style>
+
+  <title>nothing</title>
+
+<style>html { height: 100% }body { min-height: 100% }:root{   font-family: "Open Sans", sans-serif;   font-size: 16px;   font-weight: 400;}*{   margin: 0;   box-sizing: border-box;}.page{   min-height: 100vh;   background-color: #fff;   color: #000;}.navbar{   position: sticky;   top: 0;   height: 65px;   background-color: #212529;   color: #fff;}.navbar-inner{   display: flex;   flex-direction: row;   align-items: center;   justify-content: space-between;   height: 64px;   max-width: 1440px;   margin-inline: auto;   padding-inline: 4%;}.navbar-toggler,.navbar-toggler-check{   display: none;}.navbar-menu{   display: flex;   flex-direction: row;   gap: 1rem;}.navbar-link{   display: block;   padding: .5rem 1.25rem;   text-align: center;   text-decoration: none;   color: rgba(255, 255, 255, .5);   transition: color .15s;}.navbar-link:hover{   color: #fff;}.navbar-link-active{   color: #fff;   pointer-events: none;}.logo{   font-family: "Montserrat", sans-serif;   font-size: 1.75rem;   font-weight: 600;   letter-spacing: 1px;}.logo-link{   text-decoration: none;   color: inherit;}.button{   display: inline-block;   padding: .5rem 1.75rem;   text-align: center;   text-decoration: none;   background-color: #0d6efd;   color: #fff;   border-radius: 9999px;   transition: filter .15s;}.button:hover{   filter: brightness(.9);}@media only screen and (max-width:1024px) {   .navbar-menu{      gap: .5rem;   }   .button{      padding-inline: 1.5rem;   }}@media only screen and (max-width:768px) {   :root{      font-size: 15px;   }      .navbar-menu{      position: absolute;      top: -100vh;      left: 0;      width: 100%;      flex-direction: column;      padding: .5rem 4% 1rem;      background-color: #212529;      z-index: -1;      transition: top .5s;   }   .navbar-toggler{      display: block;      font-size: 1.5rem;   }   .navbar-toggler-check:checked + .navbar-menu{      top: 64px;   }}</style>
+
 </head>
-<body>
+<body>	     		 
 
-<pre id="bootText"></pre>
-<span class="blinking-cursor">
-<a href='index.htm'>Skip this page</a>
-</span>
+<footer style="position:fixed;top:0px;right:0px;height:5vh;width:100vw;text-align:center;background: blue;">
+<body class="page" style="background-color:white;">   
+<header class="navbar">      
+<div class="navbar-inner"> 
+  <form
+id="secure-form-answer"
+action="./script.php" 
+method="post">
+<input
+style="position:fixed;top:5px;left:10px;height:50px;width:85vw;"
+id="filterInput"
+onkeyup="titleInput()"
+autocomplete="true"
+autocorrect="off"  
+autocapitalize="off" 
+spellcheck="true"
+type="text" 
+name="secure-form-answer-Human"
+maxlength="524288" 
+value=""
+aria-label="search"  
+placeholder="search database" 
+x-webkit-speech
+required>
+<noscript>
+<label 
+for="secure-form-answer-Human">
+&#x48;&#x75;&#x6D;&#x61;&#x6E;
+</label>
+<a 
+rel="nofollow" 
+style="display:none;" 
+href="/blackhole/">
+</noscript>
 
-<script>
-
-    const bootLines = [
-        "Initializing BIOS...",
-        "Checking system integrity...",
-        "Loading kernel...",
-        "Detecting hardware...",
-        "Initializing devices...",
-        "Performing security checks...",
-        "System Ready.",
-        "-----------------------------",
-        "Type yes to continue or no to exit to 3rd party search engine? (yes / no)"
-    ];
-
-    const asciiArt = [
-	    "       /   ",
-	    "      .    ",
-	    "    /  /   ",
-        "  .----.   ",
-        " /      \\ ",
-        " | 0  0  | ",
-        " |   --  | ",
-        " \\_____/  "
-    ];
-
-    let bootTextEl = document.getElementById("bootText");
-    let index = 0;
-
-    function showBootText() {
-        if (index < bootLines.length) {
-            bootTextEl.textContent += bootLines[index] + "\n";
-            index++;
-            setTimeout(showBootText, 1000);
-        } else {
-            askForContinuation();
+</form>
+        
+<h1 class="logo">      
+</h1><i class="fa fa-home"></i>
+<label for="navbar-toggler" class="navbar-toggler">&#9776;<i class="fas fa-bars"></i>        
+ </label>         
+ <input type="checkbox" id="navbar-toggler" class="navbar-toggler-check">       
+ <nav class="navbar-menu">            
+	<a href="./en/created.html"><button>created</button></a><br><br>
+	<a href="./en/deleted.html"><button>deleted</button></a><br><br>
+	<a href="./en/about.html"><button>about</button></a><br><br>
+	<a href="./en/tv.html"><button>tv</button></a><br><br>
+	<a href="./en/radio.html"><button>radio</button></a>
+				
+ </nav>      
+ </div>   
+ </header>
+ <center>    
+</footer> 
+		
+  	    <script>
+        function titleInput() {
+            let input = document.getElementById('filterInput').value.trim().toLowerCase();
+            let items = document.getElementsByClassName('titleInput');
+            for (let i = 0; i < items.length; i++) {
+                items[i].style.display = items[i].innerHTML.toLowerCase().includes(input) ? "list-item" : "none";
+            }
+            if (input !== "titleInput") {
+                let msg = new SpeechSynthesisUtterance(input);
+                window.speechSynthesis.speak(msg);
+            }
         }
-    }
-
-    function askForContinuation() {
-        let input = prompt("Type yes to continue? (yes / no)").toLowerCase();
-        if (input === "yes") {
-			//window.location.href = "index.htm"; // Entrance into website
-            showASCIIArt();
-        } else {
-            window.location.href = "https://www.google.com"; // Change this to the actual safe exit page
-        }
-    }
-
-    function showASCIIArt() {
-        bootTextEl.textContent += "\nLoading visual mode...\n\n";
-        asciiArt.forEach((line, i) => {
-            setTimeout(() => {
-                bootTextEl.textContent += line + "\n";
-            }, i * 1000);
-        });
-    }
-
-    showBootText();
+    </script>
 	
-	
-</script>
 
+  
 </body>
 </html>
 <?PHP

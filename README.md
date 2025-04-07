@@ -3,6 +3,28 @@
 
 ---
 
+localhost
+127.0.0.1:80
+index.html
+robots.txt
+
+when you add a new elizabot initial response 
+elizabot can choose that new initial response 
+from elizabot memory
+to begin a conversation.
+
+when you remove an initial response 
+you also remove from initial response 
+from elizabot memory
+
+when you add a new elizabot initial response 
+it will also update 
+index.json
+rss.xml
+rss.xml.rss
+
+---
+
 ## **index.php**
 the key security and architectural aspects of this PHP script:
 
