@@ -200,7 +200,7 @@ if ($badbot === 0) {
 	
 // 1st visit (warning) ?>
 <!DOCTYPE html>
-	<title>http://localhost/</title>
+	<title>banned</title>
 	<style>
 		body { color: #fff; background-color: #851507; font: 14px/1.5 Helvetica, Arial, sans-serif; }
 		#blackhole { margin: 20px auto; width: 700px; }
@@ -211,9 +211,9 @@ if ($badbot === 0) {
 		<div id="blackhole">
 			<h1>You have been banned!</h1>
 			<p>
-				This site&rsquo;s <a href="/robots.txt">robots.txt</a> file explicitly forbids your presence at this location. 
+				This site&rsquo;s <a href="../robots.txt">robots.txt</a> file explicitly forbids your presence at this location. 
 				The following Whois data has been reviewed carefully. it is determined that your are not allowed to visit this website & you are banned from this site. 
-				If you think this is a mistake, <em>now</em> is the time to <a href="https://127.0.0.1">contact the administrator</a>.
+				If you think this is a mistake, <em>now</em> is the time to <a href="../index.html">contact the administrator</a>.
 			</p>
 			<h3>Your IP Address is <?php echo $ipaddress; ?></h3>
 			<pre>WHOIS Lookup for <?php echo $ipaddress ."\n". $date ."\n\n". $whois; ?></pre>
@@ -235,7 +235,7 @@ if ($badbot === 0) {
 	mail($recip, $subject, $message, 'From: '. $from);
 	
 	echo '<h1>You have been banned from this domain</h1>';
-	echo '<p>If you think there has been a mistake, <a href="http://localhost/">contact the administrator</a> via proxy server.</p>';
+	echo '<p>If you think there has been a mistake, <a href="../index.html">contact the administrator</a> via proxy server.</p>';
 	
 }
 
