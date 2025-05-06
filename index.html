@@ -1,32 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Character encoding -->
     <meta charset="UTF-8">
+    
+    <!-- Viewport settings (this was incorrectly set as an HTTP header) -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Support this project by sending $1 through Cash App. Every contribution helps. Thank you!">
+    
+    <!-- SEO metadata (these were incorrectly set as HTTP headers) -->
+	<meta name="description" content="Support this project by sending $1 through Cash App. Every contribution helps. Thank you!">
     <meta name="keywords" content="$morgansbyers">
+    
+    <!-- CSP can be set via meta tag -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' http: https:; style-src 'self' 'unsafe-inline'; img-src 'self' data:;">
+    
+    <!-- X-XSS-Protection -->
     <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    
+    <!-- X-Content-Type-Options -->
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    
+    <!-- X-Frame-Options -->
     <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+    
+    <!-- Referrer Policy -->
     <meta name="referrer" content="same-origin">
+    
+    <!-- Permissions Policy (formerly Feature Policy) -->
     <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+    
+    <!-- Cache control -->
     <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <meta http-equiv="Clear-Site-Data" content="*">
-
-    <title>Support Morgan Shatee Byers</title>
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebPage",
-      "name": "Support Morgan Shatee Byers",
-      "description": "Support this project by sending $1 through Cash App. Every contribution helps.",
-      "url": "http://morgansbyers.scienceontheweb.net"
-    }
-    </script>
-
+	
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -100,20 +108,30 @@
             color: white;
             padding: 5px 0;
             font-size: 12px;
-        }
+			}
     </style>
+<title>Support Morgan Shatee Byers</title>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Support Morgan Shatee Byers",
+  "description": "Support this project by sending $1 through Cash App. Every contribution helps.",
+  "url": "http://morgansbyers.scienceontheweb.net"
+}
+</script>
 </head>
 <body>
     <div class="search-container">
-        <center>
-            <strong>Send $1</strong><br>
-            <a href="https://cash.app/$morgansbyers">https://cash.app/$morgansbyers</a>
-        </center>
-        <br>
+	<center>
+	Send $1
+<a href="https://cash.app/$morgansbyers">https://cash.app/$morgansbyers</a>
+	</center>
+	<br>
         <form id="search-form">
             <input
                 id="filterInput"
-                autocomplete="on"
+                autocomplete="true"
                 autocorrect="off"
                 autocapitalize="off"
                 spellcheck="true"
@@ -128,7 +146,7 @@
     </div>
     <br>
     <div class="history-container" id="searchHistory"></div>
-
+    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             loadSearchHistory();
@@ -206,22 +224,34 @@
                 .replace(/"/g, '&quot;')
                 .replace(/'/g, '&#039;');
         }
-
+    </script>
+<!-- JavaScript Security -->
+    <script>
+// Enforce strict CSP dynamically (if applicable)
+// document.addEventListener("DOMContentLoaded", function() {
+//    let metaCSP = document.createElement('meta');
+//    metaCSP.httpEquiv = "Content-Security-Policy";
+//    metaCSP.content = "default-src 'self'; script-src 'self' 'unsafe-inline' http: https:; style-src 'self' 'unsafe-inline'; img-src 'self' data:;";
+//    document.head.appendChild(metaCSP);
+// });
+        // Prevent pasting malicious code into input fields
         document.addEventListener("paste", (event) => {
             event.preventDefault();
             alert("Pasting is disabled for security reasons.");
         });
 
+        // Disable right-click (optional)
         document.addEventListener("contextmenu", (event) => event.preventDefault());
 
+        // Prevent keystroke logging attempts
         document.addEventListener("keydown", function(event) {
-            if (event.ctrlKey && ["U", "S", "H"].includes(event.key)) {
+            if (event.ctrlKey && (event.key === "U" || event.key === "S" || event.key === "H")) {
                 event.preventDefault();
                 alert("Keyboard shortcuts are disabled for security.");
             }
         });
-    </script>
-
+		</script>
+		<br>
     <div class="footer">homepage</div>
 </body>
 </html>
