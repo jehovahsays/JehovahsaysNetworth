@@ -1,32 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Character encoding -->
     <meta charset="UTF-8">
+    
+    <!-- Viewport settings -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO metadata -->
     <meta name="description" content="Support this project by sending $1 through Cash App. Every contribution helps. Thank you!">
     <meta name="keywords" content="$morgansbyers">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' http: https:; style-src 'self' 'unsafe-inline'; img-src 'self' data:;">
+    
+    <!-- Title should be placed early in the head -->
+    <title>Support Morgan Shatee Byers</title>
+    
+    <!-- Security headers -->
+    <!-- Note: Only one CSP declaration should be used - removed duplicate -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' http: https:; style-src 'self' 'unsafe-inline'; img-src 'self' data: http: https:; font-src 'self' http: https:; connect-src http: https:; frame-src 'self' http: https:;">
     <meta http-equiv="X-XSS-Protection" content="1; mode=block">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
     <meta name="referrer" content="same-origin">
     <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+    
+    <!-- Cache control -->
     <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <meta http-equiv="Clear-Site-Data" content="*">
-
-    <title>Support Morgan Shatee Byers</title>
+    
+    <!-- Structured data -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "WebPage",
       "name": "Support Morgan Shatee Byers",
       "description": "Support this project by sending $1 through Cash App. Every contribution helps.",
-      "url": "http://morgansbyers.scienceontheweb.net"
+      "url": "https://morgansbyers.scienceontheweb.net"
     }
     </script>
-
+    
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -105,15 +118,15 @@
 </head>
 <body>
     <div class="search-container">
-        <center>
-            <strong>Send $1</strong><br>
+        <div style="text-align: center;">
+            Send $1
             <a href="https://cash.app/$morgansbyers">https://cash.app/$morgansbyers</a>
-        </center>
+        </div>
         <br>
         <form id="search-form">
             <input
                 id="filterInput"
-                autocomplete="on"
+                autocomplete="off"
                 autocorrect="off"
                 autocapitalize="off"
                 spellcheck="true"
@@ -128,7 +141,7 @@
     </div>
     <br>
     <div class="history-container" id="searchHistory"></div>
-
+    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             loadSearchHistory();
@@ -183,7 +196,7 @@
                     <div>${escapeHTML(item.text)}</div>
                     <div style="font-size: 12px; color: #666;">${formattedDate}</div>
                     <div class="controls">
-                        <button onclick="speakText('${escapeHTML(item.text)}')">Speak</button>
+                        <button onclick="speakText('${escapeJS(item.text)}')">Speak</button>
                         <button onclick="removeHistoryItem(${index})">Delete</button>
                     </div>
                 `;
@@ -206,22 +219,38 @@
                 .replace(/"/g, '&quot;')
                 .replace(/'/g, '&#039;');
         }
-
+        
+        function escapeJS(str) {
+            return str
+                .replace(/\\/g, '\\\\')
+                .replace(/'/g, "\\'")
+                .replace(/"/g, '\\"')
+                .replace(/\n/g, '\\n')
+                .replace(/\r/g, '\\r')
+                .replace(/\t/g, '\\t');
+        }
+    </script>
+    
+    <!-- JavaScript Security -->
+    <script>
+        // Prevent pasting malicious code into input fields
         document.addEventListener("paste", (event) => {
             event.preventDefault();
             alert("Pasting is disabled for security reasons.");
         });
 
+        // Disable right-click (optional)
         document.addEventListener("contextmenu", (event) => event.preventDefault());
 
+        // Prevent keystroke logging attempts
         document.addEventListener("keydown", function(event) {
-            if (event.ctrlKey && ["U", "S", "H"].includes(event.key)) {
+            if (event.ctrlKey && (event.key === "u" || event.key === "s" || event.key === "h")) {
                 event.preventDefault();
                 alert("Keyboard shortcuts are disabled for security.");
             }
         });
     </script>
-
+    <br>
     <div class="footer">homepage</div>
 </body>
 </html>
