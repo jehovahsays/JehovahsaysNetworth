@@ -1,11 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=Edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="description" content="Support this project by sending $1 through Cash App. Every contribution helps. Thank you!">
+    <!-- Character encoding -->
+    <meta charset="UTF-8">
+    
+    <!-- Viewport settings (this was incorrectly set as an HTTP header) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO metadata (these were incorrectly set as HTTP headers) -->
+	<meta name="description" content="Support this project by sending $1 through Cash App. Every contribution helps. Thank you!">
+    <meta name="keywords" content="$morgansbyers">
+    
+    <!-- CSP can be set via meta tag -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' http: https:; style-src 'self' 'unsafe-inline'; img-src 'self' data:;">
+    
+    <!-- X-XSS-Protection -->
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    
+    <!-- X-Content-Type-Options -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    
+    <!-- X-Frame-Options -->
+    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+    
+    <!-- Referrer Policy -->
+    <meta name="referrer" content="same-origin">
+    
+    <!-- Permissions Policy (formerly Feature Policy) -->
+    <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+    
+    <!-- Cache control -->
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Clear-Site-Data" content="*">
+	
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .search-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 10px;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+        #filterInput {
+            width: 100%;
+            height: 50px;
+            padding: 5px 15px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .history-container {
+            margin-top: 80px;
+            padding: 10px;
+        }
+        .search-item {
+            background-color: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .controls {
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+        button {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #3367d6;
+        }
+        .empty-message {
+            text-align: center;
+            color: #666;
+            margin-top: 40px;
+        }
+		.footer {
+			position: fixed;
+			bottom: 0;
+			width: 100%;
+            height: 20;
+			background-color: black;
+		}
+    </style>
+    <!-- SEO metadata (these were incorrectly set as HTTP headers) -->
+	<meta name="description" content="Support this project by sending $1 through Cash App. Every contribution helps. Thank you!">
+    <meta name="keywords" content="$morgansbyers">
 <title>Support Morgan Shatee Byers</title>
 <script type="application/ld+json">
 {
@@ -16,14 +119,148 @@
   "url": "http://morgansbyers.scienceontheweb.net"
 }
 </script>
+<meta http-equiv="Content-Security-Policy" content="
+default-src 'self' http: https:;
+script-src 'self' 'unsafe-inline' 'unsafe-eval' http: https:;
+style-src 'self' 'unsafe-inline' http: https:;
+img-src data: http: https:;
+font-src 'self' http: https:;
+connect-src http: https:;
+frame-src 'self' http: https:;"/>
 </head>
 <body>
-<center>
-<p>
-Send $1  
-<br>
+    <div class="search-container">
+	<center>
+	Send $1
 <a href="https://cash.app/$morgansbyers">https://cash.app/$morgansbyers</a>
-</p>
-</center>
+	</center>
+	<br>
+        <form id="search-form">
+            <input
+                id="filterInput"
+                autocomplete="true"
+                autocorrect="off"
+                autocapitalize="off"
+                spellcheck="true"
+                type="text"
+                name="searchQuery"
+                maxlength="500"
+                aria-label="search"
+                placeholder="comment"
+                required
+            >
+        </form>
+    </div>
+    <br>
+    <div class="history-container" id="searchHistory"></div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSearchHistory();
+
+            document.getElementById('search-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const input = document.getElementById('filterInput');
+                const searchQuery = input.value.trim();
+
+                if (searchQuery) {
+                    speakText(searchQuery);
+                    saveSearch(searchQuery);
+                    console.log('Search processed locally:', searchQuery);
+                    input.value = '';
+                }
+            });
+        });
+
+        function speakText(text) {
+            try {
+                const msg = new SpeechSynthesisUtterance(text);
+                window.speechSynthesis.speak(msg);
+            } catch(e) {
+                console.error('Speech synthesis not supported:', e);
+            }
+        }
+
+        function saveSearch(text) {
+            let history = JSON.parse(localStorage.getItem('searchHistory') || '[]');
+            history.unshift({ text: text, timestamp: new Date().toISOString() });
+            if (history.length > 50) history = history.slice(0, 50);
+            localStorage.setItem('searchHistory', JSON.stringify(history));
+            loadSearchHistory();
+        }
+
+        function loadSearchHistory() {
+            const historyContainer = document.getElementById('searchHistory');
+            const history = JSON.parse(localStorage.getItem('searchHistory') || '[]');
+
+            if (history.length === 0) {
+                historyContainer.innerHTML = '<div class="empty-message">No comment history yet</div>';
+                return;
+            }
+
+            historyContainer.innerHTML = '';
+            history.forEach((item, index) => {
+                const date = new Date(item.timestamp);
+                const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+                const itemElement = document.createElement('div');
+                itemElement.className = 'search-item';
+                itemElement.innerHTML = `
+                    <div>${escapeHTML(item.text)}</div>
+                    <div style="font-size: 12px; color: #666;">${formattedDate}</div>
+                    <div class="controls">
+                        <button onclick="speakText('${escapeHTML(item.text)}')">Speak</button>
+                        <button onclick="removeHistoryItem(${index})">Delete</button>
+                    </div>
+                `;
+                historyContainer.appendChild(itemElement);
+            });
+        }
+
+        function removeHistoryItem(index) {
+            let history = JSON.parse(localStorage.getItem('searchHistory') || '[]');
+            history.splice(index, 1);
+            localStorage.setItem('searchHistory', JSON.stringify(history));
+            loadSearchHistory();
+        }
+
+        function escapeHTML(str) {
+            return str
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+    </script>
+<!-- JavaScript Security -->
+    <script>
+// Enforce strict CSP dynamically (if applicable)
+document.addEventListener("DOMContentLoaded", function() {
+    let metaCSP = document.createElement('meta');
+    metaCSP.httpEquiv = "Content-Security-Policy";
+    metaCSP.content = "default-src 'self'; script-src 'self' 'unsafe-inline' http: https:; style-src 'self' 'unsafe-inline'; img-src 'self' data:;";
+    document.head.appendChild(metaCSP);
+});
+        // Prevent pasting malicious code into input fields
+        document.addEventListener("paste", (event) => {
+            event.preventDefault();
+            alert("Pasting is disabled for security reasons.");
+        });
+
+        // Disable right-click (optional)
+        document.addEventListener("contextmenu", (event) => event.preventDefault());
+
+        // Prevent keystroke logging attempts
+        document.addEventListener("keydown", function(event) {
+            if (event.ctrlKey && (event.key === "U" || event.key === "S" || event.key === "H")) {
+                event.preventDefault();
+                alert("Keyboard shortcuts are disabled for security.");
+            }
+        });
+		</script>
+		<br>
+<footer>
+<center>Jehovahsays LLC</center>
+</footer>	
 </body>
 </html>
