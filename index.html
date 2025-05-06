@@ -4,29 +4,41 @@
     <!-- Character encoding -->
     <meta charset="UTF-8">
     
-    <!-- Viewport settings (this was incorrectly set as an HTTP header) -->
+    <!-- Viewport settings -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- SEO metadata (these were incorrectly set as HTTP headers) -->
-	<meta name="description" content="Support this project by sending $1 through Cash App. Every contribution helps. Thank you!">
+    <!-- Page title - moved to correct position -->
+    <title>Support Morgan Shatee Byers</title>
+    
+    <!-- SEO metadata - removed duplicate entries -->
+    <meta name="description" content="Support this project by sending $1 through Cash App. Every contribution helps. Thank you!">
     <meta name="keywords" content="$morgansbyers">
     
-    <!-- CSP can be set via meta tag -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' http: https:; style-src 'self' 'unsafe-inline'; img-src 'self' data:;">
+    <!-- Structured data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Support Morgan Shatee Byers",
+      "description": "Support this project by sending $1 through Cash App. Every contribution helps.",
+      "url": "https://morgansbyers.scienceontheweb.net"
+    }
+    </script>
     
-    <!-- X-XSS-Protection -->
+    <!-- Security headers - consolidated into one CSP -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self' http: https:;
+        script-src 'self' 'unsafe-inline' 'unsafe-eval' http: https:;
+        style-src 'self' 'unsafe-inline' http: https:;
+        img-src 'self' data: http: https:;
+        font-src 'self' http: https:;
+        connect-src http: https:;
+        frame-src 'self' http: https:;">
+    
     <meta http-equiv="X-XSS-Protection" content="1; mode=block">
-    
-    <!-- X-Content-Type-Options -->
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    
-    <!-- X-Frame-Options -->
     <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
-    
-    <!-- Referrer Policy -->
     <meta name="referrer" content="same-origin">
-    
-    <!-- Permissions Policy (formerly Feature Policy) -->
     <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
     
     <!-- Cache control -->
@@ -98,47 +110,29 @@
             color: #666;
             margin-top: 40px;
         }
-		.footer {
-			position: fixed;
-			bottom: 0;
-			width: 100%;
-            height: 20;
-			background-color: black;
-		}
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 20px; /* Fixed: was missing 'px' unit */
+            background-color: black;
+            color: white; /* Added for visibility */
+            text-align: center;
+            padding: 10px 0;
+        }
     </style>
-    <!-- SEO metadata (these were incorrectly set as HTTP headers) -->
-	<meta name="description" content="Support this project by sending $1 through Cash App. Every contribution helps. Thank you!">
-    <meta name="keywords" content="$morgansbyers">
-<title>Support Morgan Shatee Byers</title>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebPage",
-  "name": "Support Morgan Shatee Byers",
-  "description": "Support this project by sending $1 through Cash App. Every contribution helps.",
-  "url": "http://morgansbyers.scienceontheweb.net"
-}
-</script>
-<meta http-equiv="Content-Security-Policy" content="
-default-src 'self' http: https:;
-script-src 'self' 'unsafe-inline' 'unsafe-eval' http: https:;
-style-src 'self' 'unsafe-inline' http: https:;
-img-src data: http: https:;
-font-src 'self' http: https:;
-connect-src http: https:;
-frame-src 'self' http: https:;"/>
 </head>
 <body>
     <div class="search-container">
-	<center>
-	Send $1
-<a href="https://cash.app/$morgansbyers">https://cash.app/$morgansbyers</a>
-	</center>
-	<br>
+        <center>
+            Send $1
+            <a href="https://cash.app/$morgansbyers">https://cash.app/$morgansbyers</a>
+        </center>
+        <br>
         <form id="search-form">
             <input
                 id="filterInput"
-                autocomplete="true"
+                autocomplete="off"
                 autocorrect="off"
                 autocapitalize="off"
                 spellcheck="true"
@@ -153,6 +147,10 @@ frame-src 'self' http: https:;"/>
     </div>
     <br>
     <div class="history-container" id="searchHistory"></div>
+    
+    <div class="footer">
+        <center>homepage</center>
+    </div>
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -208,7 +206,7 @@ frame-src 'self' http: https:;"/>
                     <div>${escapeHTML(item.text)}</div>
                     <div style="font-size: 12px; color: #666;">${formattedDate}</div>
                     <div class="controls">
-                        <button onclick="speakText('${escapeHTML(item.text)}')">Speak</button>
+                        <button onclick="speakText('${escapeJS(item.text)}')">Speak</button>
                         <button onclick="removeHistoryItem(${index})">Delete</button>
                     </div>
                 `;
@@ -231,36 +229,52 @@ frame-src 'self' http: https:;"/>
                 .replace(/"/g, '&quot;')
                 .replace(/'/g, '&#039;');
         }
-    </script>
-<!-- JavaScript Security -->
-    <script>
-// Enforce strict CSP dynamically (if applicable)
-document.addEventListener("DOMContentLoaded", function() {
-    let metaCSP = document.createElement('meta');
-    metaCSP.httpEquiv = "Content-Security-Policy";
-    metaCSP.content = "default-src 'self'; script-src 'self' 'unsafe-inline' http: https:; style-src 'self' 'unsafe-inline'; img-src 'self' data:;";
-    document.head.appendChild(metaCSP);
-});
+
+        // Added function to escape JS strings properly
+        function escapeJS(str) {
+            if (!str) return '';
+            return str
+                .replace(/\\/g, '\\\\')
+                .replace(/'/g, "\\'")
+                .replace(/"/g, '\\"')
+                .replace(/\n/g, '\\n')
+                .replace(/\r/g, '\\r')
+                .replace(/\t/g, '\\t');
+        }
+
+        // Security features
         // Prevent pasting malicious code into input fields
         document.addEventListener("paste", (event) => {
+            // Removed the default prevention to allow pasting
+            // but still keep the security check
+            const target = event.target;
+            if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+                // Allow pasting in form fields
+                return;
+            }
+            // Prevent pasting elsewhere
             event.preventDefault();
-            alert("Pasting is disabled for security reasons.");
         });
 
         // Disable right-click (optional)
-        document.addEventListener("contextmenu", (event) => event.preventDefault());
-
-        // Prevent keystroke logging attempts
-        document.addEventListener("keydown", function(event) {
-            if (event.ctrlKey && (event.key === "U" || event.key === "S" || event.key === "H")) {
+        document.addEventListener("contextmenu", (event) => {
+            // Make this more selective - only prevent on sensitive areas
+            if (event.target.classList.contains('secure-content')) {
                 event.preventDefault();
-                alert("Keyboard shortcuts are disabled for security.");
             }
         });
-		</script>
-		<br>
-<footer>
-<center>homepage</center>
-</footer>	
+
+        // Prevent keystroke logging attempts - make more selective
+        document.addEventListener("keydown", function(event) {
+            if (event.ctrlKey && (event.key === "U" || event.key === "S" || event.key === "H")) {
+                // Only prevent in sensitive contexts
+                const target = event.target;
+                if (!(target.tagName === 'INPUT' || target.tagName === 'TEXTAREA')) {
+                    event.preventDefault();
+                    console.log("Protected keyboard shortcut intercepted");
+                }
+            }
+        });
+    </script>
 </body>
 </html>
