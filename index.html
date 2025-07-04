@@ -1,261 +1,294 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Support this project by sending $1 through Cash App. Every contribution helps. Thank you!" />
-    <meta name="keywords" content="$morgansbyers" />
-    <title>Main Page</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="Voice Search Leaderboard" />
+  <meta name="keywords" content="MEV" />
 
-    <!-- Load external CSS -->
-    <!-- <link rel="stylesheet" href="styles.css" /> -->
-	
- <style>
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f5f5f5;
-}
-.search-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    padding: 10px;
-    background-color: white;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    z-index: 100;
-}
-.centered {
-    text-align: center;
-}
-#filterInput {
-    width: 100%;
-    height: 50px;
-    padding: 5px 15px;
-    border: 1px solid #ddd;
-    border-radius: 25px;
-    font-size: 16px;
-    box-sizing: border-box;
-}
-.history-container {
-    margin-top: 80px;
-    padding: 10px;
-}
-.search-item {
-    background-color: white;
+  <title>Voice Search Leaderboard</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f7f7f7;
+    }
+    .marquee-container {
+      background: #222;
+      color: gold;
+      overflow: hidden;
+      white-space: nowrap;
+      padding: 8px 0;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    .marquee-text {
+      display: inline-block;
+      padding-left: 100%;
+      animation: scroll-left 20s linear infinite;
+    }
+    @keyframes scroll-left {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-100%); }
+    }
+
+    .search-container {
+      padding: 80px 20px 20px;
+      text-align: center;
+    }
+
+    input[type="text"] {
+      width: 90%;
+      max-width: 500px;
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 25px;
+    }
+
+    .history {
+      margin-top: 20px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .entry {
+      background: white;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .controls {
+      margin-top: 5px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .footer {
+      position: fixed;
+      bottom: 0;
+      background: #eee;
+      width: 100%;
+      text-align: center;
+      padding: 10px;
+      font-size: 14px;
+    }
+
+    .star {
+      font-size: 22px;
+      cursor: pointer;
+    }
+    .star.selected {
+      color: gold;
+    }
+
+    video#webcam {
+      position: fixed;
+       top: 50px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      z-index: 1;
+      border: 2px solid black;
+      border-radius: 50%;
+    }
+  /* Additional styles for filtering effect */
+  .titleInput {
+    background: white;
     padding: 15px;
     margin-bottom: 10px;
     border-radius: 5px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    animation: fadeIn 0.5s ease-in-out;
-}
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-.controls {
-    margin-top: 10px;
-    display: flex;
-    justify-content: space-between;
-}
-button {
-    background-color: #4285f4;
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 4px;
-    cursor: pointer;
-}
-button:hover {
-    background-color: #3367d6;
-}
-.empty-message {
-    text-align: center;
-    color: #666;
-    margin-top: 40px;
-}
-.footer {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    background-color: black;
-    text-align: center;
-    color: white;
-    padding: 5px 0;
-    font-size: 12px;
-}
- </style>
- 
-    <!-- Schema -->
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    display: list-item;
+  }
+  .titleInput.hidden {
+    display: none;
+    opacity: 0;
+  }
+  
+  </style>
+
+     <!-- Schema -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
         "@type": "WebPage",
-        "name": "Support Morgan Shatee Byers",
-        "description": "Support this project by sending $1 through Cash App. Every contribution helps.",
-        "url": "http://morgansbyers.scienceontheweb.net"
+        "name": "MEV",
+        "description": "Voice Search Leaderboard",
+        "url": "https://jehovahsays.github.io/mev/"
     }
-    </script>
-	
+    </script> 
+  
 </head>
 <body>
-    <div class="search-container">
-        <div class="centered">
-            <strong>
-			<a href="https://cash.app/$morgansbyers">
-			Send $1</a></strong><br>
-        </div>
-        <br />
-        <form id="search-form">
-            <input
-                id="filterInput"
-                autocomplete="on"
+
+<div class="marquee-container">
+  <div id="marquee" class="marquee-text">Loading leaderboard...</div>
+</div>
+
+<video id="webcam" autoplay playsinline muted></video>
+
+<div class="search-container">
+<form id="searchForm">
+  <input type="text" 
+  id="searchInput" 
+                 autocomplete="on"
                 autocorrect="off"
                 autocapitalize="off"
                 spellcheck="true"
-                type="text"
-                name="searchQuery"
-                maxlength="500"
-                aria-label="search"
-                placeholder="search"
-                required
-            />
-        </form>
-    </div>
-<br><br><br>
-    <div class="history-container" id="searchHistory"></div>
+  placeholder="Search something..." 
+  required onkeyup="titleInput()"/>
+</form>
+</div>
 
-    <div class="footer">
-Main Page
-				</div>
+<div class="history" id="history"></div>
 
-    <!-- External JS -->
-    <!-- <script src="script.js" defer></script> -->	
+<div class="footer">
+  Rate this app:
+  <span class="star" data-value="1">☆</span>
+  <span class="star" data-value="2">☆</span>
+  <span class="star" data-value="3">☆</span>
+  <span class="star" data-value="4">☆</span>
+  <span class="star" data-value="5">☆</span>
+  <br /><br />
+   <a href="https://cash.app/$morgansbyers">Send $1</a>
+</div>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-    loadSearchHistory();
+function titleInput() {
+  let input = document.getElementById('searchInput').value.toLowerCase();
+  let items = document.getElementsByClassName('titleInput');
 
-    document.getElementById('search-form').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const input = document.getElementById('filterInput');
-        const searchQuery = input.value.trim();
-        if (searchQuery) {
-            speakText(searchQuery);
-            saveSearch(searchQuery);
-            input.value = '';
-        }
-    });
-});
-
-function speakText(text) {
-    try {
-        const msg = new SpeechSynthesisUtterance(text);
-        window.speechSynthesis.speak(msg);
-    } catch (e) {
-        console.error('Speech synthesis not supported:', e);
+  for (let i = 0; i < items.length; i++) {
+    const content = items[i].textContent.toLowerCase();
+    if (!content.includes(input)) {
+      items[i].classList.add('hidden');
+    } else {
+      items[i].classList.remove('hidden');
     }
+  }
 }
+</script>
 
-function saveSearch(text) {
-    let history = JSON.parse(localStorage.getItem('searchHistory') || '[]');
-    history.unshift({ text, timestamp: new Date().toISOString() });
-    if (history.length > 50) history = history.slice(0, 50);
+<script>
+(async () => {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    document.getElementById('webcam').srcObject = stream;
+  } catch (e) {
+    console.warn("Webcam blocked or unavailable.");
+  }
+
+  const searchForm = document.getElementById('searchForm');
+  const searchInput = document.getElementById('searchInput');
+  const historyDiv = document.getElementById('history');
+  const marquee = document.getElementById('marquee');
+
+  let history = JSON.parse(localStorage.getItem('searchHistory') || '[]');
+
+  function saveSearch(text) {
+    const entry = { text, timestamp: new Date().toISOString() };
+    history.unshift(entry);
+    history = history.slice(0, 50);
     localStorage.setItem('searchHistory', JSON.stringify(history));
-    loadSearchHistory();
-}
+    updateHistory();
+    updateLeaderboard();
+  }
 
-function loadSearchHistory() {
-    const historyContainer = document.getElementById('searchHistory');
-    const history = JSON.parse(localStorage.getItem('searchHistory') || '[]');
-
-    if (history.length === 0) {
-        historyContainer.innerHTML = '<div class="empty-message">No search history yet</div>';
-        return;
+  searchForm.onsubmit = (e) => {
+    e.preventDefault();
+    const query = searchInput.value.trim();
+    if (query) {
+      saveSearch(query);
+      window.speak(query);
+      searchInput.value = '';
     }
+  };
 
-    historyContainer.innerHTML = '';
-    history.forEach((item, index) => {
-        const date = new Date(item.timestamp);
-        const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
-        const itemElement = document.createElement('div');
-        itemElement.className = 'search-item';
-        itemElement.innerHTML = `
-            <div>${escapeHTML(item.text)}</div>
-            <div style="font-size: 12px; color: #666;">${formattedDate}</div>
-            <div class="controls">
-                <button data-index="${index}" class="speak">Speak</button>
-                <button data-index="${index}" class="delete">Delete</button>
-            </div>
-        `;
-        historyContainer.appendChild(itemElement);
-    });
+  // Star rating
+  document.querySelectorAll('.star').forEach(star => {
+    star.onclick = () => {
+      const rating = parseInt(star.dataset.value);
+      localStorage.setItem('rating', rating);
+      updateStars(rating);
+    };
+  });
 
-    historyContainer.querySelectorAll('.speak').forEach(button => {
-        button.addEventListener('click', (e) => {
-            const index = e.target.dataset.index;
-            speakText(history[index].text);
-        });
+  function updateStars(rating) {
+    document.querySelectorAll('.star').forEach(star => {
+      star.classList.toggle('selected', parseInt(star.dataset.value) <= rating);
     });
+  }
 
-    historyContainer.querySelectorAll('.delete').forEach(button => {
-        button.addEventListener('click', (e) => {
-            const index = e.target.dataset.index;
-            removeHistoryItem(index);
-        });
-    });
+  const savedRating = parseInt(localStorage.getItem('rating'));
+  if (savedRating) updateStars(savedRating);
+
+  updateHistory();
+  updateLeaderboard();
+})();
+
+// ✅ Make speak and removeEntry globally accessible
+window.speak = function(text) {
+  const msg = new SpeechSynthesisUtterance(text);
+  window.speechSynthesis.speak(msg);
+};
+
+// Replace location.reload()
+window.removeEntry = function(index) {
+  let history = JSON.parse(localStorage.getItem('searchHistory') || '[]');
+  history.splice(index, 1);
+  localStorage.setItem('searchHistory', JSON.stringify(history));
+  updateHistory(); // instead of reload
+  updateLeaderboard();
+};
+</script>
+
+<script>
+function updateHistory() {
+  const historyDiv = document.getElementById('history');
+  let history = JSON.parse(localStorage.getItem('searchHistory') || '[]');
+  historyDiv.innerHTML = '';
+  if (history.length === 0) {
+    historyDiv.innerHTML = '<p>No searches yet.</p>';
+    return;
+  }
+  history.forEach((entry, index) => {
+    const div = document.createElement('div');
+    div.className = 'entry titleInput';
+    div.innerHTML = `
+      <strong>${entry.text}</strong><br>
+      <small>${new Date(entry.timestamp).toLocaleString()}</small>
+      <div class="controls">
+        <button onclick="window.speak('${entry.text.replace(/'/g, "\\'")}')">Speak</button>
+        <button onclick="window.removeEntry(${index})">Delete</button>
+      </div>
+    `;
+    historyDiv.appendChild(div);
+  });
 }
 
-function removeHistoryItem(index) {
-    let history = JSON.parse(localStorage.getItem('searchHistory') || '[]');
-    history.splice(index, 1);
-    localStorage.setItem('searchHistory', JSON.stringify(history));
-    loadSearchHistory();
+function updateLeaderboard() {
+  const marquee = document.getElementById('marquee');
+  let history = JSON.parse(localStorage.getItem('searchHistory') || '[]');
+  const counts = {};
+  for (const entry of history) {
+    const term = entry.text.toLowerCase();
+    counts[term] = (counts[term] || 0) + 1;
+  }
+  const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+  marquee.textContent = sorted.length
+    ? '🏆 Leaderboard: ' + sorted.map(([term, count], i) => `${i + 1}. ${term} (${count})`).join(' • ')
+    : 'No searches yet.';
 }
+</script>
 
-function escapeHTML(str) {
-    return str
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-}
 
-// Security measures
-document.addEventListener("paste", (event) => {
-    event.preventDefault();
-    alert("Pasting is disabled for security reasons.");
-});
-
-document.addEventListener("contextmenu", (event) => event.preventDefault());
-
-document.addEventListener("keydown", (event) => {
-    if (event.ctrlKey && ["U", "S", "H"].includes(event.key)) {
-        event.preventDefault();
-        alert("Keyboard shortcuts are disabled for security.");
-    }
-});
-
-        // Disable right-click (optional)
-        document.addEventListener("contextmenu", (event) => event.preventDefault());
-
-        // Prevent keystroke logging attempts
-        document.addEventListener("keydown", function(event) {
-            if (event.ctrlKey && (event.key === "U" || event.key === "S" || event.key === "H")) {
-                event.preventDefault();
-                alert("Keyboard shortcuts are disabled for security.");
-            }
-        });
-</script>	
-	
 </body>
 </html>
