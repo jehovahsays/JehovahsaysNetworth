@@ -1,277 +1,307 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Security and Performance Headers -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <meta http-equiv="Clear-Site-Data" content="*">
+  <meta name="referrer" content="same-origin">
+  <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+  <meta http-equiv="Cross-Origin-Embedder-Policy" content="require-corp">
+  <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin">
+  <meta http-equiv="Cross-Origin-Resource-Policy" content="same-site">
+  <meta name="theme-color" content="#000000">
+
+  <meta name="description" content="Voice Search Leaderboard" />
+  <meta name="keywords" content="MEV, voice search, leaderboard, AI, speech recognition" />
+
   <title>Leaderboard</title>
   <style>
-    html, body {
+    body {
       margin: 0;
-      padding: 0;
       background: #000;
-      color: #fff;
-      font-family: sans-serif;
-      height: 100%;
-      overflow: hidden;
+      color: gold;
+      font-family: Arial, sans-serif;
     }
-    canvas {
-      display: block;
-      background: linear-gradient(#87CEEB, #228B22);
-    }
-    #ui {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      background: rgba(0,0,0,0.5);
-      padding: 12px;
-      border-radius: 8px;
-    }
-    button {
-      padding: 10px;
-      font-size: 1rem;
-      margin-top: 10px;
+
+    .marquee-container {
+      position: relative;
+      top: 65px;
       width: 100%;
+      background: #222;
+      color: white;
+      overflow: hidden;
+      white-space: nowrap;
+      padding: 8px 0;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .marquee-text {
+      display: inline-block;
+      padding-left: 100%;
+      animation: scroll-left 20s linear infinite;
+    }
+
+    .ticker {
+      width: 100%;
+      overflow: hidden;
+      background: #111;
+      border-top: 2px solid gold;
+      border-bottom: 2px solid gold;
+      white-space: nowrap;
+      box-sizing: border-box;
+    }
+
+    .ticker-text {
+      display: inline-block;
+      padding-left: 100%;
+      animation: scroll-left 20s linear infinite;
+      font-size: 1.2rem;
+      padding: 10px 0;
+    }
+
+    @keyframes scroll-left {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-100%); }
+    }
+
+    .search-container {
+      padding: 80px 20px 20px;
+      text-align: center;
+    }
+
+    .search-container h1 {
+      color: #00ffcc;
+      margin-bottom: 20px;
+    }
+
+    input[type="text"] {
+      width: 90%;
+      max-width: 500px;
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 25px;
+    }
+
+    .history {
+      margin-top: 20px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .entry {
+      background: white;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .entry:nth-child(even) {
+      background: #f4f4f4;
+    }
+
+    .controls {
+      margin-top: 5px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .controls button {
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .controls button:hover {
+      background: #eee;
+    }
+
+    .footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: #222;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #888;
+    }
+
+    .titleInput {
+      background: white;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      opacity: 1;
+      transition: opacity 0.3s ease;
+      display: list-item;
+    }
+
+    .titleInput.hidden {
+      display: none;
+      opacity: 0;
     }
   </style>
+
+  <!-- Schema -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "MEV",
+      "description": "Voice Search Leaderboard",
+      "url": "https://jehovahsays.github.io/mev"
+    }
+  </script>
 </head>
 <body>
-  <canvas id="treeCanvas" width="400" height="600"></canvas>
-  <div id="ui">
-    <div>Current Top: <span id="topAmount">$0</span></div>
-    <div>Send <strong id="nextAmount">$1</strong> to <code>$morgansbyers on cash app</code></div>
-    <button id="confirmBtn">I sent <span id="btnAmount">$1</span></button>
+
+  <div class="ticker">
+    <div id="ticker" class="ticker-text">Loading leaderboard...</div>
+  </div>
+
+  <div class="marquee-container">
+    <div id="marquee" class="marquee-text">Loading top searches...</div>
+  </div>
+
+  <div class="search-container">
+    <h1>Voice Search Leaderboard</h1>
+    <form id="searchForm" class="search-form" aria-label="Search form">
+      <input 
+        type="text" 
+        id="searchInput"
+        autocomplete="on"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="true"
+        placeholder="Search something..."
+        required 
+        onkeyup="titleInput()" 
+        aria-label="Search input"
+      />
+    </form>
+  </div>
+
+  <div class="history" id="history"></div>
+
+  <div class="footer">
+    Send $1 to <strong>$morgansbyers</strong> using Cash App.<br>
+    Last updated: <span id="updated"></span><br><br>
+    <center><button onclick="location.href='about.html'">About</button></center>
   </div>
 
   <script>
-    const canvas = document.getElementById('treeCanvas');
-    const ctx = canvas.getContext('2d');
-    let topAmount = 0;
-    let birds = [], sunX = 0, sunDir = 1;
-    let birdInterval = null;
-
-    async function loadTopAmount() {
-      try {
-        const res = await fetch('/seed.json');
-        const json = await res.json();
-        topAmount = json.topAmount || 0;
-      } catch {
-        topAmount = 0;
-      }
-      updateUI();
-      drawTree(topAmount);
-      if (topAmount >= 7) {
-        startBirdsAnimation();
-        startSunAnimation();
+    function titleInput() {
+      let input = document.getElementById('searchInput').value.toLowerCase();
+      let items = document.getElementsByClassName('titleInput');
+      for (let i = 0; i < items.length; i++) {
+        const content = items[i].textContent.toLowerCase();
+        items[i].classList.toggle('hidden', !content.includes(input));
       }
     }
 
-    function updateUI() {
-      document.getElementById('topAmount').innerText = '$' + topAmount;
-      const next = topAmount + 1;
-      document.getElementById('nextAmount').innerText = '$' + next;
-      document.getElementById('btnAmount').innerText = '$' + next;
-    }
+    fetch('leaderboard.json')
+      .then(res => res.json())
+      .then(data => {
+        const ticker = document.getElementById('ticker');
+        const updated = document.getElementById('updated');
+        const text = `Total Collected: $${data.totalCollected} • Total To Send: $${data.totalToSend} • `;
+        ticker.textContent = text.repeat(2);
+        updated.textContent = data.lastUpdated || '—';
+      })
+      .catch(() => {
+        document.getElementById('ticker').textContent = 'Error loading leaderboard data.';
+      });
 
-document.getElementById('confirmBtn').addEventListener('touchstart', () => {
-  launchGrandFinale();
-});
-    function drawTree(stage) {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    (function() {
+      const searchForm = document.getElementById('searchForm');
+      const searchInput = document.getElementById('searchInput');
+      const historyDiv = document.getElementById('history');
+      let history = JSON.parse(localStorage.getItem('searchHistory') || '[]');
 
-      // Sky and sun
-      ctx.fillStyle = '#87CEEB';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      if (stage >= 7) {
-        ctx.fillStyle = 'yellow';
-        ctx.beginPath();
-        ctx.arc(sunX, 60, 20, 0, 2 * Math.PI);
-        ctx.fill();
+      function saveSearch(text) {
+        const entry = { text, timestamp: new Date().toISOString() };
+        history.unshift(entry);
+        history = history.slice(0, 50);
+        localStorage.setItem('searchHistory', JSON.stringify(history));
+        updateHistory();
+        updateLeaderboard();
       }
 
-      // Planet
-      ctx.fillStyle = '#2e8b57';
-      ctx.beginPath();
-      ctx.arc(canvas.width / 2, canvas.height - 60, 100, 0, Math.PI, true);
-      ctx.fill();
-
-      const centerX = canvas.width / 2;
-      let y = canvas.height - 160;
-
-      if (stage >= 1) {
-        ctx.fillStyle = '#8B4513';
-        ctx.beginPath();
-        ctx.arc(centerX, y, 6, 0, 2 * Math.PI);
-        ctx.fill();
-      }
-
-      if (stage >= 2) {
-        ctx.strokeStyle = '#A0522D';
-        ctx.beginPath();
-        ctx.moveTo(centerX, y + 6);
-        ctx.lineTo(centerX, y + 25);
-        ctx.stroke();
-      }
-
-      if (stage >= 3) {
-        ctx.strokeStyle = '#228B22';
-        ctx.beginPath();
-        ctx.moveTo(centerX, y - 6);
-        ctx.lineTo(centerX, y - 25);
-        ctx.stroke();
-        y -= 25;
-      }
-
-      if (stage >= 4) {
-        ctx.beginPath();
-        ctx.moveTo(centerX, y);
-        ctx.lineTo(centerX - 10, y - 10);
-        ctx.moveTo(centerX, y);
-        ctx.lineTo(centerX + 10, y - 10);
-        ctx.stroke();
-      }
-
-      if (stage >= 5) {
-        ctx.beginPath();
-        ctx.moveTo(centerX, canvas.height - 54);
-        ctx.lineTo(centerX - 10, canvas.height - 40);
-        ctx.moveTo(centerX, canvas.height - 54);
-        ctx.lineTo(centerX + 10, canvas.height - 40);
-        ctx.stroke();
-      }
-
-      if (stage >= 6) {
-        ctx.fillStyle = '#ff69b4';
-        ctx.beginPath();
-        ctx.arc(centerX - 10, y - 15, 4, 0, 2 * Math.PI);
-        ctx.arc(centerX + 10, y - 15, 4, 0, 2 * Math.PI);
-        ctx.fill();
-      }
-
-      if (stage >= 7) {
-        ctx.fillStyle = '#fff';
-        birds.forEach(bird => {
-          ctx.beginPath();
-          ctx.moveTo(bird.x, bird.y);
-          ctx.lineTo(bird.x + 10, bird.y - 5);
-          ctx.lineTo(bird.x + 20, bird.y);
-          ctx.stroke();
-        });
-      }
-    }
-
-    function startBirdsAnimation() {
-      birds = [];
-      for (let i = 0; i < 3; i++) {
-        birds.push({
-          x: Math.random() * canvas.width,
-          y: 100 + i * 30,
-          speed: 1 + Math.random()
-        });
-      }
-
-      if (!birdInterval) {
-        birdInterval = setInterval(() => {
-          birds.forEach(bird => {
-            bird.x += bird.speed;
-            if (bird.x > canvas.width) bird.x = -20;
-          });
-          drawTree(topAmount);
-        }, 50);
-      }
-    }
-
-    function startSunAnimation() {
-      setInterval(() => {
-        sunX += sunDir * 2;
-        if (sunX > canvas.width || sunX < 0) sunDir *= -1;
-      }, 60);
-    }
-
-    loadTopAmount();
-	
-class Firework {
-  constructor() {
-    this.x = Math.random() * canvas.width;
-    this.y = canvas.height;
-    this.targetY = Math.random() * canvas.height / 2;
-    this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
-    this.exploded = false;
-    this.particles = [];
-  }
-  update() {
-    if (!this.exploded) {
-      this.y -= 10;
-      if (this.y <= this.targetY) {
-        this.exploded = true;
-        for (let i = 0; i < 50; i++) {
-          this.particles.push(new Particle(this.x, this.y, this.color));
+      searchForm.onsubmit = (e) => {
+        e.preventDefault();
+        const query = searchInput.value.trim();
+        if (query) {
+          saveSearch(query);
+          window.speak(query);
+          searchInput.value = '';
         }
+      };
+
+      updateHistory();
+      updateLeaderboard();
+
+      window.speak = function(text) {
+        const msg = new SpeechSynthesisUtterance(text);
+        window.speechSynthesis.speak(msg);
+      };
+
+      window.removeEntry = function(index) {
+        history.splice(index, 1);
+        localStorage.setItem('searchHistory', JSON.stringify(history));
+        updateHistory();
+        updateLeaderboard();
+      };
+
+      function updateHistory() {
+        historyDiv.innerHTML = '';
+        if (history.length === 0) {
+          historyDiv.innerHTML = '<p>No searches yet.</p>';
+          return;
+        }
+
+        history.forEach((entry, index) => {
+          const div = document.createElement('div');
+          div.className = 'entry titleInput';
+          div.innerHTML = `
+            <strong>${entry.text.replace(/</g, "&lt;")}</strong><br>
+            <small>${new Date(entry.timestamp).toLocaleString()}</small>
+            <div class="controls">
+              <button onclick="window.speak('${entry.text.replace(/'/g, "\\'")}')">Speak</button>
+              <button onclick="window.removeEntry(${index})">Delete</button>
+            </div>
+          `;
+          historyDiv.appendChild(div);
+        });
       }
-    } else {
-      this.particles.forEach(p => p.update());
-    }
-  }
-  draw() {
-    if (!this.exploded) {
-      ctx.fillStyle = this.color;
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
-      ctx.fill();
-    } else {
-      this.particles.forEach(p => p.draw());
-    }
-  }
-}
 
-class Particle {
-  constructor(x, y, color) {
-    this.x = x;
-    this.y = y;
-    this.vx = (Math.random() - 0.5) * 8;
-    this.vy = (Math.random() - 0.5) * 8;
-    this.alpha = 1;
-    this.color = color;
-  }
-  update() {
-    this.x += this.vx;
-    this.y += this.vy;
-    this.alpha -= 0.02;
-  }
-  draw() {
-    ctx.globalAlpha = this.alpha;
-    ctx.fillStyle = this.color;
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.globalAlpha = 1;
-  }
-}
-
-let finaleFireworks = [];
-
-function launchGrandFinale() {
-  for (let i = 0; i < 15; i++) {
-    setTimeout(() => {
-      finaleFireworks.push(new Firework());
-    }, i * 300);
-  }
-}
-
-function animateFireworks() {
-  requestAnimationFrame(animateFireworks);
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  drawTree(topAmount);
-  finaleFireworks.forEach(fw => {
-    fw.update();
-    fw.draw();
-  });
-  finaleFireworks = finaleFireworks.filter(fw =>
-    !fw.exploded || fw.particles.some(p => p.alpha > 0)
-  );
-}
-
-animateFireworks();	
+      function updateLeaderboard() {
+        const marquee = document.getElementById('marquee');
+        const counts = {};
+        for (const entry of history) {
+          const term = entry.text.toLowerCase();
+          counts[term] = (counts[term] || 0) + 1;
+        }
+        const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+        marquee.textContent = sorted.length
+          ? 'Top searches: ' + sorted.map(([term, count], i) => `${i + 1}. ${term} (${count})`).join(' • ')
+          : 'No searches yet.';
+      }
+    })();
   </script>
+
 </body>
 </html>

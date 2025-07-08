@@ -1,7 +1,8 @@
-
 # 🏆 MEV – Voice Search Leaderboard
 
-A private, fully offline web app that lets users search, save, filter, and listen to terms — while tracking the most searched words on a live leaderboard. No backend. No tracking. 100% client-side.
+A private, fully offline web app that lets users search, save, filter, and **listen to voice commands** — while tracking the most frequently searched terms on a **live leaderboard**. Includes a competitive payout game via **Cash App** where users can win the pot by topping the leaderboard.
+
+No backend. No tracking. 100% client-side.
 
 ---
 
@@ -11,67 +12,114 @@ A private, fully offline web app that lets users search, save, filter, and liste
 Serve with a simple Python server:
 ```bash
 python3 -m http.server
-```
-Then visit: [http://localhost:8000/index.html](http://localhost:8000/index.html)
 
-### 🔹 Host Online
-Deploy using GitHub Pages, Netlify, or any static host:  
-**Example:** `https://yourdomain.com/index.html`
+Then visit: http://localhost:8000/index.html
 
----
+🔹 Host Online
 
-## ✨ Features
+Deploy using GitHub Pages, Netlify, or any static host:
+Live Example: https://jehovahsays.github.io/mev
 
-| Feature              | Description                                                        |
-|----------------------|--------------------------------------------------------------------|
-| 🔍 **Search Input**     | Users enter search terms, which are spoken aloud and saved locally |
-| 🎯 **Live Filtering**   | Filters previous entries in real time as user types              |
-| 🏆 **Leaderboard**      | Top 5 most searched terms, updated dynamically                   |
-| 🗣️ **Speech Output**    | Uses browser's speech synthesis to speak each term               |
-| 📷 **Webcam View**      | Displays user's webcam in a circular view (permission-based)     |
-| ⭐ **Star Rating**      | Users can rate the page from 1–5 stars (stored locally)           |
-| 💾 **Offline Support** | Entire app runs in-browser via `localStorage`                    |
+⸻
 
----
+🎮 How to Play
+	1.	Open the Leaderboard.
+	2.	Search any term using the input field.
+	3.	Your search is saved locally, spoken aloud, and contributes to the leaderboard.
+	4.	View the current top payout value.
+	5.	Send $1 more than the current top value to $morgansbyers on Cash App.
+	6.	After manual verification, you win the entire pot!
 
-## 🔐 Privacy & Security
+All actions are client-side only. Winnings are verified and returned manually.
 
-| Category           | Status              |
-|--------------------|---------------------|
-| Network Requests   | ❌ None              |
-| Data Storage       | ✅ `localStorage` only |
-| Microphone Access  | ❌ Not used          |
-| Webcam Access      | ✅ Requires permission |
-| Audio Output       | ✅ Client-side only   |
-| Encryption         | ❌ Not applicable    |
+⸻
 
-> **Security Grade:** A • **Privacy Grade:** A
+✨ Features
 
----
+Feature
+Description
+🔍 Search Input
+Users enter terms, which are spoken aloud and saved locally
+🎯 Live Filtering
+Filters entries in real time as user types
+🏆 Leaderboard
+Top 5 most searched terms, ranked by frequency
+🗣️ Speech Output
+Browser speaks each term using speechSynthesis
+📜 History Log
+Shows previous searches with time and control buttons
+📈 Cash Reward Game
+Top sender gets all contributions after manual verification
+💬 About Page
+Read-aloud instructions and rules with accessibility built-in
+🔐 Security Headers
+Enforced via meta tags for privacy, integrity, and sandboxing
+💾 Offline Support
+Entire app runs in-browser via localStorage
 
-## 🛠 Developer Mode
 
-- **Full editing**: [http://localhost/index.html](http://localhost/index.html)  
-- **Deployed view**: [https://jehovahsays.github.io/mev/](https://jehovahsays.github.io/mev/)
+⸻
 
----
+🔐 Privacy & Security
 
-## 📦 Tech Stack
+Category
+Status
+Network Requests
+✅ For JSON file only
+Data Storage
+✅ localStorage only
+Microphone Access
+❌ Not used
+Webcam Access
+❌ Not used
+Audio Output
+✅ Client-side only
+Permissions Policy
+✅ Strict
+HSTS/COEP/COOP
+✅ Set via headers
 
-- HTML5, CSS3, Vanilla JavaScript
-- No frameworks, analytics, or external dependencies
-- Works on Chrome, Firefox, Safari, Edge
+Security Grade: A • Privacy Grade: A • Trust-Based Verification: Manual
 
----
+⸻
+
+🛠 Developer Mode
+	•	Local Testing: http://localhost:8000/index.html
+	•	Live Deployment: https://jehovahsays.github.io/mev
+
+⸻
+
+📦 Tech Stack
+	•	HTML5, CSS3, Vanilla JavaScript
+	•	No frameworks, cookies, analytics, or external APIs
+	•	Works on Chrome, Firefox, Safari, and Edge
+	•	Lightweight and fast-loading (< 100 KB total)
+
+
+⸻
+
+⚖️ Strengths & Weaknesses
+
+✅ Strengths
+	•	Simple to use, no signup or login required
+	•	Fast client-side interaction with zero server dependencies
+	•	Engaging voice feedback and search tracking
+	•	Competitive reward mechanism with real monetary incentive
+	•	Portable and offline-friendly
+
+⚠️ Weaknesses
+	•	Manual payout process (trust-based, no automation)
+	•	Leaderboard and search history are local to your device
+	•	No multiplayer visibility or cloud sync
+	•	Requires user to trust webmaster for payout handling
+	•	No authentication or proof-of-play between users
+
+⸻	
 
 ## ✅ Build & CI Status
 
-[![PHPMD](https://github.com/jehovahsays/mev/actions/workflows/phpmd.yml/badge.svg)](https://github.com/jehovahsays/mev/actions/workflows/phpmd.yml)
-[![PHP CI](https://github.com/jehovahsays/mev/actions/workflows/php.yml/badge.svg)](https://github.com/jehovahsays/mev/actions/workflows/php.yml)
-[![CodeQL](https://github.com/jehovahsays/mev/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/jehovahsays/mev/actions/workflows/github-code-scanning/codeql)
 [![Dependabot Updates](https://github.com/jehovahsays/mev/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/jehovahsays/mev/actions/workflows/dependabot/dependabot-updates)
 [![Pages Deploy](https://github.com/jehovahsays/mev/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/jehovahsays/mev/actions/workflows/pages/pages-build-deployment)
-[![Jekyll CI](https://github.com/jehovahsays/mev/actions/workflows/jekyll-docker.yml/badge.svg)](https://github.com/jehovahsays/mev/actions/workflows/jekyll-docker.yml)
 
 ---
 
