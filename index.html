@@ -3,313 +3,288 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <!-- Security and Performance Headers -->
-  <meta http-equiv="X-Content-Type-Options" content="nosniff">
-  <meta http-equiv="X-Frame-Options" content="DENY">
-  <meta http-equiv="X-XSS-Protection" content="1; mode=block">
-  <meta http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
-  <meta http-equiv="Clear-Site-Data" content="*">
-  <meta name="referrer" content="same-origin">
-  <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
-  <meta http-equiv="Cross-Origin-Embedder-Policy" content="require-corp">
-  <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin">
-  <meta http-equiv="Cross-Origin-Resource-Policy" content="same-site">
+
+  <title>MEV Voice Search</title>
   <meta name="theme-color" content="#000000">
+  <meta name="description" content="MEV Voice Search Leaderboard - AI Powered Voice Search App">
 
-  <meta name="description" content="Voice Search Leaderboard" />
-  <meta name="keywords" content="MEV, voice search, leaderboard, AI, speech recognition" />
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="icon-192.png">
 
-  <title>Leaderboard</title>
   <style>
+    :root {
+      --bg: #000;
+      --accent: gold;
+      --card-bg: #121212;
+    }
     body {
       margin: 0;
-      background: #000;
-      color: gold;
-      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--accent);
+      font-family: system-ui, -apple-system, sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
     }
 
-    .marquee-container {
-      position: relative;
-      top: 65px;
-      width: 100%;
+    header {
+      text-align: center;
+      padding: 1rem;
+      background: #111;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--accent);
+      letter-spacing: 0.5px;
+    }
+
+    main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .marquee {
+      overflow: hidden;
+      white-space: nowrap;
       background: #222;
       color: white;
-      overflow: hidden;
-      white-space: nowrap;
-      padding: 8px 0;
-      font-size: 16px;
-      font-weight: bold;
+      padding: 8px;
+      border-radius: 6px;
+      font-weight: 500;
+      margin-bottom: 10px;
     }
 
-    .marquee-text {
+    .marquee span {
       display: inline-block;
       padding-left: 100%;
       animation: scroll-left 20s linear infinite;
     }
-
-    .ticker {
-      width: 100%;
-      overflow: hidden;
-      background: #111;
-      border-top: 2px solid gold;
-      border-bottom: 2px solid gold;
-      white-space: nowrap;
-      box-sizing: border-box;
-    }
-
-    .ticker-text {
-      display: inline-block;
-      padding-left: 100%;
-      animation: scroll-left 20s linear infinite;
-      font-size: 1.2rem;
-      padding: 10px 0;
-    }
-
     @keyframes scroll-left {
-      0% { transform: translateX(0%); }
-      100% { transform: translateX(-100%); }
-    }
-
-    .search-container {
-      padding: 80px 20px 20px;
-      text-align: center;
-    }
-
-    .search-container h1 {
-      color: #00ffcc;
-      margin-bottom: 20px;
-    }
-
-    input[type="text"] {
-      width: 90%;
-      max-width: 500px;
-      padding: 12px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 25px;
-    }
-
-    .history {
-      margin-top: 20px;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
+      from { transform: translateX(0%); }
+      to { transform: translateX(-100%); }
     }
 
     .entry {
-      background: white;
-      padding: 10px;
+      background: var(--card-bg);
+      padding: 12px;
+      border-radius: 8px;
       margin-bottom: 10px;
-      border-radius: 5px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.05);
     }
 
-    .entry:nth-child(even) {
-      background: #f4f4f4;
+    .entry small {
+      color: #bbb;
+      display: block;
+      margin-top: 4px;
     }
 
     .controls {
-      margin-top: 5px;
       display: flex;
       justify-content: space-between;
+      margin-top: 8px;
     }
 
     .controls button {
+      background: #333;
+      color: var(--accent);
+      border: none;
+      border-radius: 6px;
+      padding: 5px 10px;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: 0.3s;
     }
 
     .controls button:hover {
-      background: #eee;
+      background: var(--accent);
+      color: #000;
     }
 
-    .footer {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      background: #222;
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.9rem;
+    footer {
+      background: #111;
       color: #888;
+      text-align: center;
+      padding: 0.5rem;
+      font-size: 0.9rem;
     }
 
-    .titleInput {
-      background: white;
-      padding: 15px;
-      margin-bottom: 10px;
-      border-radius: 5px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      opacity: 1;
-      transition: opacity 0.3s ease;
-      display: list-item;
-    }
-
-    .titleInput.hidden {
-      display: none;
-      opacity: 0;
-    }
-.infobox {
+    /* Floating search bar */
+    .search-bar {
       position: fixed;
-	  top: 70px;
-	  width: 100%;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 500px;
+      display: flex;
+      align-items: center;
+      background: #fff;
+      border-radius: 50px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      padding: 8px 15px;
     }
 
+    .search-bar input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 16px;
+      padding: 8px;
+      border-radius: 50px;
+    }
+
+    .mic-btn {
+      background: var(--accent);
+      border: none;
+      border-radius: 50%;
+      width: 45px;
+      height: 45px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: black;
+      font-size: 20px;
+    }
   </style>
-
-  <!-- Schema -->
-  <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebPage",
-      "name": "MEV",
-      "description": "Voice Search Leaderboard",
-      "url": "https://jehovahsays.github.io/mev"
-    }
-  </script>
 </head>
 <body>
+  <header>🎙️ MEV Voice Search</header>
 
-  <div class="ticker">
-    <div id="ticker" class="ticker-text">Loading leaderboard...</div>
+  <main>
+    <div class="marquee"><span id="leaderboard">Loading top searches...</span></div>
+    <div id="history"></div>
+  </main>
+
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Say or type something..." />
+    <button id="micBtn" class="mic-btn">🎤</button>
   </div>
 
-  <div class="marquee-container">
-    <div id="marquee" class="marquee-text">Loading top searches...</div>
-  </div>
-
-<a href="map.html" target="_blank" rel="noopener"><button class="infobox">Explore map</button></a><br>
-  
-  <div class="search-container">
-    <h1>Leaderboard</h1>
-    <form id="searchForm" class="search-form" aria-label="Search form">
-      <input 
-        type="text" 
-        id="searchInput"
-        autocomplete="on"
-        autocorrect="off"
-        autocapitalize="off"
-        spellcheck="true"
-        placeholder="Search something..."
-        required 
-        onkeyup="titleInput()" 
-        aria-label="Search input"
-      />
-    </form>
-  </div>
-
-  <div class="history" id="history"></div>
-
-  <div class="footer">
-    Send $1 to <strong>$morgansbyers</strong> using Cash App.<br>
-    Last updated: <span id="updated"></span><br><br>
-    <center><button onclick="location.href='about.html'">About</button></center>
-  </div>
+  <footer id="statusFooter">Offline</footer>
 
   <script>
-    function titleInput() {
-      let input = document.getElementById('searchInput').value.toLowerCase();
-      let items = document.getElementsByClassName('titleInput');
-      for (let i = 0; i < items.length; i++) {
-        const content = items[i].textContent.toLowerCase();
-        items[i].classList.toggle('hidden', !content.includes(input));
-      }
+    const footer = document.getElementById('statusFooter');
+    const input = document.getElementById('searchInput');
+    const historyDiv = document.getElementById('history');
+    const marquee = document.getElementById('leaderboard');
+    const micBtn = document.getElementById('micBtn');
+    let history = JSON.parse(localStorage.getItem('searchHistory') || '[]');
+
+    function updateStatus() {
+      footer.textContent = navigator.onLine ? 'Online' : 'Offline';
+      footer.style.color = navigator.onLine ? '#00ff00' : '#ff4444';
+    }
+    window.addEventListener('online', updateStatus);
+    window.addEventListener('offline', updateStatus);
+    updateStatus();
+
+    function escapeHTML(text) {
+      return text.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
     }
 
-    fetch('leaderboard.json')
-      .then(res => res.json())
-      .then(data => {
-        const ticker = document.getElementById('ticker');
-        const updated = document.getElementById('updated');
-        const text = `Total Collected: $${data.totalCollected} • Total To Send: $${data.totalToSend} • `;
-        ticker.textContent = text.repeat(2);
-        updated.textContent = data.lastUpdated || '—';
-      })
-      .catch(() => {
-        document.getElementById('ticker').textContent = 'Error loading leaderboard data.';
-      });
-
-    (function() {
-      const searchForm = document.getElementById('searchForm');
-      const searchInput = document.getElementById('searchInput');
-      const historyDiv = document.getElementById('history');
-      let history = JSON.parse(localStorage.getItem('searchHistory') || '[]');
-
-      function saveSearch(text) {
-        const entry = { text, timestamp: new Date().toISOString() };
-        history.unshift(entry);
-        history = history.slice(0, 50);
-        localStorage.setItem('searchHistory', JSON.stringify(history));
-        updateHistory();
-        updateLeaderboard();
-      }
-
-      searchForm.onsubmit = (e) => {
-        e.preventDefault();
-        const query = searchInput.value.trim();
-        if (query) {
-          saveSearch(query);
-          window.speak(query);
-          searchInput.value = '';
-        }
-      };
-
+    function saveSearch(text) {
+      const entry = { text, timestamp: new Date().toISOString() };
+      history.unshift(entry);
+      history = history.slice(0, 50);
+      localStorage.setItem('searchHistory', JSON.stringify(history));
       updateHistory();
       updateLeaderboard();
+    }
 
-      window.speak = function(text) {
-        const msg = new SpeechSynthesisUtterance(text);
-        window.speechSynthesis.speak(msg);
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && input.value.trim()) {
+        e.preventDefault();
+        saveSearch(input.value.trim());
+        speak(input.value.trim());
+        input.value = '';
+      }
+    });
+
+    function speak(text) {
+      window.speechSynthesis.cancel();
+      const msg = new SpeechSynthesisUtterance(text);
+      window.speechSynthesis.speak(msg);
+    }
+
+    function updateHistory() {
+      historyDiv.innerHTML = '';
+      if (!history.length) {
+        historyDiv.innerHTML = '<p>No searches yet.</p>';
+        return;
+      }
+      history.forEach((entry, index) => {
+        const div = document.createElement('div');
+        div.className = 'entry';
+        div.innerHTML = `
+          <strong>${escapeHTML(entry.text)}</strong>
+          <small>${new Date(entry.timestamp).toLocaleString()}</small>
+          <div class="controls">
+            <button onclick="speak('${entry.text.replace(/'/g, "\\'")}')">🔊 Speak</button>
+            <button onclick="removeEntry(${index})">🗑️ Delete</button>
+          </div>
+        `;
+        historyDiv.appendChild(div);
+      });
+    }
+
+    function updateLeaderboard() {
+      const counts = {};
+      for (const entry of history) {
+        const term = entry.text.toLowerCase();
+        counts[term] = (counts[term] || 0) + 1;
+      }
+      const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+      marquee.textContent = sorted.length
+        ? 'Top searches: ' + sorted.map(([term, count], i) => `${i + 1}. ${term} (${count})`).join(' • ')
+        : 'No searches yet.';
+    }
+
+    window.removeEntry = function(index) {
+      history.splice(index, 1);
+      localStorage.setItem('searchHistory', JSON.stringify(history));
+      updateHistory();
+      updateLeaderboard();
+    };
+
+    // Voice recognition support
+    if ('webkitSpeechRecognition' in window) {
+      const recognition = new webkitSpeechRecognition();
+      recognition.continuous = false;
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+
+      micBtn.onclick = () => {
+        recognition.start();
+        micBtn.textContent = '🎧';
       };
 
-      window.removeEntry = function(index) {
-        history.splice(index, 1);
-        localStorage.setItem('searchHistory', JSON.stringify(history));
-        updateHistory();
-        updateLeaderboard();
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript.trim();
+        input.value = transcript;
+        saveSearch(transcript);
+        speak(transcript);
+        micBtn.textContent = '🎤';
       };
 
-      function updateHistory() {
-        historyDiv.innerHTML = '';
-        if (history.length === 0) {
-          historyDiv.innerHTML = '<p>No searches yet.</p>';
-          return;
-        }
+      recognition.onerror = () => {
+        micBtn.textContent = '🎤';
+      };
+    } else {
+      micBtn.style.display = 'none';
+    }
 
-        history.forEach((entry, index) => {
-          const div = document.createElement('div');
-          div.className = 'entry titleInput';
-          div.innerHTML = `
-            <strong>${entry.text.replace(/</g, "&lt;")}</strong><br>
-            <small>${new Date(entry.timestamp).toLocaleString()}</small>
-            <div class="controls">
-              <button onclick="window.speak('${entry.text.replace(/'/g, "\\'")}')">Speak</button>
-              <button onclick="window.removeEntry(${index})">Delete</button>
-            </div>
-          `;
-          historyDiv.appendChild(div);
-        });
-      }
+    updateHistory();
+    updateLeaderboard();
 
-      function updateLeaderboard() {
-        const marquee = document.getElementById('marquee');
-        const counts = {};
-        for (const entry of history) {
-          const term = entry.text.toLowerCase();
-          counts[term] = (counts[term] || 0) + 1;
-        }
-        const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 5);
-        marquee.textContent = sorted.length
-          ? 'Top searches: ' + sorted.map(([term, count], i) => `${i + 1}. ${term} (${count})`).join(' • ')
-          : 'No searches yet.';
-      }
-    })();
+    // Register service worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js');
+    }
   </script>
-
 </body>
 </html>
