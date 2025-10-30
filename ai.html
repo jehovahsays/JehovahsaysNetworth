@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MEV User Manual</title>
+
+  <meta name="description" content="User Manual for the MEV Offline Voice AI. Learn how to use, teach, and interact with the local AI assistant that works even without the internet.">
+  <meta name="theme-color" content="#000000">
+
+  <style>
+    body {
+      background: #000;
+      color: #eee;
+      font-family: "Segoe UI", Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 40px;
+    }
+
+    h1, h2 {
+      color: gold;
+    }
+
+    a {
+      color: #00ffcc;
+    }
+
+    section {
+      margin-bottom: 40px;
+      border-bottom: 1px solid #222;
+      padding-bottom: 20px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #888;
+      border-top: 1px solid #333;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧠 MEV — Offline Voice AI</h1>
+  <p>
+    <strong>MEV</strong> is a browser-based offline assistant that learns from what you type and speaks responses aloud.  
+    It stores what you teach it locally in your browser using <code>localStorage</code> — no internet, no cloud, no tracking.
+  </p>
+
+  <section>
+    <h2>🚀 How to Use MEV</h2>
+    <ol>
+      <li>Open <a href="index.html">MEV AI</a> (or your <code>index.html</code> app).</li>
+      <li>Teach it facts by typing a sentence such as <strong>“1+1 is 2”</strong>.</li>
+      <li>Ask a question such as <strong>“What is 1+1?”</strong> — it will reply with “2”.</li>
+      <li>It remembers everything you teach, even offline, until you clear your browser storage.</li>
+      <li>Click the microphone button (optional future feature) to talk directly.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>📴 Offline Capabilities</h2>
+    <ul>
+      <li>🧠 Local memory — all facts are stored in <code>localStorage</code>.</li>
+      <li>🔊 Voice output — uses your browser’s built-in <code>speechSynthesis</code>.</li>
+      <li>💾 Service Worker caching — the app loads without internet.</li>
+      <li>🧍 Works in private mode (with limited persistence).</li>
+      <li>🔒 No external scripts, no remote servers, no data transmission.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🌐 Online Capabilities</h2>
+    <ul>
+      <li>When connected, the footer changes to “Online”.</li>
+      <li>Future versions can sync knowledge across devices using GitHub Pages or APIs.</li>
+      <li>Online mode may allow optional data export or leaderboard updates.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🧩 Browser Compatibility</h2>
+    <ul>
+      <li>✅ Chrome, Edge, Brave — fully supported (speech + localStorage + offline cache).</li>
+      <li>✅ Firefox — supported, though voice may differ slightly.</li>
+      <li>✅ Safari / iOS — supported, but speech synthesis may pause on tab switch.</li>
+      <li>⚠️ Private / Incognito — works temporarily, but data is erased when closed.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🧰 Security & Privacy</h2>
+    <ul>
+      <li>✔ No network requests or API calls are made.</li>
+      <li>✔ Uses only browser features: <code>SpeechSynthesis</code>, <code>localStorage</code>, <code>Service Worker</code>.</li>
+      <li>✔ Passes key web security headers:
+        <ul>
+          <li><code>X-Frame-Options: DENY</code></li>
+          <li><code>Cross-Origin-Opener-Policy: same-origin</code></li>
+          <li><code>Permissions-Policy: geolocation=(), microphone=(), camera=()</code></li>
+        </ul>
+      </li>
+      <li>🔒 Data is stored only on your device. Clearing your cache or local storage will erase all learned data.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>⚠️ Limitations</h2>
+    <ul>
+      <li>MEV cannot access the internet or real-time information when offline.</li>
+      <li>It only understands facts written in the form “X is Y”.</li>
+      <li>It does not yet handle complex logic, synonyms, or math parsing.</li>
+      <li>Speech recognition (voice input) may not work in all browsers offline.</li>
+      <li>Knowledge is local to your browser — not shared across devices.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🧪 Browser Security Tests Passed</h2>
+    <ul>
+      <li>✅ No mixed-content or external requests</li>
+      <li>✅ CSP-safe (no inline eval or unsafe script)</li>
+      <li>✅ Offline functionality verified with DevTools → Network → “Offline”</li>
+      <li>✅ LocalStorage data persistence confirmed</li>
+      <li>✅ Speech synthesis verified on Chrome 129+, Edge 129+, Firefox 129</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>📦 Files Included</h2>
+    <ul>
+      <li><code>index.html</code> — user manual (this page)</li>
+      <li><code>ai.html</code> — the MEV Offline AI app</li>
+      <li><code>sw.js</code> — optional service worker for offline caching</li>
+    </ul>
+  </section>
+
+  <footer>
+    MEV Offline AI • Created for <a href="https://jehovahsays.github.io/mev/">GitHub Pages</a> • Works fully offline 🔋
+  </footer>
+
+</body>
+</html>
