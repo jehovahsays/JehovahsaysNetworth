@@ -1,17 +1,17 @@
 # 🧠 MEV – Offline Voice AI & Voice Search Leaderboard
 
-A private, fully offline web app that learns from what you type and speaks answers aloud — built to demonstrate **local AI memory**, **speech synthesis**, and **secure offline operation**.  
+A private, fully offline web app that learns from what you type and speaks answers aloud — built to demonstrate **local AI memory**, **speech synthesis**, and **secure offline operation**.
 
 Originally designed as a **voice search leaderboard**, MEV has evolved into an intelligent **offline assistant** that can both **learn** and **answer** user-taught information — with optional online syncing and payout leaderboard modes.
 
-No backend. No tracking. 100% browser-based.
+> **No backend. No tracking. 100% browser-based.**
 
 ---
 
 ## 🚀 Quick Start
 
-### 🔹 Open Locally
-Run MEV from your computer:
+### 🔹 Run Locally
+
 ```bash
 python3 -m http.server
 
@@ -20,7 +20,7 @@ Then visit:
 
 🔹 Host Online
 
-Deploy using GitHub Pages (as done here):
+Deploy using GitHub Pages:
 🔗 https://jehovahsays.github.io/mev
 
 All files are static and require no server — everything runs in your browser.
@@ -28,17 +28,14 @@ All files are static and require no server — everything runs in your browser.
 ⸻
 
 🎮 How It Works
-	1.	Open MEV AI￼
+	1.	Open MEV AI
 	2.	Teach the AI a fact:
-	
-	1+1 is 2
-	
-	What is 1+1?
-	
-	➤ It replies aloud: “2” ✅
-
-	4.	Works offline and remembers everything in your browser until cleared.
-	5.	When online, status changes automatically from “Offline” to “Online.”
+1+1 is 2
+	3.	Ask it:
+What is 1+1?
+	4.	It replies aloud: “2” ✅
+	5.	Works offline and remembers everything in your browser until cleared
+	6.	Status updates from “Offline” to “Online” automatically when connected
 
 ⸻
 
@@ -53,17 +50,17 @@ Speaks answers aloud using browser SpeechSynthesis
 🔍 Smart Matching
 Recognizes questions related to stored facts
 💬 Self-Teaching
-Automatically learns when you type sentences like “X is Y”
+Automatically learns when you type “X is Y”
 🧩 Offline Operation
 Works without any internet connection
 🕹️ Leaderboard Mode
-(Legacy) Tracks most searched or spoken terms
-🧱 Manual Payout Mode
-(Optional) Top player can send $1 to $morgansbyers and win pot
-🔐 Security Headers
-Enforced for privacy, integrity, and sandboxing
+(Legacy) Tracks most searched/spoken terms
+🧱 Manual Payout
+(Optional) $1 payout to winner via Cash App
+🔐 Secure Headers
+Privacy, sandboxing, and permission enforcement
 💾 Service Worker
-Caches app files for offline startup
+Caches all files for offline startup
 
 
 ⸻
@@ -76,18 +73,18 @@ Local Storage (Memory)
 ✅
 Speech Synthesis
 ✅
-Offline Launch (via sw.js)
+Offline Launch (sw.js)
 ✅
-Persistent Data (Until Cleared)
+Persistent Data
 ✅
-Microphone / Camera Access
+Microphone / Camera
 ❌
 External Network Requests
 ❌
-PWA Installation (Manual)
+PWA Installation
 ✅
 
-Works 100% offline once loaded — even with “Airplane Mode” enabled.
+Works 100% offline once loaded — even in Airplane Mode ✈️
 
 ⸻
 
@@ -96,13 +93,13 @@ Works 100% offline once loaded — even with “Airplane Mode” enabled.
 Feature
 Description
 🟢 Dynamic Status
-Footer changes between “Online” and “Offline” in real time
+Footer shows “Online” or “Offline” in real time
 🧠 Sync Ready
-Future versions may allow cloud sync or leaderboard upload
+Future versions may support optional cloud syncing
 💰 Cash Game
-Optional payout mode (manual verification)
+Optional payout mode (manual)
 📈 GitHub Hosting
-Fully compatible with GitHub Pages for public demo
+Works with GitHub Pages for public deployment
 
 
 ⸻
@@ -112,108 +109,106 @@ Fully compatible with GitHub Pages for public demo
 Category
 Status
 Network Requests
-✅ Only for optional leaderboard.json
+✅ None (except optional leaderboard fetch)
 Data Storage
-✅ localStorage (browser-only)
+✅ Local only (localStorage)
 Microphone Access
 ❌ Disabled by Permissions Policy
 Webcam Access
 ❌ Disabled by Permissions Policy
 Audio Output
-✅ Client-side only
+✅ Speech synthesis only
 Permissions Policy
-✅ Strict (geolocation=(), camera=(), microphone=())
+✅ Strict (no geolocation, camera, mic)
 Cross-Origin Policies
 ✅ COEP / COOP / CORP enforced
-HSTS
-✅ GitHub Pages HTTPS enforced
+HSTS / HTTPS
+✅ GitHub Pages HTTPS
 
 Security Grade: A
 Privacy Grade: A
-Data Ownership: 100% user-controlled (stored locally in your browser)
+Data Ownership: 100% user-controlled (local only)
 
 ⸻
 
 ⚙️ Technical Architecture
 	•	Frontend: HTML5, CSS3, Vanilla JavaScript
-	•	Data Storage: Browser localStorage
-	•	Voice Engine: Web Speech API (SpeechSynthesisUtterance)
+	•	Data Storage: localStorage (browser only)
+	•	Voice Engine: Web Speech API (SpeechSynthesis)
 	•	Offline Cache: Service Worker (sw.js)
 	•	Hosting: GitHub Pages
-	•	Network Calls: None (except optional leaderboard fetch)
+	•	Network Calls: Optional (DuckDuckGo API or leaderboard fetch)
 
 ⸻
 
-🧱 Repository File Structure
+📁 File Structure
 
 mev/
-├── index.html         # User Manual / README page
-├── ai.html            # Offline AI App
-├── sw.js              # Service Worker for offline caching
-├── leaderboard.json   # Optional for leaderboard demo
-└── README.md          # Documentation (this file)
+├── index.html         # Main entry / documentation
+├── wiki.html          # AI-powered offline wiki
+├── auth.js            # Local login/signup system
+├── sw.js              # Service worker (offline cache)
+├── manifest.json      # PWA metadata
+├── icon-192.png       # PWA icon (small)
+├── icon-512.png       # PWA icon (large)
+├── README.md          # GitHub project info
+└── leaderboard.json   # Optional file for leaderboard
 
 
 ⸻
 
-⚖️ Strengths & Weaknesses
+✅ Strengths & ⚠️ Weaknesses
 
 ✅ Strengths
-	•	100% offline operation — no internet needed after first load
-	•	Learns facts and answers them intelligently
-	•	Fast and lightweight (under 100 KB total)
-	•	Privacy-by-design — no data leaves your device
-	•	Secure headers and sandboxed browser policies
-	•	Works across Chrome, Firefox, Safari, and Edge
-	•	Expandable for future leaderboard and voice input
+	•	100% offline-capable
+	•	Learns facts and answers naturally
+	•	Lightweight (~100KB total)
+	•	Fully private and secure (no server)
+	•	Mobile-friendly and cross-browser
+	•	Service Worker + Voice AI support
 
-⚠️ Weaknesses
-	•	Facts must follow “X is Y” structure
-	•	Cannot interpret logic or math beyond stored facts
-	•	Knowledge is local (not synced across devices)
-	•	Speech recognition may vary by browser
-	•	No authentication or multiplayer data sharing
+⚠️ Limitations
+	•	Only supports “X is Y” fact formats
+	•	Doesn’t compute or reason beyond facts
+	•	Data is not synced across devices
+	•	No multiplayer or collaborative mode (yet)
+	•	Voice input not available (yet)
 
 ⸻
 
-🧪 Browser Tests & Compliance
+🧪 Browser Compatibility & Tests
 
 Test
 Result
-Mixed Content
+Mixed Content Security
 ✅ Passed
-Content Security Policy
-✅ Safe inline use only
-Offline Test (DevTools → Offline Mode)
+Offline Mode (DevTools)
 ✅ Passed
-Local Storage Persistence
+localStorage Persistence
 ✅ Verified
-Speech Synthesis Test
+Speech Synthesis API
 ✅ Chrome / Edge / Firefox
 Permissions Policy Enforcement
 ✅ Confirmed
-COEP / COOP Headers
-✅ Passed via Meta
-Cache Storage Inspection
-✅ Service Worker verified
+Cross-Origin Isolation
+✅ COEP / COOP
+Service Worker Cache Storage
+✅ Verified
 
 
 ⸻
 
-🧠 Offline AI Command Examples
-
-You can teach, ask, and clear knowledge using natural language.
-Here are examples of commands you can try:
+🧠 AI Examples (Teach & Ask)
 
 Type
 Example Input
 Expected Response
 🧩 Teach
 1+1 is 2
-Learns the fact
+Learns 1+1 = 2
 🧩 Teach
 The sky is blue
-Learns “sky = blue”
+Learns sky = blue
 ❓ Ask
 What is 1+1?
 Speaks: “2”
@@ -222,36 +217,35 @@ What color is the sky?
 Speaks: “blue”
 🔄 Update
 The sky is gray
-Updates stored fact
+Updates existing fact
 🗑️ Clear
 clear memory
-Removes all learned facts
+Removes all data
 🔊 Repeat
 say hello
-Speaks “hello”
+Speaks: “hello”
 💬 Test
 MEV is smart
-Learns and repeats fact
+Learns and replies
 
-💡 Tip: Punctuation and capitalization don’t matter — MEV matches key terms in lowercase.
-All learning is stored securely in your browser’s localStorage until manually cleared.
+💡 Tip: Capitalization and punctuation don’t matter — MEV matches based on keywords.
 
 ⸻
 
 🛠 Developer Mode
-	•	Local Testing: http://localhost:8000/ai.html
-	•	Live Deployment: https://jehovahsays.github.io/mev/ai.html
-	•	Code Editing: Any text editor (VS Code, Sublime, etc.)
+	•	Local Dev: http://localhost:8000/wiki.html
+	•	Live Demo: https://jehovahsays.github.io/mev/wiki.html
+	•	Editor: Any (VS Code, Sublime, Notepad++, etc.)
 
 ⸻
 
 📦 Tech Stack
 	•	HTML5 + CSS3
-	•	Vanilla JavaScript (no frameworks)
+	•	Vanilla JavaScript (no libraries)
 	•	Web Speech API
-	•	Web Storage API
-	•	Service Worker
-	•	GitHub Pages (static host)
+	•	Web Storage API (localStorage)
+	•	Service Workers (offline caching)
+	•	GitHub Pages (static hosting)
 
 ⸻
 
@@ -260,13 +254,10 @@ All learning is stored securely in your browser’s localStorage until manually 
 Creator: Morgan Shatee Byers
 GitHub: @jehovahsays￼
 YouTube: @jehovahsaysnetworth￼
-Donate: Cash App $morgansbyers￼
+Donate: Cash App $morgansbyers
 
 ⸻
 
-💡 “MEV demonstrates that intelligent, interactive, voice-driven applications can run fully offline — private, secure, and owned by the user.”
+💡 “MEV proves that intelligent, interactive, voice‑driven apps can run fully offline — private, secure, and owned by the user.”
 
 ---
-
-	
-	

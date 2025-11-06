@@ -1,13 +1,21 @@
 {
-  "name": "MEV Voice Search",
-  "short_name": "MEV Search",
-  "start_url": ".",
+  "name": "MEV Offline Wiki AI",
+  "short_name": "MEV Wiki",
+  "start_url": "./wiki.html",
   "display": "standalone",
-  "background_color": "#000000",
-  "theme_color": "#000000",
-  "description": "AI-powered voice search leaderboard app.",
+  "background_color": "#ffffff",
+  "theme_color": "#3366cc",
+  "description": "Private offline wiki with voice-enabled AI and editable pages.",
   "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
   ]
 }
