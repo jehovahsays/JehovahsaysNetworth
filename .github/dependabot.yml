@@ -1,11 +1,13 @@
 # .github/dependabot.yml
 version: 2
 updates:
-  - package-ecosystem: "composer"
-    directory: "/"
+  - package-ecosystem: "github-actions"
+    directory: "/"  # Root directory
     schedule:
       interval: "weekly"
+
   - package-ecosystem: "npm"
-    directory: "/"
+    directory: "/"  # If you have or plan to add package.json
     schedule:
       interval: "weekly"
+    open-pull-requests-limit: 5
