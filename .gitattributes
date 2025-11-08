@@ -1,0 +1,4 @@
+.nojekyll text eol=lf
+*.html text
+*.css text
+*.js text
