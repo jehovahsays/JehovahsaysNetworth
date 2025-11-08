@@ -1,50 +1,112 @@
+// ========= wiki.js =========
+// Safe section editing with login, sanitization, and feedback
+
+function getCurrentUser() {
+  try {
+    return JSON.parse(localStorage.getItem('wiki_current_user') || 'null');
+  } catch {
+    return null;
+  }
+}
+
+// Sanitize input: escape all HTML, only allow line breaks
+function sanitizeHTML(input) {
+  const div = document.createElement('div');
+  div.textContent = input;
+  return div.innerHTML.replace(/\n/g, '<br>');
+}
+
+// Load saved content into .content divs on load
+function restoreSectionContent() {
+  document.querySelectorAll('section').forEach(section => {
+    const id = section.id;
+    const saved = localStorage.getItem('wiki_' + id);
+    const contentDiv = section.querySelector('.content');
+    if (saved && contentDiv) {
+      contentDiv.innerHTML = saved;
+    }
+  });
+}
+
+// Main editor function (auth required)
 function editSection(id) {
+  const user = getCurrentUser();
+  if (!user) {
+    alert("You must be logged in to edit sections.");
+    return;
+  }
+
   const section = document.getElementById(id);
+  if (!section) return;
+
   const contentDiv = section.querySelector('.content');
-  const oldContent = contentDiv.innerHTML;
+  if (!contentDiv) return;
 
+  const originalHTML = contentDiv.innerHTML;
+
+  // Prepare textarea
   const textarea = document.createElement('textarea');
-  textarea.value = oldContent.replace(/<br>/g, '\n').replace(/<\/?[^>]+(>|$)/g, '');
-
+  textarea.className = 'editor';
+  textarea.value = originalHTML
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/?[^>]+(>|$)/g, ''); // Strip all HTML tags except <br>
   contentDiv.innerHTML = '';
   contentDiv.appendChild(textarea);
+  textarea.focus();
 
+  // Create button row
+  const btnRow = document.createElement('div');
+  btnRow.style.marginTop = '10px';
+
+  // Save button
   const saveBtn = document.createElement('button');
   saveBtn.textContent = 'Save';
   saveBtn.className = 'edit-btn';
-  saveBtn.style.marginTop = '10px';
-
   saveBtn.onclick = () => {
-    const html = textarea.value.trim().replace(/\n/g, '<br>');
-    contentDiv.innerHTML = html;
+    const rawInput = textarea.value.trim();
+    const safeHTML = sanitizeHTML(rawInput);
+    contentDiv.innerHTML = safeHTML;
+    localStorage.setItem('wiki_' + id, safeHTML);
 
-    // Save to localStorage
-    localStorage.setItem('wiki_' + id, html);
-
-    // Update currentUser edits
-    const user = JSON.parse(localStorage.getItem('mevUser') || 'null');
-    if (user) {
-      if (!user.edits) user.edits = [];
-      user.edits.push({ section: id, time: new Date().toISOString() });
-      localStorage.setItem('mevUser', JSON.stringify(user));
+    // Update user edits
+    let users;
+    try {
+      users = JSON.parse(localStorage.getItem('wiki_users') || '[]');
+    } catch {
+      users = [];
     }
 
-    // Feedback voice
-    const msg = new SpeechSynthesisUtterance("Section saved!");
-    msg.lang = 'en-US';
-    msg.pitch = 1;
-    msg.rate = 1;
-    speechSynthesis.speak(msg);
+    const userIndex = users.findIndex(u => u.name === user.name);
+    if (userIndex !== -1) {
+      if (!Array.isArray(users[userIndex].edits)) users[userIndex].edits = [];
+      users[userIndex].edits.push({ section: id, time: new Date().toISOString() });
+      localStorage.setItem('wiki_users', JSON.stringify(users));
+      localStorage.setItem('wiki_current_user', JSON.stringify(users[userIndex]));
+    }
+
+    // Feedback
+    if (typeof speak === 'function') {
+      speak("Section saved!");
+    } else {
+      const msg = new SpeechSynthesisUtterance("Section saved!");
+      msg.lang = 'en-US';
+      speechSynthesis.speak(msg);
+    }
   };
 
-  contentDiv.appendChild(saveBtn);
+  // Cancel button
+  const cancelBtn = document.createElement('button');
+  cancelBtn.textContent = 'Cancel';
+  cancelBtn.className = 'edit-btn';
+  cancelBtn.style.marginLeft = '10px';
+  cancelBtn.onclick = () => {
+    contentDiv.innerHTML = originalHTML;
+  };
+
+  btnRow.appendChild(saveBtn);
+  btnRow.appendChild(cancelBtn);
+  contentDiv.appendChild(btnRow);
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('section').forEach(sec => {
-    const savedContent = localStorage.getItem('wiki_' + sec.id);
-    if (savedContent && sec.querySelector('.content')) {
-      sec.querySelector('.content').innerHTML = savedContent;
-    }
-  });
-});
+// Run on page load
+window.addEventListener('DOMContentLoaded', restoreSectionContent);

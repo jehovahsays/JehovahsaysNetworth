@@ -1,21 +1,45 @@
 {
+  "id": "/",
   "name": "MEV Offline Wiki AI",
   "short_name": "MEV Wiki",
-  "start_url": "./wiki.html",
+  "start_url": "/index.html",
+  "scope": "/",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#ffffff",
   "theme_color": "#3366cc",
   "description": "Private offline wiki with voice-enabled AI and editable pages.",
+  "lang": "en",
+  "version": "1.1.0-alpha2",
   "icons": [
     {
       "src": "icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "utilities", "education"],
+  "shortcuts": [
+    {
+      "name": "New Page",
+      "short_name": "New",
+      "url": "/#",
+      "description": "Create a new wiki page",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Recent Changes",
+      "short_name": "Recent",
+      "url": "/#",
+      "description": "View recent page edits",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192", "type": "image/png" }]
     }
   ]
 }

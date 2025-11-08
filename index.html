@@ -1,225 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>MEV AI Wiki – Offline AI Encyclopedia</title>
   <meta name="description" content="MEV AI Wiki – Offline AI Encyclopedia. Learn, edit, explore." />
-  <meta name="theme-color" content="#ffffff" />
-<link rel="manifest" href="manifest.json">
-  <style>
-    /* MediaWiki‑style white/blue theme */
-    body {
-      margin: 0;
-      font-family: "Segoe UI", Arial, sans-serif;
-      background: #fff;
-      color: #000;
-    }
-header {
-  background: #3366cc;
-  color: #fff;
-  padding: 10px 20px;
-  display: flex;
-  align-items: center;
-}
+  <meta name="theme-color" content="#3366cc" />
+  <meta name="color-scheme" content="light dark" />
+  <link rel="manifest" href="manifest.json" />
 
-#menu-btn {
-  font-size: 20px;
-  background: transparent;
-  color: white;
-  border: none;
-  margin-right: 15px;
-  cursor: pointer;
-}    header h1 {
-      margin: 0;
-      font-size: 1.5rem;
-    }
-    #banner {
-      background: #ffcc00;
-      color: #000;
-      padding: 10px;
-      text-align: center;
-      display: none;
-      font-weight: bold;
-    }
-    #container {
-      display: flex;
-      height: calc(100vh - 100px);
-    }
-#sidebar {
-  display: none; /* Hidden by default */
-}	
-    #sidebar {
-      width: 250px;
-      background: #f8f9fa;
-      border-right: 1px solid #ccc;
-      overflow-y: auto;
-      padding: 10px;
-    }
-    #sidebar ul {
-      list-style: none;
-      padding: 0;
-    }
-    #sidebar li {
-      margin: 5px 0;
-    }
-    #sidebar a {
-      color: #3366cc;
-      text-decoration: none;
-    }
-    #sidebar a:hover {
-      text-decoration: underline;
-    }
-#main {
-  flex: 1 1 100%;
-  padding: 20px;
-  overflow-y: auto;
-}    #ai-bar {
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-    }
-    #ai-input {
-      flex: 1;
-      padding: 8px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-    #ai-button {
-      padding: 8px 12px;
-      margin-left: 8px;
-      font-size: 16px;
-      background: #3366cc;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    #ai-button:hover {
-      background: #254a9e;
-    }
-    section.page {
-      margin-bottom: 40px;
-    }
-    section.page h2 {
-      border-bottom: 1px solid #ccc;
-      padding-bottom: 5px;
-    }
-    section.page .content {
-      margin-top: 10px;
-    }
-    .edit-btn {
-      background: #3366cc;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      padding: 5px 10px;
-      cursor: pointer;
-      float: right;
-    }
-    .edit-btn:hover {
-      background: #254a9e;
-    }
-    textarea.editor {
-      width: 100%;
-      height: 300px;
-      padding: 10px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-family: monospace;
-    }
-    footer {
-      height: 60px;
-      background: #f1f1f1;
-      border-top: 1px solid #ccc;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 20px;
-    }
-    #status-indicator {
-      font-size: 14px;
-      color: #555;
-    }
-    #ticker {
-      white-space: nowrap;
-      overflow: hidden;
-      width: 100%;
-      position: relative;
-    }
-    #ticker span {
-      display: inline-block;
-      padding-left: 100%;
-      animation: scroll-left 20s linear infinite;
-    }
-    @keyframes scroll-left {
-      0% { transform: translateX(0%); }
-      100% { transform: translateX(-100%); }
-    }
-    #storage-bar {
-      margin-top: 10px;
-      background: #e9ecef;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      overflow: hidden;
-    }
-    #storage-bar-inner {
-      height: 10px;
-      background: #3366cc;
-      width: 0%;
-    }
-  </style>
+  <!-- iOS PWA Support -->
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="MEV Wiki">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Security -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self';
+    style-src 'self';
+    img-src 'self' data:;
+    font-src 'self';
+    connect-src 'self' https://api.duckduckgo.com;
+    object-src 'none';
+    base-uri 'self';
+    form-action 'self';
+    frame-ancestors 'none';
+  ">
 </head>
 
 <body>
-  <div id="banner"></div>
-<header>
-  <button id="menu-btn" onclick="toggleSidebar()">☰</button>
-  <h1>MEV AI Wiki</h1>
-</header>
+  <div id="banner" class="banner"></div>
+
+  <header>
+    <button id="menu-btn" aria-label="Toggle menu navigation">☰</button>
+    <h1>MEV AI Wiki</h1>
+  </header>
 
   <div id="container">
     <nav id="sidebar">
-<div id="auth-links" style="margin-top: 1rem;">
-  <div id="user-status" style="margin-bottom: 0.5rem;">Not logged in</div>
-<a href="#" id="create-account-link" onclick="showCreateAccount()">Create Account</a><br>
-<a href="#" id="login-link" onclick="showLogin()">Log In</a><br>
-<a href="#" onclick="showProfile()">My Profile</a><br>
-<a href="#" id="logout-link" onclick="logout()" style="display:none;">Log Out</a>
-</div>
+      <div id="auth-links">
+        <div id="user-status">Not logged in</div>
+        <a href="#" id="create-account-link">Create Account</a><br>
+        <a href="#" id="login-link">Log In</a><br>
+        <a href="#" id="profile-link">My Profile</a><br>
+        <a href="#" id="logout-link" style="display:none;">Log Out</a>
+      </div>
+
       <h3>Pages</h3>
       <ul id="page-list"></ul>
-      <button onclick="createPage()">+ New Page</button>
+      <button id="create-page-btn">+ New Page</button>
+
       <hr />
       <ul>
-        <li><a href="#" onclick="showRecent(); return false;">Recent Changes</a></li>
-        <li><a href="#" onclick="showSettings(); return false;">Settings</a></li>
-        <li><a href="#" onclick="showAbout(); return false;">About</a></li>
+        <li><a href="#" id="recent-link">Recent Changes</a></li>
+        <li><a href="#" id="settings-link">Settings</a></li>
+        <li><a href="#" id="about-link">About</a></li>
       </ul>
-	  
-      <div id="storage-bar"><div id="storage-bar-inner"></div></div>
+
+      <div id="storage-bar">
+        <div id="storage-bar-inner"></div>
+      </div>
     </nav>
-	<script>
-	function showProfile() {
-  const user = getUser();
-  if (!user) return alert("You're not logged in.");
-  alert(`👤 Username: ${user.name}\n📅 Joined: ${new Date(user.joined).toLocaleString()}`);
-}
-	</script>
-<script>
-  document.querySelectorAll('#sidebar a').forEach(link => {
-    link.addEventListener('click', () => {
-      // Auto-close sidebar
-      document.getElementById('sidebar').style.display = 'none';
-      document.getElementById('main').style.flex = '1 1 100%';
-    });
-  });
-</script>
+
     <main id="main">
       <div id="ai-bar">
-        <input type="text" id="ai-input" placeholder="Ask AI or search wiki…" />
+        <input type="text" id="ai-input" placeholder="Ask AI or search wiki…" aria-label="AI search or question input" />
         <button id="ai-button">Ask AI</button>
       </div>
       <div id="page-container"></div>
@@ -229,563 +79,25 @@ header {
   <footer>
     <div id="status-indicator">🔴 Offline</div>
     <div id="ticker"><span id="ticker-content"></span></div>
+    <div id="app-version">v1.1.0-alpha1</div>
   </footer>
 
-  <script>
-    // ===== LocalStorage Utility for Pages, Users, Changes, Knowledge =====
-    const STORAGE_KEYS = {
-      pages: 'wiki_pages',
-      users: 'wiki_users',
-      currentUser: 'wiki_current_user',
-      changes: 'wiki_changes',
-      knowledge: 'wiki_knowledge'
-    };
-
-    function loadData(key, defaultVal) {
-      const v = localStorage.getItem(key);
-      return v ? JSON.parse(v) : defaultVal;
-    }
-    function saveData(key, data) {
-      localStorage.setItem(key, JSON.stringify(data));
-    }
-
-    // ===== Voice Function (Friendly Human‑like) =====
-    function speak(text) {
-      const msg = new SpeechSynthesisUtterance(text);
-      msg.lang = 'en-US';
-      msg.pitch = 1;
-      msg.rate = 1;
-      window.speechSynthesis.speak(msg);
-    }
-
-    // ===== Sidebar Toggle =====
-    let sidebarVisible = true;
-function toggleSidebar() {
-  const sidebar = document.getElementById('sidebar');
-  const main = document.getElementById('main');
-
-  if (sidebar.style.display === 'block') {
-    sidebar.style.display = 'none';
-    main.style.flex = '1 1 100%';
-  } else {
-    sidebar.style.display = 'block';
-    main.style.flex = '1';
-  }
-}
-    // ===== Storage Usage & Banner =====
-    const LOW_SPACE_THRESHOLD = 0.90; // 90% usage
-    async function updateStorageBar() {
-      let used = 0, quota = 0;
-      if (navigator.storage && navigator.storage.estimate) {
-        const est = await navigator.storage.estimate();
-        used = est.usage;
-        quota = est.quota;
-      } else {
-        // fallback estimating by localStorage size
-        used = new Blob(Object.values(localStorage)).size;
-        quota = 5242880; // assume 5MB
-      }
-      const percent = used / quota;
-      document.getElementById('storage-bar-inner').style.width = (percent * 100) + '%';
-
-      if (percent > LOW_SPACE_THRESHOLD) {
-        showBanner("⚠️ Heads‑up! Your wiki is getting full — please delete some pages to continue saving new ones.");
-      }
-    }
-
-    function showBanner(msg) {
-      const banner = document.getElementById('banner');
-      banner.textContent = msg;
-      banner.style.display = 'block';
-      speak(msg);
-    }
-
-    function hideBanner() {
-      const banner = document.getElementById('banner');
-      banner.style.display = 'none';
-    }
-
-    // ===== Data Structures =====
-    let pages = loadData(STORAGE_KEYS.pages, {});
-    let changes = loadData(STORAGE_KEYS.changes, []);
-    let knowledge = loadData(STORAGE_KEYS.knowledge, {});
-    let currentUser = loadData(STORAGE_KEYS.currentUser, null);
-
-    // ===== AI Logic: Learn from pages automatically =====
-    function updateKnowledgeFromPage(title, content) {
-      const words = content.toLowerCase().match(/\b[a-z0-9']+\b/g) || [];
-      words.forEach(w => {
-        if (!knowledge[w]) knowledge[w] = new Set();
-        knowledge[w].add(title);
-      });
-      saveData(STORAGE_KEYS.knowledge, Array.from(Object.entries(knowledge)).map(([k,v]) => [k,Array.from(v)]));
-    }
-
-    function findAnswer(query) {
-      const q = query.toLowerCase().trim();
-      const words = q.match(/\b[a-z0-9']+\b/g) || [];
-      const titlesSet = new Set();
-      words.forEach(w => {
-        const entry = knowledge[w];
-        if (entry) entry.forEach(t => titlesSet.add(t));
-      });
-      if (titlesSet.size === 0) return null;
-      // simple summary: return first matched page
-      const title = Array.from(titlesSet)[0];
-      return { title, content: pages[title].content };
-    }
-
-    async function answerAI(query) {
-      hideBanner();
-      const res = findAnswer(query);
-      if (res) {
-        const ans = `Here’s what I found from your wiki page titled "${res.title}":\n${res.content}`;
-        speak(ans);
-        displayAnswer(ans);
-      } else if (navigator.onLine) {
-        if (confirm("I couldn’t find a local answer. Would you like me to check online for you?")) {
-          // simple fetch from wiki summary API (placeholder)
-          const resp = await fetch("https://api.duckduckgo.com/?q=" + encodeURIComponent(query) + "&format=json");
-          const ans2 = resp.ok ? (await resp.json()).AbstractText || "Could not find online answer." : "Online fetch failed.";
-          speak(ans2);
-          displayAnswer(ans2);
-        } else {
-          displayAnswer("Okay. I’ll wait until you add content to the wiki!");
-        }
-      } else {
-        displayAnswer("Sorry — I couldn't find anything locally and you're offline.");
-      }
-    }
-
-    function displayAnswer(text) {
-      const out = document.createElement('div');
-      out.style.padding = "10px";
-      out.style.margin = "10px 0";
-      out.style.background = "#e1ecf4";
-      out.style.border = "1px solid #3366cc";
-      out.textContent = text;
-      const main = document.getElementById('main');
-      main.insertBefore(out, document.getElementById('page-container'));
-    }
-
-    document.getElementById('ai-button').addEventListener('click', () => {
-      const q = document.getElementById('ai-input').value.trim();
-      if (q) answerAI(q);
-      document.getElementById('ai-input').value = '';
-    });
-
-    // ===== Page System =====
-    function savePage(title, content) {
-      const timestamp = new Date().toISOString();
-      pages[title] = { title, content, lastEdited: timestamp, createdBy: currentUser ? currentUser.name : 'Guest' };
-      saveData(STORAGE_KEYS.pages, pages);
-
-      changes.unshift({ type: 'edit', title, time: timestamp, user: currentUser ? currentUser.name : 'Guest' });
-      saveData(STORAGE_KEYS.changes, changes);
-
-      updateKnowledgeFromPage(title, content);
-      refreshPageList();
-      updateStorageBar();
-      showPage(title);
-    }
-
-    function deletePage(title) {
-      if (pages[title]) {
-        const timestamp = new Date().toISOString();
-        delete pages[title];
-        saveData(STORAGE_KEYS.pages, pages);
-        changes.unshift({ type: 'delete', title, time: timestamp, user: currentUser ? currentUser.name : 'Guest' });
-        saveData(STORAGE_KEYS.changes, changes);
-
-        // Remove from knowledge
-        for (const w in knowledge) {
-          knowledge[w] = knowledge[w].filter(t => t !== title);
-          if (knowledge[w].length === 0) delete knowledge[w];
-        }
-        saveData(STORAGE_KEYS.knowledge, knowledge);
-        refreshPageList();
-        updateStorageBar();
-        showBanner(`Page "${title}" deleted.`);
-      }
-    }
-
-    function createPage() {
-      const title = prompt("New page title:");
-      if (title) {
-        if (pages[title]) {
-          alert("Page already exists.");
-          showPage(title);
-        } else {
-          savePage(title, "This is the new page \"" + title + "\". Click Edit to add content.");
-        }
-      }
-    }
-
-    function refreshPageList() {
-      const list = document.getElementById('page-list');
-      list.innerHTML = '';
-      const keys = Object.keys(pages).sort();
-      keys.forEach(t => {
-        const li = document.createElement('li');
-        const a = document.createElement('a');
-        a.href = "#";
-        a.textContent = t;
-        a.onclick = () => { showPage(t); return false; };
-        li.appendChild(a);
-        list.appendChild(li);
-      });
-    }
-
-    function showPage(title) {
-      const pageContainer = document.getElementById('page-container');
-      pageContainer.innerHTML = '';
-      if (!pages[title]) {
-        // red link / not found
-        const msg = `This page does not exist yet: "${title}". Click the button below to create it.`;
-        const createBtn = document.createElement('button');
-        createBtn.textContent = "Create page";
-        createBtn.onclick = () => savePage(title, "");
-        pageContainer.appendChild(createBtn);
-        pageContainer.insertBefore(document.createElement('p'), createBtn).textContent = msg;
-        return;
-      }
-      const page = pages[title];
-      const section = document.createElement('section');
-      section.className = "page";
-      const h2 = document.createElement('h2');
-      h2.textContent = title;
-      section.appendChild(h2);
-
-      const editBtn = document.createElement('button');
-      editBtn.className = 'edit-btn';
-      editBtn.textContent = "Edit";
-      editBtn.onclick = () => editPage(title);
-      section.appendChild(editBtn);
-
-      const contentDiv = document.createElement('div');
-      contentDiv.className = 'content';
-      contentDiv.innerHTML = page.content;
-      section.appendChild(contentDiv);
-      pageContainer.appendChild(section);
-    }
-
-    function editPage(title) {
-      const page = pages[title];
-      const pageContainer = document.getElementById('page-container');
-      pageContainer.innerHTML = '';
-      const section = document.createElement('section');
-      section.className = "page";
-      const h2 = document.createElement('h2');
-      h2.textContent = title;
-      section.appendChild(h2);
-
-      const textarea = document.createElement('textarea');
-      textarea.className = "editor";
-      textarea.value = page.content;
-      section.appendChild(textarea);
-
-      const saveBtn = document.createElement('button');
-      saveBtn.textContent = "Save";
-      saveBtn.onclick = () => {
-        savePage(title, textarea.value);
-      };
-      section.appendChild(saveBtn);
-
-      const delBtn = document.createElement('button');
-      delBtn.textContent = "Delete Page";
-      delBtn.onclick = () => {
-        if (confirm("Are you sure you want to delete this page?")) {
-          deletePage(title);
-          document.getElementById('page-container').innerHTML = '';
-        }
-      };
-      section.appendChild(delBtn);
-
-      pageContainer.appendChild(section);
-    }
-
-    function showRecent() {
-      const pageContainer = document.getElementById('page-container');
-      pageContainer.innerHTML = '';
-      const section = document.createElement('section');
-      section.className = "page";
-      const h2 = document.createElement('h2');
-      h2.textContent = "Recent Changes";
-      section.appendChild(h2);
-
-      const ul = document.createElement('ul');
-      changes.slice(0,50).forEach(ch => {
-        const li = document.createElement('li');
-        const link = document.createElement('a');
-        link.textContent = ch.title;
-        link.href = "#";
-        link.onclick = () => { showPage(ch.title); return false; };
-        li.appendChild(link);
-        li.append(" — " + ch.type + " by " + ch.user + " at " + new Date(ch.time).toLocaleString());
-        ul.appendChild(li);
-      });
-      section.appendChild(ul);
-      pageContainer.appendChild(section);
-    }
-
-    function showSettings() {
-      const pageContainer = document.getElementById('page-container');
-      pageContainer.innerHTML = '';
-      const section = document.createElement('section');
-      section.className = "page";
-      const h2 = document.createElement('h2');
-      h2.textContent = "Settings";
-      section.appendChild(h2);
-
-      const storageInfo = document.createElement('p');
-      storageInfo.textContent = "Storage usage information:";
-      section.appendChild(storageInfo);
-
-      const storageStats = document.createElement('pre');
-      section.appendChild(storageStats);
-
-      function refreshStats() {
-        if (navigator.storage && navigator.storage.estimate) {
-          navigator.storage.estimate().then(est => {
-            storageStats.textContent = `Used: ${Math.round(est.usage / 1024)} KB\nQuota: ${Math.round(est.quota / 1024)} KB`;
-          });
-        } else {
-          storageStats.textContent = `localStorage items: ${Object.keys(localStorage).length}`;
-        }
-      }
-      refreshStats();
-
-      const clearBtn = document.createElement('button');
-      clearBtn.textContent = "Clear AI memory";
-      clearBtn.onclick = () => {
-        knowledge = {};
-        saveData(STORAGE_KEYS.knowledge, knowledge);
-        alert("AI memory cleared.");
-      };
-      section.appendChild(clearBtn);
-
-      pageContainer.appendChild(section);
-    }
-
-    function showAbout() {
-      const pageContainer = document.getElementById('page-container');
-      pageContainer.innerHTML = '';
-      const section = document.createElement('section');
-      section.className = "page";
-      const h2 = document.createElement('h2');
-      h2.textContent = "About";
-      section.appendChild(h2);
-
-      const p = document.createElement('p');
-      p.innerHTML = `
-        <strong>MEV AI Wiki</strong> is an offline‑first encyclopedia powered by your browser.
-        You can create, edit, and link pages. The AI assistant learns from your edits and can answer your questions.
-        Works fully offline. No tracking. No server needed.
-      `;
-      section.appendChild(p);
-      pageContainer.appendChild(section);
-    }
-
-    // ===== Recent Changes Ticker =====
-    function updateTicker() {
-      const tips = [
-        "Tip: Use [[PageName]] to link pages.",
-        "Tip: Delete unused pages to free up space.",
-        "Tip: The AI speaks aloud — click Ask AI and speak your mind!",
-        "Check storage stats in Settings to avoid low‑space warnings."
-      ];
-      const recentTitles = changes.slice(0, 5).map(c => c.title);
-      const items = [...recentTitles, ...tips];
-      const linkItems = items.map(i => {
-        return `<a href="#" onclick="showPage('${i}')">${i}</a>`;
-      });
-      document.getElementById('ticker-content').innerHTML = linkItems.join(" • ");
-    }
-
-    setInterval(updateTicker, 5000);
-
-    // ===== Online/Offline Status =====
-    function updateConnectionStatus() {
-      const indicator = document.getElementById('status-indicator');
-      const online = navigator.onLine;
-      indicator.textContent = online ? "🟢 Online" : "🔴 Offline";
-    }
-    window.addEventListener('online', updateConnectionStatus);
-    window.addEventListener('offline', updateConnectionStatus);
-    updateConnectionStatus();
-
-    // ===== Initialization =====
-    window.onload = () => {
-      // convert any nested Sets etc
-      const pagesRaw = loadData(STORAGE_KEYS.pages, {});
-      for (const t in pagesRaw) pages[t] = pagesRaw[t];
-      const knowledgeRaw = loadData(STORAGE_KEYS.knowledge, {});
-      // convert arrays back to sets
-      knowledge = {};
-      for (const [k, arr] of Object.entries(knowledgeRaw)) {
-        knowledge[k] = new Set(arr);
-      }
-      refreshPageList();
-      updateStorageBar();
-      updateTicker();
-    };
-
-    // ===== Service Worker Registration =====
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js')
-    .then(() => console.log("✅ Service Worker registered"))
-    .catch(err => console.error("❌ SW registration failed:", err));
-}
-  </script>
-<script>
-  // ========== AUTH FIXED VERSION ==========
-
-  function getAllUsers() {
-    return loadData(STORAGE_KEYS.users, []);
-  }
-
-  function getCurrentUser() {
-    return loadData(STORAGE_KEYS.currentUser, null);
-  }
-
-  function saveCurrentUser(user) {
-    saveData(STORAGE_KEYS.currentUser, user);
-  }
-
-  function showCreateAccount() {
-    document.getElementById('auth-modal-title').textContent = "Create Account";
-    document.getElementById('auth-modal').style.display = 'block';
-    document.getElementById('auth-username').value = '';
-    document.getElementById('auth-username').focus();
-    window.authMode = 'create';
-  }
-
-  function showLogin() {
-    document.getElementById('auth-modal-title').textContent = "Log In";
-    document.getElementById('auth-modal').style.display = 'block';
-    document.getElementById('auth-username').value = '';
-    document.getElementById('auth-username').focus();
-    window.authMode = 'login';
-  }
-
-  function closeAuthModal() {
-    document.getElementById('auth-modal').style.display = 'none';
-  }
-
-  function submitAuthModal() {
-    const username = document.getElementById('auth-username').value.trim();
-    if (!username) {
-      alert("Please enter a username.");
-      return;
-    }
-
-    let users = getAllUsers();
-    let current = null;
-
-    if (window.authMode === 'create') {
-      const exists = users.find(u => u.name === username);
-      if (exists) {
-        alert("That username already exists. Try logging in.");
-        return;
-      }
-
-      const newUser = {
-        name: username,
-        joined: new Date().toISOString(),
-        edits: []
-      };
-      users.push(newUser);
-      saveData(STORAGE_KEYS.users, users);
-      saveCurrentUser(newUser);
-      alert("Account created and logged in.");
-      current = newUser;
-
-    } else if (window.authMode === 'login') {
-      const found = users.find(u => u.name === username);
-      if (!found) {
-        alert("User not found. Try creating an account.");
-        return;
-      }
-      saveCurrentUser(found);
-      alert(`Welcome back, ${found.name}!`);
-      current = found;
-    }
-
-    closeAuthModal();
-    updateAuthUI();
-    updateUserStatus();
-    showProfile(); // Show user profile after login or signup
-  }
-
-  function logout() {
-    localStorage.removeItem(STORAGE_KEYS.currentUser);
-    alert("Logged out.");
-    updateAuthUI();
-    updateUserStatus();
-  }
-
-  function updateAuthUI() {
-    const user = getCurrentUser();
-    const createLink = document.getElementById('create-account-link');
-    const loginLink = document.getElementById('login-link');
-    const logoutLink = document.getElementById('logout-link');
-
-    if (user) {
-      createLink.style.display = 'none';
-      loginLink.style.display = 'none';
-      logoutLink.style.display = 'block';
-    } else {
-      createLink.style.display = 'block';
-      loginLink.style.display = 'block';
-      logoutLink.style.display = 'none';
-    }
-  }
-
-  function updateUserStatus() {
-    const user = getCurrentUser();
-    const status = document.getElementById('user-status');
-    status.textContent = user ? `Logged in as ${user.name}` : "Not logged in";
-  }
-
-  function showProfile() {
-    const user = getCurrentUser();
-    if (!user) {
-      alert("You're not logged in.");
-      return;
-    }
-
-    const pageContainer = document.getElementById('page-container');
-    pageContainer.innerHTML = '';
-    const section = document.createElement('section');
-    section.className = "page";
-    const h2 = document.createElement('h2');
-    h2.textContent = "My Profile";
-    section.appendChild(h2);
-
-    const details = document.createElement('p');
-    details.innerHTML = `
-      👤 <strong>Username:</strong> ${user.name}<br>
-      📅 <strong>Joined:</strong> ${new Date(user.joined).toLocaleString()}<br>
-    `;
-    section.appendChild(details);
-
-    pageContainer.appendChild(section);
-  }
-
-  // Run on load
-  updateAuthUI();
-  updateUserStatus();
-</script>
-<script src="auth.js"></script>
-<!-- Auth Modal -->
-<div id="auth-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#000000bb; z-index:1000;">
-  <div style="background:white; max-width:400px; margin:10% auto; padding:20px; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.5); text-align:left;">
-    <h2 id="auth-modal-title">Create Account</h2>
-    <label for="auth-username">Username:</label>
-    <input id="auth-username" type="text" style="width:100%; padding:10px; margin-top:10px;"><br><br>
-    <button onclick="submitAuthModal()">Submit</button>
-    <button onclick="closeAuthModal()" style="float:right;">Cancel</button>
+  <!-- Auth Modal -->
+  <div id="auth-modal" class="modal-overlay">
+    <div class="modal-box">
+      <h2 id="auth-modal-title">Create Account</h2>
+      <label for="auth-username">Username:</label>
+      <input id="auth-username" type="text" />
+      <div class="modal-actions">
+        <button id="submit-auth">Submit</button>
+        <button id="cancel-auth">Cancel</button>
+      </div>
+    </div>
   </div>
-</div>
+
+  <!-- Scripts at bottom for better load performance -->
+  <script src="main.js" defer></script>
+  <script src="auth.js" defer></script>
+  <script src="wiki.js" defer></script>
 </body>
 </html>

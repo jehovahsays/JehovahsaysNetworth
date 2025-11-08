@@ -1,119 +1,155 @@
-// ======== Authentication System for MEV Wiki ========
+// ===== Authentication System =====
+let authMode = "signup";
 
-// Utility: Get current user
+const SELECTORS = {
+  modal: 'auth-modal',
+  username: 'auth-username',
+  title: 'auth-modal-title',
+  createLink: 'create-account-link',
+  loginLink: 'login-link',
+  logoutLink: 'logout-link',
+  userStatus: 'user-status',
+  submitBtn: 'submit-auth',
+  cancelBtn: 'cancel-auth'
+};
+
+// ===== Storage Utilities =====
 function getUser() {
-  return JSON.parse(localStorage.getItem('mevUser') || 'null');
+  try {
+    return JSON.parse(localStorage.getItem('wiki_current_user') || 'null');
+  } catch {
+    return null;
+  }
 }
-
-// Utility: Get all users (stored as array)
 function getAllUsers() {
-  return JSON.parse(localStorage.getItem('mevUsers') || '[]');
+  try {
+    return JSON.parse(localStorage.getItem('wiki_users') || '[]');
+  } catch {
+    return [];
+  }
 }
-
-// Utility: Save user list
+function saveCurrentUser(user) {
+  localStorage.setItem('wiki_current_user', JSON.stringify(user));
+}
 function saveAllUsers(users) {
-  localStorage.setItem('mevUsers', JSON.stringify(users));
+  localStorage.setItem('wiki_users', JSON.stringify(users));
 }
 
-// ====== Show Modal for Signup/Login ======
-let authAction = "signup";
-
+// ===== Auth Modal Control =====
 function showCreateAccount() {
-  authAction = "signup";
-  document.getElementById('auth-modal-title').textContent = "Create Account";
-  document.getElementById('auth-username').value = "";
-  document.getElementById('auth-modal').style.display = 'block';
+  authMode = "signup";
+  document.getElementById(SELECTORS.title).textContent = "Create Account";
+  document.getElementById(SELECTORS.username).value = "";
+  document.getElementById(SELECTORS.modal).style.display = 'block';
+  setTimeout(() => document.getElementById(SELECTORS.username)?.focus(), 50);
 }
 
 function showLogin() {
-  authAction = "login";
-  document.getElementById('auth-modal-title').textContent = "Log In";
-  document.getElementById('auth-username').value = "";
-  document.getElementById('auth-modal').style.display = 'block';
+  authMode = "login";
+  document.getElementById(SELECTORS.title).textContent = "Log In";
+  document.getElementById(SELECTORS.username).value = "";
+  document.getElementById(SELECTORS.modal).style.display = 'block';
+  setTimeout(() => document.getElementById(SELECTORS.username)?.focus(), 50);
 }
 
 function closeAuthModal() {
-  document.getElementById('auth-modal').style.display = 'none';
+  document.getElementById(SELECTORS.modal).style.display = 'none';
 }
 
-// ====== Submit Modal (Create or Login) ======
+// ===== Auth Submission Logic =====
 function submitAuthModal() {
-  const name = document.getElementById('auth-username').value.trim();
+  const name = document.getElementById(SELECTORS.username).value.trim();
   if (!name) return alert("Please enter a username.");
 
   let users = getAllUsers();
 
-  if (authAction === "signup") {
-    // Check if username already exists
+  if (authMode === "signup") {
     if (users.find(u => u.name.toLowerCase() === name.toLowerCase())) {
       return alert("Username already exists. Please log in.");
     }
-
-    const newUser = {
-      name,
-      joined: new Date().toISOString(),
-      edits: []
-    };
+    const newUser = { name, joined: new Date().toISOString(), edits: [] };
     users.push(newUser);
     saveAllUsers(users);
-    localStorage.setItem('mevUser', JSON.stringify(newUser));
+    saveCurrentUser(newUser);
     alert(`✅ Account created for ${name}`);
-  } else if (authAction === "login") {
+  } else {
     const user = users.find(u => u.name.toLowerCase() === name.toLowerCase());
-    if (!user) return alert("User not found. Try creating an account first.");
-    localStorage.setItem('mevUser', JSON.stringify(user));
+    if (!user) return alert("User not found. Try creating an account.");
+    saveCurrentUser(user);
     alert(`👋 Welcome back, ${user.name}`);
   }
 
-  updateUserStatus();
-  updateAuthUI();
   closeAuthModal();
-}
-
-// ====== Log Out ======
-function logout() {
-  localStorage.removeItem('mevUser');
-  alert("Logged out.");
-  updateUserStatus();
   updateAuthUI();
+  updateUserStatus();
 }
 
-// ====== Update UI Status Text ======
+function logout() {
+  localStorage.removeItem('wiki_current_user');
+  alert("Logged out.");
+  updateAuthUI();
+  updateUserStatus();
+}
+
+// ===== UI Update Functions =====
 function updateUserStatus() {
   const user = getUser();
-  const status = document.getElementById('user-status');
-  if (status) {
-    status.textContent = user ? `Logged in as ${user.name}` : 'Not logged in';
+  const el = document.getElementById(SELECTORS.userStatus);
+  if (el) {
+    el.textContent = user ? `Logged in as ${user.name}` : 'Not logged in';
   }
 }
 
-// ====== Show/Hide Auth Links ======
 function updateAuthUI() {
   const user = getUser();
-  const createLink = document.getElementById('create-account-link');
-  const loginLink = document.getElementById('login-link');
-  const logoutLink = document.getElementById('logout-link');
+  const create = document.getElementById(SELECTORS.createLink);
+  const login = document.getElementById(SELECTORS.loginLink);
+  const logoutBtn = document.getElementById(SELECTORS.logoutLink);
 
-  if (user) {
-    if (createLink) createLink.style.display = 'none';
-    if (loginLink) loginLink.style.display = 'none';
-    if (logoutLink) logoutLink.style.display = 'block';
-  } else {
-    if (createLink) createLink.style.display = 'block';
-    if (loginLink) loginLink.style.display = 'block';
-    if (logoutLink) logoutLink.style.display = 'none';
-  }
+  if (create) create.style.display = user ? 'none' : 'block';
+  if (login) login.style.display = user ? 'none' : 'block';
+  if (logoutBtn) logoutBtn.style.display = user ? 'block' : 'none';
 }
 
-// ====== Show Profile Info ======
-function showProfile() {
-  const user = getUser();
-  if (!user) return alert("You're not logged in.");
-  alert(`👤 Username: ${user.name}\n📅 Joined: ${new Date(user.joined).toLocaleString()}`);
-}
-
-// ====== Init on Load ======
+// ===== Event Handlers =====
 document.addEventListener('DOMContentLoaded', () => {
   updateUserStatus();
   updateAuthUI();
+
+  document.getElementById(SELECTORS.createLink)?.addEventListener('click', e => {
+    e.preventDefault();
+    showCreateAccount();
+  });
+
+  document.getElementById(SELECTORS.loginLink)?.addEventListener('click', e => {
+    e.preventDefault();
+    showLogin();
+  });
+
+  document.getElementById(SELECTORS.logoutLink)?.addEventListener('click', e => {
+    e.preventDefault();
+    logout();
+  });
+
+  document.getElementById(SELECTORS.submitBtn)?.addEventListener('click', e => {
+    e.preventDefault();
+    submitAuthModal();
+  });
+
+  document.getElementById(SELECTORS.cancelBtn)?.addEventListener('click', e => {
+    e.preventDefault();
+    closeAuthModal();
+  });
+
+  // Submit on Enter key
+  document.getElementById(SELECTORS.username)?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') submitAuthModal();
+  });
+});
+
+// Escape key closes modal
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    closeAuthModal();
+  }
 });

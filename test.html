@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MEV Wiki Tests</title>
+  <script src="main.js"></script>
+  <script>
+    function runTests() {
+      const output = [];
+
+      // Test 1: Storage Read/Write
+      const testKey = 'testKey';
+      saveData(testKey, { pass: true });
+      const result = loadData(testKey, {});
+      output.push(result.pass ? "✅ Storage test passed" : "❌ Storage test failed");
+
+      // Test 2: Linkify
+      const html = linkify("This links to [[Example Page]]");
+      output.push(html.includes("onclick") ? "✅ Linkify passed" : "❌ Linkify failed");
+
+      // Test 3: CSP Safe?
+      const cspSafe = !html.includes("<script>");
+      output.push(cspSafe ? "✅ CSP check passed" : "❌ CSP check failed");
+
+      document.getElementById('results').innerHTML = output.join("<br>");
+    }
+
+    document.addEventListener('DOMContentLoaded', runTests);
+  </script>
+</head>
+<body>
+  <h1>MEV Wiki Test Suite</h1>
+  <div id="results">Running tests...</div>
+</body>
+</html>
