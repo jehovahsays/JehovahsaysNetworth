@@ -1,139 +1,136 @@
-// ===== Authentication System with Password Support =====
-let authMode = "signup";
+// ====== Dark Mode Handling ======
+function applyThemeFromStorage() {
+  const mode = localStorage.getItem('wiki_theme');
+  if (mode === 'dark') {
+    document.body.classList.add('dark');
+  } else {
+    document.body.classList.remove('dark');
+  }
+}
 
-const SELECTORS = {
-  modal: 'auth-modal',
-  username: 'auth-username',
-  password: 'auth-password',
-  title: 'auth-modal-title',
-  createLink: 'create-account-link',
-  loginLink: 'login-link',
-  logoutLink: 'logout-link',
-  userStatus: 'user-status',
-  submitBtn: 'submit-auth',
-  cancelBtn: 'cancel-auth'
+function toggleTheme() {
+  const isDark = document.body.classList.toggle('dark');
+  localStorage.setItem('wiki_theme', isDark ? 'dark' : 'light');
+}
+
+// ====== Sidebar Toggle Handling ======
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const main = document.getElementById('main');
+  if (!sidebar || !main) return;
+
+  const isOpen = sidebar.style.display === 'block';
+  if (isOpen) {
+    sidebar.style.display = 'none';
+    main.style.flex = '1 1 100%';
+    localStorage.setItem('wiki_sidebar', 'closed');
+  } else {
+    sidebar.style.display = 'block';
+    main.style.flex = '1';
+    localStorage.setItem('wiki_sidebar', 'open');
+  }
+}
+
+function restoreSidebarState() {
+  const sidebar = document.getElementById('sidebar');
+  const main = document.getElementById('main');
+  if (!sidebar || !main) return;
+
+  const state = localStorage.getItem('wiki_sidebar');
+  if (state === 'open') {
+    sidebar.style.display = 'block';
+    main.style.flex = '1';
+  } else {
+    sidebar.style.display = 'none';
+    main.style.flex = '1 1 100%';
+  }
+}
+
+// ====== Storage Keys ======
+const STORAGE_KEYS = {
+  pages: 'wiki_pages',
+  users: 'wiki_users',
+  currentUser: 'wiki_current_user',
+  changes: 'wiki_changes',
+  knowledge: 'wiki_knowledge'
 };
 
-// ===== Storage Utilities =====
-function getUser() {
-  return JSON.parse(localStorage.getItem('wiki_current_user') || 'null');
-}
-function getAllUsers() {
-  return JSON.parse(localStorage.getItem('wiki_users') || '[]');
-}
-function saveCurrentUser(user) {
-  localStorage.setItem('wiki_current_user', JSON.stringify(user));
-}
-function saveAllUsers(users) {
-  localStorage.setItem('wiki_users', JSON.stringify(users));
-}
-
-// ===== Auth Modal Control =====
-function showCreateAccount() {
-  authMode = "signup";
-  document.getElementById(SELECTORS.title).textContent = "Create Account";
-  document.getElementById(SELECTORS.username).value = "";
-  document.getElementById(SELECTORS.password).value = "";
-  document.getElementById(SELECTORS.modal).style.display = 'block';
-  setTimeout(() => document.getElementById(SELECTORS.username)?.focus(), 50);
-}
-
-function showLogin() {
-  authMode = "login";
-  document.getElementById(SELECTORS.title).textContent = "Log In";
-  document.getElementById(SELECTORS.username).value = "";
-  document.getElementById(SELECTORS.password).value = "";
-  document.getElementById(SELECTORS.modal).style.display = 'block';
-  setTimeout(() => document.getElementById(SELECTORS.username)?.focus(), 50);
-}
-
-function closeAuthModal() {
-  document.getElementById(SELECTORS.modal).style.display = 'none';
-}
-
-// ===== Auth Submission Logic =====
-function submitAuthModal() {
-  const name = document.getElementById(SELECTORS.username).value.trim();
-  const password = document.getElementById(SELECTORS.password).value.trim();
-
-  if (!name || !password) {
-    alert("Please enter both username and password.");
-    return;
-  }
-
-  let users = getAllUsers();
-
-  if (authMode === "signup") {
-    if (users.find(u => u.name.toLowerCase() === name.toLowerCase())) {
-      return alert("Username already exists. Please log in.");
-    }
-
-    const newUser = {
-      name,
-      password,
-      joined: new Date().toISOString(),
-      edits: []
-    };
-
-    users.push(newUser);
-    saveAllUsers(users);
-    saveCurrentUser(newUser);
-    alert(`✅ Account created for ${name}`);
-  } else {
-    const user = users.find(u => u.name.toLowerCase() === name.toLowerCase());
-    if (!user) return alert("User not found. Try creating an account.");
-
-    if (user.password !== password) {
-      return alert("❌ Incorrect password.");
-    }
-
-    saveCurrentUser(user);
-    alert(`👋 Welcome back, ${user.name}`);
-  }
-
-  closeAuthModal();
-  updateAuthUI();
-  updateUserStatus();
-}
-
-function logout() {
-  localStorage.removeItem('wiki_current_user');
-  alert("Logged out.");
-  updateAuthUI();
-  updateUserStatus();
-}
-
-// ===== UI Update Functions =====
-function updateUserStatus() {
-  const user = getUser();
-  const el = document.getElementById(SELECTORS.userStatus);
-  if (el) {
-    el.textContent = user ? `Logged in as ${user.name}` : 'Not logged in';
+// ====== Utilities ======
+function speak(text) {
+  if ('speechSynthesis' in window) {
+    const msg = new SpeechSynthesisUtterance(text);
+    msg.lang = 'en-US';
+    msg.pitch = 1;
+    msg.rate = 1;
+    window.speechSynthesis.speak(msg);
   }
 }
 
-function updateAuthUI() {
-  const user = getUser();
-  document.getElementById(SELECTORS.createLink).style.display = user ? 'none' : 'block';
-  document.getElementById(SELECTORS.loginLink).style.display = user ? 'none' : 'block';
-  document.getElementById(SELECTORS.logoutLink).style.display = user ? 'block' : 'none';
+function escapeHTML(str) {
+  return str.replace(/[&<>"']/g, match => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
+  }[match]));
 }
 
-// ===== Event Handlers =====
+function linkify(content) {
+  const safe = escapeHTML(content);
+  return safe.replace(/\[\[([^\]]+)\]\]/g, (_, title) => {
+    return `<a href="#" onclick="showPage('${title}')">${title}</a>`;
+  });
+}
+
+function loadData(key, defaultVal) {
+  try {
+    const v = localStorage.getItem(key);
+    return v ? JSON.parse(v) : defaultVal;
+  } catch {
+    return defaultVal;
+  }
+}
+
+function saveData(key, data) {
+  localStorage.setItem(key, JSON.stringify(data));
+}
+
+// ====== Page System and Other Controls ======
+// (… include your showAbout, showSettings, showRecent, showProfile, createPage, deletePage, showPage, editPage, savePage, answerAI, updateConnectionStatus …)
+// // For brevity, assume these are unchanged from your last version, but ensure they call restoreSidebarState and applyThemeFromStorage in init.
+
+// ====== Init ======
 document.addEventListener('DOMContentLoaded', () => {
-  updateUserStatus();
-  updateAuthUI();
+  applyThemeFromStorage();
+  restoreSidebarState();
+  updateConnectionStatus();
 
-  document.getElementById(SELECTORS.createLink)?.addEventListener('click', showCreateAccount);
-  document.getElementById(SELECTORS.loginLink)?.addEventListener('click', showLogin);
-  document.getElementById(SELECTORS.logoutLink)?.addEventListener('click', logout);
-  document.getElementById(SELECTORS.submitBtn)?.addEventListener('click', submitAuthModal);
-  document.getElementById(SELECTORS.cancelBtn)?.addEventListener('click', closeAuthModal);
-});
+  document.getElementById('menu-btn')?.addEventListener('click', toggleSidebar);
+  document.getElementById('ai-button')?.addEventListener('click', () => {
+    const input = document.getElementById('ai-input');
+    if (input.value) {
+      answerAI(input.value);
+      input.value = '';
+    }
+  });
 
-// Escape key closes modal
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    closeAuthModal();
+  document.getElementById('ai-input')?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      document.getElementById('ai-button')?.click();
+    }
+  });
+
+  document.getElementById('recent-link')?.addEventListener('click', e => { e.preventDefault(); showRecent(); });
+  document.getElementById('settings-link')?.addEventListener('click', e => { e.preventDefault(); showSettings(); });
+  document.getElementById('about-link')?.addEventListener('click', e => { e.preventDefault(); showAbout(); });
+  document.getElementById('profile-link')?.addEventListener('click', e => { e.preventDefault(); showProfile(); });
+  document.getElementById('create-page-btn')?.addEventListener('click', e => { e.preventDefault(); createPage(); });
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js')
+      .then(() => console.log("✅ Service Worker registered"))
+      .catch(err => console.error("❌ SW registration failed:", err));
   }
 });
