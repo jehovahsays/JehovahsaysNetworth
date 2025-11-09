@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MEV Offline AI</title>
+
+  <meta name="description" content="Offline voice-enabled AI that learns and answers questions.">
+  <meta name="theme-color" content="#000000">
+
+  <style>
+    body {
+      background: #000;
+      color: gold;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    h1 {
+      color: #00ffcc;
+    }
+
+    input[type="text"] {
+      width: 80%;
+      max-width: 500px;
+      padding: 12px;
+      border: 2px solid gold;
+      border-radius: 25px;
+      background: #111;
+      color: #fff;
+      font-size: 16px;
+      margin-top: 20px;
+    }
+
+    button {
+      background: gold;
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 25px;
+      cursor: pointer;
+      margin: 10px;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #ffd700;
+    }
+
+    #status {
+      margin-top: 20px;
+      color: lime;
+    }
+
+    footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: #222;
+      color: #aaa;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>MEV Offline Voice AI</h1>
+  <p>Ask or teach me something below:</p>
+
+  <form id="aiForm" autocomplete="off">
+    <input type="text" id="inputText" placeholder="e.g. 1+1 is 2 or what is 1+1">
+  </form>
+
+  <div id="status">Offline Mode</div>
+
+  <footer id="connection-status">Offline</footer>
+
+  <script>
+    // ===== Connection Status =====
+    const footer = document.getElementById('connection-status');
+    function updateConnectionStatus() {
+      footer.textContent = navigator.onLine ? 'Online' : 'Offline';
+      footer.style.color = navigator.onLine ? 'lime' : 'red';
+      document.getElementById('status').textContent = navigator.onLine ? 'Online Mode' : 'Offline Mode';
+    }
+    window.addEventListener('online', updateConnectionStatus);
+    window.addEventListener('offline', updateConnectionStatus);
+    updateConnectionStatus();
+
+    // ===== AI Memory System =====
+    if (!localStorage.getItem('knowledgeBase')) {
+      localStorage.setItem('knowledgeBase', JSON.stringify([]));
+    }
+
+    function getKnowledge() {
+      return JSON.parse(localStorage.getItem('knowledgeBase') || '[]');
+    }
+
+    function saveKnowledge(kb) {
+      localStorage.setItem('knowledgeBase', JSON.stringify(kb));
+    }
+
+    function speak(text) {
+      const msg = new SpeechSynthesisUtterance(text);
+      msg.lang = 'en-US';
+      window.speechSynthesis.speak(msg);
+    }
+
+    function findAnswer(input) {
+      const kb = getKnowledge();
+      const q = input.toLowerCase().replace(/[?.]/g, '').trim();
+
+      for (const item of kb) {
+        const [statement, answer] = item.split(' is ');
+        if (statement && q.includes(statement.trim())) {
+          return answer.trim();
+        }
+      }
+      return null;
+    }
+
+    function learn(statement) {
+      const kb = getKnowledge();
+      if (!kb.includes(statement)) {
+        kb.push(statement);
+        saveKnowledge(kb);
+        speak("Got it, I’ve learned something new!");
+      }
+    }
+
+    // ===== Handle Input =====
+    const form = document.getElementById('aiForm');
+    const input = document.getElementById('inputText');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const text = input.value.trim();
+      if (!text) return;
+
+      if (text.toLowerCase().includes(' is ')) {
+        learn(text);
+        alert(`Learned: ${text}`);
+      } else {
+        const answer = findAnswer(text);
+        if (answer) {
+          alert(`Answer: ${answer}`);
+          speak(answer);
+        } else {
+          alert("I don't know that yet. You can teach me!");
+          speak("I don't know that yet. You can teach me!");
+        }
+      }
+
+      input.value = '';
+    });
+  </script>
+  <script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js')
+    .then(() => console.log('Service Worker Registered'));
+}
+</script>
+<p><a href="ai.html">→ Read me</a></p>
+</body>
+</html>
