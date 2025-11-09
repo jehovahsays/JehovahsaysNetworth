@@ -1,10 +1,10 @@
-// ===== Authentication System =====
+// ===== Authentication System with Password Support =====
 let authMode = "signup";
 
 const SELECTORS = {
   modal: 'auth-modal',
   username: 'auth-username',
-  password: 'auth-password', // NEW
+  password: 'auth-password',
   title: 'auth-modal-title',
   createLink: 'create-account-link',
   loginLink: 'login-link',
@@ -16,26 +16,24 @@ const SELECTORS = {
 
 // ===== Storage Utilities =====
 function getUser() {
-  return JSON.parse(localStorage.getItem('wiki_current_user') || 'null');
+  try {
+    return JSON.parse(localStorage.getItem('wiki_current_user') || 'null');
+  } catch {
+    return null;
+  }
 }
 function getAllUsers() {
-  return JSON.parse(localStorage.getItem('wiki_users') || '[]');
+  try {
+    return JSON.parse(localStorage.getItem('wiki_users') || '[]');
+  } catch {
+    return [];
+  }
 }
 function saveCurrentUser(user) {
   localStorage.setItem('wiki_current_user', JSON.stringify(user));
 }
 function saveAllUsers(users) {
   localStorage.setItem('wiki_users', JSON.stringify(users));
-}
-
-// ===== Simple hash (not secure, just for demo)
-function hash(text) {
-  let hash = 0;
-  for (let i = 0; i < text.length; i++) {
-    hash = ((hash << 5) - hash) + text.charCodeAt(i);
-    hash |= 0;
-  }
-  return hash.toString();
 }
 
 // ===== Auth Modal Control =====
@@ -65,25 +63,41 @@ function closeAuthModal() {
 function submitAuthModal() {
   const name = document.getElementById(SELECTORS.username).value.trim();
   const password = document.getElementById(SELECTORS.password).value.trim();
-  if (!name || !password) return alert("Please enter both username and password.");
+
+  if (!name || !password) {
+    alert("Please enter both username and password.");
+    return;
+  }
 
   const users = getAllUsers();
-  const pwHash = hash(password);
 
   if (authMode === "signup") {
     if (users.find(u => u.name.toLowerCase() === name.toLowerCase())) {
-      return alert("Username already exists. Please log in.");
+      alert("Username already exists. Please log in.");
+      return;
     }
-    const newUser = { name, password: pwHash, joined: new Date().toISOString(), edits: [] };
+    const newUser = {
+      name,
+      password,
+      joined: new Date().toISOString(),
+      edits: []
+    };
     users.push(newUser);
     saveAllUsers(users);
     saveCurrentUser(newUser);
     alert(`✅ Account created for ${name}`);
   } else {
-    const user = users.find(u => u.name.toLowerCase() === name.toLowerCase() && u.password === pwHash);
-    if (!user) return alert("❌ Invalid username or password.");
-    saveCurrentUser(user);
-    alert(`👋 Welcome back, ${user.name}`);
+    const existing = users.find(u => u.name.toLowerCase() === name.toLowerCase());
+    if (!existing) {
+      alert("User not found. Try creating an account.");
+      return;
+    }
+    if (existing.password !== password) {
+      alert("❌ Incorrect password.");
+      return;
+    }
+    saveCurrentUser(existing);
+    alert(`👋 Welcome back, ${existing.name}`);
   }
 
   closeAuthModal();
@@ -109,9 +123,13 @@ function updateUserStatus() {
 
 function updateAuthUI() {
   const user = getUser();
-  document.getElementById(SELECTORS.createLink).style.display = user ? 'none' : 'block';
-  document.getElementById(SELECTORS.loginLink).style.display = user ? 'none' : 'block';
-  document.getElementById(SELECTORS.logoutLink).style.display = user ? 'block' : 'none';
+  const createLink = document.getElementById(SELECTORS.createLink);
+  const loginLink = document.getElementById(SELECTORS.loginLink);
+  const logoutLink = document.getElementById(SELECTORS.logoutLink);
+
+  if (createLink) createLink.style.display = user ? 'none' : 'block';
+  if (loginLink) loginLink.style.display = user ? 'none' : 'block';
+  if (logoutLink) logoutLink.style.display = user ? 'block' : 'none';
 }
 
 // ===== Event Handlers =====
@@ -119,13 +137,16 @@ document.addEventListener('DOMContentLoaded', () => {
   updateUserStatus();
   updateAuthUI();
 
-  document.getElementById(SELECTORS.createLink)?.addEventListener('click', showCreateAccount);
-  document.getElementById(SELECTORS.loginLink)?.addEventListener('click', showLogin);
-  document.getElementById(SELECTORS.logoutLink)?.addEventListener('click', logout);
-  document.getElementById(SELECTORS.submitBtn)?.addEventListener('click', submitAuthModal);
-  document.getElementById(SELECTORS.cancelBtn)?.addEventListener('click', closeAuthModal);
+  document.getElementById(SELECTORS.createLink)?.addEventListener('click', e => { e.preventDefault(); showCreateAccount(); });
+  document.getElementById(SELECTORS.loginLink)?.addEventListener('click', e => { e.preventDefault(); showLogin(); });
+  document.getElementById(SELECTORS.logoutLink)?.addEventListener('click', e => { e.preventDefault(); logout(); });
+  document.getElementById(SELECTORS.submitBtn)?.addEventListener('click', e => { e.preventDefault(); submitAuthModal(); });
+  document.getElementById(SELECTORS.cancelBtn)?.addEventListener('click', e => { e.preventDefault(); closeAuthModal(); });
 });
 
+// Escape key closes modal
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') closeAuthModal();
+  if (e.key === 'Escape') {
+    closeAuthModal();
+  }
 });
