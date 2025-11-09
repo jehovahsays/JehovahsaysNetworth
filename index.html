@@ -82,18 +82,23 @@
     <div id="app-version">v1.1.0-alpha1</div>
   </footer>
 
-  <!-- Auth Modal -->
-  <div id="auth-modal" class="modal-overlay">
-    <div class="modal-box">
-      <h2 id="auth-modal-title">Create Account</h2>
-      <label for="auth-username">Username:</label>
-      <input id="auth-username" type="text" />
-      <div class="modal-actions">
-        <button id="submit-auth">Submit</button>
-        <button id="cancel-auth">Cancel</button>
-      </div>
+<!-- Auth Modal -->
+<div id="auth-modal" class="modal-overlay">
+  <div class="modal-box">
+    <h2 id="auth-modal-title">Create Account</h2>
+
+    <label for="auth-username">Username:</label>
+    <input id="auth-username" type="text" />
+
+    <label for="auth-password">Password:</label>
+    <input id="auth-password" type="password" />
+
+    <div class="modal-actions">
+      <button id="submit-auth">Submit</button>
+      <button id="cancel-auth">Cancel</button>
     </div>
   </div>
+</div>
 
   <!-- Scripts at bottom for better load performance -->
   <script src="main.js" defer></script>
