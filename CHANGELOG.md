@@ -1,40 +1,28 @@
-## [1.1.0-alpha3] – 2025-11-08
+# Changelog – MEV Offline Wiki AI
 
-- 📱 Optimized iOS home screen icon (180×180)
-- 🔧 Removed redundant icon links
+## [1.1.0-alpha3] – 2025-11-10
 
-### 🔄 Backup & Restore
-- Export local wiki data to JSON file
-- Import JSON file to restore wiki state
-- Added to Settings page
+### Added
+- Hardened security with inline meta policies and blocked unsafe functions
+- Full integration of service worker caching for offline use
+- Profile page with joined date and username display
+- Storage usage bar with visual quota feedback
+- Sanitization and linkification of page content
 
-### 🌙 Dark Mode Support
-- Added dark mode styles in `style.css`
-- Toggle button in Settings page
-- User theme saved in `localStorage`
+### Changed
+- Merged script logic into single `index.js` for better performance
+- Replaced dynamic login system with localStorage-based username auth
+- Improved CSP and removed external service access
 
-### 🧠 Core Features
-- Smart AI search with local keyword matching and link suggestions
-- Page linking using `[[Page Title]]` format
-- Offline-first editing and browsing via `localStorage`
-- Clean content sanitization and section editing (`wiki.js` refactored)
+### Removed
+- Sitemap and indexing of dynamic user content for privacy
+- Passwords and third-party connections to minimize risks
 
-### 🔐 Authentication & Security
-- Local-only user auth system (create/login/logout)
-- Per-user edit tracking and local session
-- Secure storage keys and CSP enforced in `index.html`
-- Escaped HTML for safe input (prevents injection)
+---
 
-### 🧹 UI / UX Improvements
-- Responsive sidebar menu with auto-close on link click
-- Auth modal with input focus and cancel button
-- Page delete with confirmation prompt
-- Edit view includes "Save" and "Cancel" buttons
-- AI input responds to **Enter** key press
-- Updated visual styles and accessible buttons
+## [1.0.0] – Initial Release
 
-### 🛠 Developer Experience
-- CSP (`Content-Security-Policy`) header configured
-- Modular architecture with `main.js`, `wiki.js`, `auth.js`
-- Added `README.md`, `SECURITY.md`, and `test.html`
-- App version added to `manifest.json`
+- Local wiki page creation, editing, and deletion
+- Basic localStorage account management
+- Offline page loading
+- Mobile-friendly layout and theme toggle

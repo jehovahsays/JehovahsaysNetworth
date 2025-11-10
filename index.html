@@ -8,24 +8,18 @@
   <meta name="theme-color" content="#3366cc" />
   <meta name="color-scheme" content="light dark" />
   <link rel="manifest" href="manifest.json" />
-
-  <!-- iOS PWA Support -->
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="MEV Wiki">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-
-  <!-- Styles -->
-  <link rel="stylesheet" href="style.css" />
-
-  <!-- Security -->
+  <link rel="stylesheet" href="index.css" />
   <meta http-equiv="Content-Security-Policy" content="
     default-src 'self';
     script-src 'self';
     style-src 'self';
     img-src 'self' data:;
     font-src 'self';
-    connect-src 'self' https://api.duckduckgo.com;
+    connect-src 'self';
     object-src 'none';
     base-uri 'self';
     form-action 'self';
@@ -35,6 +29,11 @@
 
 <body>
   <div id="banner" class="banner"></div>
+
+  <!-- 🔐 Offline fallback message (hidden by default) -->
+  <div id="offline-message" style="display:none; background:#ffcc00; color:#000; text-align:center; padding:10px; font-weight:bold;">
+    ⚠️ You’re offline. Some features may be unavailable.
+  </div>
 
   <header>
     <button id="menu-btn" aria-label="Toggle menu navigation">☰</button>
@@ -79,27 +78,33 @@
   <footer>
     <div id="status-indicator">🔴 Offline</div>
     <div id="ticker"><span id="ticker-content"></span></div>
-    <div id="app-version">v1.1.0-alpha1</div>
+    <div id="app-version">v1.1.0‑alpha2 – <span id="last-updated"></span></div>
   </footer>
 
-<!-- Auth Modal -->
-<div id="auth-modal" class="modal-overlay">
-  <div class="modal-box">
-    <h2 id="auth-modal-title">Create Account</h2>
-    <label for="auth-username">Username:</label>
-    <input id="auth-username" type="text" />
-    <label for="auth-password">Password:</label>
-    <input id="auth-password" type="password" />
-    <div class="modal-actions">
-      <button id="submit-auth">Submit</button>
-      <button id="cancel-auth">Cancel</button>
+  <div id="auth-modal" class="modal-overlay">
+    <div class="modal-box">
+      <h2 id="auth-modal-title">Enter Username</h2>
+      <label for="auth-username">Username:</label>
+      <input id="auth-username" type="text" />
+      <div class="modal-actions">
+        <button id="submit-auth">Submit</button>
+        <button id="cancel-auth">Cancel</button>
+      </div>
     </div>
   </div>
-</div>
 
-  <!-- Scripts at bottom for better load performance -->
-  <script src="main.js" defer></script>
-  <script src="auth.js" defer></script>
-  <script src="wiki.js" defer></script>
+  <script>
+    // Simple real-time offline message visibility
+    function updateOfflineBanner() {
+      const isOffline = !navigator.onLine;
+      const banner = document.getElementById('offline-message');
+      if (banner) banner.style.display = isOffline ? 'block' : 'none';
+    }
+    window.addEventListener('online', updateOfflineBanner);
+    window.addEventListener('offline', updateOfflineBanner);
+    window.addEventListener('DOMContentLoaded', updateOfflineBanner);
+  </script>
+
+  <script src="index.js" defer></script>
 </body>
 </html>
