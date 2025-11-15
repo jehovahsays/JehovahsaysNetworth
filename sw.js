@@ -2,6 +2,8 @@ const CACHE_NAME = "mev-offline-wiki-v3";
 const OFFLINE_FILES = [
   "./",
   "./index.html",
+  "./installer.html",
+   "./lang/en.json",
   "./index.js",
   "./index.css",
   "./manifest.json",

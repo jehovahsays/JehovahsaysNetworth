@@ -8,9 +8,9 @@
   "orientation": "portrait",
   "background_color": "#ffffff",
   "theme_color": "#3366cc",
-  "description": "Private offline wiki with voice-enabled AI and editable pages.",
+  "description": "Private offline wiki with voice-enabled AI, editable pages, and no tracking.",
   "lang": "en",
-  "version": "1.1.0-alpha2",
+  "version": "1.2.0-standalone",
   "icons": [
     {
       "src": "icon-192.png",
@@ -32,14 +32,26 @@
       "short_name": "New",
       "url": "/#",
       "description": "Create a new wiki page",
-      "icons": [{ "src": "icon-192.png", "sizes": "192x192", "type": "image/png" }]
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
     },
     {
       "name": "Recent Changes",
       "short_name": "Recent",
       "url": "/#",
       "description": "View recent page edits",
-      "icons": [{ "src": "icon-192.png", "sizes": "192x192", "type": "image/png" }]
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
     }
   ]
 }

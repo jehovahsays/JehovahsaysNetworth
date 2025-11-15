@@ -7,104 +7,895 @@
   <meta name="description" content="MEV AI Wiki – Offline AI Encyclopedia. Learn, edit, explore." />
   <meta name="theme-color" content="#3366cc" />
   <meta name="color-scheme" content="light dark" />
-  <link rel="manifest" href="manifest.json" />
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="MEV Wiki">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <link rel="stylesheet" href="index.css" />
-  <meta http-equiv="Content-Security-Policy" content="
-    default-src 'self';
-    script-src 'self';
-    style-src 'self';
-    img-src 'self' data:;
-    font-src 'self';
-    connect-src 'self';
-    object-src 'none';
-    base-uri 'self';
-    form-action 'self';
-    frame-ancestors 'none';
-  ">
+
+  <!-- Embedded CSS -->
+  <style>
+    /* ========== MEV Wiki Style (Hardened) ========== */
+    * { box‑sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, "Segoe UI", Arial, sans‑serif;
+      background: #fff;
+      color: #000;
+      transition: background 0.3s ease, color 0.3s ease;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    header {
+      background: #3366cc;
+      color: #fff;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+    }
+    #menu-btn {
+      font-size: 20px;
+      background: transparent;
+      color: white;
+      border: none;
+      margin-right: 15px;
+      cursor: pointer;
+    }
+    #menu-btn:focus, button:focus, input:focus, textarea:focus {
+      outline: 2px solid #3366cc;
+      outline-offset: 2px;
+      border-color: #3366cc;
+    }
+    [hidden],[aria-hidden="true"],.invisible,.offscreen {
+      display: none !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+      height: 0 !important;
+      width: 0 !important;
+      overflow: hidden !important;
+    }
+    .noselect { user-select: none; }
+    .readonly { pointer-events: none; user-select: none; opacity: 0.6; }
+    header h1 { margin: 0; font-size: 1.5rem; }
+
+    #banner {
+      background: #ffcc00;
+      color: #000;
+      padding: 10px;
+      text-align: center;
+      display: none;
+      font-weight: bold;
+    }
+
+    #container {
+      display: flex;
+      flex-direction: row;
+      height: calc(100vh - 100px);
+    }
+    #sidebar {
+      width: 250px;
+      background: #f8f9fa;
+      border-right: 1px solid #ccc;
+      overflow-y: auto;
+      padding: 10px;
+      display: none;
+    }
+    #sidebar ul { list-style: none; padding: 0; }
+    #sidebar li { margin: 5px 0; }
+    #sidebar a {
+      color: #3366cc;
+      text-decoration: none;
+      word-break: break-word;
+    }
+    #sidebar a:hover { text-decoration: underline; }
+
+    #main {
+      flex: 1 1 100%;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    #ai-bar {
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+    }
+    #ai-input {
+      flex: 1;
+      padding: 8px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    #ai-button {
+      padding: 8px 12px;
+      margin-left: 8px;
+      font-size: 16px;
+      background: #3366cc;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    #ai-button:hover { background: #254a9e; }
+
+    section.page { margin-bottom: 40px; }
+    section.page h2 {
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 5px;
+    }
+    section.page .content {
+      margin-top: 10px;
+      white-space: pre-wrap;
+    }
+    textarea.editor {
+      width: 100%;
+      height: 200px;
+      padding: 10px;
+      font-size: 16px;
+      font-family: monospace;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      resize: vertical;
+      margin-top: 10px;
+    }
+    .edit-btn, .delete-btn {
+      background: #3366cc;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      margin-top: 10px;
+      margin-right: 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .edit-btn:hover, .delete-btn:hover { background-color: #254a9e; }
+    .delete-btn { background-color: #cc3333; }
+    .delete-btn:hover { background-color: #a60000; }
+
+    footer {
+      height: 60px;
+      background: #f1f1f1;
+      border-top: 1px solid #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+    }
+    #status-indicator { font-size: 14px; color: #555; }
+    #ticker { white-space: nowrap; overflow: hidden; width: 100%; position: relative; }
+    #ticker span {
+      display: inline-block; padding-left: 100%; animation: scroll-left 20s linear infinite;
+    }
+    @keyframes scroll-left { 0% { transform: translateX(0%); } 100% { transform: translateX(-100%); } }
+
+    #storage-bar {
+      margin-top: 10px;
+      background: #e9ecef;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    #storage-bar-inner {
+      height: 10px;
+      background: #3366cc;
+      width: 0%;
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 1000;
+      backdrop-filter: blur(4px);
+    }
+    .modal-box {
+      background: white;
+      max-width: 400px;
+      margin: 10% auto;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      text-align: left;
+    }
+    .modal-actions { margin-top: 20px; text-align: right; }
+
+    body.dark {
+      background: #121212;
+      color: #e0e0e0;
+    }
+    body.dark header { background: #1f1f1f; }
+    body.dark #sidebar {
+      background: #1c1c1c;
+      border-right: 1px solid #444;
+    }
+    body.dark #sidebar a { color: #80bfff; }
+    body.dark #main { background: #181818; }
+    body.dark #ai-button {
+      background: #444;
+    }
+    body.dark #ai-button:hover {
+      background: #666;
+    }
+    body.dark textarea, body.dark input {
+      background: #2c2c2c; color: #e0e0e0; border: 1px solid #555;
+    }
+    body.dark .modal-box { background: #1f1f1f; }
+    body.dark .edit-btn, body.dark .delete-btn {
+      background: #444;
+    }
+    body.dark #storage-bar {
+      background: #333; border-color: #555;
+    }
+    body.dark #storage-bar-inner {
+      background: #80bfff;
+    }
+    body.dark footer {
+      background: #181818; border-top: 1px solid #444;
+    }
+
+    #page-container {
+      display: block;
+      width: 100%;
+      height: auto;
+      min-height: calc(100vh - 160px);
+      padding: 0 10px 30px 10px;
+      overflow-x: hidden;
+      overflow-y: auto;
+      word-break: break-word;
+      background-color: inherit;
+      color: inherit;
+    }
+    body.dark #page-container {
+      background-color: #181818;
+      color: #e0e0e0;
+    }
+    #offline-message {
+      display: none;
+      background: #ffcc00;
+      color: #000;
+      text-align: center;
+      padding: 10px;
+      font-weight: bold;
+      font-family: inherit;
+      z-index: 9999;
+      border-bottom: 1px solid #aaa;
+      position: relative;
+    }
+    body.dark #offline-message {
+      background: #665500;
+      color: #fff;
+      border-bottom-color: #333;
+    }
+    .semantic-status {
+      margin-top: 15px;
+      color: green;
+      font-weight: bold;
+      font-size: 0.95em;
+    }
+  </style>
+
 </head>
-
 <body>
-  <div id="banner" class="banner"></div>
 
-  <!-- 🔐 Offline fallback message (hidden by default) -->
-  <div id="offline-message" style="display:none; background:#ffcc00; color:#000; text-align:center; padding:10px; font-weight:bold;">
-    ⚠️ You’re offline. Some features may be unavailable.
-  </div>
+<!-- Redirect to installer if required -->
+<script>
+  (function () {
+    const siteName = localStorage.getItem('mev_siteName');
+    const adminUser = localStorage.getItem('mev_adminUser');
+    if (!siteName || !adminUser) {
+      window.location.replace('installer.html');
+    }
+  })();
+</script>
 
-  <header>
-    <button id="menu-btn" aria-label="Toggle menu navigation">☰</button>
-    <h1>MEV AI Wiki</h1>
-  </header>
+<div id="banner" class="banner"></div>
 
-  <div id="container">
-    <nav id="sidebar">
-      <div id="auth-links">
-        <div id="user-status">Not logged in</div>
-        <a href="#" id="create-account-link">Create Account</a><br>
-        <a href="#" id="login-link">Log In</a><br>
-        <a href="#" id="profile-link">My Profile</a><br>
-        <a href="#" id="logout-link" style="display:none;">Log Out</a>
-      </div>
+<div id="offline-message">
+  ⚠️ You’re offline. Some features may be unavailable.
+</div>
 
-      <h3>Pages</h3>
-      <ul id="page-list"></ul>
-      <button id="create-page-btn">+ New Page</button>
+<header>
+  <button id="menu-btn" aria-label="Toggle menu navigation">☰</button>
+  <h1>MEV AI Wiki</h1>
+</header>
 
-      <hr />
-      <ul>
-        <li><a href="#" id="recent-link">Recent Changes</a></li>
-        <li><a href="#" id="settings-link">Settings</a></li>
-        <li><a href="#" id="about-link">About</a></li>
-      </ul>
+<div id="container">
+  <nav id="sidebar">
+    <div id="auth-links">
+      <div id="user-status">Not logged in</div>
+      <a href="#" id="create-account-link">Create Account</a><br>
+      <a href="#" id="login-link">Log In</a><br>
+      <a href="#" id="profile-link">My Profile</a><br>
+      <a href="#" id="logout-link" style="display:none;">Log Out</a>
+    </div>
 
-      <div id="storage-bar">
-        <div id="storage-bar-inner"></div>
-      </div>
-    </nav>
+    <h3>Pages</h3>
+    <ul id="page-list"></ul>
+    <button id="create-page-btn">+ New Page</button>
+    <button id="wiki-help-btn">Wiki Formatting Help</button>
 
-    <main id="main">
-      <div id="ai-bar">
-        <input type="text" id="ai-input" placeholder="Ask AI or search wiki…" aria-label="AI search or question input" />
-        <button id="ai-button">Ask AI</button>
-      </div>
-      <div id="page-container"></div>
-    </main>
-  </div>
+    <hr />
+    <ul>
+      <li><a href="#" id="main-page-link">Main Page</a></li>
+      <li><a href="#" id="recent-link">Recent Changes</a></li>
+      <li><a href="#" id="settings-link">Settings</a></li>
+      <li><a href="#" id="about-link">About</a></li>
+      <li><a href="./stream/stream.html" id="stream-link">Stream</a></li>
+      <li><a href="chat.html" id="chat-link">Chat</a></li>
+	  <li><a href="map.html" id="map-link">Map</a></li>
+    </ul>
 
-  <footer>
-    <div id="status-indicator">🔴 Offline</div>
-    <div id="ticker"><span id="ticker-content"></span></div>
-    <div id="app-version">v1.1.0‑alpha2 – <span id="last-updated"></span></div>
-  </footer>
+    <div id="storage-bar">
+      <div id="storage-bar-inner"></div>
+    </div>
+  </nav>
 
-  <div id="auth-modal" class="modal-overlay">
-    <div class="modal-box">
-      <h2 id="auth-modal-title">Enter Username</h2>
-      <label for="auth-username">Username:</label>
-      <input id="auth-username" type="text" />
-      <div class="modal-actions">
-        <button id="submit-auth">Submit</button>
-        <button id="cancel-auth">Cancel</button>
-      </div>
+  <main id="main">
+    <div id="ai-bar">
+      <input type="text" id="ai-input" placeholder="Ask AI or search wiki…" aria-label="AI search or question input" />
+      <button id="ai-button">Ask AI</button>
+    </div>
+    <div id="page-container"></div>
+  </main>
+</div>
+
+<footer>
+  <div id="status-indicator">🔴 Offline</div>
+  <div id="ticker"><span id="ticker-content"></span></div>
+  <div id="app-version">v1.1.0‑alpha2 – <span id="last-updated"></span></div>
+  <div><a href="installer.html" id="reset-link">Reset Install</a></div>
+</footer>
+
+<div id="auth-modal" class="modal-overlay">
+  <div class="modal-box">
+    <h2 id="auth-modal-title">Enter Username</h2>
+    <label for="auth-username">Username:</label>
+    <input id="auth-username" type="text" />
+    <div class="modal-actions">
+      <button id="submit-auth">Submit</button>
+      <button id="cancel-auth">Cancel</button>
     </div>
   </div>
+</div>
 
-  <script>
-    // Simple real-time offline message visibility
-    function updateOfflineBanner() {
-      const isOffline = !navigator.onLine;
-      const banner = document.getElementById('offline-message');
-      if (banner) banner.style.display = isOffline ? 'block' : 'none';
+<!-- Embedded JS -->
+<script>
+  // ====== MEV SECURITY LAYER ======
+  (function secureClientApp() {
+    document.addEventListener("contextmenu", e => e.preventDefault());
+    document.addEventListener("dragstart", e => e.preventDefault());
+    document.addEventListener("selectstart", e => e.preventDefault());
+
+    window.eval = () => console.warn('eval blocked');
+    window.Function = function() { console.warn('Function constructor blocked'); };
+
+    const originalSetTimeout = window.setTimeout;
+    window.setTimeout = function(fn, delay) {
+      if (typeof fn === 'string') {
+        console.warn('setTimeout(string) blocked');
+        return;
+      }
+      return originalSetTimeout(fn, delay);
+    };
+
+    document.head.insertAdjacentHTML("beforeend", `
+      <meta http-equiv="X-Content-Type-Options" content="nosniff">
+      <meta http-equiv="X-Frame-Options" content="DENY">
+      <meta http-equiv="Referrer-Policy" content="no-referrer">
+      <meta http-equiv="Permissions-Policy" content="microphone=(), camera=(), geolocation=()">
+    `);
+
+    if (!location.hostname.includes('localhost')) {
+      console.log = console.warn = console.error = () => {};
     }
-    window.addEventListener('online', updateOfflineBanner);
-    window.addEventListener('offline', updateOfflineBanner);
-    window.addEventListener('DOMContentLoaded', updateOfflineBanner);
-  </script>
+  })();
 
-  <script src="index.js" defer></script>
+  const STORAGE_KEYS = {
+    pages: 'wiki_pages',
+    users: 'wiki_users',
+    currentUser: 'wiki_current_user',
+    changes: 'wiki_changes',
+    theme: 'wiki_theme',
+    sidebar: 'wiki_sidebar',
+    knowledge: 'wiki_knowledge'
+  };
+
+  function loadData(key, defaultVal) {
+    const v = localStorage.getItem(key);
+    return v ? JSON.parse(v) : defaultVal;
+  }
+  function saveData(key, data) {
+    localStorage.setItem(key, JSON.stringify(data));
+    updateStorageBar();
+  }
+  function getCurrentUser() {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEYS.currentUser) || 'null');
+    } catch {
+      return null;
+    }
+  }
+  function speak(text) {
+    if ('speechSynthesis' in window) {
+      const msg = new SpeechSynthesisUtterance(text);
+      msg.lang = 'en-US';
+      msg.pitch = 1;
+      msg.rate = 1;
+      window.speechSynthesis.speak(msg);
+    }
+  }
+  function escapeHTML(str) {
+    return str.replace(/[&<>"']/g, match => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+    }[match]));
+  }
+  function linkify(content) {
+    const safe = escapeHTML(content);
+    return safe.replace(/\[\[([^\]]+)\]\]/g, (_, t) => `<a href="#" onclick="showPage('${t}')">${t}</a>`);
+  }
+  function parseWiki(text) {
+    if (!text) return '';
+    text = escapeHTML(text);
+    text = text.replace(/^={2,6}\s*(.+?)\s*={2,6}$/gm, (m, p1) => {
+      const lvl = m.match(/^=+/)[0].length;
+      return `<h${lvl}>${p1}</h${lvl}>`;
+    });
+    text = text.replace(/'''(.*?)'''/g, '<strong>$1</strong>');
+    text = text.replace(/''(.*?)''/g, '<em>$1</em>');
+    text = text.replace(/\[\[([^\]]+)\]\]/g, (_, t) =>
+      `<a href="#" onclick="showPage('${t}')">${t}</a>`
+    );
+    // list parsing
+    let result = '';
+    let inUL = false;
+    text.split('\n').forEach(line => {
+      if (/^\*\s+/.test(line)) {
+        if (!inUL) {
+          result += '<ul>';
+          inUL = true;
+        }
+        result += `<li>${line.replace(/^\*\s+/, '')}</li>`;
+      } else {
+        if (inUL) {
+          result += '</ul>';
+          inUL = false;
+        }
+        result += line + '<br>';
+      }
+    });
+    if (inUL) result += '</ul>';
+    result += `<div class="semantic-status">✔️ Semantic HTML Enabled</div>`;
+    return result;
+  }
+
+  function updateStorageBar() {
+    const bar = document.getElementById('storage-bar-inner');
+    if (!bar) return;
+    if (navigator.storage && navigator.storage.estimate) {
+      navigator.storage.estimate().then(est => {
+        const usage = est.usage || 0;
+        const quota = est.quota || 1;
+        const percent = Math.min((usage / quota) * 100, 100).toFixed(1);
+        bar.style.width = percent + '%';
+        bar.title = `Used: ${(usage / 1024).toFixed(1)} KB / ${(quota / 1024).toFixed(1)} KB`;
+      });
+    } else {
+      let totalBytes = 0;
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        const value = localStorage.getItem(key) || '';
+        totalBytes += (key.length + value.length) * 2;
+      }
+      bar.style.width = '100%';
+      bar.title = `Approx. ${(totalBytes / 1024).toFixed(1)} KB used`;
+    }
+  }
+  function applyThemeFromStorage() {
+    const mode = localStorage.getItem(STORAGE_KEYS.theme);
+    document.body.classList.toggle('dark', mode === 'dark');
+  }
+  function toggleTheme() {
+    const isDark = document.body.classList.toggle('dark');
+    localStorage.setItem(STORAGE_KEYS.theme, isDark ? 'dark' : 'light');
+  }
+  function restoreSidebarState() {
+    const open = localStorage.getItem(STORAGE_KEYS.sidebar) === 'open';
+    const sidebar = document.getElementById('sidebar');
+    const main = document.getElementById('main');
+    if (sidebar && main) {
+      sidebar.style.display = open ? 'block' : 'none';
+      main.style.flex = open ? '1' : '1 1 100%';
+    }
+  }
+  function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const main = document.getElementById('main');
+    if (!sidebar || !main) return;
+    const isOpen = sidebar.style.display === 'block';
+    if (isOpen) {
+      sidebar.style.display = 'none';
+      main.style.flex = '1 1 100%';
+      localStorage.setItem(STORAGE_KEYS.sidebar, 'closed');
+    } else {
+      sidebar.style.display = 'block';
+      main.style.flex = '1';
+      localStorage.setItem(STORAGE_KEYS.sidebar, 'open');
+    }
+  }
+  function closeSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const main = document.getElementById('main');
+    if (sidebar && main) {
+      sidebar.style.display = 'none';
+      main.style.flex = '1 1 100%';
+    }
+  }
+
+  function setupAuth() {
+    const s = {
+      modal: 'auth-modal', username: 'auth-username',
+      title: 'auth-modal-title', createLink: 'create-account-link',
+      loginLink: 'login-link', logoutLink: 'logout-link', userStatus: 'user-status',
+      submitBtn: 'submit-auth', cancelBtn: 'cancel-auth'
+    };
+    function getAllUsers() { return loadData(STORAGE_KEYS.users, []); }
+    function saveAllUsers(users) { saveData(STORAGE_KEYS.users, users); }
+    function updateUserStatus() {
+      const user = getCurrentUser();
+      const el = document.getElementById(s.userStatus);
+      if (el) el.textContent = user ? `Logged in as ${user.name}` : 'Not logged in';
+    }
+    function updateAuthUI() {
+      const user = getCurrentUser();
+      document.getElementById(s.createLink).style.display = user ? 'none' : 'block';
+      document.getElementById(s.loginLink).style.display = user ? 'none' : 'block';
+      document.getElementById(s.logoutLink).style.display = user ? 'block' : 'none';
+    }
+    function showModal() {
+      const modal = document.getElementById(s.modal);
+      const usernameInput = document.getElementById(s.username);
+      document.getElementById(s.title).textContent = "Enter Username";
+      if (usernameInput) usernameInput.value = "";
+      if (modal) modal.style.display = 'block';
+      setTimeout(() => document.getElementById(s.username)?.focus(), 50);
+    }
+    function closeModal() {
+      const modal = document.getElementById(s.modal);
+      if (modal) modal.style.display = 'none';
+    }
+    function submitAuth() {
+      const input = document.getElementById(s.username);
+      const name = input ? input.value.trim() : '';
+      if (!name) { alert("Please enter a username."); return; }
+      let users = getAllUsers();
+      let user = users.find(u => u.name.toLowerCase() === name.toLowerCase());
+      if (!user) {
+        user = { name, joined: new Date().toISOString(), edits: [] };
+        users.push(user);
+        saveAllUsers(users);
+        alert(`✅ Account created for ${name}`);
+      } else {
+        alert(`👋 Welcome back, ${user.name}`);
+      }
+      localStorage.setItem(STORAGE_KEYS.currentUser, JSON.stringify(user));
+      closeModal();
+      updateAuthUI();
+      updateUserStatus();
+      updateStorageBar();
+      const pages = loadData(STORAGE_KEYS.pages, {});
+      const firstTitle = Object.keys(pages)[0];
+      if (firstTitle) { showPage(firstTitle); } else { showAbout(); }
+    }
+    function logout() {
+      localStorage.removeItem(STORAGE_KEYS.currentUser);
+      alert("Logged out.");
+      updateAuthUI();
+      updateUserStatus();
+      updateStorageBar();
+      showAbout();
+    }
+    document.getElementById(s.createLink)?.addEventListener('click', e => { e.preventDefault(); showModal(); });
+    document.getElementById(s.loginLink)?.addEventListener('click', e => { e.preventDefault(); showModal(); });
+    document.getElementById(s.logoutLink)?.addEventListener('click', e => { e.preventDefault(); logout(); });
+    document.getElementById(s.submitBtn)?.addEventListener('click', e => { e.preventDefault(); submitAuth(); });
+    document.getElementById(s.cancelBtn)?.addEventListener('click', e => { e.preventDefault(); closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    updateUserStatus();
+    updateAuthUI();
+  }
+
+  function sanitizeContent(input) {
+    const div = document.createElement('div');
+    div.textContent = input;
+    return div.innerHTML.replace(/\n/g, '<br>');
+  }
+  function showAbout() {
+    console.log("Navigating to About");
+    closeSidebar();
+    const c = document.getElementById('page-container');
+    if (!c) return;
+    c.innerHTML = `<section class="page"><h2>About</h2>
+      <p><strong>MEV AI Wiki</strong> is an offline‑first encyclopedia powered by your browser. No tracking, no server.</p></section>`;
+  }
+  function showSettings() {
+    console.log("Navigating to Settings");
+    closeSidebar();
+    const c = document.getElementById('page-container');
+    if (!c) return;
+    const section = document.createElement('section');
+    section.className = 'page';
+    section.innerHTML = `<h2>Settings</h2>`;
+    const themeToggle = document.createElement('button'); themeToggle.textContent = '🌗 Toggle Dark Mode'; themeToggle.onclick = toggleTheme;
+    section.appendChild(themeToggle);
+    const exportBtn = document.createElement('button'); exportBtn.textContent = '🡇 Export Backup'; exportBtn.onclick = () => {
+      const data = { pages: loadData(STORAGE_KEYS.pages, {}), users: loadData(STORAGE_KEYS.users, []), currentUser: getCurrentUser(), changes: loadData(STORAGE_KEYS.changes, {}), knowledge: loadData(STORAGE_KEYS.knowledge, {}) };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `mev‑backup‑${Date.now()}.mev.json`; a.click(); URL.revokeObjectURL(url);
+    };
+    section.appendChild(exportBtn);
+    const importInput = document.createElement('input'); importInput.type = 'file'; importInput.accept = 'application/json'; importInput.style.display = 'none';
+    importInput.onchange = e => { const file = e.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = () => {
+      try { const d = JSON.parse(reader.result); saveData(STORAGE_KEYS.pages, d.pages || {}); saveData(STORAGE_KEYS.users, d.users || []); localStorage.setItem(STORAGE_KEYS.currentUser, d.currentUser || null); saveData(STORAGE_KEYS.changes, d.changes || []); saveData(STORAGE_KEYS.knowledge, d.knowledge || {}); alert("✅ Backup imported successfully. Reloading..."); location.reload(); } catch { alert("❌ Invalid JSON"); }
+    }; reader.readAsText(file); };
+    const importBtn = document.createElement('button'); importBtn.textContent = '🡅 Import Backup'; importBtn.onclick = () => importInput.click();
+    section.appendChild(importBtn); section.appendChild(importInput);
+    const storageStats = document.createElement('pre'); section.appendChild(storageStats);
+    const clearBtn = document.createElement('button'); clearBtn.textContent = '🧠 Clear AI Memory'; clearBtn.onclick = () => { localStorage.removeItem(STORAGE_KEYS.knowledge); alert('AI memory cleared.'); updateStats(); };
+    section.appendChild(clearBtn);
+    function updateStats() { let totalBytes = 0; for (let i = 0; i < localStorage.length; i++) { const key = localStorage.key(i); const value = localStorage.getItem(key) || ''; totalBytes += (key.length + value.length)*2; } storageStats.textContent = `Used: ${Math.round(totalBytes/1024)} KB\nQuota: ~5120 KB`; }
+    updateStats();
+    c.innerHTML = '';
+    c.appendChild(section);
+  }
+  function showRecent() {
+    console.log("Navigating to Recent Changes");
+    closeSidebar();
+    const changes = loadData(STORAGE_KEYS.changes, []);
+    const c = document.getElementById('page-container');
+    if (!c) return;
+    const section = document.createElement('section'); section.className = 'page'; section.innerHTML = '<h2>Recent Changes</h2>';
+    const ul = document.createElement('ul');
+    changes.slice(0,50).forEach(ch => {
+      const li = document.createElement('li');
+      const link = document.createElement('a'); link.href = '#'; link.textContent = ch.title;
+      link.addEventListener('click', e => { e.preventDefault(); showPage(ch.title); });
+      li.innerHTML = `<strong>${ch.type}</strong> — `;
+      li.appendChild(link); li.append(` by ${ch.user} at ${new Date(ch.time).toLocaleString()}`);
+      ul.appendChild(li);
+    });
+    section.appendChild(ul);
+    c.innerHTML = ''; c.appendChild(section);
+  }
+  function showProfile() {
+    console.log("Navigating to Profile");
+    closeSidebar();
+    const user = getCurrentUser();
+    const c = document.getElementById('page-container');
+    if (!c) return;
+    if (!user) { alert("Not logged in."); return; }
+    c.innerHTML = `<section class="page"><h2>My Profile</h2>
+      <p>👤 <strong>Username:</strong> ${user.name}<br>
+      📅 <strong>Joined:</strong> ${new Date(user.joined).toLocaleString()}</p></section>`;
+  }
+  function createPage(titleFromSearch = null) {
+    console.log("Creating page:", titleFromSearch);
+    const title = titleFromSearch || prompt("Enter new page title:");
+    if (!title) return;
+    const pages = loadData(STORAGE_KEYS.pages, {});
+    const changes = loadData(STORAGE_KEYS.changes, []);
+    const user = getCurrentUser();
+    if (pages[title]) { alert("Page already exists."); showPage(title); return; }
+    pages[title] = { title, content: "This is your new page. Click Edit to customize it.", lastEdited: new Date().toISOString(), createdBy: user ? user.name : 'Guest' };
+    saveData(STORAGE_KEYS.pages, pages);
+    changes.unshift({ type:'create', title, time:new Date().toISOString(), user:user?user.name:'Guest' });
+    saveData(STORAGE_KEYS.changes, changes);
+    alert(`✅ Page "${title}" created!`);
+    showPage(title);
+  }
+  function deletePage(title) {
+    console.log("Deleting page:", title);
+    const pages = loadData(STORAGE_KEYS.pages, {});
+    const changes = loadData(STORAGE_KEYS.changes, []);
+    const user = getCurrentUser();
+    if (!pages[title]) { alert("Page not found."); return; }
+    if (!confirm(`Are you sure you want to delete the page "${title}"? This cannot be undone.`)) { return; }
+    delete pages[title];
+    saveData(STORAGE_KEYS.pages, pages);
+    changes.unshift({ type:'delete', title, time:new Date().toISOString(), user:user?user.name:'Guest' });
+    saveData(STORAGE_KEYS.changes, changes);
+    alert(`✅ Page "${title}" deleted.`);
+    showRecent();
+  }
+  function showPage(title) {
+    console.log("Showing page:", title);
+    closeSidebar();
+    const pages = loadData(STORAGE_KEYS.pages, {});
+    const page = pages[title];
+    const c = document.getElementById('page-container');
+    if (!c) return;
+    if (!page) {
+      const all = Object.keys(pages);
+      const suggest = all.filter(t => t.toLowerCase().includes(title.toLowerCase()));
+      let html = `<section class="page"><h2>No page found for "${title}"</h2>`;
+      if (suggest.length) {
+        html += `<p>Did you mean: ${suggest.map(t => `<a href="#" onclick="showPage('${t}')">${t}</a>`).join(', ')}</p>`;
+      }
+      html += `<p>Would you like to create it?</p><button onclick="createPage('${title}')">Create Page</button></section>`;
+      c.innerHTML = html;
+      speak(`No page found for ${title}.`);
+      return;
+    }
+    c.innerHTML = `
+      <article class="page" itemscope itemtype="https://schema.org/Article">
+        <h2 itemprop="headline">${escapeHTML(page.title)}</h2>
+        <div class="content" itemprop="articleBody">${parseWiki(page.content)}</div>
+        <button class="edit-btn" id="edit-btn">Edit</button>
+        <button class="delete-btn" id="delete-btn">Delete Page</button>
+        <div class="semantic-status">✔️ Semantic HTML Loaded for ${escapeHTML(title)}</div>
+      </article>
+    `;
+    document.getElementById('edit-btn')?.addEventListener('click', () => editPage(title));
+    document.getElementById('delete-btn')?.addEventListener('click', () => deletePage(title));
+  }
+  function editPage(title) {
+    console.log("Editing page:", title);
+    const user = getCurrentUser();
+    if (!user) { alert("You must be logged in to edit sections."); return; }
+    const pages = loadData(STORAGE_KEYS.pages, {});
+    const page = pages[title];
+    const c = document.getElementById('page-container');
+    if (!c) return;
+    c.innerHTML = `<section class="page">
+      <h2>${escapeHTML(title)}</h2>
+      <textarea class="editor">${page.content.replace(/<br\s*\/?>/gi,"\n")}</textarea>
+      <button id="save-page-btn">Save</button>
+      <button id="cancel-edit-btn">Cancel</button>
+    </section>`;
+    document.getElementById('save-page-btn')?.addEventListener('click', () => savePage(title));
+    document.getElementById('cancel-edit-btn')?.addEventListener('click', () => showPage(title));
+  }
+  function savePage(title) {
+    console.log("Saving page:", title);
+    const pages = loadData(STORAGE_KEYS.pages, {});
+    const changes = loadData(STORAGE_KEYS.changes, []);
+    const user = getCurrentUser();
+    const raw = document.querySelector('.editor').value.trim();
+    const safe = sanitizeContent(raw);
+    pages[title].content = safe;
+    pages[title].lastEdited = new Date().toISOString();
+    saveData(STORAGE_KEYS.pages, pages);
+    changes.unshift({ type:'edit', title, time:new Date().toISOString(), user:user?user.name:'Guest'});
+    saveData(STORAGE_KEYS.changes, changes);
+    alert("✅ Page saved.");
+    showPage(title);
+  }
+  function createExampleWikiPage() {
+    const title = "Formatting Examples";
+    const pages = loadData(STORAGE_KEYS.pages, {});
+    if (pages[title]) return;
+    const content = `
+== Welcome to MEV Wiki ==
+''italic'' text and '''bold''' text.
+
+== Lists ==
+* Item One
+* Item Two
+# Step One
+# Step Two
+
+== Links ==
+[[Main Page]] – go home
+
+== Code ==
+Inline: \`let x = 5;\`
+
+Block:
+\`\`\`
+function greet() {
+  console.log("Hello!");
+}
+\`\`\`
+`;
+    pages[title] = { title, content, createdBy:'System', lastEdited:new Date().toISOString() };
+    saveData(STORAGE_KEYS.pages, pages);
+    console.log("✅ Example wiki page created.");
+  }
+  function answerAI(query) {
+    console.log("AI query:", query);
+    const txt = query.trim();
+    if (!txt) return;
+    const pages = loadData(STORAGE_KEYS.pages, {});
+    const all = Object.keys(pages);
+    const suggest = all.filter(t => t.toLowerCase().includes(txt.toLowerCase()));
+    const c = document.getElementById('page-container');
+    if (!c) return;
+    if (suggest.length) {
+      c.innerHTML = `<section class="page">
+        <h2>Closest matches for "${txt}"</h2>
+        <ul>${suggest.map(t => `<li><a href="#" class="suggest-link" data-title="${t}">${t}</a></li>`).join('')}</ul>
+        <p>Or you can create the page.</p>
+        <button id="create-page-btn-dynamic">Create Page "${txt}"</button>
+      </section>`;
+      document.querySelectorAll('.suggest-link').forEach(link => {
+        link.addEventListener('click', e => {
+          e.preventDefault();
+          const t = link.dataset.title;
+          showPage(t);
+        });
+      });
+      document.getElementById('create-page-btn-dynamic')?.addEventListener('click', e => {
+        e.preventDefault();
+        createPage(txt);
+      });
+      speak(`Found similar pages for ${txt}.`);
+      return;
+    }
+    c.innerHTML = `<section class="page">
+      <h2>No page found for "${txt}"</h2>
+      <p>Would you like to create it?</p>
+      <button id="create-page-btn-dynamic">Create Page "${txt}"</button>
+    </section>`;
+    document.getElementById('create-page-btn-dynamic')?.addEventListener('click', e => {
+      e.preventDefault();
+      createPage(txt);
+    });
+    speak(`No local page found for ${txt}.`);
+  }
+  function updateConnectionStatus() {
+    const el = document.getElementById('status-indicator');
+    const banner = document.getElementById('offline-message');
+    const online = navigator.onLine;
+    if (el) el.textContent = online ? '🟢 Online' : '🔴 Offline';
+    if (banner) banner.style.display = online ? 'none' : 'block';
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    applyThemeFromStorage();
+    restoreSidebarState();
+    setupAuth();
+    restoreSidebarState();
+    updateConnectionStatus();
+    updateStorageBar();
+    createExampleWikiPage();
+
+    window.addEventListener('online', updateConnectionStatus);
+    window.addEventListener('offline', updateConnectionStatus);
+
+    document.getElementById('menu-btn')?.addEventListener('click', toggleSidebar);
+    document.getElementById('ai-button')?.addEventListener('click', () => {
+      const inp = document.getElementById('ai-input');
+      if (inp && inp.value.trim()) {
+        answerAI(inp.value.trim());
+        inp.value = '';
+      }
+    });
+    document.getElementById('ai-input')?.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        document.getElementById('ai-button')?.click();
+      }
+    });
+    document.getElementById('main-page-link')?.addEventListener('click', e => {
+      e.preventDefault();
+      const title = localStorage.getItem("mev_mainPageTitle") || "Main Page";
+      showPage(title);
+    });
+    document.getElementById('recent-link')?.addEventListener('click', e => { e.preventDefault(); showRecent(); });
+    document.getElementById('settings-link')?.addEventListener('click', e => { e.preventDefault(); showSettings(); });
+    document.getElementById('about-link')?.addEventListener('click', e => { e.preventDefault(); showAbout(); });
+    document.getElementById('create-page-btn')?.addEventListener('click', e => { e.preventDefault(); createPage(); });
+    document.getElementById('profile-link')?.addEventListener('click', e => { e.preventDefault(); showProfile(); });
+    document.getElementById('wiki-help-btn')?.addEventListener('click', e => {
+  e.preventDefault();
+  showPage("Formatting Examples");
+});
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js')
+        .then(() => console.log('✅ Service Worker registered'))
+        .catch(err => console.error('❌ SW registration failed:', err));
+    }
+  });
+
+</script>
+
 </body>
 </html>

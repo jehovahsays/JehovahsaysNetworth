@@ -1,56 +1,108 @@
-# MEV Offline Wiki AI 📚🧠  
-**An offline-first, privacy-respecting AI-powered wiki platform built for the browser.**
+# MEV Offline Wiki AI – v1.2.0-standalone
+
+**MEV AI Wiki** is a fully offline, secure, self-contained encyclopedia designed for personal knowledge management. It runs entirely in your browser, requires no server, and stores all data locally using `localStorage`.  
+
+This version (v1.2.0-standalone) merges all critical logic and assets into a single `index.html` file, making it portable, simple to host, and easy to maintain.
 
 ---
 
-## 🚀 Latest Release: `v1.1.0-alpha2`
+## 🧩 Features
 
-The newest version of MEV AI Wiki is live!
-
-- ✅ Hardened JavaScript security layer (CSP + eval protection)
-- ✅ Optimized offline-first service worker support
-- ✅ Visual storage usage and cleanup options
-- ✅ User profile panel and local page editing
-- ✅ GitHub Discussions + community feedback
-- ✅ `MIT License` and `CONTRIBUTING.md` added
-
-📢 **Join the conversation:**  
-👉 [📌 Release Discussion (Announcements)](https://github.com/jehovahsays/mev/discussions)
-
----
-
-## 🌐 Features
-
-- 🧠 Local AI Search and Suggestion Engine  
-- 💾 Offline-first with Service Worker caching  
-- 🔐 No server, no tracking, no analytics  
-- 🧑‍💻 Fully browser-based editing and account management  
-- 🔧 Backup/Import/Export wiki content as `.json`  
-- 🌗 Dark/Light mode toggle  
-- 📦 Visual storage usage bar  
-- ⚠️ Hardened security layer against common browser attacks  
+- ✅ Fully **standalone HTML** (no external JS/CSS required)
+- ✅ **Offline-first** with Service Worker support
+- ✅ **Wiki-style markup** with support for:
+  - `== Headings ==`
+  - `'''Bold'''`, `''Italic''`
+  - `* Bullet Lists`
+  - `[[Internal Links]]`
+- ✅ Semantic HTML and [schema.org](https://schema.org) annotations
+- ✅ Account creation via localStorage (no passwords)
+- ✅ Page creation, editing, and deletion
+- ✅ Auto-generated "Formatting Help" page
+- ✅ Sidebar with navigation, theme toggle, and AI input bar
+- ✅ Dark mode support
+- ✅ Offline/online status banner
+- ✅ Secure client runtime with hardened JS restrictions
 
 ---
 
-## 📁 Structure
+## 🧪 Experimental / In-Development
 
-- `index.html` – Main webpage interface  
-- `index.js` – Full application logic (auth, editor, AI, security)  
-- `index.css` – Responsive styling and theme control  
-- `sw.js` – Service Worker for offline functionality  
-- `manifest.json` – PWA metadata for installability  
-- `.nojekyll` – Prevents GitHub Pages from ignoring `_` folders  
+The following features are **available in the UI** but are still under **active development**:
+
+### Chat (`chat.html`)
+- Interactive chat interface
+- Currently supports local input/output
+- LLM integration not finalized
+- Behavior may change or be disabled in future updates
+
+### Stream (`stream.html`)
+- Local video playback (non-live)
+- Being tested for future **real-time streaming**
+- May be replaced or expanded based on testing feedback
+
+### Play (Under Construction)
+- Planned for multimedia interactivity
+- Currently unavailable
 
 ---
 
-## 🛠️ How to Use
+## 📦 Installation
 
-1. **Clone or fork** this repository.  
-2. **Open `index.html`** in a browser (or serve locally).  
-3. **Create a username** to start editing pages.  
-4. All data is stored in your **localStorage** — never leaves your browser.  
+To use the wiki:
 
----
+1. Clone or download the repo.
+2. Open `index.html` in any modern browser (Chrome, Edge, Firefox, Safari).
+3. On first launch, you will be redirected to `installer.html` to configure:
+   - Wiki name
+   - Admin user
+4. Once configured, it works fully offline.
+
+### Optional: Local Hosting
+To run it on a local web server:
+
+```bash
+python3 -m http.server
+
+Then navigate to http://localhost:8000/
+
+⸻
+
+🧾 Project Structure
+
+/
+├── index.html          # 🔗 Main self-contained app
+├── installer.html      # Installer for initial configuration
+├── chat.html           # Experimental chat feature
+├── stream/             # Streaming test files
+│   ├── stream.html
+│   ├── app.js
+│   └── config.json
+├── sw.js               # Service worker
+├── manifest.json       # PWA manifest
+├── main.css            # Optional legacy stylesheet
+├── robots.txt          # Crawling rules
+├── LICENSE
+├── CHANGELOG.md
+└── README.md
+
+
+⸻
+
+🚧 Development Notes
+	•	All major logic and styling are embedded in index.html.
+	•	Some legacy files (index.js, parser.js, semantic-editor.js) have been deprecated.
+	•	The installer remains temporarily due to redirect dependencies.
+	•	The app is privacy-first: no tracking, no servers, no telemetry.
+
+⸻
+
+🧠 Credits
+	•	Developed by Morgan Shatee Byers
+	•	Offline-first principles inspired by the IndieWeb and personal knowledge management tools
+	•	Built with pure JavaScript, HTML, and CSS—no frameworks
+
+⸻
 
 ## 💡 Why Offline?
 
@@ -69,6 +121,10 @@ The newest version of MEV AI Wiki is live!
   - Show and Tell
 - 📥 Pull requests welcome! See [`CONTRIBUTING.md`](CONTRIBUTING.md) for guidelines.  
 
+
+📢 **Join the conversation:**  
+👉 [📌 Release Discussion (Announcements)](https://github.com/jehovahsays/mev/discussions)
+
 ---
 
 ## 🚀 Deployment
@@ -84,3 +140,5 @@ This project is designed for [GitHub Pages](https://pages.github.com/):
 ## ✅ License
 
 This project is licensed under the [MIT License](LICENSE).
+---
+

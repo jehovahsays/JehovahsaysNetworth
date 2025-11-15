@@ -1,6 +1,8 @@
 # robots.txt for MEV Offline Wiki AI
 # Index homepage only — block user-generated & AI/dynamic paths.
 
+# Block installer
+Disallow: /installer.html
 User-agent: *
 Disallow: /#*
 Disallow: /?*
