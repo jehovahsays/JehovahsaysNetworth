@@ -1,8 +1,6 @@
-# robots.txt for MEV Offline Wiki AI
-# Index homepage only — block user-generated & AI/dynamic paths.
+# robots.txt for MEV Offline Wiki 
+# Index homepage only — block user-generated & /dynamic paths.
 
-# Block installer
-Disallow: /installer.html
 User-agent: *
 Disallow: /#*
 Disallow: /?*
@@ -10,15 +8,6 @@ Disallow: /recent
 Disallow: /settings
 Disallow: /profile
 Disallow: /edit
-Disallow: /ai
-Disallow: /auth
-Disallow: /sw.js
-Disallow: /manifest.json
-Disallow: /index.json
-Disallow: /index.js
-Disallow: /index.css
 
 # Let crawlers index only the base route
 Allow: /
-
-Sitemap: https://jehovahsays.github.io/mev/sitemap.xml

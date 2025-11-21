@@ -1,15 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MEV AI Wiki – Offline AI Encyclopedia</title>
-  <meta name="description" content="MEV AI Wiki – Offline AI Encyclopedia. Learn, edit, explore." />
+  <title>MEV Wiki</title>
+  <meta name="description" content="MEV Wiki – Offline Encyclopedia. Learn, edit, explore." />
   <meta name="theme-color" content="#3366cc" />
   <meta name="color-scheme" content="light dark" />
 
   <!-- Embedded CSS -->
   <style>
+  html, body {
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+}
+
+#main {
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 80%;
+  width: 100%;
+}
+
+#page-container {
+  overflow: auto;
+  height: 100%;
+  width: 100%;
+}
     /* ========== MEV Wiki Style (Hardened) ========== */
     * { box‑sizing: border-box; }
     body {
@@ -29,7 +48,7 @@
       align-items: center;
     }
     #menu-btn {
-      font-size: 20px;
+      font-size: 28px;
       background: transparent;
       color: white;
       border: none;
@@ -93,23 +112,25 @@
       margin-bottom: 20px;
       display: flex;
       align-items: center;
+	  margin-top: 10px; /* new line added */
     }
-    #ai-input {
-      flex: 1;
-      padding: 8px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-    #ai-button {
-      padding: 8px 12px;
-      margin-left: 8px;
-      font-size: 16px;
-      background: #3366cc;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
+#ai-input {
+  flex: 1;
+  padding: 6px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+#ai-button {
+  margin-left: 6px;
+  padding: 6px 10px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: none;
+  background: #fff;
+  color: #3366cc;
+  cursor: pointer;
     }
     #ai-button:hover { background: #254a9e; }
 
@@ -271,20 +292,9 @@
       font-size: 0.95em;
     }
   </style>
-
+  
 </head>
 <body>
-
-<!-- Redirect to installer if required -->
-<script>
-  (function () {
-    const siteName = localStorage.getItem('mev_siteName');
-    const adminUser = localStorage.getItem('mev_adminUser');
-    if (!siteName || !adminUser) {
-      window.location.replace('installer.html');
-    }
-  })();
-</script>
 
 <div id="banner" class="banner"></div>
 
@@ -294,17 +304,20 @@
 
 <header>
   <button id="menu-btn" aria-label="Toggle menu navigation">☰</button>
-  <h1>MEV AI Wiki</h1>
+  <div id="ai-bar">
+    <input type="text" id="ai-input" placeholder="search…" aria-label="Search or question input">
+    <button id="ai-button">Search</button>
+  </div>
 </header>
 
 <div id="container">
   <nav id="sidebar">
     <div id="auth-links">
       <div id="user-status">Not logged in</div>
-      <a href="#" id="create-account-link">Create Account</a><br>
-      <a href="#" id="login-link">Log In</a><br>
-      <a href="#" id="profile-link">My Profile</a><br>
-      <a href="#" id="logout-link" style="display:none;">Log Out</a>
+      <a href="#create" id="create-account-link">Create Account</a><br>
+      <a href="#login" id="login-link">Log In</a><br>
+      <a href="#profile" id="profile-link">My Profile</a><br>
+      <a href="#logout" id="logout-link" style="display:none;">Log Out</a>
     </div>
 
     <h3>Pages</h3>
@@ -314,13 +327,10 @@
 
     <hr />
     <ul>
-      <li><a href="#" id="main-page-link">Main Page</a></li>
-      <li><a href="#" id="recent-link">Recent Changes</a></li>
-      <li><a href="#" id="settings-link">Settings</a></li>
-      <li><a href="#" id="about-link">About</a></li>
-      <li><a href="./stream/stream.html" id="stream-link">Stream</a></li>
-      <li><a href="chat.html" id="chat-link">Chat</a></li>
-	  <li><a href="map.html" id="map-link">Map</a></li>
+      <li><a href="#main" id="main-page-link">Main Page</a></li>
+      <li><a href="#recent" id="recent-link">Recent Changes</a></li>
+      <li><a href="#settings" id="settings-link">Settings</a></li>
+      <li><a href="#about" id="about-link">About</a></li>
     </ul>
 
     <div id="storage-bar">
@@ -329,10 +339,7 @@
   </nav>
 
   <main id="main">
-    <div id="ai-bar">
-      <input type="text" id="ai-input" placeholder="Ask AI or search wiki…" aria-label="AI search or question input" />
-      <button id="ai-button">Ask AI</button>
-    </div>
+
     <div id="page-container"></div>
   </main>
 </div>
@@ -340,8 +347,7 @@
 <footer>
   <div id="status-indicator">🔴 Offline</div>
   <div id="ticker"><span id="ticker-content"></span></div>
-  <div id="app-version">v1.1.0‑alpha2 – <span id="last-updated"></span></div>
-  <div><a href="installer.html" id="reset-link">Reset Install</a></div>
+  <div id="app-version">1.2.0-standalone – <span id="last-updated"></span></div>
 </footer>
 
 <div id="auth-modal" class="modal-overlay">
@@ -799,7 +805,23 @@ function greet() {
     saveData(STORAGE_KEYS.pages, pages);
     console.log("✅ Example wiki page created.");
   }
-  function answerAI(query) {
+  
+function ensureMainPage() {
+  const pages = loadData(STORAGE_KEYS.pages, {});
+  if (!pages["Main Page"]) {
+    pages["Main Page"] = {
+      title: "Main Page",
+      content: "An offline‑first encyclopedia powered by your browser. No tracking, no server.",
+      lastEdited: new Date().toISOString(),
+      createdBy: "System"
+    };
+    saveData(STORAGE_KEYS.pages, pages);
+    console.log("✅ Main Page created.");
+  }
+}
+
+
+function answerAI(query) {
     console.log("AI query:", query);
     const txt = query.trim();
     if (!txt) return;
@@ -856,8 +878,18 @@ function greet() {
     updateConnectionStatus();
     updateStorageBar();
     createExampleWikiPage();
+    ensureMainPage();
 
     window.addEventListener('online', updateConnectionStatus);
+    window.addEventListener('hashchange', () => {
+      const h = location.hash.slice(1);
+      if (h === "main") showPage("Main Page");
+      else if (h === "settings") showSettings();
+      else if (h === "about") showAbout();
+      else if (h === "recent") showRecent();
+      else if (h === "profile") showProfile();
+    });
+
     window.addEventListener('offline', updateConnectionStatus);
 
     document.getElementById('menu-btn')?.addEventListener('click', toggleSidebar);
@@ -868,22 +900,65 @@ function greet() {
         inp.value = '';
       }
     });
+	
+	  document.addEventListener("DOMContentLoaded", () => {
+    const redirected = sessionStorage.getItem("redirected");
+    const hashEmpty = !location.hash || location.hash === "#";
+    const mainEl = document.getElementById("main");
+
+    if (!redirected && hashEmpty && mainEl) {
+      sessionStorage.setItem("redirected", "1");
+      location.hash = "#main";
+    }
+  });
+	
     document.getElementById('ai-input')?.addEventListener('keydown', e => {
       if (e.key === 'Enter') {
         e.preventDefault();
         document.getElementById('ai-button')?.click();
       }
     });
-    document.getElementById('main-page-link')?.addEventListener('click', e => {
-      e.preventDefault();
-      const title = localStorage.getItem("mev_mainPageTitle") || "Main Page";
-      showPage(title);
-    });
-    document.getElementById('recent-link')?.addEventListener('click', e => { e.preventDefault(); showRecent(); });
-    document.getElementById('settings-link')?.addEventListener('click', e => { e.preventDefault(); showSettings(); });
-    document.getElementById('about-link')?.addEventListener('click', e => { e.preventDefault(); showAbout(); });
-    document.getElementById('create-page-btn')?.addEventListener('click', e => { e.preventDefault(); createPage(); });
-    document.getElementById('profile-link')?.addEventListener('click', e => { e.preventDefault(); showProfile(); });
+	
+function resetHashAndScroll(hash = "#main") {
+  // Clear the hash first to prevent default scroll
+  history.replaceState(null, null, ' ');
+  location.hash = hash;
+
+  setTimeout(() => {
+    window.scrollTo(0, 0);
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+
+    const main = document.getElementById("main");
+    const container = document.getElementById("page-container");
+    if (main) main.scrollTop = 0;
+    if (container) container.scrollTop = 0;
+  }, 50);
+}
+
+document.getElementById('recent-link')?.addEventListener('click', e => {
+  e.preventDefault();
+  showRecent();
+  resetHashAndScroll("#recent");
+});
+
+document.getElementById('settings-link')?.addEventListener('click', e => {
+  e.preventDefault();
+  showSettings();
+  resetHashAndScroll("#settings");
+});
+
+document.getElementById('about-link')?.addEventListener('click', e => {
+  e.preventDefault();
+  showAbout();
+  resetHashAndScroll("#about");
+});
+
+    document.getElementById('create-page-btn')?.addEventListener('click', e => {
+  e.preventDefault();
+  createPage();
+});
+    document.getElementById('profile-link')?.addEventListener('click', e => {  });
     document.getElementById('wiki-help-btn')?.addEventListener('click', e => {
   e.preventDefault();
   showPage("Formatting Examples");
@@ -895,6 +970,32 @@ function greet() {
     }
   });
 
+</script>
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const redirected = sessionStorage.getItem("redirected");
+  const hashEmpty = !location.hash || location.hash === "#";
+  const mainEl = document.getElementById("main");
+
+  if (!redirected && hashEmpty && mainEl) {
+    sessionStorage.setItem("redirected", "1");
+    const title = localStorage.getItem("mev_mainPageTitle") || "Main Page";
+    showPage(title); // Show the Main Page content
+    location.hash = "#main";
+
+    // Scroll to top of all containers
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+      mainEl.scrollTop = 0;
+      document.getElementById("page-container")?.scrollTo(0, 0);
+    }, 50);
+  }
+});
 </script>
 
 </body>
