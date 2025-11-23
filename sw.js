@@ -1,5 +1,4 @@
-
-const CACHE = "mev-wiki-v7";
+const CACHE = "mev-wiki-v8"; // INCREMENTED CACHE VERSION TO FORCE UPDATE
 
 const FILES = [
   "/",
@@ -36,3 +35,4 @@ self.addEventListener("fetch", event => {
     })
   );
 });
+

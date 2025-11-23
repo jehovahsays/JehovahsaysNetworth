@@ -178,6 +178,7 @@
       justify-content: space-between;
       padding: 0 20px;
     }
+
     #status-indicator { font-size: 14px; color: #555; }
     #ticker { white-space: nowrap; overflow: hidden; width: 100%; position: relative; }
     #ticker span {
@@ -291,6 +292,38 @@
       font-weight: bold;
       font-size: 0.95em;
     }
+
+    /* NEW STYLES for Voice/Filter component */
+    #quick-filters {
+      list-style: none;
+      padding: 0;
+      margin-top: 10px;
+    }
+    .titleInput button {
+      /* Style for the buttons in the new component, inheriting MEV Wiki aesthetics */
+      background: #e9ecef; 
+      border: 1px solid #ccc;
+      padding: 6px 10px;
+      margin-top: 5px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: block; 
+      width: 100%;
+      text-align: left;
+      color: #3366cc;
+      font-weight: 500;
+    }
+    .titleInput button:hover {
+      background: #d4d8db;
+    }
+    body.dark .titleInput button {
+      background: #2c2c2c;
+      color: #80bfff;
+      border-color: #555;
+    }
+    body.dark .titleInput button:hover {
+      background: #3c3c3c;
+    }
   </style>
   
 </head>
@@ -305,7 +338,15 @@
 <header>
   <button id="menu-btn" aria-label="Toggle menu navigation">☰</button>
   <div id="ai-bar">
-    <input type="text" id="ai-input" placeholder="search…" aria-label="Search or question input">
+    <!-- MODIFIED: Added voice and filtering attributes to the existing input -->
+    <input 
+      type="text" 
+      id="ai-input" 
+      placeholder="search or speak your query…" 
+      aria-label="Search or question input"
+      onkeyup="titleInput()" 
+      x-webkit-speech 
+    >
     <button id="ai-button">Search</button>
   </div>
 </header>
@@ -326,11 +367,22 @@
     <button id="wiki-help-btn">Wiki Formatting Help</button>
 
     <hr />
+    <!-- Existing navigation links -->
     <ul>
       <li><a href="#main" id="main-page-link">Main Page</a></li>
       <li><a href="#recent" id="recent-link">Recent Changes</a></li>
       <li><a href="#settings" id="settings-link">Settings</a></li>
       <li><a href="#about" id="about-link">About</a></li>
+	  <!-- REMOVED: <li><a href="JehovahsaysNetworth.html" id="jehovahsays-link">jehovahsays</a></li> -->
+    </ul>
+
+    <!-- NEW SECTION: Quick Filters for Voice Search -->
+    <h3>Quick Filters (Voice Enabled)</h3>
+    <ul id="quick-filters">
+        <li class="titleInput"><button onclick="showRecent()">Recent Changes</button></li>
+        <li class="titleInput"><button onclick="showSettings()">Settings</button></li>
+        <li class="titleInput"><button onclick="showAbout()">About</button></li>
+        <li class="titleInput"><button onclick="showPage('Formatting Examples')">Formatting Help</button></li>
     </ul>
 
     <div id="storage-bar">
@@ -390,7 +442,8 @@
     `);
 
     if (!location.hostname.includes('localhost')) {
-      console.log = console.warn = console.error = () => {};
+      // Commented out to aid in testing, but keeping original secure approach
+      // console.log = console.warn = console.error = () => {}; 
     }
   })();
 
@@ -428,6 +481,38 @@
       window.speechSynthesis.speak(msg);
     }
   }
+  
+  // ==========================================================
+  // NEW GLOBAL FUNCTION FOR VOICE/FILTER COMPONENT
+  // ==========================================================
+  function titleInput() {
+      // Target the user's actual search input
+      let input = document.getElementById('ai-input').value;
+      input = input.toLowerCase();
+
+      // Target the new list of filter buttons in the sidebar
+      let x = document.querySelectorAll('#quick-filters .titleInput');
+    
+      for (let i = 0; i < x.length; i++) {
+        // Check if the button content matches the input (using innerText for reliability)
+        if (!x[i].innerText.toLowerCase().includes(input)) {
+          x[i].style.display = "none";
+        }
+        else {
+          x[i].style.display = "list-item";
+        }
+      }
+      
+      // Text-to-Speech part
+      // Only speak if input is long enough to be meaningful and speech is not already active
+      if (input.length > 2 && !window.speechSynthesis.speaking) { 
+        let msg = new SpeechSynthesisUtterance(input); 
+        window.speechSynthesis.speak(msg);
+      }
+  }
+  // Expose the function globally for the onkeyup attribute to work
+  window.titleInput = titleInput;
+
   function escapeHTML(str) {
     return str.replace(/[&<>"']/g, match => ({
       '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
@@ -570,16 +655,16 @@
     function submitAuth() {
       const input = document.getElementById(s.username);
       const name = input ? input.value.trim() : '';
-      if (!name) { alert("Please enter a username."); return; }
+      if (!name) { console.error("Please enter a username."); return; }
       let users = getAllUsers();
       let user = users.find(u => u.name.toLowerCase() === name.toLowerCase());
       if (!user) {
         user = { name, joined: new Date().toISOString(), edits: [] };
         users.push(user);
         saveAllUsers(users);
-        alert(`✅ Account created for ${name}`);
+        console.log(`✅ Account created for ${name}`);
       } else {
-        alert(`👋 Welcome back, ${user.name}`);
+        console.log(`👋 Welcome back, ${user.name}`);
       }
       localStorage.setItem(STORAGE_KEYS.currentUser, JSON.stringify(user));
       closeModal();
@@ -592,7 +677,7 @@
     }
     function logout() {
       localStorage.removeItem(STORAGE_KEYS.currentUser);
-      alert("Logged out.");
+      console.log("Logged out.");
       updateAuthUI();
       updateUserStatus();
       updateStorageBar();
@@ -640,12 +725,12 @@
     section.appendChild(exportBtn);
     const importInput = document.createElement('input'); importInput.type = 'file'; importInput.accept = 'application/json'; importInput.style.display = 'none';
     importInput.onchange = e => { const file = e.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = () => {
-      try { const d = JSON.parse(reader.result); saveData(STORAGE_KEYS.pages, d.pages || {}); saveData(STORAGE_KEYS.users, d.users || []); localStorage.setItem(STORAGE_KEYS.currentUser, d.currentUser || null); saveData(STORAGE_KEYS.changes, d.changes || []); saveData(STORAGE_KEYS.knowledge, d.knowledge || {}); alert("✅ Backup imported successfully. Reloading..."); location.reload(); } catch { alert("❌ Invalid JSON"); }
+      try { const d = JSON.parse(reader.result); saveData(STORAGE_KEYS.pages, d.pages || {}); saveData(STORAGE_KEYS.users, d.users || {}); localStorage.setItem(STORAGE_KEYS.currentUser, d.currentUser ? JSON.stringify(d.currentUser) : 'null'); saveData(STORAGE_KEYS.changes, d.changes || {}); saveData(STORAGE_KEYS.knowledge, d.knowledge || {}); console.log("✅ Backup imported successfully. Reloading..."); location.reload(); } catch { console.error("❌ Invalid JSON"); }
     }; reader.readAsText(file); };
     const importBtn = document.createElement('button'); importBtn.textContent = '🡅 Import Backup'; importBtn.onclick = () => importInput.click();
     section.appendChild(importBtn); section.appendChild(importInput);
     const storageStats = document.createElement('pre'); section.appendChild(storageStats);
-    const clearBtn = document.createElement('button'); clearBtn.textContent = '🧠 Clear AI Memory'; clearBtn.onclick = () => { localStorage.removeItem(STORAGE_KEYS.knowledge); alert('AI memory cleared.'); updateStats(); };
+    const clearBtn = document.createElement('button'); clearBtn.textContent = '🧠 Clear AI Memory'; clearBtn.onclick = () => { localStorage.removeItem(STORAGE_KEYS.knowledge); console.log('AI memory cleared.'); updateStats(); };
     section.appendChild(clearBtn);
     function updateStats() { let totalBytes = 0; for (let i = 0; i < localStorage.length; i++) { const key = localStorage.key(i); const value = localStorage.getItem(key) || ''; totalBytes += (key.length + value.length)*2; } storageStats.textContent = `Used: ${Math.round(totalBytes/1024)} KB\nQuota: ~5120 KB`; }
     updateStats();
@@ -677,7 +762,7 @@
     const user = getCurrentUser();
     const c = document.getElementById('page-container');
     if (!c) return;
-    if (!user) { alert("Not logged in."); return; }
+    if (!user) { console.error("Not logged in."); return; }
     c.innerHTML = `<section class="page"><h2>My Profile</h2>
       <p>👤 <strong>Username:</strong> ${user.name}<br>
       📅 <strong>Joined:</strong> ${new Date(user.joined).toLocaleString()}</p></section>`;
@@ -689,12 +774,12 @@
     const pages = loadData(STORAGE_KEYS.pages, {});
     const changes = loadData(STORAGE_KEYS.changes, []);
     const user = getCurrentUser();
-    if (pages[title]) { alert("Page already exists."); showPage(title); return; }
+    if (pages[title]) { console.error("Page already exists."); showPage(title); return; }
     pages[title] = { title, content: "This is your new page. Click Edit to customize it.", lastEdited: new Date().toISOString(), createdBy: user ? user.name : 'Guest' };
     saveData(STORAGE_KEYS.pages, pages);
     changes.unshift({ type:'create', title, time:new Date().toISOString(), user:user?user.name:'Guest' });
     saveData(STORAGE_KEYS.changes, changes);
-    alert(`✅ Page "${title}" created!`);
+    console.log(`✅ Page "${title}" created!`);
     showPage(title);
   }
   function deletePage(title) {
@@ -702,13 +787,13 @@
     const pages = loadData(STORAGE_KEYS.pages, {});
     const changes = loadData(STORAGE_KEYS.changes, []);
     const user = getCurrentUser();
-    if (!pages[title]) { alert("Page not found."); return; }
+    if (!pages[title]) { console.error("Page not found."); return; }
     if (!confirm(`Are you sure you want to delete the page "${title}"? This cannot be undone.`)) { return; }
     delete pages[title];
     saveData(STORAGE_KEYS.pages, pages);
     changes.unshift({ type:'delete', title, time:new Date().toISOString(), user:user?user.name:'Guest' });
     saveData(STORAGE_KEYS.changes, changes);
-    alert(`✅ Page "${title}" deleted.`);
+    console.log(`✅ Page "${title}" deleted.`);
     showRecent();
   }
   function showPage(title) {
@@ -745,7 +830,7 @@
   function editPage(title) {
     console.log("Editing page:", title);
     const user = getCurrentUser();
-    if (!user) { alert("You must be logged in to edit sections."); return; }
+    if (!user) { console.error("You must be logged in to edit sections."); return; }
     const pages = loadData(STORAGE_KEYS.pages, {});
     const page = pages[title];
     const c = document.getElementById('page-container');
@@ -766,12 +851,12 @@
     const user = getCurrentUser();
     const raw = document.querySelector('.editor').value.trim();
     const safe = sanitizeContent(raw);
-    pages[title].content = safe;
+    pages[title].content = raw; // Save raw content, sanitize only for display
     pages[title].lastEdited = new Date().toISOString();
     saveData(STORAGE_KEYS.pages, pages);
     changes.unshift({ type:'edit', title, time:new Date().toISOString(), user:user?user.name:'Guest'});
     saveData(STORAGE_KEYS.changes, changes);
-    alert("✅ Page saved.");
+    console.log("✅ Page saved.");
     showPage(title);
   }
   function createExampleWikiPage() {
@@ -870,6 +955,23 @@ function answerAI(query) {
     if (banner) banner.style.display = online ? 'none' : 'block';
   }
 
+function resetHashAndScroll(hash = "#main") {
+  // Clear the hash first to prevent default scroll
+  history.replaceState(null, null, ' ');
+  location.hash = hash;
+
+  setTimeout(() => {
+    window.scrollTo(0, 0);
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+
+    const main = document.getElementById("main");
+    const container = document.getElementById("page-container");
+    if (main) main.scrollTop = 0;
+    if (container) container.scrollTop = 0;
+  }, 50);
+}
+
   document.addEventListener('DOMContentLoaded', () => {
     applyThemeFromStorage();
     restoreSidebarState();
@@ -893,6 +995,8 @@ function answerAI(query) {
     window.addEventListener('offline', updateConnectionStatus);
 
     document.getElementById('menu-btn')?.addEventListener('click', toggleSidebar);
+    
+    // Updated listener to use the ai-input field
     document.getElementById('ai-button')?.addEventListener('click', () => {
       const inp = document.getElementById('ai-input');
       if (inp && inp.value.trim()) {
@@ -912,6 +1016,7 @@ function answerAI(query) {
     }
   });
 	
+    // Updated listener to use the ai-input field
     document.getElementById('ai-input')?.addEventListener('keydown', e => {
       if (e.key === 'Enter') {
         e.preventDefault();
@@ -919,22 +1024,12 @@ function answerAI(query) {
       }
     });
 	
-function resetHashAndScroll(hash = "#main") {
-  // Clear the hash first to prevent default scroll
-  history.replaceState(null, null, ' ');
-  location.hash = hash;
 
-  setTimeout(() => {
-    window.scrollTo(0, 0);
-    document.body.scrollTop = 0;
-    document.documentElement.scrollTop = 0;
-
-    const main = document.getElementById("main");
-    const container = document.getElementById("page-container");
-    if (main) main.scrollTop = 0;
-    if (container) container.scrollTop = 0;
-  }, 50);
-}
+document.getElementById('main-page-link')?.addEventListener('click', e => {
+  e.preventDefault();
+  showPage("Main Page");
+  resetHashAndScroll("#main");
+});
 
 document.getElementById('recent-link')?.addEventListener('click', e => {
   e.preventDefault();
@@ -954,11 +1049,11 @@ document.getElementById('about-link')?.addEventListener('click', e => {
   resetHashAndScroll("#about");
 });
 
-    document.getElementById('create-page-btn')?.addEventListener('click', e => {
+document.getElementById('create-page-btn')?.addEventListener('click', e => {
   e.preventDefault();
   createPage();
 });
-    document.getElementById('profile-link')?.addEventListener('click', e => {  });
+    document.getElementById('profile-link')?.addEventListener('click', e => { e.preventDefault(); showProfile(); });
     document.getElementById('wiki-help-btn')?.addEventListener('click', e => {
   e.preventDefault();
   showPage("Formatting Examples");
@@ -968,7 +1063,22 @@ document.getElementById('about-link')?.addEventListener('click', e => {
         .then(() => console.log('✅ Service Worker registered'))
         .catch(err => console.error('❌ SW registration failed:', err));
     }
+    
+    // Initial page load based on hash
+    const initialHash = location.hash.slice(1);
+    if (initialHash) {
+      if (initialHash === "main") showPage("Main Page");
+      else if (initialHash === "settings") showSettings();
+      else if (initialHash === "about") showAbout();
+      else if (initialHash === "recent") showRecent();
+      else if (initialHash === "profile") showProfile();
+      else showPage(initialHash); // Attempt to load a wiki page by hash
+    } else {
+        showPage(localStorage.getItem("mev_mainPageTitle") || "Main Page");
+    }
+
   });
+
 
 </script>
 
@@ -1000,3 +1110,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </body>
 </html>
+
