@@ -9,6 +9,7 @@
   <meta name="theme-color" content="#3366cc" />
   <meta name="color-scheme" content="light dark" />
 
+  <!-- Embedded CSS -->
   <style>
   html, body {
   overflow: hidden;
@@ -400,6 +401,7 @@
 <header>
   <button id="menu-btn" aria-label="Toggle menu navigation">☰</button>
   <div id="ai-bar">
+    <!-- Voice recognition enabled via x-webkit-speech attribute -->
     <input 
       type="text" 
       id="ai-input" 
@@ -412,6 +414,7 @@
   </div>
 </header>
 
+<!-- No-JS Fallback is simple text since the app is JS-heavy -->
 <noscript>
 <p style="text-align: center; color: red;">
   This application requires JavaScript. <br>
@@ -431,6 +434,7 @@
 
     <hr/>
     
+    <!-- Quick Filters (Searchable and clickable) -->
     <h3>Navigation Filters</h3>
     <ul id="quick-filters">
         <li class="titleInput"><button onclick="showPage('Main Page')">Main Page</button></li>
@@ -443,6 +447,7 @@
     <hr />
 
     <h3>Wiki Pages</h3>
+    <!-- This list will be dynamically populated and filtered by JS -->
     <ul id="page-list"></ul>
     
     <button id="create-page-btn" class="edit-btn" style="width: 100%; margin-top: 10px;">+ New Page</button>
@@ -454,6 +459,7 @@
   </nav>
 
   <main id="main">
+    <!-- Page Content is rendered here -->
     <div id="page-container"></div>
   </main>
 </div>
@@ -476,6 +482,7 @@
   </div>
 </div>
 
+<!-- Embedded JS -->
 <script>
   // ====== MEV SECURITY LAYER ======
   (function secureClientApp() {
@@ -1093,13 +1100,7 @@
     `;
     document.getElementById('edit-btn')?.addEventListener('click', () => editPage(title));
     document.getElementById('delete-btn')?.addEventListener('click', () => deletePage(title));
-    
-    // FIX: Standardize hash for Main Page to the requested '#main'
-    if (title === "Main Page") {
-        location.hash = "#main";
-    } else {
-        location.hash = `#${encodeURIComponent(title)}`;
-    }
+    location.hash = `#${encodeURIComponent(title)}`;
   }
   function editPage(title) {
     console.log("Editing page:", title);
@@ -1325,9 +1326,6 @@ function answerAI(query) {
       else if (initialHash === "profile") showProfile();
       else showPage(initialHash); 
     } else {
-        // If hash is empty, explicitly go to the desired canonical hash: #main
-        // This will call showPage("Main Page") via the hashchange listener if necessary, 
-        // or just rely on showPage to set the correct hash.
         showPage("Main Page");
     }
 
@@ -1344,3 +1342,4 @@ function answerAI(query) {
 </script>
 </body>
 </html>
+
