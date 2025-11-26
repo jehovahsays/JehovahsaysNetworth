@@ -1,3 +1,10 @@
+
+![Website](https://img.shields.io/website?url=https%3A%2F%2Fjehovahsays.github.io%2Fmev%2F)
+![Last Commit](https://img.shields.io/github/last-commit/jehovahsays/mev)
+![Repo Size](https://img.shields.io/github/repo-size/jehovahsays/mev)
+![License](https://img.shields.io/github/license/jehovahsays/mev)
+
+---
 # MEV Offline Wiki AI – v1.2.0-standalone
 
 **MEV AI Wiki** is a fully offline, secure, self-contained encyclopedia designed for personal knowledge management. It runs entirely in your browser, requires no server, and stores all data locally using `localStorage`.
