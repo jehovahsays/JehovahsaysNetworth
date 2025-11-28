@@ -9,6 +9,21 @@
 
 **MEV Offline Wiki AI** is a fully offline, secure, and self-contained encyclopedia designed for **Personal Knowledge Management (PKM)**. It embodies the Offline-First philosophy, running entirely in your web browser with no external server or database connection required.
 
+## 🔐 Security-Hardened Version: `index.secure.html`
+
+This file is a clean, self-contained, security-enhanced version of MEV Wiki. It includes:
+- Sanitized rendering logic
+- Hardened script execution environment
+- Content Security Policy enforcement
+- Local-only data access
+
+Use this file for:
+- Security reviews
+- Hosting in hardened environments (e.g., GitHub Pages, kiosk systems)
+- Comparing against `index.html` to track enhancements
+
+> For unrestricted offline usage, continue using `index.html`.
+
 The core motivation is resilience: **Your data is stored locally and cannot be vandalized or censored by external actors.** Any changes made by others only affect their local browser copy, providing a unique "self-defending" architecture against online abuse.
 
 ---
