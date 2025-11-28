@@ -1,170 +1,102 @@
+# MEV Offline Wiki AI
 
 ![Website](https://img.shields.io/website?url=https%3A%2F%2Fjehovahsays.github.io%2Fmev%2F)
 ![Last Commit](https://img.shields.io/github/last-commit/jehovahsays/mev)
 ![Repo Size](https://img.shields.io/github/repo-size/jehovahsays/mev)
 ![License](https://img.shields.io/github/license/jehovahsays/mev)
 
----
-# MEV Offline Wiki AI – v1.2.0-standalone
+## 💡 Project Overview: The Self-Defending Wiki
 
-**MEV AI Wiki** is a fully offline, secure, self-contained encyclopedia designed for personal knowledge management. It runs entirely in your browser, requires no server, and stores all data locally using `localStorage`.
+**MEV Offline Wiki AI** is a fully offline, secure, and self-contained encyclopedia designed for **Personal Knowledge Management (PKM)**. It embodies the Offline-First philosophy, running entirely in your web browser with no external server or database connection required.
 
-> 🧱 **Version 1.2.0-standalone** fully embeds all scripts and styles into `index.html` — no external files required!
-
----
-
-## 🧩 Features
-
-- ✅ **Single-file HTML** (`index.html` is fully standalone)
-- ✅ **Offline-first PWA** with Service Worker & `manifest.json`
-- ✅ **Wiki-style markup**:
-  - `== Headings ==`
-  - `'''Bold'''`, `''Italic''`
-  - `* Bullet Lists`, `[[Internal Links]]`
-- ✅ **Semantic HTML + schema.org microdata**
-- ✅ **Voice + AI Search UI**
-- ✅ **JS & No-JS graceful fallbacks**
-- ✅ **Light and dark mode**
-- ✅ **Client-side account creation (no passwords, no backend)**
-- ✅ **Local page editing, creation, and deletion**
-- ✅ **Formatting Help, Settings, and Profile UI**
-- ✅ **Sidebar with navigation and voice filters**
-- ✅ **Offline/online detection with banner UI**
+The core motivation is resilience: **Your data is stored locally and cannot be vandalized or censored by external actors.** Any changes made by others only affect their local browser copy, providing a unique "self-defending" architecture against online abuse.
 
 ---
 
-## 🔐 Security Model
+## 🧱 Core Architecture & Security Posture
 
-This app uses a strict client-side security model:
+MEV Wiki is intentionally designed to be minimal, hardened, and server-less. This architecture dictates its security and deployment model.
 
-- `eval`, `Function`, and `setTimeout(string)` are **blocked**
-- `<meta http-equiv>` headers set:
-  - `X-Content-Type-Options: nosniff`
-  - `X-Frame-Options: DENY`
-  - `Referrer-Policy: no-referrer`
-  - `Permissions-Policy: microphone=(), camera=(), geolocation=()`
-- Context menu, text selection, and drag-start events are disabled
-- Scripts and styles are **inlined** — no external requests
+### Single-File Deployment (v1.2.0-standalone)
 
----
+The application is engineered for maximum simplicity:
+* **Self-Contained:** Version `v1.2.0-standalone` fully embeds all necessary HTML, CSS, and JavaScript into a single file: `index.html`.
+* **Zero-Dependency:** There are no external scripts, CDNs, analytics, or server calls, eliminating the entire class of supply-chain attacks.
+* **Simple Hosting:** Deployment only requires a static file server (like GitHub Pages or a simple Python server) to serve `index.html` and, optionally, `sw.js`.
 
-## ⚙️ How to Use
+### Data Storage Deep Dive: `localStorage`
 
-### Option 1: No Setup Required (recommended)
+The choice of `localStorage` defines the app's performance and security trade-offs:
 
-1. Clone or download this repository
-2. Open `index.html` in any modern browser
-3. You're done — it works 100% offline
+| Aspect | Summary | Security & Performance Rationale |
+| :--- | :--- | :--- |
+| **Resilience** | Persistent, tied to the specific browser/origin. | Data survives browser/system restarts. It is *not* guaranteed to survive browser data clears or storage eviction due to low disk space. |
+| **Performance** | Near-instant, synchronous access. | Zero network latency. Data retrieval is virtually instantaneous, resulting in a fluid, native-like User Experience (UX). |
+| **Security** | Immune to Network Interception, Vulnerable to XSS. | Data **never** leaves the client, securing it from Man-in-the-Middle (MITM) attacks. However, any successful **Cross-Site Scripting (XSS)** attack could read and exfiltrate all wiki content. This makes client-side sanitation the **most critical** security component. |
 
-### Option 2: Local Server (for testing as PWA)
+### Hardened Defenses
 
-```bash
-python3 -m http.server
-# Visit http://localhost:8000
-
-To test installability and Service Worker caching, serve over http://localhost or deploy to GitHub Pages.
-
-⸻
-
-📡 Online/Offline Behavior
-	•	When online, fetches fall back to the network
-	•	When offline, the app loads from Service Worker cache
-	•	If any non-cached file is requested offline, /index.html is returned as fallback
-	•	Displays a banner when offline
-
-⸻
-
-💡 Graceful Degradation
-
-This site works with and without JavaScript:
-
-Feature
-JS Required
-Fallback Behavior
-Search + AI input
-✅ Yes
-No voice/text input
-Wiki editing
-✅ Yes
-View-only
-Theme toggle
-✅ Yes
-Light mode default
-Offline fallback
-✅ Yes (SW)
-Browser-level fallback
-
-
-⸻
-
-📦 Service Worker
-
-See sw.js￼ for caching behavior:
-	•	Versioned cache: mev-wiki-v8
-	•	Files cached: /index.html, /, /sw.js
-	•	Reclaims old caches on activation
-	•	Fallback to /index.html for offline
-
-⸻
-
-🤖 Robots.txt
-
-The app ships with a hardened robots.txt:
-
-User-agent: *
-Disallow: /#*
-Disallow: /?*
-Disallow: /recent
-Disallow: /settings
-Disallow: /profile
-Disallow: /edit
-Allow: /
-
-Only allows indexing of homepage (/). Blocks all dynamic routes, querystrings, and user-generated pages ￼ ￼.
-
-⸻
-
-🧠 Credits
-	•	Created by Morgan Shatee Byers
-	•	Inspired by the IndieWeb and PKM community
-	•	Built using plain HTML, CSS, and JavaScript
-
-⸻
-
-📣 Community & Contribution
-	•	💬 Join GitHub Discussions
-	•	📥 Pull requests welcome! See CONTRIBUTING.md
-
-⸻
-
-🚀 GitHub Pages Deployment
-
-To publish:
-	1.	Push index.html to your repo’s main branch
-	2.	Enable GitHub Pages in settings
-	3.	Your wiki is now live!
-
-⸻
-
-📄 License
-
-Licensed under the MIT License￼
+* **Strict CSP:** A strict Content Security Policy (`meta` tag) is enforced to block dynamic code execution (`eval`) and external script loading.
+* **Robots.txt:** The included `robots.txt` actively blocks search engine indexing of all dynamic content and user routes (`/#*`, `/edit`, `/profile`, etc.), ensuring user data and private pages are not exposed via search results.
+* **Service Worker (`sw.js`):** Uses a versioned, cache-only strategy for core files (`/index.html`, `/sw.js`), ensuring users receive security patches quickly and guaranteeing reliable offline access.
 
 ---
 
-### 🔄 CHANGELOG.md
+## ⚙️ Getting It Running
 
-No changes needed — it's already correctly reflecting:
+The application requires a basic HTTP server to function correctly (opening `index.html` directly from the file system may cause browser security policies to block `localStorage` access and Service Worker registration).
 
-- The standalone switch
-- Removal of legacy scripts
-- Security and offline features [oai_citation:2‡CHANGELOG.md](sediment://file_00000000ff18722f98c4f69d476bb424)
+### Requirements
+
+* A basic static HTTP server (e.g., Python's `http.server`, Node's `serve`, Nginx, Apache, or GitHub Pages).
+
+### Quickstart Example (Using Python)
+
+1.  **Navigate** to the repository directory:
+    ```bash
+    cd /path/to/mev
+    ```
+2.  **Start** the simple Python HTTP server on port 8000:
+    ```bash
+    python -m http.server 8000
+    ```
+3.  The application will be accessible at: **`http://localhost:8000`**
+
+### Note on PWA Experience
+
+For the full Progressive Web App (PWA) experience (deep offline caching and "Add to Home Screen" functionality), the **`sw.js`** file must be present alongside `index.html` and served at the root of the domain. If omitted, the core application remains functional via `localStorage`, but the robust offline features will be disabled.
 
 ---
 
-### ✅ robots.txt
+## 🧩 Key Features
 
-Already properly limits indexing to only `/` and blocks dynamic routes and query parameters [oai_citation:3‡robots.txt](sediment://file_00000000216c722f91c13ea83f198c58).
+The following functionalities are fully implemented using only client-side browser APIs:
+
+* ✅ **Wiki Core:** Local page editing, creation, and deletion (via `localStorage`).
+* ✅ **Offline PWA:** Offline-first functionality with Service Worker & manifest.json.
+* ✅ **Markup Support:** Wiki-style formatting: `== Headings ==`, `'''Bold'''`, `[[Internal Links]]`.
+* ✅ **Search:** Voice + AI Search UI.
+* ✅ **Accessibility:** WCAG 2.1 AA Compliance (color contrast, semantic structure) and view-only keyboard navigation.
+* ✅ **Theming:** Light and dark mode support.
+* ✅ **Fallbacks:** Graceful fallbacks for users with JavaScript disabled (`<noscript>`).
+* ✅ **Authentication:** Client-side account creation (no passwords, no backend required).
 
 ---
 
+## 📣 Community & Contribution
+
+We welcome contributions that uphold the project's values of **simplicity, security, and offline privacy.**
+
+* **View our Contribution Guide:** [CONTRIBUTING.md](CONTRIBUTING.md)
+* **Review our Security Policy:** [SECURITY.md](SECURITY.md)
+* **Join the discussion:** Open a GitHub Issue or a Discussion thread.
+
+### 🧠 Credits
+
+* **Creator:** Morgan Shatee Byers
+* **Inspiration:** The IndieWeb and Personal Knowledge Management (PKM) communities.
+* **Built With:** Plain HTML, CSS, and JavaScript.
+
+### 📄 License
+
+MEV Wiki is licensed under the **MIT License**.
