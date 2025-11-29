@@ -5,113 +5,114 @@
 ![Repo Size](https://img.shields.io/github/repo-size/jehovahsays/mev)
 ![License](https://img.shields.io/github/license/jehovahsays/mev)
 
-## 💡 Project Overview: The Self-Defending Wiki
+# MEV Offline Wiki AI
 
-**MEV Offline Wiki AI** is a fully offline, secure, and self-contained encyclopedia designed for **Personal Knowledge Management (PKM)**. It embodies the Offline-First philosophy, running entirely in your web browser with no external server or database connection required.
+## 📘 What is MEV
 
-## 🔐 Security-Hardened Version: `index.secure.html`
+**MEV** is a fully offline, self-contained wiki / personal knowledge-management (PKM) tool that runs entirely in the browser — no server, no database, no external dependencies.  
+It is designed around an **“offline-first, self-defending”** philosophy.
 
-This file is a clean, self-contained, security-enhanced version of MEV Wiki. It includes:
-- Sanitized rendering logic
-- Hardened script execution environment
-- Content Security Policy enforcement
-- Local-only data access
-
-Use this file for:
-- Security reviews
-- Hosting in hardened environments (e.g., GitHub Pages, kiosk systems)
-- Comparing against `index.html` to track enhancements
-
-> For unrestricted offline usage, continue using `index.html`.
-
-The core motivation is resilience: **Your data is stored locally and cannot be vandalized or censored by external actors.** Any changes made by others only affect their local browser copy, providing a unique "self-defending" architecture against online abuse.
+This makes MEV ideal for users who want privacy, portability, and resilience.
 
 ---
 
-## 🧱 Core Architecture & Security Posture
+## 🚀 Why Use MEV
 
-MEV Wiki is intentionally designed to be minimal, hardened, and server-less. This architecture dictates its security and deployment model.
-
-### Single-File Deployment (v1.2.0-standalone)
-
-The application is engineered for maximum simplicity:
-* **Self-Contained:** Version `v1.2.0-standalone` fully embeds all necessary HTML, CSS, and JavaScript into a single file: `index.html`.
-* **Zero-Dependency:** There are no external scripts, CDNs, analytics, or server calls, eliminating the entire class of supply-chain attacks.
-* **Simple Hosting:** Deployment only requires a static file server (like GitHub Pages or a simple Python server) to serve `index.html` and, optionally, `sw.js`.
-
-### Data Storage Deep Dive: `localStorage`
-
-The choice of `localStorage` defines the app's performance and security trade-offs:
-
-| Aspect | Summary | Security & Performance Rationale |
-| :--- | :--- | :--- |
-| **Resilience** | Persistent, tied to the specific browser/origin. | Data survives browser/system restarts. It is *not* guaranteed to survive browser data clears or storage eviction due to low disk space. |
-| **Performance** | Near-instant, synchronous access. | Zero network latency. Data retrieval is virtually instantaneous, resulting in a fluid, native-like User Experience (UX). |
-| **Security** | Immune to Network Interception, Vulnerable to XSS. | Data **never** leaves the client, securing it from Man-in-the-Middle (MITM) attacks. However, any successful **Cross-Site Scripting (XSS)** attack could read and exfiltrate all wiki content. This makes client-side sanitation the **most critical** security component. |
-
-### Hardened Defenses
-
-* **Strict CSP:** A strict Content Security Policy (`meta` tag) is enforced to block dynamic code execution (`eval`) and external script loading.
-* **Robots.txt:** The included `robots.txt` actively blocks search engine indexing of all dynamic content and user routes (`/#*`, `/edit`, `/profile`, etc.), ensuring user data and private pages are not exposed via search results.
-* **Service Worker (`sw.js`):** Uses a versioned, cache-only strategy for core files (`/index.html`, `/sw.js`), ensuring users receive security patches quickly and guaranteeing reliable offline access.
+- **Offline‑first & portable** — once loaded, works with no internet.
+- **Simple deployment** — just static files, easy to host anywhere.
+- **Secure and minimal** — no CDNs, no trackers, no third-party scripts.
+- **Ideal for personal wikis** — notes, journaling, docs, etc.
 
 ---
 
-## ⚙️ Getting It Running
+## 🏗️ Architecture & Security Posture
 
-The application requires a basic HTTP server to function correctly (opening `index.html` directly from the file system may cause browser security policies to block `localStorage` access and Service Worker registration).
+### Single-File Deployment
 
-### Requirements
+- All code is in `index.html`, with optional `sw.js` for PWA support.
+- No dependencies, no build step required.
 
-* A basic static HTTP server (e.g., Python's `http.server`, Node's `serve`, Nginx, Apache, or GitHub Pages).
+### Storage Model: `localStorage`
 
-### Quickstart Example (Using Python)
+- Stores content in browser's local storage.
+- No data leaves the client.
+- Works offline by design.
+- Data may be lost if storage is cleared.
 
-1.  **Navigate** to the repository directory:
-    ```bash
-    cd /path/to/mev
-    ```
-2.  **Start** the simple Python HTTP server on port 8000:
-    ```bash
-    python -m http.server 8000
-    ```
-3.  The application will be accessible at: **`http://localhost:8000`**
+### Security Hardened
 
-### Note on PWA Experience
-
-For the full Progressive Web App (PWA) experience (deep offline caching and "Add to Home Screen" functionality), the **`sw.js`** file must be present alongside `index.html` and served at the root of the domain. If omitted, the core application remains functional via `localStorage`, but the robust offline features will be disabled.
+- Strong Content Security Policy (CSP).
+- No dynamic JS injection (e.g. `eval` is blocked).
+- No external code is loaded.
 
 ---
 
-## 🧩 Key Features
+## 🧩 Project Structure
 
-The following functionalities are fully implemented using only client-side browser APIs:
-
-* ✅ **Wiki Core:** Local page editing, creation, and deletion (via `localStorage`).
-* ✅ **Offline PWA:** Offline-first functionality with Service Worker & manifest.json.
-* ✅ **Markup Support:** Wiki-style formatting: `== Headings ==`, `'''Bold'''`, `[[Internal Links]]`.
-* ✅ **Search:** Voice + AI Search UI.
-* ✅ **Accessibility:** WCAG 2.1 AA Compliance (color contrast, semantic structure) and view-only keyboard navigation.
-* ✅ **Theming:** Light and dark mode support.
-* ✅ **Fallbacks:** Graceful fallbacks for users with JavaScript disabled (`<noscript>`).
-* ✅ **Authentication:** Client-side account creation (no passwords, no backend required).
+- `index.html` — the wiki app
+- `sw.js`, `manifest.json` — for optional PWA support
+- `.nojekyll` — disables GitHub Jekyll processing
+- `CHANGELOG.md`, `CONTRIBUTING.md`, `LICENSE`, `SECURITY.md`, `MOTIVATION.md` — metadata and docs
 
 ---
 
-## 📣 Community & Contribution
+## 🛠️ Getting Started
 
-We welcome contributions that uphold the project's values of **simplicity, security, and offline privacy.**
+### Option A: Use Locally
 
-* **View our Contribution Guide:** [CONTRIBUTING.md](CONTRIBUTING.md)
-* **Review our Security Policy:** [SECURITY.md](SECURITY.md)
-* **Join the discussion:** Open a GitHub Issue or a Discussion thread.
+1. Download or clone the repo.
+2. Open `index.html` in your browser.
+3. Start editing and writing — content is auto-saved.
 
-### 🧠 Credits
+### Option B: Host Online (e.g. GitHub Pages)
 
-* **Creator:** Morgan Shatee Byers
-* **Inspiration:** The IndieWeb and Personal Knowledge Management (PKM) communities.
-* **Built With:** Plain HTML, CSS, and JavaScript.
+1. Push to GitHub.
+2. Enable GitHub Pages in repo settings.
+3. Access via: [https://jehovahsays.github.io/mev/](https://jehovahsays.github.io/mev/)
 
-### 📄 License
+---
 
-MEV Wiki is licensed under the **MIT License**.
+## 🎯 Who Is This For
+
+- Webmasters and devs needing a simple offline wiki
+- Designers who want minimal tools for documentation
+- Anyone wanting a privacy-first PKM system
+
+---
+
+## 🔎 Live Demo
+
+Try the live demo:  
+[https://jehovahsays.github.io/mev/](https://jehovahsays.github.io/mev/)  
+- Fully functional with or without JavaScript
+
+---
+
+## 🤝 Contributing
+
+1. Fork the repo
+2. Make a branch and your changes
+3. Submit a pull request
+
+See: [`CONTRIBUTING.md`](CONTRIBUTING.md)
+
+---
+
+## 📃 License
+
+Licensed under the MIT License — see [`LICENSE`](LICENSE)
+
+---
+
+## 🧠 Project Philosophy
+
+MEV stands for minimal, efficient, verifiable. It aims to be:
+
+- Easy to understand and modify
+- Resistant to interference (no servers)
+- Private by design
+- Compatible with low-resource environments
+
+---
+
+_Last updated: 2025-11-29_
