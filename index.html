@@ -464,6 +464,16 @@
 </head>
 <body>
 
+<noscript>
+    <!-- 
+        If JavaScript is disabled, this meta tag will refresh the page to the CSS-only version.
+        We pass the current hash so the user lands on the intended page if possible.
+    -->
+    <meta http-equiv="refresh" content="0;url=css.html#main">
+</noscript>
+
+
+
 <div id="banner" class="banner"></div>
 
 <div id="offline-message">
@@ -568,7 +578,7 @@
 <footer>
   <div id="status-indicator">🔴 Offline</div>
   <div id="ticker"><span id="ticker-content"></span></div>
-  <div id="app-version"><a href="index.zip">Source Version: 1.2.0-standalone</a> – <span id="last-updated"></span></div>
+  <div id="app-version"><a href="index.zip">Download Source Version: 1.2.0-standalone</a> – <span id="last-updated"></span></div>
 </footer>
 
 <div id="auth-modal" class="modal-overlay">
