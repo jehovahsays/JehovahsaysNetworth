@@ -1,10 +1,21 @@
-const CACHE = "mev-wiki-v8"; // INCREMENTED CACHE VERSION TO FORCE UPDATE
+const CACHE = "mev-wiki-v9"; // 🌟 FIX: BUMPED CACHE VERSION TO FORCE UPDATE
 
+// Full list of all static assets for robust offline-first caching
 const FILES = [
+  // Core HTML/Entry points
   "/",
   "/index.html",
-  // The service worker itself must be listed
-  "/sw.js" 
+  "/css.html",            // CSS-only fallback page
+  
+  // PWA & Service Worker files
+  "/sw.js", 
+  "/manifest.json",       // PWA manifest file
+  
+  // Static Assets (The four required icons)
+  "/assets/icons/icon-192.png", 
+  "/assets/icons/icon-512.png",
+  "/assets/icons/maskable-192.png",
+  "/assets/icons/maskable-512.png"
 ];
 
 self.addEventListener("install", event => {
@@ -23,7 +34,7 @@ self.addEventListener("activate", event => {
     caches.keys().then(keys =>
       Promise.all(keys.filter(k => k !== CACHE).map(k => {
           console.log('[Service Worker] Deleting old cache:', k);
-          return caches.delete(k);
+          return caches.delete(k); // Deletes the old cache (v8)
       }))
     )
   );
@@ -35,7 +46,7 @@ self.addEventListener("fetch", event => {
 
   event.respondWith(
     caches.match(event.request).then(cacheRes => {
-      // Return cached response if available, otherwise fetch from network
+      // Cache-first strategy: Return cached response, otherwise fetch from network
       return cacheRes || fetch(event.request).catch(() =>
         // Fallback to index.html if offline/network fails
         caches.match("/index.html")

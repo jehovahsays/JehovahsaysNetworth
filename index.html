@@ -460,7 +460,8 @@
        to   { opacity: 1; transform: translateY(0); }
     }
   </style>
-  
+  <link rel="apple-touch-icon" href="/assets/icons/icon-512.png" /> 
+
 </head>
 <body>
 
@@ -564,6 +565,7 @@
 <a href="./ToolBox/search.html#search" onclick="closeSidebar()"><button class="edit-btn"> #search design</button></a>
 <a href="./ToolBox/index.htm#settings" onclick="closeSidebar()"><button class="edit-btn"> htm design</button></a>
 
+<a href="./ToolBox/css.index.html" onclick="closeSidebar()"><button class="edit-btn">CSS Fallback design</button></a>
 
     <div id="storage-bar">
       <div id="storage-bar-inner"></div>
@@ -1653,5 +1655,36 @@ function answerAI(query) {
   });
 
 </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 1. Define the ONLY acceptable trigger value
+    const EXPECTED_ACTION = 'cli_update'; 
+
+    // Get the URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const receivedAction = urlParams.get('action');
+
+    // 2. *** HARDENING STEP: Use Strict Equality Check ***
+    // The script *only* proceeds if the action is exactly 'cli_update'
+    if (receivedAction === EXPECTED_ACTION && urlParams.size === 1) { 
+        try {
+            // ... (Your existing Local Storage setting logic) ...
+            
+            // Key 1: Flag indicating the user has used the CLI tool
+            localStorage.setItem('cli_tools_enabled', 'true');
+            // ... (Other key/value pairs) ...
+            
+            // Clean the URL history to prevent the script from running again on page refresh.
+            window.history.replaceState({}, document.title, window.location.pathname);
+
+        } catch (e) {
+            // ...
+        }
+    }
+    // Any other action or any extra parameters in the URL are safely ignored.
+});
+</script>
+
 </body>
 </html>

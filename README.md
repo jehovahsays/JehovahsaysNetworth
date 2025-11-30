@@ -18,26 +18,27 @@ This makes MEV ideal for users who want privacy, portability, and resilience.
 
 ## 🚀 Why Use MEV
 
-- **Offline‑first & portable** — once loaded, works with no internet.
-- **Simple deployment** — just static files, easy to host anywhere.
-- **Secure and minimal** — no CDNs, no trackers, no third-party scripts.
-- **Ideal for personal wikis** — notes, journaling, docs, etc.
+- **Offline‑first & Portable** — Once loaded, the application works completely offline, making it portable across devices.
+- **Progressive Web App (PWA)** — Installable on desktop and mobile (iOS/Android) for a seamless, app-like experience.
+- **Secure and minimal** — No CDNs, no trackers, no third-party scripts.
+- **Simple Deployment** — Just static files, easy to host anywhere (including your local PHP server via PHPwin).
 
 ---
 
 ## 🏗️ Architecture & Security Posture
 
-### Single-File Deployment
+### Multi-File PWA Architecture
 
-- All code is in `index.html`, with optional `sw.js` for PWA support.
+- The application is a Progressive Web App (PWA) distributed as static files (`index.html`, `sw.js`, `manifest.json`, `css.html`).
+- The **Service Worker (`sw.js`)** pre-caches all critical assets, guaranteeing instant loading even when offline.
 - No dependencies, no build step required.
 
 ### Storage Model: `localStorage`
 
-- Stores content in browser's local storage.
-- No data leaves the client.
+- Stores content entirely in the browser's local storage.
+- **No data leaves the client.**
 - Works offline by design.
-- Data may be lost if storage is cleared.
+- *Note: Data may be lost if browser storage is explicitly cleared by the user.*
 
 ### Security Hardened
 
@@ -49,10 +50,13 @@ This makes MEV ideal for users who want privacy, portability, and resilience.
 
 ## 🧩 Project Structure
 
-- `index.html` — the wiki app
-- `sw.js`, `manifest.json` — for optional PWA support
-- `.nojekyll` — disables GitHub Jekyll processing
-- `CHANGELOG.md`, `CONTRIBUTING.md`, `LICENSE`, `SECURITY.md`, `MOTIVATION.md` — metadata and docs
+- `index.html` — The core wiki application.
+- `sw.js`, `manifest.json` — Essential files for PWA installation and offline functionality.
+- `css.html` — The CSS-only fallback/anchor page.
+- `index.bat` — CLI launcher for Windows users to manage settings via URL parameters.
+- `assets/icons/` — Directory containing the required PWA icons (maskable and standard).
+- `.nojekyll` — Disables GitHub Jekyll processing.
+- `CHANGELOG.md`, `CONTRIBUTING.md`, `LICENSE`, `SECURITY.md`, `MOTIVATION.md` — Metadata and documentation.
 
 ---
 
@@ -63,20 +67,27 @@ This makes MEV ideal for users who want privacy, portability, and resilience.
 1. Download or clone the repo.
 2. Open `index.html` in your browser.
 3. Start editing and writing — content is auto-saved.
+4. **Windows Users:** Use `index.bat` to quickly launch the wiki or update settings via the command line interface.
 
 ### Option B: Host Online (e.g. GitHub Pages)
 
-1. Push to GitHub.
+1. Push the files to your GitHub repository.
 2. Enable GitHub Pages in repo settings.
 3. Access via: [https://jehovahsays.github.io/mev/](https://jehovahsays.github.io/mev/)
+
+### Option C: Install as a PWA
+
+1. Visit the URL on a compatible device (like your iPhone).
+2. Use the browser's "Install App" or "Add to Home Screen" feature.
+3. The app will be available on your home screen, runnable offline.
 
 ---
 
 ## 🎯 Who Is This For
 
-- Webmasters and devs needing a simple offline wiki
-- Designers who want minimal tools for documentation
-- Anyone wanting a privacy-first PKM system
+- Developers and users needing a highly secure, simple offline wiki.
+- Those who prioritize privacy and resilience over cloud-based storage.
+- Anyone wanting a fully operational, installable PWA knowledge system.
 
 ---
 
@@ -84,7 +95,7 @@ This makes MEV ideal for users who want privacy, portability, and resilience.
 
 Try the live demo:  
 [https://jehovahsays.github.io/mev/](https://jehovahsays.github.io/mev/)  
-- Fully functional with or without JavaScript
+- Fully functional with or without JavaScript.
 
 ---
 
