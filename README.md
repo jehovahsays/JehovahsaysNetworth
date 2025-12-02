@@ -9,19 +9,20 @@
 
 ## 📘 What is MEV
 
-**MEV** is a fully offline, self-contained wiki / personal knowledge-management (PKM) tool that runs entirely in the browser — no server, no database, no external dependencies.  
-It is designed around an **“offline-first, self-defending”** philosophy.
+**[span_0](start_span)MEV** is a fully offline, self-contained wiki / personal knowledge-management (PKM) tool that runs entirely in the browser — no server, no database, no external dependencies[span_0](end_span).  
+[span_1](start_span)It is designed around an **“offline-first, self-defending”** philosophy[span_1](end_span).
 
-This makes MEV ideal for users who want privacy, portability, and resilience.
+[span_2](start_span)This makes MEV ideal for users who want privacy, portability, and resilience[span_2](end_span).
 
 ---
 
 ## 🚀 Why Use MEV
 
-- **Offline‑first & Portable** — Once loaded, the application works completely offline, making it portable across devices.
-- **Progressive Web App (PWA)** — Installable on desktop and mobile (iOS/Android) for a seamless, app-like experience.
-- **Secure and minimal** — No CDNs, no trackers, no third-party scripts.
-- **Simple Deployment** — Just static files, easy to host anywhere (including your local PHP server via PHPwin).
+- **[span_3](start_span)Offline‑first & Portable** — Once loaded, the application works completely offline, making it portable across devices[span_3](end_span).
+- **Encrypted Storage** — Optional PIN-based encryption using Web Crypto API (AES-GCM) ensures your data remains private even in local storage.
+- **[span_4](start_span)Progressive Web App (PWA)** — Installable on desktop and mobile (iOS/Android) for a seamless, app-like experience[span_4](end_span).
+- **[span_5](start_span)Secure and minimal** — No CDNs, no trackers, no third-party scripts[span_5](end_span).
+- **[span_6](start_span)Simple Deployment** — Just static files, easy to host anywhere (including your local PHP server via PHPwin)[span_6](end_span).
 
 ---
 
@@ -29,34 +30,40 @@ This makes MEV ideal for users who want privacy, portability, and resilience.
 
 ### Multi-File PWA Architecture
 
-- The application is a Progressive Web App (PWA) distributed as static files (`index.html`, `sw.js`, `manifest.json`, `css.html`).
-- The **Service Worker (`sw.js`)** pre-caches all critical assets, guaranteeing instant loading even when offline.
-- No dependencies, no build step required.
+- [span_7](start_span)The application is a Progressive Web App (PWA) distributed as static files (`index.html`, `assets/js/sw.js`, `manifest.json`, `css.html`)[span_7](end_span).
+- [span_8](start_span)The **Service Worker (`assets/js/sw.js`)** pre-caches all critical assets, guaranteeing instant loading even when offline[span_8](end_span).
+- [span_9](start_span)No dependencies, no build step required[span_9](end_span).
 
-### Storage Model: `localStorage`
+### Storage Model: `localStorage` with Encryption
 
-- Stores content entirely in the browser's local storage.
-- **No data leaves the client.**
-- Works offline by design.
-- *Note: Data may be lost if browser storage is explicitly cleared by the user.*
+- [span_10](start_span)Stores content entirely in the browser's local storage[span_10](end_span).
+- **Client-Side Encryption:** If a PIN is set, data is encrypted using PBKDF2 key derivation and AES-GCM before saving.
+- **[span_11](start_span)No data leaves the client**[span_11](end_span).
+- [span_12](start_span)Works offline by design[span_12](end_span).
+- *[span_13](start_span)Note: Data may be lost if browser storage is explicitly cleared by the user.*[span_13](end_span)
 
 ### Security Hardened
 
-- Strong Content Security Policy (CSP).
-- No dynamic JS injection (e.g. `eval` is blocked).
-- No external code is loaded.
+- **Strict Content Security Policy (CSP):** Styles and scripts are loaded from local assets only; inline execution is minimized.
+- [span_14](start_span)No dynamic JS injection (e.g. `eval` is blocked)[span_14](end_span).
+- [span_15](start_span)No external code is loaded[span_15](end_span).
 
 ---
 
 ## 🧩 Project Structure
 
-- `index.html` — The core wiki application.
-- `sw.js`, `manifest.json` — Essential files for PWA installation and offline functionality.
-- `css.html` — The CSS-only fallback/anchor page.
-- `index.bat` — CLI launcher for Windows users to manage settings via URL parameters.
-- `assets/icons/` — Directory containing the required PWA icons (maskable and standard).
-- `.nojekyll` — Disables GitHub Jekyll processing.
-- `CHANGELOG.md`, `CONTRIBUTING.md`, `LICENSE`, `SECURITY.md`, `MOTIVATION.md` — Metadata and documentation.
+- [span_16](start_span)`index.html` — The core wiki application[span_16](end_span).
+- [span_17](start_span)`css.html` — The CSS-only fallback/anchor page[span_17](end_span).
+- `404.html` — Offline fallback page.
+- [span_18](start_span)`manifest.json` — Essential file for PWA installation[span_18](end_span).
+- `assets/`
+    - `css/index.css` — Main stylesheet.
+    - `js/app.js` — Core application logic and crypto functions.
+    - `js/sw.js` — Service Worker for offline caching.
+    - [span_19](start_span)`icons/` — Directory containing the required PWA icons[span_19](end_span).
+- [span_20](start_span)`bin/index.bat` — CLI launcher for Windows users to manage settings via URL parameters[span_20](end_span).
+- [span_21](start_span)`.nojekyll` — Disables GitHub Jekyll processing[span_21](end_span).
+- [span_22](start_span)`CHANGELOG.md`, `CONTRIBUTING.md`, `LICENSE`, `SECURITY.md`, `MOTIVATION.md` — Metadata and documentation[span_22](end_span).
 
 ---
 
@@ -64,30 +71,30 @@ This makes MEV ideal for users who want privacy, portability, and resilience.
 
 ### Option A: Use Locally
 
-1. Download or clone the repo.
-2. Open `index.html` in your browser.
-3. Start editing and writing — content is auto-saved.
-4. **Windows Users:** Use `index.bat` to quickly launch the wiki or update settings via the command line interface.
+1. [span_23](start_span)Download or clone the repo[span_23](end_span).
+2. [span_24](start_span)Open `index.html` in your browser[span_24](end_span).
+3. [span_25](start_span)Start editing and writing — content is auto-saved[span_25](end_span).
+4. **[span_26](start_span)Windows Users:** Run `bin/index.bat` to quickly launch the wiki or update settings via the command line interface[span_26](end_span).
 
 ### Option B: Host Online (e.g. GitHub Pages)
 
-1. Push the files to your GitHub repository.
-2. Enable GitHub Pages in repo settings.
-3. Access via: [https://jehovahsays.github.io/mev/](https://jehovahsays.github.io/mev/)
+1. [span_27](start_span)Push the files to your GitHub repository[span_27](end_span).
+2. [span_28](start_span)Enable GitHub Pages in repo settings[span_28](end_span).
+3. [span_29](start_span)Access via: [https://jehovahsays.github.io/mev/](https://jehovahsays.github.io/mev/)[span_29](end_span)
 
 ### Option C: Install as a PWA
 
-1. Visit the URL on a compatible device (like your iPhone).
-2. Use the browser's "Install App" or "Add to Home Screen" feature.
-3. The app will be available on your home screen, runnable offline.
+1. [span_30](start_span)Visit the URL on a compatible device (like your iPhone)[span_30](end_span).
+2. [span_31](start_span)Use the browser's "Install App" or "Add to Home Screen" feature[span_31](end_span).
+3. [span_32](start_span)The app will be available on your home screen, runnable offline[span_32](end_span).
 
 ---
 
 ## 🎯 Who Is This For
 
-- Developers and users needing a highly secure, simple offline wiki.
-- Those who prioritize privacy and resilience over cloud-based storage.
-- Anyone wanting a fully operational, installable PWA knowledge system.
+- [span_33](start_span)Developers and users needing a highly secure, simple offline wiki[span_33](end_span).
+- [span_34](start_span)Those who prioritize privacy and resilience over cloud-based storage[span_34](end_span).
+- [span_35](start_span)Anyone wanting a fully operational, installable PWA knowledge system[span_35](end_span).
 
 ---
 
@@ -95,35 +102,35 @@ This makes MEV ideal for users who want privacy, portability, and resilience.
 
 Try the live demo:  
 [https://jehovahsays.github.io/mev/](https://jehovahsays.github.io/mev/)  
-- Fully functional with or without JavaScript.
+- [span_36](start_span)Fully functional with or without JavaScript[span_36](end_span).
 
 ---
 
 ## 🤝 Contributing
 
-1. Fork the repo
-2. Make a branch and your changes
-3. Submit a pull request
+1. [span_37](start_span)Fork the repo[span_37](end_span)
+2. [span_38](start_span)Make a branch and your changes[span_38](end_span)
+3. [span_39](start_span)Submit a pull request[span_39](end_span)
 
-See: [`CONTRIBUTING.md`](CONTRIBUTING.md)
+[span_40](start_span)See: [`CONTRIBUTING.md`](CONTRIBUTING.md)[span_40](end_span)
 
 ---
 
 ## 📃 License
 
-Licensed under the MIT License — see [`LICENSE`](LICENSE)
+[span_41](start_span)Licensed under the MIT License — see [`LICENSE`](LICENSE)[span_41](end_span)
 
 ---
 
 ## 🧠 Project Philosophy
 
-MEV stands for minimal, efficient, verifiable. It aims to be:
+[span_42](start_span)MEV stands for minimal, efficient, verifiable[span_42](end_span). It aims to be:
 
-- Easy to understand and modify
-- Resistant to interference (no servers)
-- Private by design
-- Compatible with low-resource environments
+- [span_43](start_span)Easy to understand and modify[span_43](end_span)
+- [span_44](start_span)Resistant to interference (no servers)[span_44](end_span)
+- [span_45](start_span)Private by design[span_45](end_span)
+- [span_46](start_span)Compatible with low-resource environments[span_46](end_span)
 
 ---
 
-_Last updated: 2025-11-29_
+_Last updated: 2025-12-02_
