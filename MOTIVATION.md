@@ -1,48 +1,51 @@
-# 🛡️ Motivation Behind MEV Wiki
+# Motivation Behind MEV
 
-**Built by Morgan Shatee Byers**
+## A Framework for Offline Knowledge Ownership
 
-The inspiration for MEV (Multi Edit Vandalism) Wiki came from a deeply personal place.
+MEV was created to address a growing need for knowledge platforms that do not depend on remote servers, third‑party services, or internet access. Many modern tools rely heavily on online infrastructure, leaving users dependent on external systems, policies, and availability.
 
-After experiencing mistreatment, rejection, and toxic behavior in online communities — especially on platforms like Stack Overflow — Morgan felt silenced, ignored, and even targeted. His creativity was often suppressed by unfair edits, deletions, mutes, or gatekeeping by other users.
-
-So he built something no one could take away.
+MEV takes a different approach: the user fully owns their content.
 
 ---
 
-## 🧱 A Secure, Offline Haven for Creative Freedom
+## Why Offline Matters
 
-MEV Wiki was created as a **self-defending, offline-first webpage** — a space where no one can overwrite or delete your work unless *you* let them. It runs entirely in the browser, with no server dependency, storing all data securely in `localStorage`. Even bots or bad actors trying to vandalize the site can only affect their own local copy — **their attacks don’t affect anyone else**.
+Internet‑connected tools are convenient, but they come with trade‑offs:
 
-> *What they send is what they get. Like a mini firewall.*
+- Data privacy concerns
+- Reliance on external accounts or platforms
+- Loss of access during outages or travel
+- Risk of content removal or modification outside user control
 
----
-
-## 🔐 Designed for Resilience
-
-The architecture of MEV was shaped by real-world abuse of open wikis, including Morgan’s experience hosting a public MediaWiki where bots and toxic users ruined pages with spam and mass edits.
-
-So he flipped the model:
-- **No central server to attack**
-- **No shared database to corrupt**
-- **No way to stop someone from editing — but no way for those edits to harm others**
-
-Instead, the wiki runs like a secure shell in your browser, powered by a hardened JavaScript core, local AI tools, and a bootstrapped framework that reflects edits *only to the local user*. You can collaborate by exporting and importing `.json` backups — voluntarily.
+By running **entirely in the browser**, MEV removes external dependencies and places ownership back in the hands of the user.
 
 ---
 
-## 🧠 Creativity Without Compromise
+## Design Principles
 
-MEV stands for more than just *Multi Edit Vandalism* — it stands for a way of creating, learning, and exploring **without fear of censorship or attack**.
+MEV embraces three core principles:
 
-Morgan built this for himself — and for anyone else who’s ever felt silenced.
+| Principle | Meaning |
+|----------|---------|
+| **Minimal** | Runs without servers, databases, or installations |
+| **Efficient** | Lightweight, fast, durable across devices |
+| **Verifiable** | Transparent code, readable architecture, user‑controlled data |
 
 ---
 
-## 🔗 Learn More
+## Purpose
 
-- **GitHub Repository**  
-  [https://github.com/jehovahsays/mev](https://github.com/jehovahsays/mev)
+MEV exists for users who value:
 
-- **Live GitHub Page**  
-  [https://jehovahsays.github.io/mev/](https://jehovahsays.github.io/mev/)
+- Independence from online infrastructure  
+- Private, accessible, self‑owned information  
+- A secure space to write, plan, learn, or archive content  
+
+Whether documenting research, journaling, studying, or building a personal knowledge base, MEV provides a resilient platform designed to stay available and under your control.
+
+---
+
+## Learn More
+
+- GitHub Repo: https://github.com/jehovahsays/mev  
+- Live Version: https://jehovahsays.github.io/mev/  
