@@ -7,7 +7,8 @@
   <meta name="description" content="MEV Wiki – Offline Encyclopedia. Learn, edit, explore." />
   <meta name="theme-color" content="#3366cc" />
   <meta name="color-scheme" content="light dark" />
-  
+  <!-- <meta http-equiv="refresh" content="0;url=/w/#main"> -->
+
   <link rel="canonical" href="https://jehovahsays.github.io/mev/" />
 
   <link rel="apple-touch-icon" href="/assets/icons/icon-512.png" /> 
@@ -39,8 +40,16 @@
       id="ai-input" 
       placeholder="search or speak your query…" 
       aria-label="Search or question input"
-      data-action="filter-sidebar" 
-    >
+      data-action="filter-sidebar"
+list="search-suggestions">
+	
+	      <datalist id="search-suggestions">
+        <option value="Main Page">
+        <option value="About">
+        <option value="Recent Changes">
+        <option value="Formatting Examples">
+      </datalist>
+
     <button id="ai-button">Search Wiki</button>
   </div>
 </header>
