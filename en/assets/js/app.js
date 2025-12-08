@@ -1,6 +1,3 @@
-"use strict";
-/*global window, document, console, localStorage */
-
 // --- URL Obscurity/History Rewriting Logic (ADDED) ---
 (function() {
     // This function runs immediately to rewrite the URL shown to the user.
@@ -1653,3 +1650,31 @@ if ('serviceWorker' in navigator) {
         window.location.reload();
     }, { once: true }); // Use { once: true } to prevent multiple reloads
 }
+
+// === Modal Keyboard Trap (Accessibility) ===
+document.addEventListener('keydown', function (e) {
+  const modal = document.getElementById('modal');
+  if (modal && modal.style.display !== 'none' && e.key === 'Tab') {
+    const focusableElements = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    const first = focusableElements[0];
+    const last = focusableElements[focusableElements.length - 1];
+
+    if (e.shiftKey) {
+      if (document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      }
+    } else {
+      if (document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+  }
+
+  // Close modal with Escape
+  if (modal && modal.style.display !== 'none' && e.key === 'Escape') {
+    modal.style.display = 'none';
+    document.getElementById('close')?.focus();
+  }
+});

@@ -460,3 +460,10 @@ transition: background-color 0.2s;
      to   { opacity: 1; transform: translateY(0); }
   }
 
+
+
+/* === Extracted Inline Styles (CSP Fix) === */
+.extracted-style-0 {text-align: center; color: red;}
+.extracted-style-1 {font-size: 0.9em; margin-bottom: 10px;}
+.extracted-style-2 {width: 100%; margin-top: 10px;}
+.extracted-style-3 {font-size: 0.8em; color: red; margin-top: 10px;}
