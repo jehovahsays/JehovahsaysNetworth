@@ -511,8 +511,9 @@ function parseWiki(text) {
   result = result.replace(/'''(.*?)'''/g, '<strong>$1</strong>');
   result = result.replace(/''(.*?)''/g, '<em>$1</em>');
   // Wiki Links (CSP-SAFE: Event handler removed, replaced with data attribute)
+  // 🛡️ SECURITY FIX: escapeHTML(t) used inside data-page-link attribute
   result = result.replace(/\[\[([^\]]+)\]\]/g, (_, t) =>
-    `<a href="#" data-page-link="${t}">${escapeHTML(t)}</a>`
+    `<a href="#" data-page-link="${escapeHTML(t)}">${escapeHTML(t)}</a>`
   );
   // Code blocks
   result = result.replace(/```([\s\S]*?)```/g, (m, p1) =>
@@ -528,7 +529,7 @@ function parseWiki(text) {
 
   result.split('\n').forEach(line => {
     if (/^\*\s+/.test(line)) {
-      if (inOL) { finalHtml += '</ol>'; inOL = false; }
+      if (inOL) { finalHtml += '</ol>'; inOL = false; } // ✅ FIXED: Close correct tag
       if (!inUL) { finalHtml += '<ul>'; inUL = true; }
       finalHtml += `<li>${line.replace(/^\*\s+/, '')}</li>`;
     } else if (/^\#\s+/.test(line)) {
@@ -537,7 +538,7 @@ function parseWiki(text) {
       finalHtml += `<li>${line.replace(/^\#\s+/, '')}</li>`;
     } else {
       if (inUL) { finalHtml += '</ul>'; inUL = false; }
-      if (inOL) { finalHtml += '</ol>'; inOL = false; }
+      if (inOL) { finalHtml += '</ol>'; inOL = false; } // ✅ FIXED: Close correct tag
       if (line.trim() !== '') {
           finalHtml += line + '<br>';
       } else {
@@ -547,7 +548,7 @@ function parseWiki(text) {
   });
 
   if (inUL) finalHtml += '</ul>';
-  if (inOL) finalHtml += '</ul>';
+  if (inOL) finalHtml += '</ol>'; // ✅ FIXED: Close correct tag
 
   finalHtml += `<div class="semantic-status">✔️ Semantic HTML Enabled</div><br>This landing page #search is not a broken design.`;
   return finalHtml;
@@ -578,6 +579,17 @@ function updateStorageBar() {
 
 function applyThemeFromStorage() {
     let mode = localStorage.getItem(STORAGE_KEYS.theme);
+    
+    // ✅ NEW: Check for CSS-only theme hash and sync to JS storage
+    // This unifies the experience if users come from css.html
+    if (location.hash === '#theme-dark-set') {
+        mode = 'dark';
+        localStorage.setItem(STORAGE_KEYS.theme, 'dark');
+    } else if (location.hash === '#theme-light-set') {
+        mode = 'light';
+        localStorage.setItem(STORAGE_KEYS.theme, 'light');
+    }
+
     if (mode === null) {
       mode = 'dark';
       localStorage.setItem(STORAGE_KEYS.theme, mode); 
@@ -621,12 +633,24 @@ function closeSidebar() {
 }
 
 
-// Utility for Hashing (for PIN verification, not encryption key derivation)
-async function hashPin(pin) {
+// Utility for Hashing (Updated to support Salting)
+async function hashPin(pin, saltBase64 = null) {
   if (!crypto.subtle) return null;
   const encoder = new TextEncoder();
-  const data = encoder.encode(pin);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', data); 
+  const pinData = encoder.encode(pin);
+  
+  let dataToHash = pinData;
+
+  // 🛡️ SECURITY FIX: Combine PIN with Salt if provided
+  if (saltBase64) {
+      const saltBytes = base64ToArrayBuffer(saltBase64);
+      const combined = new Uint8Array(pinData.length + saltBytes.byteLength);
+      combined.set(pinData);
+      combined.set(new Uint8Array(saltBytes), pinData.length);
+      dataToHash = combined;
+  }
+
+  const hashBuffer = await crypto.subtle.digest('SHA-256', dataToHash); 
   const hashArray = Array.from(new Uint8Array(hashBuffer));
   return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
@@ -684,15 +708,14 @@ function setupAuth() {
       return; 
     }
     
-    const enteredPinHash = await hashPin(pin);
-    if (!enteredPinHash) { console.error("Hashing failed."); speak("Error: Pin hashing failed."); return; }
-
+    // 🛡️ SECURITY FIX: REFACTORED FLOW FOR SALTED HASHING
     let users = await getAllUsers();
     let user = users.find(u => u.name.toLowerCase() === name.toLowerCase());
     
     let saltArrayBuffer;
     let isNewUser = false;
-    
+    let enteredPinHash;
+
     if (!user) {
       // --- ACCOUNT CREATION ---
       isNewUser = true;
@@ -701,6 +724,9 @@ function setupAuth() {
       saltArrayBuffer = salt.buffer;
       const saltB64 = arrayBufferToBase64(saltArrayBuffer);
       
+      // Hash with the new salt for storage
+      enteredPinHash = await hashPin(pin, saltB64);
+
       user = { 
           name, 
           joined: new Date().toISOString(), 
@@ -712,15 +738,19 @@ function setupAuth() {
       
     } else {
       // --- ACCOUNT LOGIN ---
-      if (!user.pinHash || user.pinHash !== enteredPinHash) {
-        console.error("❌ Invalid PIN."); 
-        speak("Invalid PIN."); 
-        return; 
-      }
+      // Use existing salt to verify pin
       if (!user.crypto || !user.crypto.salt) {
            console.error("❌ User found but missing crypto parameters. Data may be unrecoverable."); 
            speak("User data is incomplete. Please contact support.");
            return;
+      }
+
+      enteredPinHash = await hashPin(pin, user.crypto.salt);
+
+      if (!user.pinHash || user.pinHash !== enteredPinHash) {
+        console.error("❌ Invalid PIN."); 
+        speak("Invalid PIN."); 
+        return; 
       }
       saltArrayBuffer = base64ToArrayBuffer(user.crypto.salt);
     }
@@ -788,7 +818,7 @@ setupAuth.getAuthFunctions = setupAuth;
 function sanitizeContent(input) {
   const div = document.createElement('div');
   div.textContent = input;
-  return input; 
+  return div.innerHTML; // ✅ FIXED: Return sanitized HTML, not original input
 }
 
 function setMainView(showMain) {
@@ -844,54 +874,41 @@ async function deletePage(title) {
   // Custom modal UI should be used here instead of confirm() for a proper PWA
   if (!window.confirm(`Are you sure you want to delete the page "${title}"? This cannot be undone.`)) { return; }
   
+  // ✅ FIXED: Removed redundant logic / race conditions
+  if (!pages[title]) {
+      speak(`Page ${title} not found.`);
+      return;
+  }
+  
+  // 1. Remove page
   delete pages[title];
-  await saveData(STORAGE_KEYS.pages, pages); 
-  changes.unshift({ type:'delete', title, time:new Date().toISOString(), user:user?user.name:'Guest' });
-  
-      if (!pages[title]) {
-        speak(`Page ${title} not found.`);
-        return;
-    }
-    
-    // Remove page
-    delete pages[title];
-    await saveData(STORAGE_KEYS.pages, pages);
+  await saveData(STORAGE_KEYS.pages, pages);
 
-    // 1. Define the change entry
-    const newChangeEntry = { 
-        type:'delete', 
-        title, 
-        time:new Date().toISOString(), 
-        user:user ? user.name : 'Guest' 
-    };
+  // 2. Define the change entry
+  const newChangeEntry = { 
+      type:'delete', 
+      title, 
+      time:new Date().toISOString(), 
+      user:user ? user.name : 'Guest' 
+  };
     
-    // 2. Log to global changes array
-    changes.unshift(newChangeEntry);
-    await saveData(STORAGE_KEYS.changes, changes);
+  // 3. Log to global changes array
+  changes.unshift(newChangeEntry);
+  await saveData(STORAGE_KEYS.changes, changes);
 
-    if (user) {
-        let users = await loadData(STORAGE_KEYS.users, []);
-        const userIndex = users.findIndex(u => u.name === user.name);
+  if (user) {
+      let users = await loadData(STORAGE_KEYS.users, []);
+      const userIndex = users.findIndex(u => u.name === user.name);
 
-        if (userIndex !== -1) {
-            let userToUpdate = users[userIndex];
-            
-            // Initialize 'edits' if it doesn't exist
-            if (!userToUpdate.edits) userToUpdate.edits = [];
-            
-            // Add the new deletion entry to the user's personal history
-            userToUpdate.edits.unshift(newChangeEntry); 
-            
-            // Save the full user list back to storage
-            await saveData(STORAGE_KEYS.users, users);
-            
-            // Update the currentUser session key
-            localStorage.setItem(STORAGE_KEYS.currentUser, JSON.stringify(userToUpdate));
-        }
-    }
-    
-  
-  await saveData(STORAGE_KEYS.changes, changes); 
+      if (userIndex !== -1) {
+          let userToUpdate = users[userIndex];
+          if (!userToUpdate.edits) userToUpdate.edits = [];
+          userToUpdate.edits.unshift(newChangeEntry); 
+          
+          await saveData(STORAGE_KEYS.users, users);
+          localStorage.setItem(STORAGE_KEYS.currentUser, JSON.stringify(userToUpdate));
+      }
+  }
   
   await updatePageListSidebar(); 
   await generatePageButtonsFindView();
@@ -920,6 +937,8 @@ async function showPage(title) {
   if (!c) return;
   
   if (!page) {
+    await showPage("404");
+    return;
     const all = Object.keys(pages);
     const suggest = all.filter(t => t.toLowerCase().includes(title.toLowerCase()));
     let html = `<section class="page"><h2>No page found for "${escapeHTML(title)}"</h2>`;
@@ -1214,7 +1233,7 @@ async function answerAI(query) {
     c.innerHTML = `<section class="page">
       <h2>Closest matches for "${escapeHTML(txt)}"</h2>
       <p>Found ${suggestedTitles.length} pages matching your query:</p>
-      <ul>${suggestedTitles.map(t => `<li><a href="#" data-page-link="${t}">${escapeHTML(t)}</a></li>`).join('')}</ul>
+      <ul>${suggestedTitles.map(t => `<li><a href="#" data-page-link="${escapeHTML(t)}">${escapeHTML(t)}</a></li>`).join('')}</ul>
       <p>Or you can create a new page.</p>
       <button class="edit-btn" data-create-page="${escapeHTML(txt)}">Create Page "${escapeHTML(txt)}"</button>
     </section>`;
@@ -1524,7 +1543,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   
   // Create/Ensure essential wiki pages
   await createExampleWikiPage(); 
-  await ensureMainPage(); 
+  await ensureMainPage();
+    await createSystemPages(); 
   await ensureVisualLogPage(); // ✅ ADDED: Initialization of the new Visual-Log page
   
   await updatePageListSidebar(); 
@@ -1633,8 +1653,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // SW Registration (kept for completeness)
   if ('serviceWorker' in navigator) {
-    // ✅ PATH UPDATED TO ABSOLUTE PATH
-    navigator.serviceWorker.register('/en/sw.js')
+    // ✅ PATH UPDATED TO ROOT ABSOLUTE PATH (Fixed for Offline support)
+    navigator.serviceWorker.register('/sw.js')
       .then(() => console.log('✅ Service Worker registered'))
       .catch(err => console.error('❌ SW registration failed:', err));
   }
@@ -1678,3 +1698,36 @@ document.addEventListener('keydown', function (e) {
     document.getElementById('close')?.focus();
   }
 });
+
+
+async function createSystemPages() {
+  const pages = await loadData(STORAGE_KEYS.pages, {});
+
+  if (!pages["404"]) {
+    pages["404"] = {
+      title: "404",
+      content: `== Page Not Found ==
+
+The page you're trying to access doesn't exist. 
+
+Try searching for another topic or create a new one using the sidebar.`,
+      createdBy: "System",
+      lastEdited: new Date().toISOString()
+    };
+  }
+
+  if (!pages["NOJS"]) {
+    pages["NOJS"] = {
+      title: "NOJS",
+      content: `== JavaScript Required ==
+
+This application requires JavaScript to run.
+
+Please enable JavaScript in your browser to use this offline wiki.`,
+      createdBy: "System",
+      lastEdited: new Date().toISOString()
+    };
+  }
+
+  await saveData(STORAGE_KEYS.pages, pages);
+}

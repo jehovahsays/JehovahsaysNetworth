@@ -17,18 +17,15 @@ const CACHE = "mev-wiki-v14";
 const FILES = [
   "/",
   "/index.html",
-  // Dedicated 404 page for robust offline fallback
-  "/404.html",
-  "/assets/js/app.js",
-  "/assets/css/index.css",
-  "/css.html", // Assuming this is another critical HTML file
-  // Correct path for the Service Worker itself, assuming it is in the root directory
-  "/sw.js", 
+  "/app.js",
+  "/index.css",
+  "/sw.js",
   "/manifest.json",
-  "/assets/icons/icon-192.png",
-  "/assets/icons/icon-512.png",
-  "/assets/icons/maskable-192.png",
-  "/assets/icons/maskable-512.png"
+  "/favicon.ico",
+  "/icon-192.png",
+  "/icon-512.png",
+  "/maskable-192.png",
+  "/maskable-512.png"
 ];
 
 // --- Install Listener ---
@@ -110,7 +107,7 @@ self.addEventListener("fetch", event => {
         .catch(() => {
           // If both cache and network fail (e.g., a dynamic request), return the offline 404 page.
           if (event.request.mode === 'navigate') {
-              return caches.match('/404.html');
+              return caches.match('/#404');
           }
           // For sub-resources (images, scripts), failing silently is often better than serving HTML.
         });

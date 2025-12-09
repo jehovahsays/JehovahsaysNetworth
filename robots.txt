@@ -1,12 +1,11 @@
 # robots.txt for MEV Offline Wiki 
 # Index homepage only — block user-generated & dynamic paths.
 User-agent: *
-Disallow: /en/
-Disallow: /en/#*
-Disallow: /en/?*
-Disallow: /en/recent
-Disallow: /en/settings
-Disallow: /en/profile
-Disallow: /en/edit
-Disallow: /en/search
-Disallow: /en/notfound
+Disallow: /#*
+Disallow: /?*
+Disallow: /recent
+Disallow: /settings
+Disallow: /profile
+Disallow: /edit
+Disallow: /search
+Disallow: /notfound
