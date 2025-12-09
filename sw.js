@@ -90,9 +90,9 @@ self.addEventListener("fetch", event => {
           return networkRes;
         })
         .catch(() => {
-          // If network fails (offline or error), serve from cache.
-          // This will serve the cached index.html, which is generally what you want for a navigation failure.
-          return caches.match(event.request) || caches.match('/404.html');
+          // FIX: Since the app is an SPA, on navigation failure, we must return the
+          // cached app shell (/index.html) so the client-side JS can handle the 404 state.
+          return caches.match('/index.html');
         })
     );
     return;
@@ -105,13 +105,14 @@ self.addEventListener("fetch", event => {
       // Return cached response if available
       return cacheRes || fetch(event.request)
         .catch(() => {
-          // If both cache and network fail (e.g., a dynamic request), return the offline 404 page.
+          // If both cache and network fail, check if this was a navigation request.
           if (event.request.mode === 'navigate') {
-              return caches.match('/#404');
+              // FIX: Return the cached index.html app shell for any failed navigation
+              // to ensure the client-side router can handle the URL (e.g., show 404).
+              return caches.match('/index.html');
           }
           // For sub-resources (images, scripts), failing silently is often better than serving HTML.
         });
     })
   );
 });
-

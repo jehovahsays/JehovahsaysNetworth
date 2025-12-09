@@ -47,6 +47,7 @@
     if (document.head) {
       // Adding meta tags that are not redundant with the SW headers
       document.head.insertAdjacentHTML("beforeend", `
+          <meta http-equiv="Referrer-Policy" content="no-referrer">
           <meta http-equiv="Permissions-Policy" content="microphone=(), camera=(), geolocation=()">
       `);
     }
@@ -480,7 +481,7 @@ async function showAbout() {
       <li>Voice Search Filtering</li>
       <li>Basic Wiki Markup (==Headers, '''Bold, ''Italics, [[Links]])</li>
     </ul>
-    <p>Source Version: 1.2.0-standalone</p>
+    <p>Source Version: 1.2.1-CSP-Hardened</p>
     </section>`;
   location.hash = "#about";
 }
@@ -936,8 +937,6 @@ async function showPage(title) {
   if (!c) return;
   
   if (!page) {
-    await showPage("404");
-    return;
     const all = Object.keys(pages);
     const suggest = all.filter(t => t.toLowerCase().includes(title.toLowerCase()));
     let html = `<section class="page"><h2>No page found for "${escapeHTML(title)}"</h2>`;
@@ -1542,8 +1541,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   
   // Create/Ensure essential wiki pages
   await createExampleWikiPage(); 
-  await ensureMainPage();
-    await createSystemPages(); 
+  await ensureMainPage(); 
   await ensureVisualLogPage(); // ✅ ADDED: Initialization of the new Visual-Log page
   
   await updatePageListSidebar(); 
@@ -1697,36 +1695,3 @@ document.addEventListener('keydown', function (e) {
     document.getElementById('close')?.focus();
   }
 });
-
-
-async function createSystemPages() {
-  const pages = await loadData(STORAGE_KEYS.pages, {});
-
-  if (!pages["404"]) {
-    pages["404"] = {
-      title: "404",
-      content: `== Page Not Found ==
-
-The page you're trying to access doesn't exist. 
-
-Try searching for another topic or create a new one using the sidebar.`,
-      createdBy: "System",
-      lastEdited: new Date().toISOString()
-    };
-  }
-
-  if (!pages["NOJS"]) {
-    pages["NOJS"] = {
-      title: "NOJS",
-      content: `== JavaScript Required ==
-
-This application requires JavaScript to run.
-
-Please enable JavaScript in your browser to use this offline wiki.`,
-      createdBy: "System",
-      lastEdited: new Date().toISOString()
-    };
-  }
-
-  await saveData(STORAGE_KEYS.pages, pages);
-}
