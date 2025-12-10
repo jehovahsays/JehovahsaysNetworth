@@ -1,6 +1,3 @@
-"use strict";
-/*global self, caches, fetch, clients */
-
 /**
  * sw.js - Service Worker for MEV Wiki PWA
  *
@@ -10,76 +7,43 @@
 
 // A unique name for your cache. Increment this version number every time
 // you make changes to the files listed in the 'FILES' array.
-const CACHE = "mev-wiki-v15"; 
+const CACHE = "mev-wiki-v14"; 
 
 // Full list of all static assets to cache during installation.
 // All paths must be relative to the Service Worker's scope (which is the root '/').
 const FILES = [
   "/",
   "/index.html",
-  "/app.js",
-  "/index.css",
-  "/sw.js",
+  // Dedicated 404 page for robust offline fallback
+  "/404.html",
+  "/assets/js/app.js",
+  "/assets/css/index.css",
+  "/css.html", // Assuming this is another critical HTML file
+  // Correct path for the Service Worker itself, assuming it is in the root directory
+  "/sw.js", 
   "/manifest.json",
-  "/favicon.ico",
-  "/icon-192.png",
-  "/icon-512.png",
-  "/maskable-192.png",
-  "/maskable-512.png",
-  "/purify.min.js" // NEW: Added DOMPurify
+  "/assets/icons/icon-192.png",
+  "/assets/icons/icon-512.png",
+  "/assets/icons/maskable-192.png",
+  "/assets/icons/maskable-512.png"
 ];
-
-// --- NEW: Integrity Hash Map (SHA-256 Hex) ---
-// Note: You must update these hashes whenever you modify the corresponding file.
-const FILES_WITH_INTEGRITY_HASHES = {
-  "/purify.min.js": "478a07c34d3d2e1b35eab43f96024467094b0716b77207c452e806c9a7210620",
-  // UNCOMMENT AND UPDATE THESE AFTER SAVING FILES LOCALLY:
-  // "/index.html": "UPDATE_WITH_YOUR_HASH", 
-  // "/app.js": "UPDATE_WITH_YOUR_HASH",
-  // "/index.css": "UPDATE_WITH_YOUR_HASH",
-};
-
-// Utility function to calculate the hash (for use inside the SW)
-async function calculateHash(response) {
-  const buffer = await response.clone().arrayBuffer(); 
-  const hashBuffer = await self.crypto.subtle.digest('SHA-256', buffer);
-  return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
-}
 
 // --- Install Listener ---
 self.addEventListener("install", event => {
   console.log('[Service Worker] Install Event - Caching App Shell:', CACHE);
+  // waitUntil ensures the Service Worker won't install until the cache is fully populated.
   event.waitUntil(
     caches.open(CACHE)
-      .then(async cache => {
-        const fetchPromises = FILES.map(async url => {
-            const response = await fetch(url);
-            
-            if (!response.ok) {
-                throw new Error(`Failed to fetch ${url}. Status: ${response.status}`);
-            }
-
-            // Perform Integrity Check if hash is defined for this file
-            if (FILES_WITH_INTEGRITY_HASHES[url]) {
-                const expectedHash = FILES_WITH_INTEGRITY_HASHES[url];
-                const calculatedHash = await calculateHash(response);
-                
-                if (calculatedHash !== expectedHash) {
-                    console.error(`[SW SRI Check] Integrity check failed for ${url}. Expected: ${expectedHash}, Got: ${calculatedHash}`);
-                    throw new Error(`SRI check failed for ${url}`); 
-                }
-            }
-
-            return cache.put(url, response.clone());
-        });
-        return Promise.all(fetchPromises);
+      .then(cache => {
+        // cache.addAll performs multiple fetches and adds to the cache
+        return cache.addAll(FILES);
       })
       .catch(err => {
+        // If caching fails for any file (e.g., a 404), the Service Worker installation fails.
         console.error('[Service Worker] Failed to cache critical assets:', err);
-        // We do not reject here to allow partial installation if non-critical assets fail,
-        // but for high security, you might want to return Promise.reject(err)
       })
   );
+  // Force the new Service Worker to activate immediately instead of waiting for existing ones to close.
   self.skipWaiting(); 
 });
 
@@ -126,9 +90,9 @@ self.addEventListener("fetch", event => {
           return networkRes;
         })
         .catch(() => {
-          // FIX: Since the app is an SPA, on navigation failure, we must return the
-          // cached app shell (/index.html) so the client-side JS can handle the 404 state.
-          return caches.match('/index.html');
+          // If network fails (offline or error), serve from cache.
+          // This will serve the cached index.html, which is generally what you want for a navigation failure.
+          return caches.match(event.request) || caches.match('/404.html');
         })
     );
     return;
@@ -141,14 +105,13 @@ self.addEventListener("fetch", event => {
       // Return cached response if available
       return cacheRes || fetch(event.request)
         .catch(() => {
-          // If both cache and network fail, check if this was a navigation request.
+          // If both cache and network fail (e.g., a dynamic request), return the offline 404 page.
           if (event.request.mode === 'navigate') {
-              // FIX: Return the cached index.html app shell for any failed navigation
-              // to ensure the client-side router can handle the URL (e.g., show 404).
-              return caches.match('/index.html');
+              return caches.match('/404.html');
           }
           // For sub-resources (images, scripts), failing silently is often better than serving HTML.
         });
     })
   );
 });
+
