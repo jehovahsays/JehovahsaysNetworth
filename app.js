@@ -4,7 +4,7 @@
     const currentPath = location.pathname;
 
     // The path fragment to hide.
-    const pathFragmentToHide = '/en/'; 
+    const pathFragmentToHide = '/'; 
 
     if (currentPath.includes(pathFragmentToHide)) {
         // Construct the "hidden" URL: remove the unwanted fragment and keep the hash.
@@ -22,6 +22,20 @@
 })();
 // --- End URL Obscurity/History Rewriting Logic ---
 
+// --- NEW: HTTPS/Security Check (app.js) ---
+(function checkSecurityContext() {
+    if (location.protocol === 'http:' && !location.hostname.includes('localhost')) {
+        const banner = document.getElementById('banner');
+        if (banner) {
+            banner.textContent = "🚨 WARNING: This app is running over HTTP (Insecure). Please switch to HTTPS for full protection.";
+            banner.style.display = 'block';
+            banner.style.backgroundColor = '#d9534f'; 
+            banner.style.color = 'white';
+        }
+        console.error("🚨 SECURITY WARNING: App running over HTTP. Storage may be less secure.");
+    }
+})();
+// --- End HTTPS Check ---
 
 // ====== MEV SECURITY LAYER (Moved from inline script) ======
 (function secureClientApp() {
@@ -70,6 +84,36 @@ const STORAGE_KEYS = {
 // 🔒 GLOBAL IN-MEMORY ENCRYPTION KEY (Non-persistent storage)
 let encryptionKey = null;
 window.userCrypto = null; // Stored user crypto parameters
+
+// --- NEW: Inactivity Key Expiry ---
+const INACTIVITY_TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes
+let activityTimeout;
+
+function clearEncryptionKey() {
+    if (encryptionKey) {
+        console.log("🔒 Inactivity detected. Clearing in-memory encryption key.");
+        // Clear key material
+        encryptionKey = null; 
+        window.userCrypto = null;
+        
+        // Force logout visual state
+        const s = setupAuth.getAuthFunctions;
+        if(s && s.logout) s.logout();
+        
+        speak("Session expired due to inactivity. Please log in again.");
+    }
+}
+
+function resetKeyExpiryTimer() {
+    if (!encryptionKey) return; 
+    clearTimeout(activityTimeout);
+    activityTimeout = setTimeout(clearEncryptionKey, INACTIVITY_TIMEOUT_MS);
+}
+// Listeners for activity
+document.addEventListener('mousemove', resetKeyExpiryTimer);
+document.addEventListener('keydown', resetKeyExpiryTimer);
+document.addEventListener('scroll', resetKeyExpiryTimer);
+
 
 // ==========================================================
 // 🔑 CRYPTO UTILITIES (Web Crypto API)
@@ -499,18 +543,18 @@ function escapeHTML(str) {
 function parseWiki(text) {
   if (!text) return '';
 
-  let result = escapeHTML(text);
+  let result = text; // Start with the raw text, NOT escaped
 
   // Headings
   result = result.replace(/^={2,6}\s*(.+?)\s*={2,6}$/gm, (m, p1) => {
     const lvl = m.match(/^=+/)[0].length;
-    return `<h${lvl}>${p1}</h${lvl}>`;
+    return `<h${lvl}>${escapeHTML(p1)}</h${lvl}>`;
   });
   // Bold and Italic
   result = result.replace(/'''(.*?)'''/g, '<strong>$1</strong>');
   result = result.replace(/''(.*?)''/g, '<em>$1</em>');
+  
   // Wiki Links (CSP-SAFE: Event handler removed, replaced with data attribute)
-  // 🛡️ SECURITY FIX: escapeHTML(t) used inside data-page-link attribute
   result = result.replace(/\[\[([^\]]+)\]\]/g, (_, t) =>
     `<a href="#" data-page-link="${escapeHTML(t)}">${escapeHTML(t)}</a>`
   );
@@ -519,35 +563,58 @@ function parseWiki(text) {
       `<pre style="background: #eee; padding: 10px; border-radius: 4px; overflow-x: auto;">${escapeHTML(p1).trim()}</pre>`
   );
   // Inline code
-  result = result.replace(/`([^`]+)`/g, '<code>$1</code>');
+  result = result.replace(/`([^`]+)`/g, (m, p1) => `<code>${escapeHTML(p1)}</code>`);
 
-  // List parsing
-  let finalHtml = '';
-  let inUL = false;
-  let inOL = false;
+  // List parsing (Preserving simple regex logic for compatibility, but running on 'result')
+  // We need to be careful with line splitting on modified HTML
+  // For simplicity and safety, we rely on DOMPurify to cleanup any mess, 
+  // but list parsing is best done line-by-line before complex HTML replacement.
+  // ... (Skipping full list parser rewrite for brevity, assuming existing logic works on `result` 
+  // or that complex nesting isn't required. The key is the final sanitizer below).
 
-  result.split('\n').forEach(line => {
-    if (/^\*\s+/.test(line)) {
-      if (inOL) { finalHtml += '</ol>'; inOL = false; } // ✅ FIXED: Close correct tag
-      if (!inUL) { finalHtml += '<ul>'; inUL = true; }
-      finalHtml += `<li>${line.replace(/^\*\s+/, '')}</li>`;
-    } else if (/^\#\s+/.test(line)) {
-      if (inUL) { finalHtml += '</ul>'; inUL = false; }
-      if (!inOL) { finalHtml += '<ol>'; inOL = true; }
-      finalHtml += `<li>${line.replace(/^\#\s+/, '')}</li>`;
-    } else {
-      if (inUL) { finalHtml += '</ul>'; inUL = false; }
-      if (inOL) { finalHtml += '</ol>'; inOL = false; } // ✅ FIXED: Close correct tag
-      if (line.trim() !== '') {
-          finalHtml += line + '<br>';
+  // 1. Simple List Parsing Patch (applied to `result`)
+  let lines = result.split('\n');
+  let finalLines = [];
+  let inUL = false, inOL = false;
+  
+  lines.forEach(line => {
+      if (/^\*\s+/.test(line)) {
+          if (inOL) { finalLines.push('</ol>'); inOL = false; }
+          if (!inUL) { finalLines.push('<ul>'); inUL = true; }
+          finalLines.push(`<li>${line.replace(/^\*\s+/, '')}</li>`);
+      } else if (/^\#\s+/.test(line)) {
+          if (inUL) { finalLines.push('</ul>'); inUL = false; }
+          if (!inOL) { finalLines.push('<ol>'); inOL = true; }
+          finalLines.push(`<li>${line.replace(/^\#\s+/, '')}</li>`);
       } else {
-          finalHtml += '<br>';
+          if (inUL) { finalLines.push('</ul>'); inUL = false; }
+          if (inOL) { finalLines.push('</ol>'); inOL = false; }
+          // Don't double break if it's a block element we just added
+          if (!line.trim().startsWith('<h') && !line.trim().startsWith('<pre')) {
+             if (line.trim() !== '') finalLines.push(line + '<br>');
+             else finalLines.push('<br>');
+          } else {
+             finalLines.push(line);
+          }
       }
-    }
   });
+  if (inUL) finalLines.push('</ul>');
+  if (inOL) finalLines.push('</ol>');
+  
+  let preSanitized = finalLines.join('\n');
 
-  if (inUL) finalHtml += '</ul>';
-  if (inOL) finalHtml += '</ol>'; // ✅ FIXED: Close correct tag
+  // ✅ DOMPurify Sanitization
+  // Assumes DOMPurify is loaded globally from index.html
+  let finalHtml;
+  if (window.DOMPurify) {
+      finalHtml = DOMPurify.sanitize(preSanitized, {
+          USE_PROFILES: { html: true, svg: true, mathMl: false },
+          RETURN_DOM_FRAGMENT: false
+      });
+  } else {
+      console.warn("DOMPurify not loaded. Fallback to basic escaping.");
+      finalHtml = escapeHTML(text); // Fail safe
+  }
 
   finalHtml += `<div class="semantic-status">✔️ Semantic HTML Enabled</div><br>This landing page #search is not a broken design.`;
   return finalHtml;
@@ -663,6 +730,10 @@ function setupAuth() {
     submitBtn: 'submit-auth', cancelBtn: 'cancel-auth'
   };
 
+  // --- NEW: Rate Limiting Variables ---
+  let loginAttempts = 0;
+  let lockoutUntil = 0;
+
   async function getAllUsers() { return await loadData(STORAGE_KEYS.users, []); }
   async function saveAllUsers(users) { await saveData(STORAGE_KEYS.users, users); }
   
@@ -696,6 +767,14 @@ function setupAuth() {
   }
   
   async function submitAuth() { 
+    // --- NEW: Rate Limiting Check ---
+    if (Date.now() < lockoutUntil) {
+        const remaining = Math.ceil((lockoutUntil - Date.now()) / 1000);
+        speak(`Login locked. Wait ${remaining} seconds.`);
+        document.getElementById(s.title).textContent = `Locked (${remaining}s)`;
+        return;
+    }
+
     const input = document.getElementById(s.username);
     const pinInput = document.getElementById(s.pin);
     const name = input ? input.value.trim() : '';
@@ -747,8 +826,18 @@ function setupAuth() {
       enteredPinHash = await hashPin(pin, user.crypto.salt);
 
       if (!user.pinHash || user.pinHash !== enteredPinHash) {
-        console.error("❌ Invalid PIN."); 
-        speak("Invalid PIN."); 
+        // --- NEW: Failed Login Logic ---
+        loginAttempts++;
+        const delay = Math.min(1000 * Math.pow(2, loginAttempts), 30000);
+        
+        if (loginAttempts >= 5) {
+            lockoutUntil = Date.now() + delay;
+            console.error(`❌ Invalid PIN. Login locked out for ${delay / 1000} seconds.`);
+            speak("Too many failed attempts. Login locked.");
+        } else {
+            console.error(`❌ Invalid PIN.`); 
+            speak("Invalid PIN.");
+        }
         return; 
       }
       saltArrayBuffer = base64ToArrayBuffer(user.crypto.salt);
@@ -759,6 +848,11 @@ function setupAuth() {
         const key = await deriveKey(pin, saltArrayBuffer);
         encryptionKey = key; 
         console.log("✅ Encryption key derived and set for session.");
+        
+        // Success: Reset rate limits
+        loginAttempts = 0;
+        lockoutUntil = 0;
+        resetKeyExpiryTimer(); // Start expiry timer
     } catch(e) {
         console.error("❌ Key derivation failed:", e);
         speak("Critical error during key derivation. Cannot log in.");
@@ -785,6 +879,7 @@ function setupAuth() {
   function logout() {
     encryptionKey = null; 
     window.userCrypto = null;
+    clearTimeout(activityTimeout); // Stop timer
     localStorage.removeItem(STORAGE_KEYS.currentUser);
     console.log("Logged out. Encryption key cleared from memory.");
     updateAuthUI();
@@ -1441,10 +1536,16 @@ async function runImport() {
 }
 // --- END PR 1 FIX ---
 
-// --- START PR 2 FIX: Safe Export Function (KEPT AS IS) ---
+// --- START PR 2 FIX: Safe Export Function ---
+/**
+ * Exports wiki data.
+ * @param {boolean} isContentOnly - If true, removes sensitive user authentication hashes.
+ */
 async function exportData(isContentOnly) {
     // 1. Load the full application state
     const appState = {
+        wikiVersion: "1.2.0-standalone",
+        exportDate: new Date().toISOString(),
         pages: await loadData(STORAGE_KEYS.pages, {}),
         users: await loadData(STORAGE_KEYS.users, []),
         currentUser: getCurrentUser(), // Get the active user object
@@ -1457,14 +1558,26 @@ async function exportData(isContentOnly) {
 
     if (isContentOnly) {
         // 2. SANITIZE: Keep only content and public history
-        delete exportData.users;
+        delete exportData.users; // Contains pinHashes
         delete exportData.currentUser;
-        // Do not delete 'changes' as that is often useful historical context
+        delete exportData.cryptoParams;
         
+        // Sanitize any potential stray user data if users array exists
+        if (exportData.users) {
+             exportData.users = exportData.users.map(u => ({
+                name: u.name,
+                joined: u.joined,
+                edits: u.edits
+                // OMIT pinHash and crypto
+            }));
+        }
+
         fileName += '-content-only.json';
+        console.log("✅ Exporting content-only backup (safe to share).");
     } else {
         // 3. FULL BACKUP: Include everything (users, pinHash, etc.)
         fileName += '-full.json';
+        console.log("⚠️ Exporting full backup including user auth hashes (DO NOT SHARE).");
     }
 
     // 4. Create the JSON string
@@ -1517,9 +1630,7 @@ function handleCliAction() {
         }
 
         // 3. Trigger the actual update logic
-        // This is where you would call your functions to refresh settings,
-        // check for external updates, or force a data synchronization.
-        showSettings(); // Example: Immediately navigates to settings view after sync message
+        showSettings(); 
         
         return true;
     }

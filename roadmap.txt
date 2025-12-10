@@ -1,0 +1,114 @@
+
+
+✅ Summary: Files to Edit
+
+File
+Purpose
+index.html
+Fix CSP, add clickjacking protection, add integrity to purify.min.js
+app.js
+DOMPurify fallback, enforce PIN login, inactivity logout, rate limit persistence, min PIN strength
+(optional) sw.js
+Already does integrity checking – no change needed unless you add more files
+
+⚠️ Critical Issues (Must Fix)
+
+1. ⚠️ CSP script-src hash is static and outdated
+
+Your CSP is currently hardcoded with this line:
+
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-R4oH2tL59tM16rQp5Y6v1b1l2k4H4g1R5O9r8i0j8oI='; style-src 'self'; object-src 'none'; connect-src 'none';">
+
+This hash only covers a specific inline script. If you’ve moved most JS to app.js, that CSP hash is not necessary. It can also break if you later include any inline event handlers or script changes.
+
+✅ Fix: Replace with this safer CSP:
+
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'; connect-src 'none'; frame-ancestors 'none'; base-uri 'none';">
+
+Also, use the integrity attribute (SRI) on all external scripts (already done for purify.min.js in sw.js) and enforce upgrade-insecure-requests if applicable.
+
+⸻
+
+⚠️ Medium Priority Risks
+
+2. 🕵️‍♂️ LocalStorage is still vulnerable without a PIN
+
+You correctly state that LocalStorage is only encrypted when a PIN is set.
+
+However:
+	•	The initial user data (before a PIN is used) is stored in cleartext
+	•	A malicious browser extension could still access unencrypted data
+
+✅ Suggestion:
+	•	Make PIN-based encryption mandatory to use the app
+	•	On first run, enforce account creation with PIN instead of optional login
+
+⸻
+
+3. 🧪 DOMPurify loaded from local script but no SRI enforcement
+
+You include purify.min.js as a local file (good for offline use), and your Service Worker includes its integrity hash, but index.html does not use the integrity attribute for it.
+
+✅ Suggestion:
+Add this to your HTML to match the hash in sw.js:
+
+<script src="/purify.min.js" integrity="sha256-478a07c34d3d2e1b35eab43f96024467094b0716b77207c452e806c9a7210620" crossorigin="anonymous"></script>
+
+
+⸻
+
+4. 🧼 Sanitization bypass fallback is too lenient
+
+In parseWiki():
+
+if (!window.DOMPurify) {
+  finalHtml = escapeHTML(text); // Fallback
+}
+
+The fallback uses escapeHTML, but you then still return finalHtml += with additional semantic markup.
+
+⚠️ This could reintroduce unsafe HTML if DOMPurify fails to load or is tampered with.
+
+✅ Suggestion:
+	•	Don’t allow rendering at all without DOMPurify
+	•	Or show a warning: DOMPurify missing — unsafe rendering disabled
+
+⸻
+
+5. 🔐 Rate limiting logic is local-only and ephemeral
+
+Your login rate limiting (via loginAttempts and lockoutUntil) is only stored in-memory.
+
+This can be bypassed by:
+	•	Refreshing the page
+	•	Restarting the browser
+	•	Opening the app in a private window
+
+✅ Suggestion:
+	•	Persist failed attempt timestamps in LocalStorage, and reset after timeout
+	•	Consider device fingerprinting or IP-based rate limiting for future server-based versions
+
+⸻
+
+🛡️ Suggestions to Harden Security Further
+
+Area
+Suggestion
+🔑 PIN Strength Enforcement
+Require minimum length (e.g., 6+ digits) or check entropy
+🔄 Encryption Key Lifetime
+Add visual indicator that data is encrypted / session active
+🔐 Force Logout on Tab Close
+Use beforeunload or visibilitychange to clear key
+📦 Encrypted Export
+Ensure exported data is encrypted even when downloaded
+🌐 PWA HTTPS enforcement
+Redirect from HTTP to HTTPS (already partially implemented)
+🧱 Prevent Clickjacking
+Add <meta http-equiv="X-Frame-Options" content="DENY">
+⚙️ Feature Policy
+Already good (Permissions-Policy blocks mic/camera/GPS)
+
+
+
+

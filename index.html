@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
@@ -12,7 +11,7 @@
 <meta content="no-cache" http-equiv="Pragma"/>
 <meta content="0" http-equiv="Expires"/>
 <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
-<meta content="default-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'; connect-src 'none';" http-equiv="Content-Security-Policy"/>
+<meta content="default-src 'self'; script-src 'self' 'sha256-R4oH2tL59tM16rQp5Y6v1b1l2k4H4g1R5O9r8i0j8oI='; style-src 'self'; object-src 'none'; connect-src 'none';" http-equiv="Content-Security-Policy"/>
 <meta content="no-referrer" http-equiv="Referrer-Policy"/>
 <meta content="microphone=(), camera=(), geolocation=()" http-equiv="Permissions-Policy"/>
 <meta content="nosniff" http-equiv="X-Content-Type-Options"/>
@@ -30,7 +29,8 @@
     This application requires JavaScript to run.<br/>
     Please enable it in your browser settings to continue using the MEV Wiki.
   </div>
-</noscript><div class="banner" id="banner"></div>
+</noscript>
+<div class="banner" id="banner"></div>
 <div id="offline-message">
   ⚠️ You’re offline. Some features may be unavailable.
 </div>
@@ -112,6 +112,11 @@
 </div>
 </div>
 </div>
+<script 
+  src="/purify.min.js" 
+  integrity="sha256-R4oH2tL59tM16rQp5Y6v1b1l2k4H4g1R5O9r8i0j8oI=" 
+  crossorigin="anonymous">
+</script>
 <script defer="" src="/app.js" type="text/javascript"></script>
 </body>
 </html>
