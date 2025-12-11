@@ -8,10 +8,14 @@
 		<link type="text/css" rel="stylesheet" href="./files/main.css">
 
 	<style>
-  .vizFrame {
-    width: 100vw;
-    height: 100vh; /* Viewport height */
-  }
+ 	  .vizFrame{
+    position: fixed;
+    top: 0; 
+    left: 0;
+    width: 100vw; 
+    height: 100vh;
+	z-index: 1;
+	  }
 </style>
 <style>
 .infobox {
@@ -44,7 +48,7 @@
 </style>	
 </head>
 <body>
-  <iframe class="vizFrame" id="vizFrame" src="map.html" frameborder="0" scrolling="no" title="3D Wiki Activity Map"></iframe>
+  <iframe class="vizFrame" id="vizFrame" src="/mev/map.html" frameborder="0" scrolling="no" title="3D Wiki Activity Map"></iframe>
 
 		<script type="importmap">
 			{
