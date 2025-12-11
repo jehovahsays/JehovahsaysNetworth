@@ -1602,7 +1602,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // SW Registration (kept for completeness)
   if ('serviceWorker' in navigator) {
     // ✅ PATH UPDATED TO ABSOLUTE PATH
-    navigator.serviceWorker.register('/sw.js')
+    navigator.serviceWorker.register('/mev/sw.js')
       .then(() => console.log('✅ Service Worker registered'))
       .catch(err => console.error('❌ SW registration failed:', err));
   }

@@ -11,21 +11,21 @@ const CACHE = "mev-wiki-v14";
 
 // Full list of all static assets to cache during installation.
 // All paths must be relative to the Service Worker's scope (which is the root '/').
+// In sw.js
 const FILES = [
-  "/",
-  "/index.html",
+  "/mev/",
+  "/mev/index.html",
   // Dedicated 404 page for robust offline fallback
-  "/404.html",
-  "/assets/js/app.js",
-  "/assets/css/index.css",
-  "/css.html", // Assuming this is another critical HTML file
-  // Correct path for the Service Worker itself, assuming it is in the root directory
-  "/sw.js", 
-  "/manifest.json",
-  "/assets/icons/icon-192.png",
-  "/assets/icons/icon-512.png",
-  "/assets/icons/maskable-192.png",
-  "/assets/icons/maskable-512.png"
+  "/mev/404.html", 
+  "/mev/assets/js/app.js",
+  "/mev/assets/css/index.css",
+  "/mev/css.html", 
+  "/mev/sw.js", 
+  "/mev/manifest.json",
+  "/mev/assets/icons/icon-192.png",
+  "/mev/assets/icons/icon-512.png",
+  "/mev/assets/icons/maskable-192.png",
+  "/mev/assets/icons/maskable-512.png"
 ];
 
 // --- Install Listener ---
@@ -107,7 +107,7 @@ self.addEventListener("fetch", event => {
         .catch(() => {
           // If both cache and network fail (e.g., a dynamic request), return the offline 404 page.
           if (event.request.mode === 'navigate') {
-              return caches.match('/404.html');
+              return caches.match('/mev/404.html');
           }
           // For sub-resources (images, scripts), failing silently is often better than serving HTML.
         });
