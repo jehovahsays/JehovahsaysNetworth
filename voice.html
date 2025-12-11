@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+<meta name="viewport" content="width=device-width, height=device-height, user-scalable=yes, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Clear-Site-Data" content="*">
+<meta http-equiv="X-Frame-Options" content="DENY">
+<meta http-equiv="X-XSS-Protection" content="1; mode=block">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<style>
+/* (Your original CSS styles are here) */
+.core {
+        margin: 0px;
+		width: 100%;
+		height: 300px;
+	    position: fixed;		
+	    top: 55px;
+        left: 0px;
+		right: 0px;
+        padding: 0px;
+		opacity: 0.5;
+}
+.blackhole {
+        margin: 0px;
+		width: 35px;
+		height: 35px;
+	    position: fixed;		
+	    top: 188px;
+        left: 165px;
+		right: 0px;
+        padding: 0px;
+		opacity: 0.5;
+}
+input[type="text"] {
+  font-family: monospace;
+  font-size: 10px;
+  color: peru;
+}
+fieldset{
+	position:absolute;
+	top:0;
+	left:0;
+	width:99%;
+	height:99%;
+}
+#filterInputList {
+        list-style: none;
+        padding: 0px;
+        margin: 0px;
+		position: fixed;
+	    top: 60px;
+        left: 0px;
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+}
+
+.titleInput {
+        margin: 0px;
+	    position: relative;		
+	    top: 23px;
+        left: 70px; 
+        font-size: 1.0em;
+        padding: 0px;
+        animation: fadeIn 0.5s ease-in-out;
+} 
+
+.titleInput:last-child {        
+        margin: 0px;
+	    position: relative;		
+	    top: 23px;
+        left: 70px;
+        font-size: 1.0em;
+        padding: 0px;
+        border-bottom: none;
+}
+
+@keyframes fadeIn {
+   from {
+        opacity: 0;
+        transform: translateY(-10px);
+}
+   to   {
+        opacity: 1;
+        transform: translateY(0);
+}
+}  
+</style>
+
+<title>voice</title>
+
+<script src="voice.js"></script> 
+</head>
+
+<body style="background-color:black;">
+
+<fieldset style="width:305px;">
+<center>
+<br>
+<div id="inputWrapper">
+<form
+id="searchForm"
+action="./#search" 
+method="get"
+>	
+<div id="inputWrapper">
+<input
+style="position:absolute;top:25px;left:90px;width:150px;"
+id="filterInput"
+onkeyup="titleInput()"
+autocomplete="true"
+autocorrect="off"  
+autocapitalize="off" 
+spellcheck="true"
+type="text" 
+name="q"
+maxlength="524288" 
+value=""
+aria-label="search"  
+placeholder="search database" 
+required>
+</div>		
+
+<button 
+    id="micButton" 
+    type="button" 
+    style="position:absolute; top:25px; left:250px; width:30px; height:20px; font-size: 8px; cursor: pointer;"
+>
+    🎤
+</button>
+
+</form>
+
+<script>
+// I. Set Initial URL Hash
+if (window.location.hash === '') {
+    window.location.hash = '#search';
+}
+
+// II. Original titleInput function (for filtering and speech on keyup)
+function titleInput() {
+    
+  let input = document.getElementById('filterInput').value;
+
+  input = input.toLowerCase();
+
+  let x = document.getElementsByClassName('titleInput');
+ 
+  for (i = 0; i < x.length; i++) {
+    const buttonText = x[i].querySelector('button').textContent.toLowerCase();
+
+    if (!buttonText.includes(input)) {
+      x[i].parentNode.style.display = "none";
+    }
+    else {
+      x[i].parentNode.style.display = "list-item";
+    }
+  }
+  
+let msg = new SpeechSynthesisUtterance(input); 
+window.speechSynthesis.speak(msg);   
+}
+
+
+// III. Function to add keyword button
+function addKeywordButton(keyword) {
+    if (keyword.trim() === '') return;
+
+    // Check for dynamic page creation commands (Logic in voice.js)
+    if (typeof handleMapSceneCommand === 'function' && handleMapSceneCommand(keyword, createLinkButton)) {
+        return; 
+    }
+    
+    // --- Standard Logic for creating a new keyword button ---
+    const list = document.getElementById('filterInputList');
+    
+    const listItem = document.createElement('li');
+    const link = document.createElement('a');
+    link.href = `#${encodeURIComponent(keyword)}`;
+    link.className = 'titleInput'; 
+    
+    const button = document.createElement('button');
+    button.textContent = keyword.trim();
+    
+    link.appendChild(button);
+    listItem.appendChild(link);
+    list.appendChild(listItem);
+
+    let msg = new SpeechSynthesisUtterance("Keyword added: " + keyword.trim()); 
+    window.speechSynthesis.speak(msg); 
+}
+
+// IV. Event Listener for 'Enter' key on the search input
+document.getElementById('searchForm').addEventListener('submit', function(event) {
+    event.preventDefault(); 
+    
+    const inputElement = document.getElementById('filterInput');
+    const keyword = inputElement.value;
+    
+    if (keyword.trim() !== '') {
+        addKeywordButton(keyword);
+        inputElement.value = ''; 
+    }
+});
+
+
+// V. Web Speech API Implementation (Modern Standard)
+let recognition = null;
+
+// Check for browser compatibility
+if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false; 
+    recognition.maxAlternatives = 1;
+
+    // --- Recognition Handlers ---
+
+    recognition.onresult = function(event) {
+        const inputElement = document.getElementById('filterInput');
+        // Get the final transcript
+        const speechResult = event.results[0][0].transcript;
+        
+        // 1. Set the input field value
+        inputElement.value = speechResult;
+        
+        // 2. Automatically process the command (simulates hitting Enter)
+        // Ensure this happens AFTER the value is set
+        addKeywordButton(speechResult);
+        
+        // 3. Clear the input after processing the command
+        inputElement.value = '';
+    };
+
+    recognition.onstart = function() {
+        document.getElementById('micButton').textContent = '🔴';
+    };
+
+    recognition.onend = function() {
+        document.getElementById('micButton').textContent = '🎤';
+    };
+
+    recognition.onerror = function(event) {
+        console.error('Speech recognition error:', event.error);
+        alert('Voice Error: ' + event.error + '. Check your browser permissions and ensure you are using a secure context (HTTPS or localhost).');
+        document.getElementById('micButton').textContent = '🎤';
+    };
+
+    // --- Button Listener ---
+    document.getElementById('micButton').addEventListener('click', () => {
+        try {
+            recognition.start();
+        } catch (e) {
+            if (e.name !== 'InvalidStateError') {
+                console.error('Error starting recognition:', e);
+            }
+        }
+    });
+
+} else {
+    // Fallback for incompatible browsers
+    document.addEventListener('DOMContentLoaded', () => {
+        const micButton = document.getElementById('micButton');
+        if (micButton) {
+            micButton.textContent = '❌';
+            micButton.disabled = true;
+            micButton.title = 'Speech Recognition not supported in this browser.';
+        }
+    });
+}
+
+</script>
+<br><br><br><br>
+<ul id="filterInputList"> 
+<li><a href="#recent" id="recent-link" class="titleInput"><button>Recent</button></a></li>
+<li><a href="#settings" id="settings-link" class="titleInput"><button>Settings</button></a></li>
+<li><a href="#about" id="about-link" class="titleInput"><button>About</button></a></li>
+</ul>
+
+
+</div>
+</center>
+</fieldset>
+
+</body>
+</html>

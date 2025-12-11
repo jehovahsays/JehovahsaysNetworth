@@ -37,6 +37,10 @@
 
 			let camera, scene, renderer;
 			let controls;
+			
+			// Clock is added to enable time-based math for the day cycle
+			let clock = new THREE.Clock();
+			
 
 			init();
 
@@ -110,6 +114,33 @@
 
 				scene.add( new THREE.HemisphereLight( skyColor.value, groundColor.value, 0.5 ) );
 
+				// =========================================================================
+				// NEW: Day/Night Cycle Setup (Words and Math)
+				// =========================================================================
+
+				// A single directional light to act as the sun.
+				const sunLight = new THREE.DirectionalLight(0xffffff, 1.0);
+				sunLight.position.set(0, 50, 0); // Initial position
+				scene.add(sunLight);
+				
+				// NEW WORDS: Create the VISIBLE Sun Object (Geometry and Material)
+				const sunGeometry = new THREE.SphereGeometry( 20, 32, 32 ); // Size 20, basic math definition
+				// Use Emissive material so it glows and ignores ambient light
+				const sunMaterial = new THREE.MeshBasicMaterial( { color: 0xFFFF00, emissive: 0xFFFF00 } ); 
+				const visibleSun = new THREE.Mesh( sunGeometry, sunMaterial );
+				scene.add( visibleSun ); // Add the visible sun to the scene
+
+				// Math variable: Controls the speed of the day cycle. (~60 second cycle duration)
+				const dayCycleSpeed = 0.017; 
+
+				// Store the light, visible sun, and speed so animate() can access them
+				window.sunLight = sunLight;
+				window.visibleSun = visibleSun;
+				window.dayCycleSpeed = dayCycleSpeed; 
+
+				// =========================================================================
+
+
 				// geometry
 
 				const planeGeometry = new THREE.PlaneGeometry( 200, 200 );
@@ -157,6 +188,34 @@
 			}
 
 			function animate() {
+
+				// =========================================================================
+				// NEW: Day/Night Cycle Logic (Math)
+				// =========================================================================
+				const elapsedTime = clock.getElapsedTime(); 
+				const time = elapsedTime * window.dayCycleSpeed; 
+				const theta = time % (Math.PI * 2); 
+
+				// Calculate the sun's position on a vertical circle (X is East/West, Y is Height)
+				const sunX = Math.cos(theta) * 200; 
+				const sunY = Math.sin(theta) * 200; 
+
+				// Update the light's position. Z is fixed at 0.
+				window.sunLight.position.set(sunX, sunY, 0); 
+				// Update the visible sphere's position to match the light
+				window.visibleSun.position.set(sunX, sunY, 0); 
+
+				// Intensity and Color Math
+				const intensityFactor = Math.max(0.1, Math.sin(theta) * 1.0); 
+
+				window.sunLight.intensity = intensityFactor * 1.5; 
+				
+				const sunriseColor = new THREE.Color(0xFF8800); 
+				const noonColor = new THREE.Color(0xFFFFFF); 
+				
+				// Lerp (Linear Interpolation) blends the color based on the factor
+				window.sunLight.color.lerpColors(sunriseColor, noonColor, intensityFactor);
+				// =========================================================================
 
 				controls.update();
 

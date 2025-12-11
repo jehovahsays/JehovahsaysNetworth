@@ -266,6 +266,8 @@ function titleInputSidebar() {
     updatePageListSidebar(input ? input.value : '');
 }
 
+
+
 async function showRecent() {
   setMainView(true);
   console.log("Navigating to Recent Changes");
