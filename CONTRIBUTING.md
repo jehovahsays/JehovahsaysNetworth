@@ -1,61 +1,53 @@
-# Contributing to MEV Offline Wiki AI
+# Contributing to MEV
 
-Thank you for your interest in contributing! 🎉  
-This project values simplicity, security, and offline privacy. Contributions must uphold these principles.
-
----
-
-## 🧠 What Can I Contribute?
-
-- Bug fixes or improvements
-- Feature suggestions (offline-only or localStorage-compatible)
-- Code cleanup or performance enhancements
-- Security hardening suggestions
-- Documentation updates (README, SECURITY, etc.)
+Thank you for contributing to MEV — a privacy-first, offline-only wiki.
 
 ---
 
-## 🛠 Development Guidelines
+## ✅ What You Can Contribute
 
-### 📦 Code Structure
-
-- `index.html` — UI structure + CSP meta tags
-- `index.js` — All app logic (auth, page logic, AI, etc.)
-- `index.css` — Core styling
-- `sw.js` — Service Worker for caching
-
-### ⚠️ Security Requirements
-
-- Do **not** add external scripts, analytics, or CDN resources.
-- Do **not** introduce server calls or remote APIs.
-- Sanitize any input/output in `index.js` (`escapeHTML()` is used).
-- Always use strict mode if creating new scripts: `'use strict';`
+- Bug fixes, UI improvements, offline-compatible features
+- Security enhancements (CSP, input sanitization)
+- Performance optimizations
+- Accessibility improvements
+- Docs updates
 
 ---
 
-## 🧪 Testing Locally
+## 🧱 Architecture Notes
 
-You can test changes in your browser directly:
-
-1. Clone the repo
-2. Open `index.html` in your browser
-3. Test offline by disconnecting or simulating offline in DevTools
-
----
-
-## 📥 How to Submit
-
-1. Fork this repository
-2. Create a new branch (`git checkout -b feature-name`)
-3. Make your changes
-4. Commit (`git commit -am 'Add feature xyz'`)
-5. Push to your fork (`git push origin feature-name`)
-6. Open a Pull Request on the main repo
+MEV is a **single-page, CSP-hardened** web app:
+- No external assets (scripts, fonts, CDNs).
+- All logic must be inside `index.html`.
+- Do **not** add network calls, analytics, or cookies.
 
 ---
 
-## 💬 Need Help?
+## 🔐 Security Requirements
 
-Open an Issue if you're unsure about your changes or need guidance.
+- CSP must remain strict: `default-src 'self'`
+- No external APIs or third-party resources
+- Use `escapeHTML()` for all dynamic HTML
 
-Thank you for helping build a privacy-first AI wiki! 💙
+---
+
+## 🧪 Testing
+
+- Open `index.html` in any modern browser
+- Disconnect internet to test offline
+- Simulate storage usage in DevTools
+
+---
+
+## 📥 How to Contribute
+
+1. Fork the repo
+2. Create a feature branch
+3. Make your changes (respecting CSP/offline rules)
+4. Submit a Pull Request
+
+---
+
+## 🙏 Thank You
+
+Your help improves a fully offline, user-respecting knowledge system.

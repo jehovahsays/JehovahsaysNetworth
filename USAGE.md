@@ -1,102 +1,56 @@
-# MEV Wiki — User Guide
+# MEV Wiki — Usage Guide
 
-Welcome to **MEV Wiki**, your personal offline knowledge system. This guide explains how to use it effectively.
+Welcome to **MEV**, the offline-first encrypted wiki.
 
 ---
 
 ## 🧰 Getting Started
 
-1. Open [https://jehovahsays.github.io/mev/](https://jehovahsays.github.io/mev/) in your browser.
-2. Optionally install it as a PWA:
-   - Click "Install" in the browser (or Add to Home Screen).
-3. Begin editing, creating, and organizing your wiki!
-
-> 🟢 All content is saved locally — you never need an internet connection again!
+1. Open `index.html` in your browser.
+2. Click the “Install” button (PWA support).
+3. You can now browse and edit offline — no server or internet needed.
 
 ---
 
-## ✍️ Creating & Editing Pages
+## ✍️ Creating Pages
 
-- Use the **search bar** to find or create a page.
-- Type your content directly in the editor.
-- Press `Enter` to save and format.
-- Pages are saved automatically.
-
----
-
-### 🧾 Formatting Tips
-
-Use markdown-style shortcuts:
-
-- `# Heading`  
-- `* Bullet point`  
-- `[[Page Name]]` → Internal link  
-- `---` → Horizontal line
+- Use the search bar to find/create pages.
+- Content auto-saves using `localStorage`.
+- Markdown-like formatting supported:
+  - `# Heading`
+  - `* Bullet`
+  - `[[Page Name]]` → Internal link
+  - `---` → Horizontal line
 
 ---
 
-## 🔐 Using Encryption
+## 🔐 Local Encryption
 
-1. Click the **Settings** link.
-2. Set a **PIN or passphrase**.
-3. Your data will now be encrypted using AES-GCM.
-4. You’ll need the PIN to unlock your content on that device.
-
-> ⚠️ If you lose your PIN, you lose your data. It is never sent to a server.
-
----
-
-## 📊 Exploring Features
-
-### 🔎 Find
-
-Go to **🔎 Find** to search across all content.  
-📍 URL: `/find.html`
-
-### 🧭 3D Data Log
-
-Visualize wiki changes in a timeline format.  
-📍 URL: `/log.html`
-
-### 🎙️ Voice Input
-
-Use your microphone to speak and control the app.  
-📍 URL: `/voice.html`
-
-### 🗺️ 3D Map
-
-Your wiki as a 3D world. Each page = a building.  
-- Load map: `/map-loader.html`
-- Enter 3D view: `/map.html`  
-- Explore maps: `/maps.html`
-
-### 🎮 Plays
-
-Access pre-made walkthroughs or guided page flows.  
-📍 URL: `/plays.html`
+- Set a PIN in **Settings** to enable encryption.
+- Uses AES-GCM via Web Crypto API.
+- Your PIN is never stored or transmitted.
+- Without your PIN, encrypted data cannot be recovered.
 
 ---
 
 ## ⚙️ Settings
 
-Accessible via the **Settings** link. Allows you to:
-
-- Toggle themes or layout
-- Reset content
-- Manage encryption
-- View device info
+- Toggle dark/light mode.
+- View storage usage.
+- Backup/Import/Export wiki data.
 
 ---
 
-## 💡 Tips
+## 🛑 Offline & Security Notes
 
-- Bookmark important pages.
-- Backup your data via browser tools or exporting.
-- Use “Recent Changes” to track edits.
+- Everything is stored locally.
+- **No cloud sync**.
+- **No tracking or telemetry**.
+- Works in any modern browser.
 
 ---
 
-## 🛑 Privacy & Security
+## 🧠 Pro Tip
 
-- No tracking. No cloud. 100% local.
-- Source code: [https://github.com/jehovahsays/mev](https://github.com/jehovahsays/mev)
+- Voice support works even offline!
+- Check `/log.html` and `/map.html` for advanced views.
