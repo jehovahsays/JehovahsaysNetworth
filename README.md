@@ -37,11 +37,7 @@ MEV (Multi Edit Vandalism) is a single-page offline-first personal wiki designed
 
 ## 🧭 Navigation
 
-- `/find.html` — Global search
-- `/log.html` — Edit log
-- `/map.html`, `/map-loader.html`, `/maps.html` — 3D map view
-- `/voice.html` — Voice input
-- `/plays.html` — Guided walkthroughs
+- `/index.html` — Main Page
 
 ---
 
