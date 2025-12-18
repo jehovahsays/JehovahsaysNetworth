@@ -1,53 +1,56 @@
-# Contributing to MEV
+# 🤝 Contributing to MEV
 
-Thank you for contributing to MEV — a privacy-first, offline-only wiki.
-
----
-
-## ✅ What You Can Contribute
-
-- Bug fixes, UI improvements, offline-compatible features
-- Security enhancements (CSP, input sanitization)
-- Performance optimizations
-- Accessibility improvements
-- Docs updates
+Thank you for considering a contribution!
 
 ---
 
-## 🧱 Architecture Notes
-
-MEV is a **single-page, CSP-hardened** web app:
-- No external assets (scripts, fonts, CDNs).
-- All logic must be inside `index.html`.
-- Do **not** add network calls, analytics, or cookies.
-
----
-
-## 🔐 Security Requirements
-
-- CSP must remain strict: `default-src 'self'`
-- No external APIs or third-party resources
-- Use `escapeHTML()` for all dynamic HTML
-
----
-
-## 🧪 Testing
-
-- Open `index.html` in any modern browser
-- Disconnect internet to test offline
-- Simulate storage usage in DevTools
-
----
-
-## 📥 How to Contribute
+## 🧰 How to Contribute
 
 1. Fork the repo
-2. Create a feature branch
-3. Make your changes (respecting CSP/offline rules)
-4. Submit a Pull Request
+2. Clone your fork
+3. Create a new branch
+4. Make changes
+5. Open a Pull Request (PR)
 
 ---
 
-## 🙏 Thank You
+## 🧪 Development Setup
 
-Your help improves a fully offline, user-respecting knowledge system.
+No build tools are required. Just:
+
+```bash
+git clone https://github.com/yourusername/mev.git
+cd mev
+```
+
+Edit files directly in your browser or text editor.
+
+---
+
+## 📄 Editing Docs
+
+- Edit `README.md`, `USAGE.md`, or `SECURITY.md` as needed
+- Preview changes locally before submitting
+
+---
+
+## ✅ Pull Request Checklist
+
+- [ ] Code is functional
+- [ ] No broken links
+- [ ] Docs are updated
+- [ ] Describe your change clearly
+
+---
+
+## 🧼 Code Style
+
+- HTML and JS should be readable
+- Use spaces, not tabs
+- Avoid unnecessary libraries
+
+---
+
+## 📢 Questions?
+
+Open an issue or contact the maintainer.

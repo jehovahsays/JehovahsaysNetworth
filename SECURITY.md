@@ -1,46 +1,51 @@
-# Security Policy — MEV Offline Wiki
+# 🔐 Security Policy — MEV
 
-## 🔐 Overview
+## 🛡️ Project Goals
 
-MEV is a fully client-side app with no server component. All content is local, and no data ever leaves your browser.
+MEV is designed as an offline-first web application with minimal attack surface.
 
----
-
-## 🛡 Hardened Security Features
-
-- Strict **Content-Security-Policy (CSP)** blocking all remote assets.
-- **Referrer Policy** and **Permissions Policy** enforced via meta tags.
-- No use of `eval()` or `Function()` — explicitly blocked in code.
-- All JavaScript and CSS are inline.
-- Input sanitization via `escapeHTML()`.
+- ✅ Static site compatibility
+- ✅ Client-side only functionality
+- ✅ Optional server-side ban list
 
 ---
 
-## 🔑 Encryption
+## 🚫 Blackhole IP Blocking
 
-- Optional user PIN enables **AES-GCM** encryption.
-- Uses **PBKDF2** with salt for key derivation.
-- Encrypted data is stored in localStorage.
+The `/blackhole/` directory includes:
 
----
+- `blackhole.php`: Bans clients based on IP
+- `blackhole.dat`: List of banned IPs
 
-## 📦 Storage Model
+If you access `/blackhole/` directly, your IP may be added to this list.
 
-- Fully offline via `localStorage`.
-- Works even without network access.
-- Typical capacity: ~5MB (browser-dependent).
-- Periodic backups are encouraged.
+### ❓ How to Unban Yourself
 
----
+1. Open the `blackhole` directory
+2. Edit `blackhole.dat`
+3. Remove your IP address (or clear the file)
+4. Save and close
 
-## ❗ Limitations
-
-- No server means no collaboration or real-time sync.
-- Clearing browser cache = data loss unless backed up.
-- One-user model; no user access controls.
+You are now unbanned.
 
 ---
 
-## 🛠 Reporting Issues
+## 🐛 Reporting Vulnerabilities
 
-Please open a GitHub issue for bugs or vulnerabilities.
+To report security issues:
+
+1. Open a [GitHub Issue](https://github.com/jehovahsays/mev/issues)
+2. Use the "Security" label
+3. Include relevant code or logs
+
+---
+
+## 🔐 Responsible Disclosure
+
+Please do not publicly disclose vulnerabilities until they have been confirmed and patched.
+
+---
+
+## 📦 Supported Versions
+
+Security patches will be made to the latest main version.

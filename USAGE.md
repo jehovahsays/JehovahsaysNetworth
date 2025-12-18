@@ -1,56 +1,61 @@
-# MEV Wiki — Usage Guide
+# 📘 Usage Guide — MEV
 
-Welcome to **MEV**, the offline-first encrypted wiki.
-
----
-
-## 🧰 Getting Started
-
-1. Open `index.html` in your browser.
-2. Click the “Install” button (PWA support).
-3. You can now browse and edit offline — no server or internet needed.
+This guide explains how to use the MEV (Multi Edit Vandalism) project, including offline and online modes, editing features, and user interaction via the `/mev/#main` interface.
 
 ---
 
-## ✍️ Creating Pages
+## 🔑 Accessing the App
 
-- Use the search bar to find/create pages.
-- Content auto-saves using `localStorage`.
-- Markdown-like formatting supported:
-  - `# Heading`
-  - `* Bullet`
-  - `[[Page Name]]` → Internal link
-  - `---` → Horizontal line
+Most users will start by opening:
+
+- `index.html` → Static offline-friendly homepage
+- `index.php` → Optional PHP-based homepage if hosted on a server
+- `/mev/index.html` → Wiki-style internal editor
 
 ---
 
-## 🔐 Local Encryption
+## 🧠 /mev/#main — In-Browser Editor
 
-- Set a PIN in **Settings** to enable encryption.
-- Uses AES-GCM via Web Crypto API.
-- Your PIN is never stored or transmitted.
-- Without your PIN, encrypted data cannot be recovered.
+The `/mev/#main` page provides a **client-side editor** with account-like features:
 
----
+### 🆕 Create Account
 
-## ⚙️ Settings
+- Opens a local setup screen
+- Data is stored in localStorage or an optional backend
+- No registration is sent to a server
 
-- Toggle dark/light mode.
-- View storage usage.
-- Backup/Import/Export wiki data.
+### 🔐 Log In / Log Out
 
----
+- Simulates a user login state
+- Useful for enabling edit/save UI features
+- Works entirely in the browser
 
-## 🛑 Offline & Security Notes
+### ✍️ Edit / Save / Cancel
 
-- Everything is stored locally.
-- **No cloud sync**.
-- **No tracking or telemetry**.
-- Works in any modern browser.
+- **Edit**: Opens current page section in editable form
+- **Save**: Commits changes to localStorage or (if configured) a server via PHP
+- **Cancel**: Discards unsaved edits
 
 ---
 
-## 🧠 Pro Tip
+## 🔌 With JavaScript OFF
 
-- Voice support works even offline!
-- Check `/log.html` and `/map.html` for advanced views.
+- Navigation: Basic links work
+- Editor: Not functional
+- Offline: Limited
+
+**Use with JavaScript ON for full functionality**
+
+---
+
+## 🚫 What Not To Do
+
+Do NOT visit `/blackhole/` directly.
+
+If you ban yourself:
+1. Open `/blackhole/blackhole.dat`
+2. Remove your IP address
+3. Save and reload
+
+You’ll be unbanned instantly.
+
