@@ -562,7 +562,21 @@
     <ul id="page-list"></ul>
     
     <button id="create-page-btn" class="edit-btn" style="width: 100%; margin-top: 10px;">+ New Page</button>
-    
+    <!-- 🌐 Language Selector (CSP-Safe: defined statically) -->
+<hr />
+<button id="language-btn" class="edit-btn" style="width:100%;margin-top:10px;">🌐 Language</button>
+
+<div id="language-menu" class="hidden" style="margin-top:8px;">
+  <select id="language-select" style="width:100%;padding:6px;border-radius:6px;">
+    <option value="en-US">English (US)</option>
+    <option value="fr-FR">Français</option>
+    <option value="de-DE">Deutsch</option>
+    <option value="es-ES">Español</option>
+    <option value="it-IT">Italiano</option>
+    <option value="ja-JP">日本語</option>
+  </select>
+  <button id="apply-language-btn" class="edit-btn" style="width:100%;margin-top:6px;">Apply</button>
+</div>
     <div id="storage-bar">
       <div id="storage-bar-inner"></div>
     </div>
@@ -657,6 +671,50 @@ self.addEventListener("activate", event => {
   // Claim clients immediately to take control of all open pages within the scope.
   return self.clients.claim();
 });
+
+self.addEventListener("fetch", event => {
+  const url = new URL(event.request.url);
+
+  // === MEV INDEX OVERRIDE INTERCEPT ===
+  if (url.pathname === '/mev/' || url.pathname === '/mev/index.html') {
+    event.respondWith(
+      (async () => {
+        try {
+          // Ask the active page for its corrected index
+          const client = await self.clients.get(event.clientId);
+          if (!client) throw new Error('No client');
+
+          const channel = new MessageChannel();
+
+          const responsePromise = new Promise(resolve => {
+            channel.port1.onmessage = e => resolve(e.data);
+          });
+
+          client.postMessage(
+            { type: 'REQUEST_INDEX_OVERRIDE' },
+            [channel.port2]
+          );
+
+          const html = await responsePromise;
+
+          if (html) {
+            return new Response(html, {
+              headers: { 'Content-Type': 'text/html' }
+            });
+          }
+
+        } catch (e) {
+          // Fall through to normal fetch
+        }
+
+        return fetch(event.request);
+      })()
+    );
+    return;
+  }
+
+  // ⬇️ EXISTING FETCH / CACHE LOGIC CONTINUES BELOW
+  
 
 // --- Fetch Listener ---
 self.addEventListener("fetch", event => {
@@ -2327,8 +2385,130 @@ document.addEventListener('DOMContentLoaded', async () => {
       }, { once: true }); 
   }
 });
+
+// 🌐 Full i18n system (CSP-safe)
+document.addEventListener("DOMContentLoaded", () => {
+  const translations = {
+    "en-US": {
+      MainPage: "Main Page", About: "About", Settings: "Settings", Search: "Search Wiki",
+      Content: {
+        "Main-Page": "== Welcome to MEV Wiki ==\n\nAn offline-first encyclopedia powered by your browser.",
+        "About": "== About ==\n\nMEV Wiki lets you browse and edit offline content safely on your device.",
+        "Settings": "== Settings ==\n\nManage appearance, data, and user preferences."
+      }
+    },
+    "fr-FR": {
+      MainPage: "Page Principale", About: "À propos", Settings: "Paramètres", Search: "Rechercher dans le Wiki",
+      Content: {
+        "Main-Page": "== Bienvenue sur MEV Wiki ==\n\nUne encyclopédie hors ligne alimentée par votre navigateur.",
+        "About": "== À propos ==\n\nMEV Wiki vous permet de naviguer et de modifier le contenu hors ligne en toute sécurité.",
+        "Settings": "== Paramètres ==\n\nGérez l'apparence, les données et les préférences utilisateur."
+      }
+    },
+    "de-DE": {
+      MainPage: "Hauptseite", About: "Über", Settings: "Einstellungen", Search: "Wiki durchsuchen",
+      Content: {
+        "Main-Page": "== Willkommen bei MEV Wiki ==\n\nEine Offline-Enzyklopädie in deinem Browser.",
+        "About": "== Über ==\n\nMEV Wiki ermöglicht das sichere Offline-Arbeiten.",
+        "Settings": "== Einstellungen ==\n\nVerwalte Darstellung, Daten und Benutzer."
+      }
+    },
+    "es-ES": {
+      MainPage: "Página Principal", About: "Acerca de", Settings: "Configuraciones", Search: "Buscar en el Wiki",
+      Content: {
+        "Main-Page": "== Bienvenido a MEV Wiki ==\n\nUna enciclopedia sin conexión impulsada por tu navegador.",
+        "About": "== Acerca de ==\n\nMEV Wiki te permite explorar y editar contenido sin conexión.",
+        "Settings": "== Configuraciones ==\n\nAdministra apariencia, datos y preferencias del usuario."
+      }
+    },
+    "it-IT": {
+      MainPage: "Pagina Principale", About: "Informazioni", Settings: "Impostazioni", Search: "Cerca nel Wiki",
+      Content: {
+        "Main-Page": "== Benvenuto in MEV Wiki ==\n\nUn'enciclopedia offline gestita dal tuo browser.",
+        "About": "== Informazioni ==\n\nMEV Wiki ti consente di navigare e modificare offline.",
+        "Settings": "== Impostazioni ==\n\nGestisci aspetto, dati e preferenze."
+      }
+    },
+    "ja-JP": {
+      MainPage: "メインページ", About: "概要", Settings: "設定", Search: "ウィキを検索",
+      Content: {
+        "Main-Page": "== MEVウィキへようこそ ==\n\nブラウザで動作するオフライン百科事典です。",
+        "About": "== 概要 ==\n\nMEVウィキはオフラインで閲覧・編集できます。",
+        "Settings": "== 設定 ==\n\n外観、データ、ユーザー設定を管理します。"
+      }
+    }
+  };
+
+  const langBtn = document.getElementById("language-btn");
+  const langMenu = document.getElementById("language-menu");
+  const langSelect = document.getElementById("language-select");
+  const applyBtn = document.getElementById("apply-language-btn");
+  let currentLang = localStorage.getItem("wiki_language") || "en-US";
+
+  // 🌐 Toggle menu visibility
+  langBtn.addEventListener("click", () => langMenu.classList.toggle("hidden"));
+
+  // ✅ Apply selected language
+  applyBtn.addEventListener("click", () => {
+    currentLang = langSelect.value;
+    localStorage.setItem("wiki_language", currentLang);
+    applyLanguage(currentLang);
+    applyContentLanguage(currentLang);
+    langMenu.classList.add("hidden");
+  });
+
+  // 🌐 UI translation
+  function applyLanguage(locale) {
+    const dict = translations[locale] || translations["en-US"];
+    const mainBtn = document.querySelector("[data-page-target='Main-Page']");
+    const aboutBtn = document.querySelector("[data-nav-target='about']");
+    const settingsBtn = document.querySelector("[data-nav-target='settings']");
+    const searchInput = document.querySelector("#ai-input");
+    if (mainBtn) mainBtn.textContent = dict.MainPage;
+    if (aboutBtn) aboutBtn.textContent = dict.About;
+    if (settingsBtn) settingsBtn.textContent = dict.Settings;
+    if (searchInput) searchInput.placeholder = dict.Search;
+  }
+
+  // 📄 Content translation
+  function applyContentLanguage(locale) {
+    const pageContainer = document.getElementById("page-container");
+    if (!pageContainer) return;
+    const currentPage = (location.hash.replace("#", "") || "Main-Page");
+    const dict = translations[locale] || translations["en-US"];
+    if (dict.Content && dict.Content[currentPage]) {
+      // assumes parseWiki() exists in your code
+      pageContainer.innerHTML = typeof parseWiki === "function"
+        ? parseWiki(dict.Content[currentPage])
+        : dict.Content[currentPage];
+    }
+  }
+
+  // 🗣 Speech synthesis uses selected language
+  const originalSpeak = window.speak;
+  window.speak = (text) => {
+    if ("speechSynthesis" in window) {
+      const msg = new SpeechSynthesisUtterance(text);
+      msg.lang = currentLang;
+      window.speechSynthesis.speak(msg);
+    } else if (typeof originalSpeak === "function") {
+      originalSpeak(text);
+    }
+  };
+
+  // 🔁 Update content whenever navigation changes
+  window.addEventListener("hashchange", () => {
+    applyContentLanguage(currentLang);
+  });
+
+  // 🔁 Also update when page initially loads
+  langSelect.value = currentLang;
+  applyLanguage(currentLang);
+  applyContentLanguage(currentLang);
+});
 </script>
 
+<script src="./autodetection.js"></script>
 
 <a rel="nofollow" style="display:none;" href="/blackhole/">
 
