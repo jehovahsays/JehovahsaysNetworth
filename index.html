@@ -672,50 +672,6 @@ self.addEventListener("activate", event => {
   return self.clients.claim();
 });
 
-self.addEventListener("fetch", event => {
-  const url = new URL(event.request.url);
-
-  // === MEV INDEX OVERRIDE INTERCEPT ===
-  if (url.pathname === '/mev/' || url.pathname === '/mev/index.html') {
-    event.respondWith(
-      (async () => {
-        try {
-          // Ask the active page for its corrected index
-          const client = await self.clients.get(event.clientId);
-          if (!client) throw new Error('No client');
-
-          const channel = new MessageChannel();
-
-          const responsePromise = new Promise(resolve => {
-            channel.port1.onmessage = e => resolve(e.data);
-          });
-
-          client.postMessage(
-            { type: 'REQUEST_INDEX_OVERRIDE' },
-            [channel.port2]
-          );
-
-          const html = await responsePromise;
-
-          if (html) {
-            return new Response(html, {
-              headers: { 'Content-Type': 'text/html' }
-            });
-          }
-
-        } catch (e) {
-          // Fall through to normal fetch
-        }
-
-        return fetch(event.request);
-      })()
-    );
-    return;
-  }
-
-  // ⬇️ EXISTING FETCH / CACHE LOGIC CONTINUES BELOW
-  
-
 // --- Fetch Listener ---
 self.addEventListener("fetch", event => {
   if (event.request.method !== "GET") return;
@@ -2508,7 +2464,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
-<script src="./autodetection.js"></script>
 
 <a rel="nofollow" style="display:none;" href="/blackhole/">
 
