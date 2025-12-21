@@ -454,7 +454,7 @@ function init() {
     createCity();
 
     const loader = new GLTFLoader();
-    loader.load('./mev/examples/models/gltf/RobotExpressive/RobotExpressive.glb', function (gltf) {
+    loader.load('./examples/models/gltf/RobotExpressive/RobotExpressive.glb', function (gltf) {
         model = gltf.scene;
         scene.add(model);
         createGUI( model, gltf.animations );
