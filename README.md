@@ -1,151 +1,92 @@
 # MEV — Multi Edit Vandalism
 
-[![License](https://img.shields.io/github/license/jehovahsays/mev)](https://github.com/jehovahsays/mev/blob/main/LICENSE)
-[![Last Commit](https://img.shields.io/github/last-commit/jehovahsays/mev)](https://github.com/jehovahsays/mev/commits/main)
-[![Issues](https://img.shields.io/github/issues/jehovahsays/mev)](https://github.com/jehovahsays/mev/issues)
+**An interactive web-based experience built using HTML, CSS, and JavaScript.**
 
-## 🚀 Overview
+This project is fully static and hosted on GitHub Pages. It provides a multi-part user experience with a landing page, map interface, and player/game view. Originally part of a different repository, all current code and documentation have been consolidated here.
 
-MEV is a multi‑page web application designed to work **offline out of the box** in modern browsers without a server. It includes enhanced security features, optional backend PHP hooks, and a mechanism to block misbehaving clients (*blackhole*).
+🔗 **Live Website**: [https://jehovahsays.github.io/mev/](https://jehovahsays.github.io/mev/)
 
 ---
 
-## 📁 Root Folder Architecture
+## 📁 Project Structure
 
-```
-/ (root)
-├─ index.html               ← Main static homepage
-├─ index.php                ← Optional dynamic PHP homepage
-├─ /blackhole/
-│   ├─ blackhole.dat        ← IP block list
-│   └─ blackhole.php        ← PHP script to check/block clients
-├─ /mev/
-│   └─ index.html           ← Secondary content (wiki or app section)
-├─ assets/                  ← CSS, JS, images, fonts
-├─ README.md                ← This file
-└─ other resources          ← JSON, txt content
-```
+All active files are located in the root of the repository:
 
----
-
-## 🌐 Website Pages
-
-### `index.html`
-
-- Default landing page for most users.
-- Fully static and works **offline**.
-- Best for secure, static content delivery.
-
-### `index.php`
-
-- Optional dynamic homepage with PHP support.
-- Useful for advanced server-side logic.
-
-### `/mev/index.html` and `/#main`
-
-A sub-application that supports basic editing functions in the browser:
-
-- **Create Account**: Opens a local-only user setup screen.
-- **Log In / Log Out**: Manages session state in the browser.
-- **Edit**: Opens the current content section in an editable form.
-- **Save**: Commits edits to localStorage or optional PHP save hook.
-- **Cancel**: Discards unsaved changes.
-- **Note**: No data is sent to a remote server unless you customize it.
-
-All edits are designed to work offline. If connected to a PHP-enabled server, additional persistence features may be unlocked.
+| File/Folder        | Description |
+|--------------------|-------------|
+| `index.html`       | 🏠 Main homepage — the entry point to the website. |
+| `map.html`         | 🗺️ Navigation/map interface — allows users to explore different sections. |
+| `player.html`      | 🧍 Main interactive experience — the "game" or immersive content area. |
+| `USAGE.md`         | 📘 Instructions on how to use or view the site offline. |
+| `MOTIVATION.md`    | 💡 Project goals, creative direction, or backstory. |
+| `CONTRIBUTING.md`  | 🤝 Guidelines for contributing to the project. |
+| `CODE_OF_CONDUCT.md` | 📜 Community behavior rules. |
+| `LICENSE`          | 📄 MIT License (open-source usage). |
+| `.nojekyll`        | ⚙️ Required for GitHub Pages to serve all folders. |
+| `favicon.ico`, `apple-touch-icon.png` | 🌐 Browser/device icons. |
+| `/wiki/`           | 📂 Archived files from a previous version of the repo (old README, unused docs). Not part of the live site. |
+| `/examples/`       | 📂 Example files or configurations (optional). |
+| `/files/`          | 📂 Assets or support files for internal use. |
 
 ---
 
-## 🛡️ Security Features
+## 🧭 Website Navigation Guide
 
-- Static delivery for no remote attack surface.
-- **Blackhole system** for banning bad actors.
-- Optional backend checks with `blackhole.php`.
-- Manual or automatic banning via IP list.
+Visitors can explore the site in three parts:
 
----
+### 1. **Homepage**
+- **URL**: [https://jehovahsays.github.io/mev/](https://jehovahsays.github.io/mev/)
+- This is the landing page that introduces the project.
 
-## 🚫 “Blackhole” Directory Warning
+### 2. **Map Interface**
+- **URL**: [https://jehovahsays.github.io/mev/map.html](https://jehovahsays.github.io/mev/map.html)
+- Provides a navigation experience, possibly visual or location-based.
 
-Do **not** manually navigate to `/blackhole/` in the browser.
-
-### If you ban yourself:
-
-1. Go to the `blackhole` folder.
-2. Open `blackhole.dat` with a text editor.
-3. Remove your IP address, or delete all entries.
-4. Save and refresh the site.
-
-You’ll now be unbanned.
+### 3. **Player/Game Experience**
+- **URL**: [https://jehovahsays.github.io/mev/player.html](https://jehovahsays.github.io/mev/player.html)
+- This is the core interactive experience (e.g., game, editor, or story interface).
 
 ---
 
-## 📌 Why Use MEV?
+## 🛠️ How to Use Locally
 
-- Works **100% offline**.
-- Easy to modify and extend.
-- Lightweight, privacy-first design.
-- Local-only mode for secure data editing.
-
----
-
-## 🏠 Self-Hosting
-
-Supports:
-
-- Static hosting (GitHub Pages, Netlify)
-- Apache with PHP
-- Nginx with PHP-FPM
-- Localhost testing
-
-**To host:**
+You can also run the experience locally in your browser:
 
 ```bash
 git clone https://github.com/jehovahsays/mev.git
 cd mev
-cp -R * /your/web/server/root/
-```
+open index.html
+
+No server required — it’s fully static.
+
+⸻
+
+📚 Documentation
+	•	Usage Guide￼
+	•	Project Motivation￼
+	•	Contribution Guidelines￼
+
+Archived files from an earlier version of the project are located in the /wiki/ folder.
+
+⸻
+
+🧠 Note on Naming
+
+“MEV” here stands for Multi Edit Vandalism.
+It is unrelated to the blockchain/DeFi concept Maximal Extractable Value.
+
+⸻
+
+🤝 Contributing
+
+Contributions are welcome!
+Please see CONTRIBUTING.md￼ for instructions.
+
+⸻
+
+📜 License
+
+This project is licensed under the MIT License￼.
 
 ---
-
-## 🧭 Browser Support
-
-✅ Chrome  
-✅ Firefox  
-✅ Safari  
-✅ Edge  
-✅ Android / iOS browsers  
-
-⚠️ **JavaScript Required** for full interactivity.
-
----
-
-## 📴 JavaScript Behavior
-
-| Feature             | JS On | JS Off |
-|---------------------|-------|--------|
-| Navigation          | ✅    | ✅     |
-| Create/Edit/Save UI | ✅    | ❌     |
-| Offline sync        | ✅    | ❌     |
-
----
-
-## 📂 Contribution Guidelines
-
-1. Fork this repo.
-2. Open a new branch for your changes.
-3. Submit a Pull Request.
-4. Document what you add or fix.
-
----
-
-## 📜 License
-
-This project is licensed under the MIT License.
-
----
-
-## 🤝 Contact
-
-Open an [issue](https://github.com/jehovahsays/mev/issues) for questions, suggestions, or contributions.
 
