@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>MEV Wiki</title>
   <meta name="description" content="MEV Wiki – Offline Encyclopedia. Learn, edit, explore." />
   <meta name="theme-color" content="#3366cc" />
@@ -590,12 +589,10 @@
 
 <footer>
   <div id="status-indicator">🔴 Offline</div>
+  <a href="/mev/m/index.html" target="_blank" rel="noopener"><button>START GAME</button></a>
   <div id="ticker"><span id="ticker-content"></span></div>
     <span id="last-updated" style="margin-left: auto;"></span>
   </div>
-  <div id="info">
-<a href="/mev/m/index.html" target="_blank" rel="noopener"><button class="infobox">START GAME</button></a>
-</div>
 </footer>
 
 <div id="auth-modal" class="modal-overlay">
@@ -2469,8 +2466,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <script>
 async function runFirewall() {
-    const BLACKHOLE_FILE = './blackhole/blackhole.dat';
-    const BANNED_PAGE = 'banned.html'; // Create this page in your directory
+    const BLACKHOLE_FILE = './mev/blackhole/blackhole.dat';
+    const BANNED_PAGE = '/mev/banned.html'; // Create this page in your directory
 
     try {
         // 1. Fetch the blackhole data file
@@ -2511,7 +2508,7 @@ runFirewall();
 </script>
 
 
-<a rel="nofollow" style="display:none;" href="/blackhole/">
+<a rel="nofollow" style="display:none;" href="/mev/blackhole/">
 
 </body>
 </html>
