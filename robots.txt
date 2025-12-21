@@ -12,3 +12,6 @@ Disallow: /notfound
 
 # Let crawlers index only the base route
 Allow: /
+Allow: /index.html
+Allow: /search.html
+Allow: /players.html
