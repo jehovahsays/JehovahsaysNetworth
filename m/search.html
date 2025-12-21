@@ -12,7 +12,7 @@
 <meta http-equiv="X-Frame-Options" content="DENY">
 <meta http-equiv="X-XSS-Protection" content="1; mode=block">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
-<link rel="icon" href="/mev/favicon.ico" />
+<link rel="icon" href="/mev/m/favicon.ico" />
 
 <title>Search Wiki Pages</title>
 
@@ -141,7 +141,7 @@ body {
         const button = document.createElement('button');
         button.textContent = title;
         button.onclick = () => {
-            window.location.href = `./wiki/#${hash}`;
+            window.location.href = `../mev/#${hash}`;
         };
 
         li.appendChild(button);
@@ -195,7 +195,7 @@ body {
                 const text = button.textContent.toLowerCase();
                 if (text.includes(input)) {
                     const hash = encodeURIComponent(button.textContent.trim());
-                    window.location.href = `./wiki/#${hash}`;
+                    window.location.href = `../mev/#${hash}`;
                     return;
                 }
             }
@@ -205,7 +205,6 @@ body {
     });
 </script>
 
-<a href="/mev/index.html"><button>Start Game</button></a><br>
 
 </body>
 </html>

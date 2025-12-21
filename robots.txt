@@ -9,9 +9,7 @@ Disallow: /profile
 Disallow: /edit
 Disallow: /search
 Disallow: /notfound
+Disallow: /blackhole/
 
 # Let crawlers index only the base route
 Allow: /
-Allow: /index.html
-Allow: /search.html
-Allow: /players.html

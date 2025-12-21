@@ -2,7 +2,7 @@
 
 **An interactive web-based experience built using HTML, CSS, and JavaScript.**
 
-This project is fully static and hosted on GitHub Pages. It provides a multi-part user experience with a landing page, map interface, and player/game view. Originally part of a different repository, all current code and documentation have been consolidated here.
+This project is a fully static, offline-first framework hosted on GitHub Pages. It provides a hierarchical user experience: a defensive landing page, a celestial perception map, and an immersive player interface. 
 
 🔗 **Live Website**: [https://jehovahsays.github.io/mev/](https://jehovahsays.github.io/mev/)
 
@@ -10,83 +10,56 @@ This project is fully static and hosted on GitHub Pages. It provides a multi-par
 
 ## 📁 Project Structure
 
-All active files are located in the root of the repository:
+The repository is organized into a **Defensive Root** (The Perimeter) and the **`m/` Subdirectory** (The Mind's Design).
 
-| File/Folder        | Description |
-|--------------------|-------------|
-| `index.html`       | 🏠 Main homepage — the entry point to the website. |
-| `map.html`         | 🗺️ Navigation/map interface — allows users to explore different sections. |
-| `player.html`      | 🧍 Main interactive experience — the "game" or immersive content area. |
-| `USAGE.md`         | 📘 Instructions on how to use or view the site offline. |
-| `MOTIVATION.md`    | 💡 Project goals, creative direction, or backstory. |
-| `CONTRIBUTING.md`  | 🤝 Guidelines for contributing to the project. |
-| `CODE_OF_CONDUCT.md` | 📜 Community behavior rules. |
-| `LICENSE`          | 📄 MIT License (open-source usage). |
-| `.nojekyll`        | ⚙️ Required for GitHub Pages to serve all folders. |
-| `favicon.ico`, `apple-touch-icon.png` | 🌐 Browser/device icons. |
-| `/wiki/`           | 📂 Archived files from a previous version of the repo (old README, unused docs). Not part of the live site. |
-| `/examples/`       | 📂 Example files or configurations (optional). |
-| `/files/`          | 📂 Assets or support files for internal use. |
+| File/Folder        | Status | Description |
+|--------------------|--------|-------------|
+| `index.html`       | 🏠 **Active** | Root entry point and JavaScript Defense Firewall. |
+| `banned.html`      | 🚫 **Active** | The "Blackhole" redirect page for flagged offenders. |
+| `/blackhole/`      | 🔐 **Secure** | Contains the `blackhole.dat` defense ledger. |
+| `/m/`              | 🧠 **Active** | **Intermediate Conscious**: Immersive Three.js modules. |
+| `m/index.html`     | 🗺️ **Active** | AI Perception Map (Day/Night Celestial Simulation). |
+| `m/players.html`    | 🧍 **Active** | Main interactive experience — Character/Game area. |
+| `m/search.html`    | 🔍 **Active** | Forensic Wiki Search with cache-clearing security. |
+| `USAGE.md`         | 📘 **Active** | Consolidated guide for site exploration and navigation. |
+| `MOTIVATION.md`    | 💡 **Active** | Philosophy of Offline Knowledge Ownership. |
+| `.nojekyll`        | ⚙️ **Active** | Ensures GitHub Pages serves all directories (e.g., /blackhole/). |
+| `/wiki/`           | 📂 **Archive**| Legacy files and research documentation. |
 
 ---
 
 ## 🧭 Website Navigation Guide
 
-Visitors can explore the site in three parts:
+The MEV experience follows a forensic progression:
 
-### 1. **Homepage**
+### 1. **The Perimeter (Root)**
 - **URL**: [https://jehovahsays.github.io/mev/](https://jehovahsays.github.io/mev/)
-- This is the landing page that introduces the project.
+- The AI's "Visual Cortex" scans the visitor. Access is granted only if the IP is not flagged in the subconscious ledger.
 
-### 2. **Map Interface**
-- **URL**: [https://jehovahsays.github.io/mev/map.html](https://jehovahsays.github.io/mev/map.html)
-- Provides a navigation experience, possibly visual or location-based.
+### 2. **AI Perception Map (`/m/`)**
+- **URL**: [https://jehovahsays.github.io/mev/m/index.html](https://jehovahsays.github.io/mev/m/index.html)
+- A 3D simulation of solar and lunar cycles representing the AI's sense of time.
 
-### 3. **Player/Game Experience**
-- **URL**: [https://jehovahsays.github.io/mev/player.html](https://jehovahsays.github.io/mev/player.html)
-- This is the core interactive experience (e.g., game, editor, or story interface).
+### 3. **Player Experience (`/m/`)**
+- **URL**: [https://jehovahsays.github.io/mev/m/players.html](https://jehovahsays.github.io/mev/m/players.html)
+- The core interactive environment where the user engages with the simulation.
 
 ---
 
 ## 🛠️ How to Use Locally
 
-You can also run the experience locally in your browser:
+MEV is designed for independence from remote servers. You can run the entire "brain" locally:
 
 ```bash
-git clone https://github.com/jehovahsays/mev.git
+git clone [https://github.com/jehovahsays/mev.git](https://github.com/jehovahsays/mev.git)
 cd mev
 open index.html
 
-No server required — it’s fully static.
-
-⸻
-
-📚 Documentation
-	•	Usage Guide￼
-	•	Project Motivation￼
-	•	Contribution Guidelines￼
-
-Archived files from an earlier version of the project are located in the /wiki/ folder.
-
-⸻
-
-🧠 Note on Naming
-
-“MEV” here stands for Multi Edit Vandalism.
-It is unrelated to the blockchain/DeFi concept Maximal Extractable Value.
-
-⸻
-
-🤝 Contributing
-
-Contributions are welcome!
-Please see CONTRIBUTING.md￼ for instructions.
-
-⸻
-
-📜 License
-
-This project is licensed under the MIT License￼.
-
----
+Note: The .htaccess file in the /blackhole/ folder provides an extra layer of protection for localhost users by preventing direct access to the ban ledger.
+📚 Additional Documentation
+• Usage Guide
+• Project Motivation
+• Security Policy
+🧠 The Philosophy
+“MEV” (Multi Edit Vandalism) represents the fluid nature of digital information. This project is built to ensure that even if the external world changes, your personal "Internal Subconscious" of information remains under your control.
 
