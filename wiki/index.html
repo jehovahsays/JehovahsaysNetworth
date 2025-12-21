@@ -1,3 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MEV Wiki</title>
+  <meta name="description" content="MEV Wiki – Offline Encyclopedia. Learn, edit, explore." />
+  <meta name="theme-color" content="#3366cc" />
+  <meta name="color-scheme" content="light dark" />
+
+  <meta http-equiv="Referrer-Policy" content="no-referrer">
+
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self' 'unsafe-inline'; object-src 'none'; style-src 'self' 'unsafe-inline';">
+  
+  <style>
+    /* Base Layout Styles */
+    html, body {
+      overflow: hidden;
+      height: 100%;
+      width: 100%;
+      font-family: 'Inter', system-ui, "Segoe UI", Arial, sans-serif;
+    }
+
+    #main-content-wrapper {
+      overflow-y: auto;
+      overflow-x: hidden;
+      height: 100%; 
+      width: 100%;
+    }
+
+    #page-container {
+      overflow: auto;
+      height: 100%;
+      width: 100%;
+    }
+      /* ========== MEV Wiki Style (Hardened) ========== */
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: system-ui, "Segoe UI", Arial, sans-serif;
+        background: #fff;
+        color: #000;
+        transition: background 0.3s ease, color 0.3s ease;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+      header {
+        background: #3366cc;
+        color: #fff;
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between; 
+        border-radius: 0 0 8px 8px;
+      }
+      #menu-btn {
+        font-size: 28px;
+        background: transparent;
+        color: white;
+        border: none;
+        margin-right: 15px;
+        cursor: pointer;
+        border-radius: 4px;
+        padding: 5px 8px;
+        transition: background-color 0.2s;
+      }
+      #menu-btn:hover { background-color: rgba(255, 255, 255, 0.1); }
+
+      #menu-btn:focus, button:focus, input:focus, textarea:focus {
+        outline: 2px solid #ffcc00;
+        outline-offset: 2px;
+      }
+      /* ADDED CSP-SAFE HIDDEN CLASS */
+      .hidden {
+        display: none !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+        height: 0 !important;
+        width: 0 !important;
+        overflow: hidden !important;
+      }
+      .noselect { user-select: none; }
+      .readonly { pointer-events: none; user-select: none; opacity: 0.6; }
+      header h1 { margin: 0; font-size: 1.5rem; }
+
+      #banner {
+        background: #ffcc00;
+        color: #000;
+        padding: 10px;
+        text-align: center;
+        display: none;
+        font-weight: bold;
+      }
+
+      #container {
+        display: flex;
+        flex-direction: row;
+        /* Adjusted height to account for header and footer */
+        height: calc(100vh - 120px); 
+      }
+      #sidebar {
+        width: 250px;
+        background: #f8f9fa;
+        border-right: 1px solid #ccc;
+        overflow-y: auto;
+        padding: 10px;
+        /* MODIFICATION: Change display: none to display: block to show menu by default */
+        display: block; 
+        flex-shrink: 0;
+      }
+      #sidebar h3 { margin-top: 15px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+      #sidebar ul { list-style: none; padding: 0; }
+      #sidebar li { margin: 5px 0; border-radius: 4px; padding: 2px 0; }
+      #sidebar a {
+        color: #3366cc;
+        text-decoration: none;
+        word-break: break-word;
+        display: block;
+        padding: 4px 6px;
+      }
+      #sidebar a:hover { background-color: #e9ecef; border-radius: 4px; }
+      
+      /* Main Content Area - RENAME for clarity */
+      #main-content-wrapper {
+        flex: 1 1 100%;
+        padding: 20px;
+        overflow-y: auto;
+      }
+      #ai-bar {
+        /* Search/Voice bar integrated into header */
+        flex-grow: 1; 
+        margin-left: 15px; 
+        display: flex;
+        align-items: center;
+      }
+    #ai-input {
+    flex: 1;
+    padding: 8px 12px;
+    font-size: 1rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    min-width: 150px;
+    }
+
+    #ai-button {
+    margin-left: 8px;
+    padding: 8px 15px;
+    font-size: 1rem;
+    border-radius: 6px;
+    border: none;
+    background: #ffcc00;
+    color: #000;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+    }
+      #ai-button:hover { background: #e0b300; }
+
+      section.page { margin-bottom: 40px; padding: 10px; border-radius: 8px; background-color: #fefefe; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+      section.page h2 {
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 5px;
+      }
+      section.page .content {
+        margin-top: 10px;
+        white-space: pre-wrap;
+      }
+      textarea.editor {
+        width: 100%;
+        height: 200px;
+        padding: 10px;
+        font-size: 16px;
+        font-family: monospace;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        resize: vertical;
+        margin-top: 10px;
+      }
+      .edit-btn, .delete-btn {
+        background: #3366cc;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        margin-top: 15px;
+        margin-right: 8px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 15px;
+        transition: background-color 0.2s;
+      }
+      .edit-btn:hover { background-color: #254a9e; }
+      .delete-btn { background-color: #cc3333; }
+      .delete-btn:hover { background-color: #a60000; }
+
+      footer {
+        height: 60px;
+        background: #f1f1f1;
+        border-top: 1px solid #ccc;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20px;
+        border-radius: 8px 8px 0 0;
+        /* FIX CONTRAST: Ensure all general footer text is dark enough */
+        color: #333333; 
+      }
+
+      /* FIX CONTRAST: Status indicator color was #555 (too light) */
+      #status-indicator { font-size: 14px; color: #333333; font-weight: 600;}
+      
+      #ticker { white-space: nowrap; overflow: hidden; width: 100%; position: relative; margin: 0 15px; }
+      #ticker span {
+        display: inline-block; padding-left: 100%; animation: scroll-left 20s linear infinite;
+      }
+      @keyframes scroll-left { 0% { transform: translateX(0%); } 100% { transform: translateX(-100%); } }
+
+      #storage-bar {
+        margin-top: 15px;
+        background: #e9ecef;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      #storage-bar-inner {
+        height: 10px;
+        background: #3366cc;
+        width: 0%;
+        transition: width 0.5s;
+      }
+
+      /* Modal Styling */
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0; left: 0;
+        width: 100vw; height: 100vh;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 1000;
+        backdrop-filter: blur(5px);
+      }
+      .modal-box {
+        background: white;
+        max-width: 90%;
+        width: 400px;
+        margin: 10vh auto;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        text-align: left;
+      }
+      .modal-actions { margin-top: 20px; text-align: right; }
+      .modal-actions button { margin-left: 10px; }
+
+      /* Dark Mode */
+      body.dark {
+        background: #121212;
+        color: #e0e0e0;
+      }
+      body.dark header { background: #1f1f1f; }
+      body.dark #sidebar {
+        background: #1c1c1c;
+        border-right: 1px solid #444;
+      }
+      body.dark #sidebar h3 { border-bottom-color: #333; }
+      body.dark #sidebar a { color: #80bfff; }
+      body.dark #sidebar a:hover { background-color: #2c2c2c; }
+      body.dark #main-content-wrapper { background: #181818; }
+      body.dark #ai-input {
+        background: #2c2c2c; color: #e0e0e0; border: 1px solid #555;
+      }
+      body.dark #ai-button {
+        background: #665500;
+        color: #fff;
+      }
+      body.dark #ai-button:hover {
+        background: #776600;
+      }
+      body.dark section.page { background-color: #1f1f1f; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+      body.dark textarea, body.dark input {
+        background: #2c2c2c; color: #e0e0e0; border: 1px solid #555;
+      }
+      body.dark .modal-box { background: #1f1f1f; }
+      body.dark .edit-btn, body.dark .delete-btn {
+        background: #444;
+      }
+      body.dark #storage-bar {
+        background: #333; border-color: #555;
+      }
+      body.dark #storage-bar-inner {
+        background: #80bfff;
+      }
+      body.dark footer {
+        background: #181818; border-top: 1px solid #444;
+      }
+      body.dark #status-indicator {
+        /* Ensure status indicator text is visible in dark mode, inheriting body color or setting explicitly */
+        color: #e0e0e0; 
+      }
+
+      #page-container {
+        display: block;
+        width: 100%;
+        height: auto;
+        min-height: calc(100vh - 160px);
+        padding: 0 10px 30px 10px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        word-break: break-word;
+        background-color: inherit;
+        color: inherit;
+      }
+      body.dark #page-container {
+        background-color: #181818;
+        color: #e0e0e0;
+      }
+      #offline-message {
+        display: none;
+        background: #ffcc00;
+        color: #000;
+        text-align: center;
+        padding: 10px;
+        font-weight: bold;
+        font-family: inherit;
+        z-index: 9999;
+        border-bottom: 1px solid #aaa;
+        position: relative;
+      }
+      body.dark #offline-message {
+        background: #665500;
+        color: #fff;
+        border-bottom-color: #333;
+      }
+      .semantic-status {
+        margin-top: 15px;
+        color: green;
+        font-weight: bold;
+        font-size: 0.95em;
+      }
+
+      /* Styles for Quick Filter Buttons (New Component) */
+      #quick-filters {
+        list-style: none;
+        padding: 0;
+        margin-top: 10px;
+      }
+      /* .titleInput class is used by JS for filtering, applying to the LI */
+      .titleInput button {
+        background: #e9ecef; 
+        border: 1px solid #ccc;
+        padding: 6px 10px;
+        margin-top: 5px;
+        border-radius: 4px;
+        cursor: pointer;
+        display: block; 
+        width: 100%;
+        text-align: left;
+        color: #3366cc;
+        font-weight: 500;
+        transition: background-color 0.2s, color 0.2s;
+      }
+      .titleInput button:hover {
+        background: #d4d8db;
+      }
+      body.dark .titleInput button {
+        background: #2c2c2c;
+        color: #80bfff;
+        border-color: #555;
+      }
+      body.dark .titleInput button:hover {
+        background: #3c3c3c;
+      }
+
+      @media (max-width: 600px) {
+        header {
+          padding: 10px;
+        }
+        #ai-bar {
+          margin-left: 10px;
+        }
+        #ai-input {
+          font-size: 0.9rem;
+          padding: 6px 10px;
+        }
+        #ai-button {
+          padding: 6px 10px;
+          font-size: 0.9rem;
+        }
+        #sidebar {
+          width: 100%;
+          position: fixed;
+          height: calc(100vh - 50px);
+          top: 50px;
+          left: 0;
+          z-index: 900;
+        }
+        #container {
+          height: calc(100vh - 120px);
+        }
+        #main-content-wrapper {
+          padding: 10px;
+        }
+      }
+      /* ==================================================== */
+      /* STYLES FOR INITIAL FIND VIEW (From find.html) */
+      /* ==================================================== */
+      #find-view {
+          /* MODIFICATION: Hide by default. JS will show/hide as needed. */
+          display: none; 
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 90%;
+          max-width: 600px;
+          z-index: 999;
+          /* Inherit Dark Mode colors */
+          background-color: inherit; 
+          color: inherit;
+      }
+      #filterInput-find {
+          width: 100%;
+          padding: 15px;
+          margin-bottom: 20px;
+          font-size: 1.2em;
+          border-radius: 8px;
+          border: 1px solid #555;
+          box-sizing: border-box;
+          background-color: #f8f9fa;
+          color: #000;
+      }
+      body.dark #filterInput-find {
+          background-color: #2c2c2c;
+          color: #e0e0e0;
+          border: 1px solid #555;
+      }
+      #page-list-find {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          max-height: 40vh; /* Limit height for long lists */
+          overflow-y: auto;
+      }
+      .titleInput-find {
+          margin: 5px 0;
+          animation: fadeIn 0.5s ease-in-out;
+      }
+      .titleInput-find button {
+          width: 100%;
+          padding: 12px;
+          text-align: left;
+          background-color: #3366cc;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          font-size: 1.0em;
+          transition: background-color 0.2s;
+      }
+      .titleInput-find button:hover {
+          background-color: #254a9e;
+      }
+      body.dark .titleInput-find button {
+          background-color: #444;
+      }
+      body.dark .titleInput-find button:hover {
+          background-color: #555;
+      }
+      /* FIX CONTRAST: Status message color was #888 (failed contrast) */
+      #status-message-find { color: #444444; margin-top: 10px; text-align: center; font-size: 0.9em; }
+
+      @keyframes fadeIn {
+         from { opacity: 0; transform: translateY(-10px); }
+         to   { opacity: 1; transform: translateY(0); }
+      }
+  </style>
+
+</head>
+
+<body>
+<noscript>
+    <!-- <meta http-equiv="refresh" content="0;url=#noscript-warning"> -->
+</noscript>
+
+<div id="banner" class="banner"></div>
+
+<div id="offline-message">
+  ⚠️ You’re offline. Some features may be unavailable.
+</div>
+
+<header>
+  <button id="menu-btn" aria-label="Toggle menu navigation">☰</button>
+  <div id="ai-bar">
+    <input 
+      type="text" 
+      id="ai-input" 
+      placeholder="search or speak your query…" 
+      aria-label="Search or question input"
+      data-action="filter-sidebar"
+      list="search-suggestions">
+	
+	      <datalist id="search-suggestions">
+        <option value="Main Page">
+        <option value="About">
+        <option value="Recent Changes">
+        <option value="Formatting Examples">
+      </datalist>
+
+    <button id="ai-button">Search Wiki</button>
+  </div>
+</header>
+
+<noscript>
+<p id="noscript-warning" style="text-align: center; color: red; padding: 20px;">
+  This application requires JavaScript. <br>
+  Please enable JavaScript for MEV Wiki to function.
+</p>
+</noscript>
+
+<div id="find-view">
+    <div id="search-container">
+	<p id="search-note" style="font-size: 0.9em; margin-bottom: 10px;"></p>
+        <input
+            id="filterInput-find"
+            data-action="filter-findview" 
+            autocomplete="off"
+            autocorrect="off"  
+            autocapitalize="off" 
+            spellcheck="false"
+            type="text" 
+            placeholder="Search wiki pages..." 
+            aria-label="Search wiki pages" 
+            aria-describedby="search-note"
+            required>
+        
+        <ul id="page-list-find"></ul>
+        
+        <div id="status-message-find">Start typing to filter pages...</div>
+    </div>
+</div>
+
+<div id="container">
+  <nav id="sidebar">
+    <div id="auth-links">
+      <div id="user-status">Not logged in</div>
+      <a href="#create" id="create-account-link">Create Account</a><br>
+      <a href="#login" id="login-link">Log In</a><br>
+      <a href="#profile" id="profile-link">My Profile</a><br>
+      <a href="#logout" id="logout-link" class="hidden">Log Out</a> 
+    </div>
+    <hr/>
+    <h3>Navigation Filters</h3>
+    <ul id="quick-filters">
+        <li class="titleInput"><button data-page-target="Main-Page">Main-Page</button></li>
+        <li class="titleInput"><button data-nav-target="recent">Recent Changes</button></li>
+        <li class="titleInput"><button data-nav-target="settings">Settings</button></li>
+        <li class="titleInput"><button data-nav-target="about">About</button></li>
+        <li class="titleInput"><button data-page-target="Formatting Examples">Wiki Formatting Help</button></li>
+    </ul>
+
+    <hr />
+    <h3>Wiki Pages</h3>
+    <ul id="page-list"></ul>
+    
+    <button id="create-page-btn" class="edit-btn" style="width: 100%; margin-top: 10px;">+ New Page</button>
+    <!-- 🌐 Language Selector (CSP-Safe: defined statically) -->
+<hr />
+<button id="language-btn" class="edit-btn" style="width:100%;margin-top:10px;">🌐 Language</button>
+
+<div id="language-menu" class="hidden" style="margin-top:8px;">
+  <select id="language-select" style="width:100%;padding:6px;border-radius:6px;">
+    <option value="en-US">English (US)</option>
+    <option value="fr-FR">Français</option>
+    <option value="de-DE">Deutsch</option>
+    <option value="es-ES">Español</option>
+    <option value="it-IT">Italiano</option>
+    <option value="ja-JP">日本語</option>
+  </select>
+  <button id="apply-language-btn" class="edit-btn" style="width:100%;margin-top:6px;">Apply</button>
+</div>
+    <div id="storage-bar">
+      <div id="storage-bar-inner"></div>
+    </div>
+  </nav>
+
+  <main id="main-content-wrapper" itemscope itemtype="https://schema.org/WebPage">
+    <meta itemprop="url" content="https://jehovahsays.github.io/mev/">
+    <div id="page-container"></div> 
+  </main>
+</div>
+
+<footer>
+  <div id="status-indicator">🔴 Offline</div>
+  <div id="ticker"><span id="ticker-content"></span></div>
+    <span id="last-updated" style="margin-left: auto;"></span>
+  </div>
+</footer>
+
+<div id="auth-modal" class="modal-overlay">
+  <div class="modal-box">
+    <h2 id="auth-modal-title">Enter Username</h2>
+    <label for="auth-username">Username:</label>
+    <input id="auth-username" type="text" autocomplete="username" /><br><br>
+    
+    <label for="auth-pin">PIN/Passphrase (4-12 characters recommended):</label>
+    <input id="auth-pin" type="password" maxlength="12" autocomplete="current-password" />
+    <p style="font-size: 0.8em; color: red; margin-top: 10px;">⚠️ If you set a PIN/Passphrase, **all your data will be encrypted**. If you forget the PIN, the data will be permanently inaccessible.</p>
+    
+    <div class="modal-actions">
+      <button id="submit-auth">Submit</button>
+      <button id="cancel-auth">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+
+/**
+ * sw.js - Service Worker for MEV Wiki PWA (INLINED)
+ * * NOTE: The Service Worker file must be registered either as a Blob or a Data URL
+ * to be self-contained in index.html. We will use a Blob.
+ * * The Service Worker content (previously in mev/sw.js) is stored here as a string.
+ */
+const SERVICE_WORKER_CONTENT = `
+// A unique name for your cache. Increment this version number every time
+// you make changes to the files listed in the 'FILES' array.
+const CACHE = "mev-wiki-v14-singlefile"; 
+
+// Full list of all static assets to cache during installation.
+// All dependencies must now be self-referential to the root index.html.
+const FILES = [
+  '/',
+  '/index.html'
+];
+
+// --- Install Listener ---
+self.addEventListener("install", event => {
+  console.log('[Service Worker] Install Event - Caching App Shell:', CACHE);
+  // waitUntil ensures the Service Worker won't install until the cache is fully populated.
+  event.waitUntil(
+    caches.open(CACHE)
+      .then(cache => {
+        // cache.addAll only needs to fetch the single index.html file.
+        return cache.addAll(FILES);
+      })
+      .catch(err => {
+        // If caching fails for any file (e.g., a 404), the Service Worker installation fails.
+        console.error('[Service Worker] Failed to cache critical assets:', err);
+      })
+  );
+  // Force the new Service Worker to activate immediately.
+  self.skipWaiting(); 
+});
+
+// --- Activate Listener ---
+self.addEventListener("activate", event => {
+  console.log('[Service Worker] Activate Event - Cleaning old caches.');
+  // Delete outdated caches to free up space.
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cacheName => {
+          // If the current cache name is not in the whitelist (i.e., it's an old version), delete it.
+          if (cacheName !== CACHE) {
+            console.log('[Service Worker] Deleting old cache:', cacheName);
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+  );
+  // Claim clients immediately to take control of all open pages within the scope.
+  return self.clients.claim();
+});
+
+// --- Fetch Listener ---
+self.addEventListener("fetch", event => {
+  if (event.request.method !== "GET") return;
+
+  const url = new URL(event.request.url);
+  // Check if the request is for the main document (root or index.html)
+  const isMainDocument = url.pathname === '/' || url.pathname === '/index.html';
+  
+  // Strategy: Network-First with Cache Fallback for index.html (the only asset)
+  if (isMainDocument) {
+    event.respondWith(
+      fetch(event.request)
+        .then(networkRes => {
+          // If the network response is good (200 OK), cache it for future offline use, 
+          // and return the original response.
+          if (networkRes.status === 200) {
+            const resToCache = networkRes.clone();
+            caches.open(CACHE).then(cache => cache.put(event.request, resToCache));
+          }
+          return networkRes;
+        })
+        .catch(() => {
+          // If network fails (offline or error), serve the single index.html from cache.
+          // Note: Since all CSS/JS is inline, this cached index.html is the entire app.
+          return caches.match(event.request); 
+        })
+    );
+    return;
+  }
+
+  // All other requests (e.g., hash changes, or external requests which should fail)
+  // are handled here. Since there are no external assets, the main logic is simple.
+  event.respondWith(
+    caches.match(event.request).then(cacheRes => {
+      // If the request is not for the root, and it's not in the cache (it shouldn't be), 
+      // let the network attempt it, which will likely fail, or the browser will handle it.
+      return cacheRes || fetch(event.request);
+    })
+  );
+});
+`;
+
 // ====== MEV SECURITY LAYER (Moved from inline script) ======
 (function secureClientApp() {
     // These methods of blocking are less reliable than CSP, but provide defense-in-depth.
@@ -458,7 +1174,7 @@ async function showAbout() {
       <li>Voice Search Filtering</li>
       <li>Basic Wiki Markup (==Headers, '''Bold, ''Italics, [[Links]])</li>
     </ul>
-    <p>Source Version: 1.2.1-CSP-Hardened</p>
+    <p>Source Version: 1.2.1-CSP-Hardened-SingleFile</p>
     </section>`;
   location.hash = "#about";
 }
@@ -526,7 +1242,7 @@ function parseWiki(text) {
   if (inUL) finalHtml += '</ul>';
   if (inOL) finalHtml += '</ul>';
 
-  finalHtml += `<div class="semantic-status">✔️ Semantic HTML Enabled</div><br>This landing page #search is not a broken design.`;
+  finalHtml += `<div class="semantic-status">✔️ Semantic HTML Enabled</div><br>`;
   return finalHtml;
 }
 
@@ -628,9 +1344,9 @@ function setupAuth() {
   function updateAuthUI() {
     const user = getCurrentUser();
     // CSP-SAFE: Using classList.add/remove('hidden') instead of manipulating .style.display
-    document.getElementById(s.createLink).classList.toggle('hidden', !!user);
-    document.getElementById(s.loginLink).classList.toggle('hidden', !!user);
-    document.getElementById(s.logoutLink).classList.toggle('hidden', !user);
+    document.getElementById(s.createLink)?.classList.toggle('hidden', !!user);
+    document.getElementById(s.loginLink)?.classList.toggle('hidden', !!user);
+    document.getElementById(s.logoutLink)?.classList.toggle('hidden', !user);
     const profileLink = document.getElementById('profile-link');
     if (profileLink) profileLink.classList.toggle('hidden', !user);
   }
@@ -773,11 +1489,11 @@ function setMainView(showMain) {
     const pageContainer = document.getElementById('page-container');
 
     if (showMain) {
-        findView.style.display = 'none';
-        pageContainer.style.display = 'block';
+        if(findView) findView.style.display = 'none';
+        if(pageContainer) pageContainer.style.display = 'block';
     } else {
-        findView.style.display = 'block';
-        pageContainer.style.display = 'none';
+        if(findView) findView.style.display = 'block';
+        if(pageContainer) pageContainer.style.display = 'none';
     }
 }
 
@@ -821,11 +1537,8 @@ async function deletePage(title) {
   // Custom modal UI should be used here instead of confirm() for a proper PWA
   if (!window.confirm(`Are you sure you want to delete the page "${title}"? This cannot be undone.`)) { return; }
   
-  delete pages[title];
-  await saveData(STORAGE_KEYS.pages, pages); 
-  changes.unshift({ type:'delete', title, time:new Date().toISOString(), user:user?user.name:'Guest' });
   
-      if (!pages[title]) {
+    if (!pages[title]) {
         speak(`Page ${title} not found.`);
         return;
     }
@@ -868,7 +1581,6 @@ async function deletePage(title) {
     }
     
   
-  await saveData(STORAGE_KEYS.changes, changes); 
   
   await updatePageListSidebar(); 
   await generatePageButtonsFindView();
@@ -878,6 +1590,10 @@ async function deletePage(title) {
 }
 
 async function showPage(title) {
+  if (title === "find-view") {
+    setMainView(false);
+    return;
+  }
   setMainView(true);
   console.log("Showing page:", title);
   closeSidebar();
@@ -911,7 +1627,8 @@ async function showPage(title) {
   }
   
   const finalSafeHTML = parseWiki(page.content); 
-  const pageUrl = `${location.origin}#${encodeURIComponent(page.title)}`;
+  // IMPORTANT: For the single file, the URL will always be index.html.
+  const pageUrl = `${location.origin}#${encodeURIComponent(page.title)}`; 
   const dateMod = new Date(page.lastEdited).toISOString();
   const authorName = escapeHTML(page.createdBy || 'Guest');
 
@@ -1502,7 +2219,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Create/Ensure essential wiki pages
   await createExampleWikiPage(); 
   await ensureMainPage(); 
-  await ensureVisualLogPage(); // ✅ ADDED: Initialization of the new Visual-Log page
+  await ensureVisualLogPage(); 
   
   await updatePageListSidebar(); 
   await generatePageButtonsFindView(); 
@@ -1551,6 +2268,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       await showPage("Main-Page");
     }
     
+    // Clear search inputs after submission
     if (inp) inp.value = '';
     if (findInp) findInp.value = '';
   });
@@ -1581,8 +2299,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 7. Settings Action Handler (Delegated)
   document.getElementById('page-container')?.addEventListener('click', handleSettingsAction);
 
-  // 8. Import File Change Handler (Removed from here, now in showSettings)
-
   // Initial load based on hash (skip if CLI action already loaded a specific view)
   if (!cliActionHandled) {
     const initialHash = decodeURIComponent(location.hash.slice(1));
@@ -1599,22 +2315,157 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  // SW Registration (kept for completeness)
+  // SW Registration (INLINED via Blob)
   if ('serviceWorker' in navigator) {
-    // ✅ PATH UPDATED TO ABSOLUTE PATH
-    navigator.serviceWorker.register('/mev/sw.js')
-      .then(() => console.log('✅ Service Worker registered'))
-      .catch(err => console.error('❌ SW registration failed:', err));
+    try {
+        const swBlob = new Blob([SERVICE_WORKER_CONTENT], { type: 'application/javascript' });
+        const swUrl = URL.createObjectURL(swBlob);
+
+        navigator.serviceWorker.register(swUrl)
+          .then(reg => {
+            console.log('✅ Service Worker registered via Blob URL:', reg.scope);
+          })
+          .catch(err => {
+            console.error('❌ SW registration failed via Blob:', err);
+          });
+    } catch (e) {
+        console.error("❌ Failed to register SW via Blob (Security/Browser restriction):", e);
+    }
+  }
+
+  // SW Update Fix for SPA Stale Content 
+  if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+          console.log("New Service Worker activated. Forcing page reload for fresh content.");
+          window.location.reload();
+      }, { once: true }); 
   }
 });
 
-// --- SW Update Fix for SPA Stale Content ---
-// This code runs immediately after DOMContentLoaded and is essential for reliable updates.
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.addEventListener('controllerchange', () => {
-        // This fires when the new Service Worker has finished installing and activated,
-        // effectively taking control of the current page's resources.
-        console.log("New Service Worker activated. Forcing page reload for fresh content.");
-        window.location.reload();
-    }, { once: true }); // Use { once: true } to prevent multiple reloads
-}
+// 🌐 Full i18n system (CSP-safe)
+document.addEventListener("DOMContentLoaded", () => {
+  const translations = {
+    "en-US": {
+      MainPage: "Main Page", About: "About", Settings: "Settings", Search: "Search Wiki",
+      Content: {
+        "Main-Page": "== Welcome to MEV Wiki ==\n\nAn offline-first encyclopedia powered by your browser.",
+        "About": "== About ==\n\nMEV Wiki lets you browse and edit offline content safely on your device.",
+        "Settings": "== Settings ==\n\nManage appearance, data, and user preferences."
+      }
+    },
+    "fr-FR": {
+      MainPage: "Page Principale", About: "À propos", Settings: "Paramètres", Search: "Rechercher dans le Wiki",
+      Content: {
+        "Main-Page": "== Bienvenue sur MEV Wiki ==\n\nUne encyclopédie hors ligne alimentée par votre navigateur.",
+        "About": "== À propos ==\n\nMEV Wiki vous permet de naviguer et de modifier le contenu hors ligne en toute sécurité.",
+        "Settings": "== Paramètres ==\n\nGérez l'apparence, les données et les préférences utilisateur."
+      }
+    },
+    "de-DE": {
+      MainPage: "Hauptseite", About: "Über", Settings: "Einstellungen", Search: "Wiki durchsuchen",
+      Content: {
+        "Main-Page": "== Willkommen bei MEV Wiki ==\n\nEine Offline-Enzyklopädie in deinem Browser.",
+        "About": "== Über ==\n\nMEV Wiki ermöglicht das sichere Offline-Arbeiten.",
+        "Settings": "== Einstellungen ==\n\nVerwalte Darstellung, Daten und Benutzer."
+      }
+    },
+    "es-ES": {
+      MainPage: "Página Principal", About: "Acerca de", Settings: "Configuraciones", Search: "Buscar en el Wiki",
+      Content: {
+        "Main-Page": "== Bienvenido a MEV Wiki ==\n\nUna enciclopedia sin conexión impulsada por tu navegador.",
+        "About": "== Acerca de ==\n\nMEV Wiki te permite explorar y editar contenido sin conexión.",
+        "Settings": "== Configuraciones ==\n\nAdministra apariencia, datos y preferencias del usuario."
+      }
+    },
+    "it-IT": {
+      MainPage: "Pagina Principale", About: "Informazioni", Settings: "Impostazioni", Search: "Cerca nel Wiki",
+      Content: {
+        "Main-Page": "== Benvenuto in MEV Wiki ==\n\nUn'enciclopedia offline gestita dal tuo browser.",
+        "About": "== Informazioni ==\n\nMEV Wiki ti consente di navigare e modificare offline.",
+        "Settings": "== Impostazioni ==\n\nGestisci aspetto, dati e preferenze."
+      }
+    },
+    "ja-JP": {
+      MainPage: "メインページ", About: "概要", Settings: "設定", Search: "ウィキを検索",
+      Content: {
+        "Main-Page": "== MEVウィキへようこそ ==\n\nブラウザで動作するオフライン百科事典です。",
+        "About": "== 概要 ==\n\nMEVウィキはオフラインで閲覧・編集できます。",
+        "Settings": "== 設定 ==\n\n外観、データ、ユーザー設定を管理します。"
+      }
+    }
+  };
+
+  const langBtn = document.getElementById("language-btn");
+  const langMenu = document.getElementById("language-menu");
+  const langSelect = document.getElementById("language-select");
+  const applyBtn = document.getElementById("apply-language-btn");
+  let currentLang = localStorage.getItem("wiki_language") || "en-US";
+
+  // 🌐 Toggle menu visibility
+  langBtn.addEventListener("click", () => langMenu.classList.toggle("hidden"));
+
+  // ✅ Apply selected language
+  applyBtn.addEventListener("click", () => {
+    currentLang = langSelect.value;
+    localStorage.setItem("wiki_language", currentLang);
+    applyLanguage(currentLang);
+    applyContentLanguage(currentLang);
+    langMenu.classList.add("hidden");
+  });
+
+  // 🌐 UI translation
+  function applyLanguage(locale) {
+    const dict = translations[locale] || translations["en-US"];
+    const mainBtn = document.querySelector("[data-page-target='Main-Page']");
+    const aboutBtn = document.querySelector("[data-nav-target='about']");
+    const settingsBtn = document.querySelector("[data-nav-target='settings']");
+    const searchInput = document.querySelector("#ai-input");
+    if (mainBtn) mainBtn.textContent = dict.MainPage;
+    if (aboutBtn) aboutBtn.textContent = dict.About;
+    if (settingsBtn) settingsBtn.textContent = dict.Settings;
+    if (searchInput) searchInput.placeholder = dict.Search;
+  }
+
+  // 📄 Content translation
+  function applyContentLanguage(locale) {
+    const pageContainer = document.getElementById("page-container");
+    if (!pageContainer) return;
+    const currentPage = (location.hash.replace("#", "") || "Main-Page");
+    const dict = translations[locale] || translations["en-US"];
+    if (dict.Content && dict.Content[currentPage]) {
+      // assumes parseWiki() exists in your code
+      pageContainer.innerHTML = typeof parseWiki === "function"
+        ? parseWiki(dict.Content[currentPage])
+        : dict.Content[currentPage];
+    }
+  }
+
+  // 🗣 Speech synthesis uses selected language
+  const originalSpeak = window.speak;
+  window.speak = (text) => {
+    if ("speechSynthesis" in window) {
+      const msg = new SpeechSynthesisUtterance(text);
+      msg.lang = currentLang;
+      window.speechSynthesis.speak(msg);
+    } else if (typeof originalSpeak === "function") {
+      originalSpeak(text);
+    }
+  };
+
+  // 🔁 Update content whenever navigation changes
+  window.addEventListener("hashchange", () => {
+    applyContentLanguage(currentLang);
+  });
+
+  // 🔁 Also update when page initially loads
+  langSelect.value = currentLang;
+  applyLanguage(currentLang);
+  applyContentLanguage(currentLang);
+});
+</script>
+
+
+<a rel="nofollow" style="display:none;" href="/blackhole/">
+
+</body>
+</html>
