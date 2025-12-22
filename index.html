@@ -625,15 +625,11 @@
 const SERVICE_WORKER_CONTENT = `
 // A unique name for your cache. Increment this version number every time
 // you make changes to the files listed in the 'FILES' array.
-const CACHE = "mev-wiki-v14-singlefile"; 
+const CACHE = "mev-wiki-v15-singlefile"; 
 
-// Full list of all static assets to cache during installation.
-// All dependencies must now be self-referential to the root index.html.
-const FILES = [
-  '/',
-  '/index.html',
-  '/mev/purify.min.js'
-];
+// This checks if the path ends with / or index.html, regardless of the subfolder
+const isMainDocument = url.pathname.endsWith('/') || url.pathname.endsWith('/index.html');
+
 
 // --- Install Listener ---
 self.addEventListener("install", event => {
@@ -866,6 +862,8 @@ async function decryptData(encryptedData) {
 // ==========================================================
 // 💾 CORE STORAGE UTILITIES (ASYNC WRAPPERS)
 // ==========================================================
+
+
 
 async function saveData(key, data) {
     try {
@@ -2324,9 +2322,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         const swBlob = new Blob([SERVICE_WORKER_CONTENT], { type: 'application/javascript' });
         const swUrl = URL.createObjectURL(swBlob);
 
-        navigator.serviceWorker.register(swUrl)
+        // FIX: Added { scope: '/mev/' } to ensure it controls the correct subdirectory
+        navigator.serviceWorker.register(swUrl, { scope: '/mev/' })
           .then(reg => {
-            console.log('✅ Service Worker registered via Blob URL:', reg.scope);
+            console.log('✅ Service Worker registered via Blob URL with scope:', reg.scope);
           })
           .catch(err => {
             console.error('❌ SW registration failed via Blob:', err);

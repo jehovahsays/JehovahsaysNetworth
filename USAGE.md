@@ -15,6 +15,10 @@ The core immersive experience.
 - **Controls**: Use the on-screen joysticks (mobile) or WASD (desktop) to navigate the environment.
 - **Exit**: Use the navigation links to return to the Map or the Root.
 
+### 4. Offline Access (PWA)
+The MEV Wiki is now fully PWA-compliant. Once visited, the Service Worker caches the "App Shell".
+- **Version Tracking**: If the system updates, the page will automatically refresh to ensure you are viewing the latest version of the AI's mind.
+
 ---
 
 ## 📁 The `m/` Directory Contents

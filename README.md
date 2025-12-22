@@ -63,3 +63,7 @@ Note: The .htaccess file in the /blackhole/ folder provides an extra layer of pr
 🧠 The Philosophy
 “MEV” (Multi Edit Vandalism) represents the fluid nature of digital information. This project is built to ensure that even if the external world changes, your personal "Internal Subconscious" of information remains under your control.
 
+> **Note**: The Service Worker is now scoped specifically to the `/mev/` directory. If testing locally, ensure you are serving the files from a local server (like Live Server or Python's `http.server`) to allow the Blob-based Service Worker 
+to register correctly.
+
+
