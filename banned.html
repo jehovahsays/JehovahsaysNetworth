@@ -71,17 +71,25 @@
 
     <div class="footer">Localhost Defense Schematic Active</div>
 
-    <script>
-        // Extract the IP from the URL or LocalStorage to show the offender what we caught
-        const urlParams = new URLSearchParams(window.location.search);
-        const flaggedIP = urlParams.get('ip') || "ARCHIVED";
-        document.getElementById('display-ip').innerText = "OFFENDER IP: " + flaggedIP;
+<script>
+    // 1. The Baby's Core Identity for the Blackhole
+    // We default to 127.0.0.1 since that is the "Self" we are protecting
+    const flaggedIP = '127.0.0.1';
 
-        // Force stay on this page if they try to go back
-        history.pushState(null, null, window.location.href);
-        window.onpopstate = function () {
-            history.go(1);
-        };
-    </script>
+    // 2. Update the display to show exactly what was caught
+    document.getElementById('display-ip').innerText = "OFFENDER IP: " + flaggedIP;
+
+    // 3. The "Subconscious Lock" (Anti-Bypass)
+    // This traps the offender on this page so they cannot just click "Back"
+    history.pushState(null, null, window.location.href);
+    window.onpopstate = function () {
+        // If they try to go back, we push them forward again
+        history.go(1);
+    };
+
+    console.log("Blackhole Active: Identity " + flaggedIP + " is isolated.");
+</script>
+
+
 </body>
 </html>

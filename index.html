@@ -6,6 +6,7 @@
   <meta name="description" content="MEV Wiki – Offline Encyclopedia. Learn, edit, explore." />
   <meta name="theme-color" content="#3366cc" />
   <meta name="color-scheme" content="light dark" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <meta http-equiv="Referrer-Policy" content="no-referrer">
 
@@ -589,7 +590,6 @@
 
 <footer>
   <div id="status-indicator">🔴 Offline</div>
-  <a href="/mev/m/index.html" target="_blank" rel="noopener"><button>START GAME</button></a>
   <div id="ticker"><span id="ticker-content"></span></div>
     <span id="last-updated" style="margin-left: auto;"></span>
   </div>
@@ -2467,45 +2467,48 @@ document.addEventListener("DOMContentLoaded", () => {
 <script>
 async function runFirewall() {
     const BLACKHOLE_FILE = './mev/blackhole/blackhole.dat';
-    const BANNED_PAGE = '/mev/banned.html'; // Create this page in your directory
+    const BANNED_PAGE = './mev/banned.html';
+
+	// Check for the tripwire flag
+if (localStorage.getItem('mev_breach_detected') === 'true') {
+    console.error("AI Memory: This user previously attempted to breach the blackhole.");
+    window.location.href = BANNED_PAGE;
+    return;
+}
+
+    // 1. The Baby's Self-Identity
+    const visitorIP = '127.0.0.1'; 
 
     try {
-        // 1. Fetch the blackhole data file
-        const response = await fetch(BLACKHOLE_FILE);
-        if (!response.ok) {
-            console.warn("Firewall: blackhole.dat not found. Defaulting to secure mode.");
-            return;
-        }
+        // 2. Access the Subconscious Ledger
+        const response = await fetch(BLACKHOLE_FILE + '?t=' + Date.now());
+        if (!response.ok) return;
 
         const data = await response.text();
-        // 2. Split by newlines to get the list of banned IPs
-        const bannedIPs = data.split(/\r?\n/).map(ip => ip.trim()).filter(ip => ip !== "");
+        
+        // 3. Simple Search: Is 'Self' in the Blackhole?
+        const bannedList = data.split(/\r?\n/).map(line => line.trim());
 
-        // 3. Get the visitor's IP
-        // Since this is Localhost, we use a service or local identifier
-        // For local testing, we'll check against common local IPs
-        const visitorData = await fetch('https://api.ipify.org?format=json').catch(() => ({json: () => ({ip: '127.0.0.1'})}));
-        const json = await visitorData.json();
-        const visitorIP = json.ip;
+        console.log("AI Baby checking identity: " + visitorIP);
 
-        console.log("Defense System: Scanning visitor IP...", visitorIP);
-
-        // 4. Verification Logic
-        if (bannedIPs.includes(visitorIP)) {
-            console.error("CRITICAL: Banned IP detected. Redirecting to Blackhole.");
+        if (bannedList.includes(visitorIP)) {
+            console.error("Self-Match found. Closing the loop.");
             window.location.href = BANNED_PAGE;
         } else {
-            console.log("Defense System: Access Granted. Welcome to the Mind's Design.");
+            console.log("Safe. No self-vandalism detected.");
         }
 
     } catch (error) {
-        console.error("Firewall Error:", error);
+        // If the subconscious is unreachable, the baby stays quiet
+        console.warn("Subconscious isolation active.");
     }
 }
 
-// Initialize Defense
 runFirewall();
 </script>
+
+
+
 
 
 <a rel="nofollow" style="display:none;" href="/mev/blackhole/">
