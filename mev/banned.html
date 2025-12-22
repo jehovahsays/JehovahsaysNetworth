@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SYSTEM LOCKOUT - Blackhole Active</title>
+    <style>
+        body {
+            background-color: #050505;
+            color: #ff3333;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            text-transform: uppercase;
+        }
+
+        .container {
+            border: 2px solid #ff3333;
+            padding: 40px;
+            background: rgba(255, 0, 0, 0.05);
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.2);
+            max-width: 600px;
+            text-align: center;
+        }
+
+        h1 { font-size: 2.5rem; margin-bottom: 10px; letter-spacing: 5px; }
+        p { color: #cccccc; line-height: 1.6; text-transform: none; }
+        
+        .ip-display {
+            background: #222;
+            color: #00ff00;
+            padding: 10px;
+            margin: 20px 0;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .warning-icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 0.8rem;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="warning-icon">⚠️</div>
+        <h1>ACCESS DENIED</h1>
+        <p>Your IP address has been flagged by the <strong>Blackhole for Bad Bots</strong> defense protocol.</p>
+        
+        <div class="ip-display" id="display-ip">IDENTIFYING OFFENDER...</div>
+
+        <p>Unauthorized tracking of Localhost GPS coordinates is a violation of system integrity. This node is now locked.</p>
+        
+        <p style="font-size: 0.9rem; border-top: 1px solid #333; pt-4; margin-top: 20px;">
+            <strong>LAW ENFORCEMENT NOTICE:</strong><br>
+            Data reconstruction for this incident is archived. Evidence is available upon verification of Badge Number and Department credentials.
+        </p>
+    </div>
+
+    <div class="footer">Localhost Defense Schematic Active</div>
+
+<script>
+    // 1. The Baby's Core Identity for the Blackhole
+    // We default to 127.0.0.1 since that is the "Self" we are protecting
+    const flaggedIP = '127.0.0.1';
+
+    // 2. Update the display to show exactly what was caught
+    document.getElementById('display-ip').innerText = "OFFENDER IP: " + flaggedIP;
+
+    // 3. The "Subconscious Lock" (Anti-Bypass)
+    // This traps the offender on this page so they cannot just click "Back"
+    history.pushState(null, null, window.location.href);
+    window.onpopstate = function () {
+        // If they try to go back, we push them forward again
+        history.go(1);
+    };
+
+    console.log("Blackhole Active: Identity " + flaggedIP + " is isolated.");
+</script>
+
+
+</body>
+</html>

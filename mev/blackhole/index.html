@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MEV - Perimeter Breach</title>
+</head>
+<body>
+    <script>
+        // 1. Identify the Intruder as 'Self' or use the common local address
+        const intruderIP = '127.0.0.1';
+
+        // 2. Log the Breach in the Local Mind (LocalStorage)
+        // This ensures the root firewall knows they were snooping
+        localStorage.setItem('mev_breach_detected', 'true');
+
+        console.error("PERIMETER BREACH: Unauthorized access to /blackhole/");
+
+        // 3. Immediately divert to the Banned Page
+        // Since we are inside the /blackhole/ folder, the path back is ../
+        window.location.href = '../mev/banned.html?reason=perimeter_breach';
+    </script>
+</body>
+</html>
