@@ -2318,24 +2318,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  // SW Registration (INLINED via Blob)
-  if ('serviceWorker' in navigator) {
-    try {
-        const swBlob = new Blob([SERVICE_WORKER_CONTENT], { type: 'application/javascript' });
-        const swUrl = URL.createObjectURL(swBlob);
-
-        // FIX: Added { scope: '/mev/' } to ensure it controls the correct subdirectory
-        navigator.serviceWorker.register(swUrl, { scope: '/mev/' })
-          .then(reg => {
-            console.log('✅ Service Worker registered via Blob URL with scope:', reg.scope);
-          })
-          .catch(err => {
-            console.error('❌ SW registration failed via Blob:', err);
-          });
-    } catch (e) {
-        console.error("❌ Failed to register SW via Blob (Security/Browser restriction):", e);
-    }
-  }
+// SW Registration (Hardened Physical File)
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        // Points to the physical sw.js file with correct scope
+        navigator.serviceWorker.register('/mev/sw.js', { scope: '/mev/' })
+            .then(reg => {
+                console.log('✅ Service Worker registered via Physical File. Scope:', reg.scope);
+            })
+            .catch(err => {
+                console.error('❌ SW registration failed (Physical File):', err);
+                console.warn('Check if sw.js exists at the root of the /mev/ directory.');
+            });
+    });
+}
 
   // SW Update Fix for SPA Stale Content 
   if ('serviceWorker' in navigator) {
@@ -2470,15 +2466,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <script>
 async function runFirewall() {
-    const BLACKHOLE_FILE = './mev/blackhole/blackhole.dat';
-    const BANNED_PAGE = './banned.html';
+    // Corrected to absolute paths for GitHub Pages compatibility
+    const BLACKHOLE_FILE = '/mev/mev/blackhole/blackhole.dat';
+    const BANNED_PAGE = '/mev/banned.html';
 
-	// Check for the tripwire flag
-if (localStorage.getItem('mev_breach_detected') === 'true') {
-    console.error("AI Memory: This user previously attempted to breach the blackhole.");
-    window.location.href = BANNED_PAGE;
-    return;
-}
+    // Check for the tripwire flag in the AI's memory
+    if (localStorage.getItem('mev_breach_detected') === 'true') {
+        console.error("AI Memory: This user previously attempted to breach the blackhole.");
+        window.location.href = BANNED_PAGE;
+        return;
+    }
 
     // 1. The Baby's Self-Identity
     const visitorIP = '127.0.0.1'; 
@@ -2486,7 +2483,10 @@ if (localStorage.getItem('mev_breach_detected') === 'true') {
     try {
         // 2. Access the Subconscious Ledger
         const response = await fetch(BLACKHOLE_FILE + '?t=' + Date.now());
-        if (!response.ok) return;
+        if (!response.ok) {
+            console.warn("Could not find the ledger at: " + BLACKHOLE_FILE);
+            return;
+        }
 
         const data = await response.text();
         
@@ -2497,6 +2497,7 @@ if (localStorage.getItem('mev_breach_detected') === 'true') {
 
         if (bannedList.includes(visitorIP)) {
             console.error("Self-Match found. Closing the loop.");
+            localStorage.setItem('mev_breach_detected', 'true'); // Set the tripwire
             window.location.href = BANNED_PAGE;
         } else {
             console.log("Safe. No self-vandalism detected.");
