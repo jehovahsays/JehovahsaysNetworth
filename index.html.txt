@@ -1,3 +1,4 @@
+<a href="/mev/m/index.html"><button>PLAY</button></a>-<a href="/mev/m/search.html"><button>SEARCH</button></a>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,13 +7,11 @@
   <meta name="description" content="MEV Wiki – Offline Encyclopedia. Learn, edit, explore." />
   <meta name="theme-color" content="#3366cc" />
   <meta name="color-scheme" content="light dark" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <meta http-equiv="Referrer-Policy" content="no-referrer">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self' 'unsafe-inline' blob:; object-src 'none'; style-src 'self' 'unsafe-inline';">
 
-  <link rel="manifest" href="/mev/manifest.json">
-  <link rel="icon" href="/mev/assets/icons/icon-192.png" type="image/png">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self' 'unsafe-inline'; object-src 'none'; style-src 'self' 'unsafe-inline';">
   
   <style>
     /* Base Layout Styles */
@@ -590,13 +589,12 @@
     <div id="page-container"></div> 
   </main>
 </div>
+
 <footer>
   <div id="status-indicator">🔴 Offline</div>
   <div id="ticker"><span id="ticker-content"></span></div>
     <span id="last-updated" style="margin-left: auto;"></span>
   </div>
-  <p>© 2025 MEV Wiki</p>
-  <a href="https://jehovahsays.github.io/mev/" target="_blank">Open in Browser</a>
 </footer>
 
 <div id="auth-modal" class="modal-overlay">
@@ -627,11 +625,15 @@
 const SERVICE_WORKER_CONTENT = `
 // A unique name for your cache. Increment this version number every time
 // you make changes to the files listed in the 'FILES' array.
-const CACHE = "mev-wiki-v15-singlefile"; 
+const CACHE = "mev-wiki-v14-singlefile"; 
 
-// This checks if the path ends with / or index.html, regardless of the subfolder
-const isMainDocument = url.pathname.endsWith('/') || url.pathname.endsWith('/index.html');
-
+// Full list of all static assets to cache during installation.
+// All dependencies must now be self-referential to the root index.html.
+const FILES = [
+  '/',
+  '/index.html',
+  '/mev/purify.min.js'
+];
 
 // --- Install Listener ---
 self.addEventListener("install", event => {
@@ -864,8 +866,6 @@ async function decryptData(encryptedData) {
 // ==========================================================
 // 💾 CORE STORAGE UTILITIES (ASYNC WRAPPERS)
 // ==========================================================
-
-
 
 async function saveData(key, data) {
     try {
@@ -2324,10 +2324,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         const swBlob = new Blob([SERVICE_WORKER_CONTENT], { type: 'application/javascript' });
         const swUrl = URL.createObjectURL(swBlob);
 
-        // FIX: Added { scope: '/mev/' } to ensure it controls the correct subdirectory
-        navigator.serviceWorker.register(swUrl, { scope: '/mev/' })
+        navigator.serviceWorker.register(swUrl)
           .then(reg => {
-            console.log('✅ Service Worker registered via Blob URL with scope:', reg.scope);
+            console.log('✅ Service Worker registered via Blob URL:', reg.scope);
           })
           .catch(err => {
             console.error('❌ SW registration failed via Blob:', err);
