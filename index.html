@@ -587,7 +587,20 @@
 
   <main id="main-content-wrapper" itemscope itemtype="https://schema.org/WebPage">
     <meta itemprop="url" content="https://jehovahsays.github.io/mev/">
-    <div id="page-container"></div> 
+   <button id="redirect-button" class="edit-btn" style="margin-top: 20px;">
+START GAME
+</button>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const btn = document.getElementById('redirect-button');
+  if (btn) {
+    btn.addEventListener('click', () => {
+      window.location.href = "/mev/m/index.html";
+    });
+  }
+});
+</script>
+   <div id="page-container"></div> 
   </main>
 </div>
 <footer>
