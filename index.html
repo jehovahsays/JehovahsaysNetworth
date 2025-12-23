@@ -9,7 +9,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <meta http-equiv="Referrer-Policy" content="no-referrer">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self' 'unsafe-inline' blob:; object-src 'none'; style-src 'self' 'unsafe-inline';">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self' 'unsafe-inline' blob:; object-src 'none'; style-src 'self' 'unsafe-inline';"> 
+
 
   <link rel="manifest" href="/mev/manifest.json">
   <link rel="icon" href="/mev/assets/icons/icon-192.png" type="image/png">
@@ -631,59 +632,43 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <script type="text/javascript">
 
-/**
- * sw.js - Service Worker for MEV Wiki PWA (INLINED)
- * * NOTE: The Service Worker file must be registered either as a Blob or a Data URL
- * to be self-contained in index.html. We will use a Blob.
- * * The Service Worker content (previously in mev/sw.js) is stored here as a string.
- */
+// --- Service Worker Content (Subconscious) ---
 const SERVICE_WORKER_CONTENT = `
-// A unique name for your cache. Increment this version number every time
-// you make changes to the files listed in the 'FILES' array.
-const CACHE = "mev-wiki-v15-singlefile"; 
+const CACHE = "mev-wiki-v1.2.1-final";
 
-// This checks if the path ends with / or index.html, regardless of the subfolder
-const isMainDocument = url.pathname.endsWith('/') || url.pathname.endsWith('/index.html');
-
+// Assets to cache for the 'Subconscious'
+const FILES = [
+  "/mev/",
+  "/mev/index.html",
+  "/mev/manifest.json",
+  "/mev/assets/icons/icon-192.png"
+];
 
 // --- Install Listener ---
 self.addEventListener("install", event => {
   console.log('[Service Worker] Install Event - Caching App Shell:', CACHE);
-  // waitUntil ensures the Service Worker won't install until the cache is fully populated.
   event.waitUntil(
     caches.open(CACHE)
-      .then(cache => {
-        // cache.addAll only needs to fetch the single index.html file.
-        return cache.addAll(FILES);
-      })
-      .catch(err => {
-        // If caching fails for any file (e.g., a 404), the Service Worker installation fails.
-        console.error('[Service Worker] Failed to cache critical assets:', err);
-      })
+      .then(cache => cache.addAll(FILES))
+      .then(() => self.skipWaiting())
+      .catch(err => console.error('[Service Worker] Install Failed:', err))
   );
-  // Force the new Service Worker to activate immediately.
-  self.skipWaiting(); 
 });
 
 // --- Activate Listener ---
 self.addEventListener("activate", event => {
   console.log('[Service Worker] Activate Event - Cleaning old caches.');
-  // Delete outdated caches to free up space.
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cacheName => {
-          // If the current cache name is not in the whitelist (i.e., it's an old version), delete it.
           if (cacheName !== CACHE) {
-            console.log('[Service Worker] Deleting old cache:', cacheName);
             return caches.delete(cacheName);
           }
         })
       );
-    })
+    }).then(() => self.clients.claim())
   );
-  // Claim clients immediately to take control of all open pages within the scope.
-  return self.clients.claim();
 });
 
 // --- Fetch Listener ---
@@ -691,42 +676,32 @@ self.addEventListener("fetch", event => {
   if (event.request.method !== "GET") return;
 
   const url = new URL(event.request.url);
-  // Check if the request is for the main document (root or index.html)
-  const isMainDocument = url.pathname === '/' || url.pathname === '/index.html';
   
-  // Strategy: Network-First with Cache Fallback for index.html (the only asset)
+  // YOUR LOGIC: Using endsWith to catch the perimeter safely
+  const isMainDocument = url.pathname.endsWith('/') || url.pathname.endsWith('/index.html');
+  
   if (isMainDocument) {
     event.respondWith(
       fetch(event.request)
         .then(networkRes => {
-          // If the network response is good (200 OK), cache it for future offline use, 
-          // and return the original response.
           if (networkRes.status === 200) {
             const resToCache = networkRes.clone();
             caches.open(CACHE).then(cache => cache.put(event.request, resToCache));
           }
           return networkRes;
         })
-        .catch(() => {
-          // If network fails (offline or error), serve the single index.html from cache.
-          // Note: Since all CSS/JS is inline, this cached index.html is the entire app.
-          return caches.match(event.request); 
-        })
+        .catch(() => caches.match(event.request)) 
     );
     return;
   }
 
-  // All other requests (e.g., hash changes, or external requests which should fail)
-  // are handled here. Since there are no external assets, the main logic is simple.
+  // Fallback for icons/manifest
   event.respondWith(
-    caches.match(event.request).then(cacheRes => {
-      // If the request is not for the root, and it's not in the cache (it shouldn't be), 
-      // let the network attempt it, which will likely fail, or the browser will handle it.
-      return cacheRes || fetch(event.request);
-    })
+    caches.match(event.request).then(cacheRes => cacheRes || fetch(event.request))
   );
 });
 `;
+
 
 // ====== MEV SECURITY LAYER (Moved from inline script) ======
 (function secureClientApp() {
@@ -2525,8 +2500,93 @@ async function runFirewall() {
 runFirewall();
 </script>
 
+<div id="mev-splash-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: black; z-index: 9999; overflow-y: auto;">
+    <div id="search-container" style="max-width: 600px; margin: 50px auto; padding: 20px; font-family: system-ui, sans-serif;">
+        <form id="splash-form" action="#search">	
+            <input
+                id="filterInput-splash"
+                autocomplete="off"
+                autocorrect="off"  
+                autocapitalize="off" 
+                spellcheck="false"
+                type="text" 
+                placeholder="Search wiki pages..." 
+                style="width: 100%; padding: 15px; margin-bottom: 20px; font-size: 1.2em; border-radius: 5px; border: 1px solid #333; background-color: #222; color: peru; box-sizing: border-box;"
+                required>
+        </form>
+        
+        <ul id="page-list-splash" style="list-style: none; padding: 0; margin: 0;"></ul>
+        
+        <div id="status-message-splash" style="color: #ccc; margin-top: 10px; font-family: monospace;"></div>
+    </div>
+</div>
 
+<script>
+(function() {
+    const STORAGE_KEY = 'wiki_pages';
 
+    function loadWikiData() {
+        try {
+            const v = localStorage.getItem(STORAGE_KEY);
+            return v ? JSON.parse(v) : {};
+        } catch { return {}; }
+    }
+
+    function createSplashButton(title, hash) {
+        const li = document.createElement('li');
+        li.style.margin = "10px 0";
+        
+        const button = document.createElement('button');
+        button.textContent = title;
+        button.style.cssText = "width: 100%; padding: 12px; text-align: left; background-color: #3366cc; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 1.1em;";
+        
+        button.onclick = () => {
+            document.getElementById('mev-splash-screen').style.display = 'none';
+            window.location.hash = hash;
+        };
+
+        li.appendChild(button);
+        return li;
+    }
+
+    function initSplashScreen() {
+        const listEl = document.getElementById('page-list-splash');
+        const inputEl = document.getElementById('filterInput-splash');
+        const pages = loadWikiData();
+        
+        // Populate with static and dynamic "Neurons"
+        const staticLinks = [
+            { title: "Main Page", hash: "main" },
+            { title: "Recent Changes", hash: "recent" }
+        ];
+
+        staticLinks.forEach(link => listEl.appendChild(createSplashButton(link.title, link.hash)));
+        
+        Object.keys(pages).sort().forEach(title => {
+            listEl.appendChild(createSplashButton(title, encodeURIComponent(title)));
+        });
+
+        // Real-time Filtering logic
+        inputEl.addEventListener('input', function() {
+            const filter = this.value.toLowerCase();
+            const items = listEl.querySelectorAll('li');
+            items.forEach(li => {
+                const text = li.querySelector('button').textContent.toLowerCase();
+                li.style.display = text.includes(filter) ? "block" : "none";
+            });
+        });
+
+        // Handle Enter key for "Calculated" navigation
+        document.getElementById('splash-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const firstVisible = listEl.querySelector('li[style*="display: block"] button, li:not([style*="display"]) button');
+            if (firstVisible) firstVisible.click();
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', initSplashScreen);
+})();
+</script>
 
 
 <a rel="nofollow" style="display:none;" href="/mev/blackhole/">
