@@ -2514,6 +2514,8 @@ runFirewall();
                 style="width: 100%; padding: 15px; margin-bottom: 20px; font-size: 1.2em; border-radius: 5px; border: 1px solid #333; background-color: #222; color: peru; box-sizing: border-box;"
                 required>
         </form>
+		
+		
         
         <ul id="page-list-splash" style="list-style: none; padding: 0; margin: 0;"></ul>
         
@@ -2588,6 +2590,98 @@ runFirewall();
 })();
 </script>
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const HUMAN_KEY = 'mev_human_verified';
+
+    // Function to set the user as verified human
+    function markAsHuman() {
+        localStorage.setItem(HUMAN_KEY, 'true');
+    }
+
+    // Listen for input in the search box
+    const searchInput = document.getElementById('filterInput-splash');
+    if (searchInput) {
+        searchInput.addEventListener('input', markAsHuman);
+    }
+
+    // Listen for clicks on the buttons
+    const buttons = document.querySelectorAll('#page-list-splash button');
+    buttons.forEach(button => {
+        button.addEventListener('click', markAsHuman);
+    });
+
+    // Check before allowing navigation away from the splash
+    function checkVerification() {
+        if (!localStorage.getItem(HUMAN_KEY)) {
+            // If not verified, redirect them to a friendly verification reminder
+            window.location.href = '/mev/banned.html';
+        }
+    }
+
+    // Attach this check to any navigation or form submissions on the splash page
+    // For example, if there’s a “Proceed” button that leads to the main index:
+    const proceedButton = document.getElementById('proceedButton');
+    if (proceedButton) {
+        proceedButton.addEventListener('click', function(event) {
+            checkVerification();
+            // Optionally prevent default navigation if not verified
+            if (!localStorage.getItem(HUMAN_KEY)) {
+                event.preventDefault();
+            }
+        });
+    }
+});
+</script>
+
+<script>
+async function createTriggerWatcher() {
+    const BANNED_PAGE = '/mev/banned.html';
+    const HUMAN_KEY = 'mev_human_verified';
+    const BREACH_KEY = 'mev_breach_detected';
+
+    // 0. The AI's memory — has this user tripped before?
+    if (localStorage.getItem(BREACH_KEY) === 'true') {
+        console.warn("Echo memory: Breach previously logged.");
+        window.location.href = BANNED_PAGE;
+        return;
+    }
+
+    // 1. The Echo in the Address — listen for pattern #create=PageName
+    const hash = window.location.hash;
+
+    if (!hash.startsWith('#create=')) return; // Nothing suspicious here
+
+    // 2. The Unsafe Whisper — a page creation without touch
+    const title = decodeURIComponent(hash.split('=')[1] || '').trim();
+
+    // 3. The Litmus Test — has the user proven they're human?
+    if (localStorage.getItem(HUMAN_KEY) !== 'true') {
+        console.error(`Unauthorized attempt to manifest page "${title}" detected via URI echo.`);
+
+        // Tripwire triggered — permanent echo stored
+        localStorage.setItem(BREACH_KEY, 'true');
+
+        // Close the door
+        window.location.href = BANNED_PAGE;
+        return;
+    }
+
+    // 4. The Blessing — allow page creation if verified
+    console.log(`Human verified. Proceeding to create page "${title}".`);
+
+    // Call your secure or default create function
+    if (typeof createPageSecure === 'function') {
+        createPageSecure(title);
+    } else if (typeof createPage === 'function') {
+        createPage(title);
+    }
+}
+
+// Manifest check on arrival and on echo changes
+document.addEventListener('DOMContentLoaded', createTriggerWatcher);
+window.addEventListener('hashchange', createTriggerWatcher);
+</script>
 
 <a rel="nofollow" style="display:none;" href="/mev/blackhole/">
 
