@@ -475,7 +475,37 @@
          from { opacity: 0; transform: translateY(-10px); }
          to   { opacity: 1; transform: translateY(0); }
       }
+	  
+	  /* Updated Navigation Button Styles */
+.mev-button {
+    display: block;
+    background: rgba(0, 0, 0, 0.8);
+    color: #0f0;
+    
+    /* Increased size to match larger buttons */
+    padding: 12px 25px; 
+    font-size: 1.0em;
+    width: 100%; /* Ensures they fill the container like the find-view buttons */
+    
+    border: 1px solid #0f0;
+    border-radius: 5px;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.1);
+    margin-bottom: 5px; /* Adds space between the buttons */
+}
+
+.mev-button:hover {
+    background: #0f0;
+    color: #000;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+}
+
   </style>
+ 
+ 
+  
 <script src="/mev/purify.min.js"></script>
 
 </head>
@@ -596,7 +626,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const btn = document.getElementById('redirect-button');
   if (btn) {
     btn.addEventListener('click', () => {
-      window.location.href = "/mev/m/index.html";
+      window.location.href = "/mev/m/test4.html";
     });
   }
 });
@@ -2455,8 +2485,8 @@ document.addEventListener("DOMContentLoaded", () => {
 <script>
 async function runFirewall() {
     // Corrected to absolute paths for GitHub Pages compatibility
-    const BLACKHOLE_FILE = '/mev/mev/blackhole/blackhole.dat';
-    const BANNED_PAGE = '/mev/banned.html';
+    const BLACKHOLE_FILE = '/mev/blackhole/blackhole.dat';
+    const BANNED_PAGE = '/mev/css.html';
 
     // Check for the tripwire flag in the AI's memory
     if (localStorage.getItem('mev_breach_detected') === 'true') {
@@ -2515,6 +2545,10 @@ runFirewall();
                 required>
         </form>
 		
+		    <div class="nav-container">
+        <a href="/mev/playlist.html" class="mev-button"><button>playlist</button></br></a>
+    </div>
+
 		
         
         <ul id="page-list-splash" style="list-style: none; padding: 0; margin: 0;"></ul>
@@ -2615,7 +2649,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function checkVerification() {
         if (!localStorage.getItem(HUMAN_KEY)) {
             // If not verified, redirect them to a friendly verification reminder
-            window.location.href = '/mev/banned.html';
+            window.location.href = '/mev/css.html';
         }
     }
 
@@ -2636,7 +2670,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <script>
 async function createTriggerWatcher() {
-    const BANNED_PAGE = '/mev/banned.html';
+    const BANNED_PAGE = '/mev/css.html';
     const HUMAN_KEY = 'mev_human_verified';
     const BREACH_KEY = 'mev_breach_detected';
 
@@ -2683,7 +2717,12 @@ document.addEventListener('DOMContentLoaded', createTriggerWatcher);
 window.addEventListener('hashchange', createTriggerWatcher);
 </script>
 
+
+
+
 <a rel="nofollow" style="display:none;" href="/mev/blackhole/">
 
 </body>
 </html>
+
+

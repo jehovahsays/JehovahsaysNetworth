@@ -158,11 +158,7 @@
 		<div id="info"></div>
         
         <div id="orbit-controls-info">
-		<a href="../" target="_blank" rel="noopener"><button class="infobox">home</button></a><br><br>
-            Orbital Controls:<br>
-             1 finger: Rotate<br>
-             2 fingers: Zoom<br>
-             3 fingers: Pan
+		<a href="../" target="_blank" rel="noopener"><button class="infobox">home</button></a>
         </div>
         
 <div id="joystick-left" class="joystick-container">
@@ -406,7 +402,7 @@ function showRespawnButton() {
 }
 
 function respawnPlayer() {
-  playerHealth = 3;
+  playerHealth = 100;
   gameActive = true;
   const respawnButton = document.getElementById('respawnButton');
   if (respawnButton) respawnButton.remove();
@@ -613,7 +609,7 @@ function createGUI( model, animations ) {
         fadeToAction( api.state, 0.2 );
     }
     for ( let i = 0; i < emotes.length; i ++ ) createEmoteCallback( emotes[ i ] );
-    emoteFolder.open();
+    emoteFolder.close();
     activeAction = actions[ 'Walking' ];
     activeAction.play();
 }
