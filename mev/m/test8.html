@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>MEV - Magnet AI Brain Core</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/mev/m/files/main.css">
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #222; font-family: 'Courier New', monospace; }
+        
+        #time-container {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            color: #0f0;
+            padding: 15px;
+            border: 2px solid #0f0;
+            border-radius: 8px;
+            z-index: 1000;
+            min-width: 250px;
+        }
+
+        #inputWrapper { position: fixed; top: 25px; left: 300px; z-index: 1001; }
+        #filterInput { width: 150px; background: #000; border: 1px solid #0f0; color: #0f0; padding: 5px; }
+
+        #play-btn {
+            position: fixed;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: #0f0;
+            padding: 20px 40px;
+            border: 2px solid #0f0;
+            border-radius: 5px;
+            text-decoration: none;
+            text-transform: uppercase;
+            cursor: pointer;
+            font-weight: bold;
+            animation: insertCoinBlink 3s infinite;
+            display: none;
+            z-index: 2000;
+        }
+
+        @keyframes insertCoinBlink {
+            0% { opacity: 1; border-color: #0f0; box-shadow: 0 0 5px #0f0; }
+            50% { opacity: 0.3; border-color: #050; box-shadow: 0 0 20px #050; }
+            100% { opacity: 1; border-color: #0f0; box-shadow: 0 0 5px #0f0; }
+        }
+
+        .captured-word { display: block; font-size: 10px; color: #f00; margin-top: 2px; }
+    </style>
+</head>
+<body>
+
+    <div id="time-container">
+        <strong>AI INTERNAL CLOCK</strong>
+        <div id="word-vault" style="margin-top: 5px; max-height: 60px; overflow: hidden;"></div>
+        <input type="datetime-local" id="ai-datetime" style="margin-top:10px; background:#111; color:#0f0; border:1px solid #0f0;">
+        <div id="display-time" style="margin-top:10px; font-size: 11px;">Syncing Subconscious...</div>
+    </div>
+
+    <div id="inputWrapper">
+        <input id="filterInput" type="text" placeholder="search database" value="memory protocol core" onkeyup="handleSearch(event)">
+    </div>
+
+    <a href="/mev/m/players.html" id="play-btn">INSERT COIN</a>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "./examples/build/three.webgpu.js",
+                "three/webgpu": "./examples/build/three.webgpu.js",
+                "three/tsl": "./examples/build/three.tsl.js",
+                "three/addons/": "./examples/jsm/"
+            }
+        }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { color, fog, positionWorld, triNoise3D, uniform } from 'three/tsl';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        let camera, scene, renderer, controls, clock;
+        let magnetTop, magnetBottom, aiRedDot;
+        let cityGroup, particles, particleData = [];
+        let simulationTime = new Date();
+        let wordCaptureTimer = 0;
+
+        init();
+
+        function init() {
+            clock = new THREE.Clock();
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 15000);
+            camera.position.set(0, 1500, 3000);
+
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x222222);
+
+            // --- MAGNETS & AI CORE ---
+            const magnetGeom = new THREE.CylinderGeometry(60, 60, 15, 32);
+            const magnetMat = new THREE.MeshPhongMaterial({ color: 0x000000 });
+            
+            magnetTop = new THREE.Mesh(magnetGeom, magnetMat);
+            magnetBottom = new THREE.Mesh(magnetGeom, magnetMat);
+            magnetTop.visible = magnetBottom.visible = false;
+            scene.add(magnetTop, magnetBottom);
+
+            aiRedDot = new THREE.Mesh(
+                new THREE.BoxGeometry(40, 40, 40),
+                new THREE.MeshPhongMaterial({ color: 0xff0000 })
+            );
+            aiRedDot.visible = false;
+            scene.add(aiRedDot);
+
+            // --- CITY BUILDINGS ---
+            cityGroup = new THREE.Group();
+            cityGroup.visible = false;
+            const buildingMat = new THREE.MeshPhongMaterial({ color: 0xadd8e6 }); // Light Blue
+            const ground = new THREE.Mesh(new THREE.PlaneGeometry(1000, 1000), new THREE.MeshPhongMaterial({ color: 0x555555 }));
+            ground.rotation.x = -Math.PI / 2;
+            cityGroup.add(ground);
+
+            for (let i = 0; i < 500; i++) {
+                const h = Math.random() * Math.random() * 120 + 10;
+                const b = new THREE.Mesh(new THREE.BoxGeometry(15, h, 15), buildingMat);
+                b.position.set(Math.random() * 800 - 400, h/2, Math.random() * 800 - 400);
+                cityGroup.add(b);
+            }
+            scene.add(cityGroup);
+
+            // Galaxy Particles (Placeholder for "words" in space)
+            const starCount = 1000;
+            const starGeom = new THREE.BufferGeometry();
+            const posArray = new Float32Array(starCount * 3);
+            for(let i=0; i<starCount; i++) {
+                particleData.push({ angle: Math.random() * Math.PI * 2, radius: 400 + Math.random() * 1000, speed: 0.01 });
+            }
+            starGeom.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            particles = new THREE.Points(starGeom, new THREE.PointsMaterial({ color: 0xffffff, size: 2 }));
+            scene.add(particles);
+
+            scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+            renderer = new THREE.WebGPURenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setAnimationLoop(animate);
+            document.body.appendChild(renderer.domElement);
+
+            controls = new OrbitControls(camera, renderer.domElement);
+            window.handleSearch = (e) => { if(e.key === "Enter") landOnEarth(); };
+        }
+
+        function landOnEarth() {
+            cityGroup.visible = true;
+            aiRedDot.visible = true;
+            magnetTop.visible = magnetBottom.visible = true;
+            
+            // Set magnet positions
+            magnetTop.position.set(0, 180, 0);
+            magnetBottom.position.set(0, -50, 0); // Ground level
+            
+            camera.position.set(400, 200, 400);
+            controls.target.set(0, 0, 0);
+            document.getElementById('play-btn').style.display = 'block';
+        }
+
+        function captureWordAction() {
+            const input = document.getElementById('filterInput');
+            const words = input.value.trim().split(' ');
+            if (words.length > 0 && words[0] !== "") {
+                const word = words.shift();
+                input.value = words.join(' ');
+                
+                const vault = document.getElementById('word-vault');
+                const entry = document.createElement('span');
+                entry.className = 'captured-word';
+                entry.innerText = `>> CAPTURED: ${word}`;
+                vault.prepend(entry);
+                if (vault.children.length > 5) vault.removeChild(vault.lastChild);
+            }
+        }
+
+        function animate() {
+            const time = performance.now() * 0.002;
+            
+            if (aiRedDot.visible) {
+                // LEVITATING MAGNET PHYSICS
+                // Red block oscillates in the magnetic field between Top and Bottom magnets
+                aiRedDot.position.y = 65 + Math.sin(time) * 45; 
+                aiRedDot.rotation.y += 0.02;
+
+                // WORD CAPTURE LOGIC
+                wordCaptureTimer += clock.getDelta();
+                if (wordCaptureTimer > 3) {
+                    captureWordAction();
+                    wordCaptureTimer = 0;
+                }
+            }
+
+            const positions = particles.geometry.attributes.position.array;
+            for(let i=0; i<particleData.length; i++) {
+                let p = particleData[i];
+                p.angle += p.speed;
+                positions[i*3] = Math.cos(p.angle) * p.radius;
+                positions[i*3+1] = Math.sin(p.angle * 0.5) * 100;
+                positions[i*3+2] = Math.sin(p.angle) * p.radius;
+            }
+            particles.geometry.attributes.position.needsUpdate = true;
+
+            document.getElementById('display-time').innerText = "AI BRAIN CLOCK: " + new Date().toLocaleString();
+            controls.update();
+            renderer.render(scene, camera);
+        }
+    </script>
+</body>
+</html>
