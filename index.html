@@ -1,124 +1,193 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Index</title>
-    <style>
-        :root {
-            --bg: #f4f4f9;
-            --sidebar-bg: #2c3e50;
-            --text-main: #333;
-            --accent: #3498db;
-        }
+<meta charset="UTF-8">
+<http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<http-equiv="Pragma" content="no-cache">
+<http-equiv="Expires" content="0">
 
-        body { font-family: sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; background: var(--bg); }
+<style>
+    body {
+        background-color: black;
+        margin: 0;
+        overflow: hidden; /* Prevent scrolling on mobile */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        width: 100vw;
+    }
 
-        /* --- THE HAMBURGER HACK --- */
-        #menu-toggle { display: none; }
-        .menu-icon {
-            position: fixed; top: 0px; left: 0px; z-index: 100;
-            cursor: pointer; background: var(--sidebar-bg); color: white;
-            padding: 10px; border-radius: 5px; font-weight: bold;
-        }
+    /* The Gravitational Core (#main button) */
+    .core {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80px;
+        height: 80px;
+        z-index: 100;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-decoration: none;
+    }
 
-        /* --- SIDEBAR LOGIC --- */
-        #sidebar {
-            width: 250px; background: var(--sidebar-bg); color: white;
-            position: fixed; height: 100%; left: -250px; /* Hidden by default */
-            transition: 0.3s ease; z-index: 99; padding-top: 60px;
-        }
+    .core button {
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        border: 1px solid #3366cc;
+        border-radius: 50%;
+        font-family: monospace;
+        cursor: pointer;
+        box-shadow: 0 0 15px #3366cc;
+    }
 
-        /* Show sidebar when checkbox is checked */
-        #menu-toggle:checked ~ #sidebar { left: 0; }
+    /* The Orbital Container */
+    .content {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: none; /* Allow clicks to pass to the core button if needed */
+    }
 
-        .nav-item {
-            display: block; padding: 15px 20px; color: #ecf0f1;
-            text-decoration: none; border-bottom: 1px solid #34495e;
-            font-family: monospace;
-        }
-        .nav-item:hover { background: #34495e; }
+    /* Individual Orbiting Titles */
+    .titleInput {
+        pointer-events: auto;
+        font-size: 16px;
+        color: white;
+        font-family: monospace;
+        animation: fadeIn 0.8s ease-in-out;
+    }
 
-        /* --- MAIN CONTENT AREA --- */
-        #main-display {
-            flex-grow: 1; width: 100%; height: 30%;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            padding: 10px; box-sizing: border-box;
-        }
+    /* Search Box Styles */
+    #inputWrapper {
+position: fixed;
+        top: 50%;
+        left: 35%;
+        width: 10px;
+        display: flex;
+        justify-content: center;
+        z-index: 100;
+    }
 
-        /* --- ARTICLE FORMATTING --- */
-        .article {
-            display: none; /* Hidden until targeted */
-            width: 100%; max-width: 800px;
-            text-align: left;
-            background: white; padding: 40px;
-            border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
+    input[type="text"] {
+        font-family: monospace;
+        font-size: 12px;
+        color: peru;
+        background: rgba(0, 0, 0, 0.8);
+        border: 1px solid peru;
+        padding: 5px 10px;
+        width: 200px;
+        text-align: center;
+    }
 
-        /* The Entire Page Display Logic */
-        .article:target {
-            display: block;
-        }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.5); }
+        to { opacity: 1; transform: scale(1); }
+    }
+</style>
 
-        /* Hide the 'Welcome' message when an article is active */
-        .article:target ~ #welcome-msg { display: none; }
+<title>MEV</title>
 
-        h2 { font-size: 2.5rem; border-bottom: 3px solid var(--accent); padding-bottom: 10px; margin-bottom: 20px; color: var(--text-main); }
-        p { font-size: 1.2rem; line-height: 1.8; color: #555; }
+<script src="/mev/wiki/TagCloud.js"></script>
 
-        .label { color: var(--accent); font-weight: bold; text-transform: uppercase; font-size: 0.8rem; }
-    </style>
 </head>
 <body>
 
-    <input type="checkbox" id="menu-toggle">
-    <label for="menu-toggle" class="menu-icon">☰ INDEX</label>
-
-    <nav id="sidebar">
-        <span style="padding: 20px; font-size: 0.7rem; opacity: 0.5;">/#MAIN</span>
-        <a href="/mev/#main" class="nav-item">#main</a>
-        <a href="/mev/#settings" class="nav-item">#settings</a>
-        <a href="/mev/#recent" class="nav-item">#recent</a>
-        <a href="/mev/#about" class="nav-item">#about</a>
-    </nav>
-
-    <main id="main-display">
-        <br><br>
-        <div id="welcome-msg">
-            <h1>MEV Multi Edit Vandalism</h1>
-            <p>Open the menu to browse MEV</p>
-        </div>
-
-        <article id="main" class="article">
-            <h2>Main</h2>
-			        <a href="/mev/wiki/#main"><button>View Page</button></a>
-            <p>This is the primary entry point click View Page button to see more.</p>
-	
-        </article>
-
-        <article id="settings" class="article">
+<a href="#" class="core">
+<div id="inputWrapper">
+    <input
+        id="filterInput"
+        onkeyup="titleInput()"
+        type="text" 
+        placeholder="search database" 
+        x-webkit-speech
+        autocomplete="off">
+		<a href="/mev/wiki/#main">
+		<button>search</button>
+		</a>
 		
-			<br><br><br><br>
-            <h2>Settings</h2>
-        <a href="/mev/wiki/#settings"><button>View Page</button></a>
-            <p>Configuration parameters for the Blackhole for Bad Bots and internal localhost page routing. click View Page button to see more.</p>
-        </article>
+</div>
+</a>
 
-        <article id="recent" class="article">
-           
-		   <h2>Recent</h2>
-			<a href="/mev/wiki/#recent"><button>View Page</button></a>
-            <p>A log of the most recently updated mathematical definitions and bot protection logs. click View Page button to see more.</p>
-        </article>
+<div class="content"></div>
 
-        <article id="about" class="article">
-            <h2>About</h2>
-<a href="/mev/wiki/#about" class="nav-item"><button>View Page</button></a>
-            <p>MEV Multi Edit Vandalism Wiki is a zero-server search engine designed for maximum privacy and offline stability click View Page button to see more. [cite: 2025-12-18].</p>
-        </article>
+<script>
+// --- 1. Database Connection & Replay Logic ---
+async function startMevWikiReplay() {
+    const container = '.content';
+    
+    // System pages and User pages from localStorage
+    const systemTags = ["#main", "#recent", "#settings", "#about", "#formatting"];
+    const userPages = [];
+    
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('mev-page-')) {
+            userPages.push('#' + key.replace('mev-page-', '').replace(/_/g, ' '));
+        }
+    }
 
-    </main>
+    const allData = [...systemTags, ...userPages];
+
+    // Configure the TagCloud for a perfect spherical orbit
+    const options = {
+        radius: 180, // Radius around the center button
+        maxSpeed: 'normal',
+        initSpeed: 'fast',
+        direction: 135,
+        keep: true,
+        useContainerInlineStyles: true,
+        useItemInlineStyles: true,
+        containerClass: 'filterInput', 
+        itemClass: 'titleInput',       
+        useHTML: true
+    };
+
+    // Initialize the Replay
+    let currentDisplay = [];
+    const tc = TagCloud(container, currentDisplay, options);
+
+    // Sequential appearance (Replay)
+    for (const word of allData) {
+        await new Promise(resolve => setTimeout(resolve, 600));
+        currentDisplay.push(word);
+        tc.update(currentDisplay); // Dynamically injects into the sphere
+    }
+
+    // Initialization voice feedback
+    var msg = new SpeechSynthesisUtterance('Updated'); 
+    window.speechSynthesis.speak(msg);
+}
+
+// --- 2. Integrated Search & Voice Function ---
+function titleInput() {
+    let input = document.getElementById('filterInput').value.toLowerCase();
+    let tags = document.getElementsByClassName('titleInput');
+    
+    for (let i = 0; i < tags.length; i++) {
+        if (!tags[i].innerHTML.toLowerCase().includes(input)) {
+            tags[i].style.display = "none";
+        } else {
+            tags[i].style.display = "inline-block";
+        }
+    }
+    
+    // Voice feedback on search
+    if(input.length > 2) {
+        var msg = new SpeechSynthesisUtterance(input); 
+        window.speechSynthesis.speak(msg);
+    }
+}
+
+window.addEventListener('load', startMevWikiReplay);
+</script>
 
 </body>
 </html>
