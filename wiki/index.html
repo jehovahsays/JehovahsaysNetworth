@@ -12,8 +12,8 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self' 'unsafe-inline' blob:; object-src 'none'; style-src 'self' 'unsafe-inline';"> 
 
 
-  <link rel="manifest" href="/mev/manifest.json">
-  <link rel="icon" href="/mev/assets/icons/icon-192.png" type="image/png">
+  <link rel="manifest" href="/mev/wiki/manifest.json">
+  <link rel="icon" href="/mev/wiki/assets/icons/icon-192.png" type="image/png">
   
   <style>
     /* Base Layout Styles */
@@ -506,13 +506,13 @@
  
  
   
-<script src="/mev/purify.min.js"></script>
+<script src="/mev/wiki/purify.min.js"></script>
 
 </head>
 
 <body>
 <noscript>
-    <meta http-equiv="refresh" content="0;url=/mev/#main">
+   <meta http-equiv="refresh" content="0;url=/mev/wiki/css.html"> 
 </noscript>
 
 <div id="banner" class="banner"></div>
@@ -588,7 +588,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const btn = document.getElementById('redirect-button');
   if (btn) {
     btn.addEventListener('click', () => {
-      window.location.href = "/wiki/";
+      window.location.href = "/mev/#seach";
     });
   }
 });
@@ -669,10 +669,10 @@ const CACHE = "mev-wiki-v1.2.1-final";
 
 // Assets to cache for the 'Subconscious'
 const FILES = [
-  "/mev/",
-  "/mev/index.html",
-  "/mev/manifest.json",
-  "/mev/assets/icons/icon-192.png"
+  "/mev/wiki/",
+  "/mev/wiki/index.html",
+  "/mev/wiki/manifest.json",
+  "/mev/wiki/assets/icons/icon-192.png"
 ];
 
 // --- Install Listener ---
@@ -1669,7 +1669,7 @@ async function showPage(title) {
         by <span itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">${authorName}</span></span>
       </div>
 
-      <meta itemprop="image" content="${location.origin}/assets/icons/icon-512.png">
+      <meta itemprop="image" content="${location.origin}/mev/wiki/assets/icons/icon-512.png">
       
       <div class="content" itemprop="articleBody">${finalSafeHTML}</div>
       
@@ -2341,13 +2341,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         // Points to the physical sw.js file with correct scope
-        navigator.serviceWorker.register('/mev/sw.js', { scope: '/mev/' })
+        navigator.serviceWorker.register('/mev/wiki/sw.js', { scope: '/mev/wiki/' })
             .then(reg => {
                 console.log('✅ Service Worker registered via Physical File. Scope:', reg.scope);
             })
             .catch(err => {
                 console.error('❌ SW registration failed (Physical File):', err);
-                console.warn('Check if sw.js exists at the root of the /mev/ directory.');
+                console.warn('Check if sw.js exists at the root of the /mev/wiki/ directory.');
             });
     });
 }
@@ -2486,8 +2486,8 @@ document.addEventListener("DOMContentLoaded", () => {
 <script>
 async function runFirewall() {
     // Corrected to absolute paths for GitHub Pages compatibility
-    const BLACKHOLE_FILE = '/wiki/blackhole/blackhole.dat';
-    const BANNED_PAGE = '/#main';
+    const BLACKHOLE_FILE = '/mev/wiki/blackhole/blackhole.dat';
+    const BANNED_PAGE = '/mev/wiki/players.html';
 
     // Check for the tripwire flag in the AI's memory
     if (localStorage.getItem('mev_breach_detected') === 'true') {
@@ -2551,9 +2551,9 @@ runFirewall();
         <div id="status-message-splash" style="color: #ccc; margin-top: 10px; font-family: monospace;"></div>
 	
 		    <div class="nav-container">
-        <a href="/wiki/playlist.html" class="mev-button"><button>playlist</button></br></a>
-		        <a href="/wiki/multi.html" class="mev-button"><button>multi</button></br></a>
-        <a href="/wiki/solo.html" class="mev-button"><button>solo</button></br></a>
+        <a href="/mev/wiki/playlist.html" class="mev-button"><button>playlist</button></br></a>
+		        <a href="/mev/wiki/multi.html" class="mev-button"><button>multi</button></br></a>
+        <a href="/mev/wiki/solo.html" class="mev-button"><button>solo</button></br></a>
 
     </div>	
 		
@@ -2652,7 +2652,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function checkVerification() {
         if (!localStorage.getItem(HUMAN_KEY)) {
             // If not verified, redirect them to a friendly verification reminder
-            window.location.href = '/#main';
+            window.location.href = '/mev/wiki/#main';
         }
     }
 
@@ -2673,7 +2673,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <script>
 async function createTriggerWatcher() {
-    const BANNED_PAGE = '/#main';
+    const BANNED_PAGE = '/mev/wiki/players.html';
     const HUMAN_KEY = 'mev_human_verified';
     const BREACH_KEY = 'mev_breach_detected';
 
@@ -2723,7 +2723,7 @@ window.addEventListener('hashchange', createTriggerWatcher);
 
 
 
-<a rel="nofollow" style="display:none;" href="/mev/blackhole/">
+<a rel="nofollow" style="display:none;" href="/mev/wiki/blackhole/">
 
 </body>
 </html>

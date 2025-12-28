@@ -4,7 +4,7 @@
   "description": "An offline-first, privacy-focused personal wiki powered entirely by your browser.",
   "version": "1.2.1-standalone",
   "id": "/mev/", 
-  "start_url": "/mev/index.html",
+  "start_url": "/mev/wiki/index.html",
   "scope": "/mev/",
   "display": "standalone",
   "orientation": "portrait-primary",
@@ -15,13 +15,13 @@
   "prefer_related_applications": false,
   "icons": [
     {
-      "src": "/mev/assets/icons/icon-192.png",
+      "src": "/mev/wiki/assets/icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/mev/assets/icons/icon-512.png",
+      "src": "/mev/wiki/assets/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
