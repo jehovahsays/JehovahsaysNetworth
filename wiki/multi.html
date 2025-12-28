@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<title>mev</title>
+
+<script src="/wiki/TagCloud.js"></script>
+
+<style>
+    body {
+        background-color: black;
+        margin: 0;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        width: 100vw;
+    }
+
+    /* The Center of the Galaxy: The Search Box */
+    #inputWrapper {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1000;
+    }
+
+    input[type="text"] {
+        font-family: monospace;
+        font-size: 14px;
+        color: #00ffcc;
+        background: rgba(0, 0, 0, 0.9);
+        border: 1px solid #3366cc;
+        border-radius: 20px;
+        padding: 10px 20px;
+        width: 200px;
+        text-align: center;
+        box-shadow: 0 0 20px rgba(51, 102, 204, 0.5);
+        outline: none;
+    }
+
+    /* The Orbital Field */
+    .content {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+    }
+
+    /* Orbiting Items */
+    .titleInput {
+        pointer-events: auto;
+        font-size: 18px;
+        color: white;
+        font-family: monospace;
+        text-shadow: 0 0 8px #fff;
+        animation: manifest 0.5s ease-out;
+    }
+
+    @keyframes manifest {
+        from { opacity: 0; transform: scale(0); }
+        to { opacity: 1; transform: scale(1); }
+    }
+</style>
+</head>
+<body>
+
+<div id="inputWrapper">
+    <input
+        id="filterInput"
+        oninput="updateGalaxy()" 
+        type="text" 
+        placeholder="Type a key" 
+        autocomplete="off">
+		<a href="/wiki/#main"><button>search</button></a>
+</div>
+
+<div class="content"></div>
+
+<script>
+// --- Galaxy Logic: Real-time Data Collection ---
+let galaxyWords = ["#main", "#recent", "#settings"]; // Initial core tags
+let tc;
+
+function initGalaxy() {
+    const container = '.content';
+    const options = {
+        radius: 220, // Distance from the centered search box
+        maxSpeed: 'fast',
+        initSpeed: 'normal',
+        direction: 135,
+        keep: true,
+        containerClass: 'filterInput', 
+        itemClass: 'titleInput',       
+        useHTML: true
+    };
+
+    // Initialize the cloud with starting variables
+    tc = TagCloud(container, galaxyWords, options);
+}
+
+// Function to collect input data and display it as orbiting words
+function updateGalaxy() {
+    let inputField = document.getElementById('filterInput');
+    let currentInput = inputField.value;
+
+    if (currentInput.length > 0) {
+        // Split input into individual characters or words
+        // If you type "1", it collects "1" and adds it to the galaxy
+        let newChar = currentInput.slice(-1); 
+        
+        // Add the new data variable to our collection
+        galaxyWords.push(newChar);
+        
+        // Update the visualization to show the word/letter orbiting
+        tc.update(galaxyWords);
+
+        // Voice feedback for the manifested data
+        var msg = new SpeechSynthesisUtterance(newChar); 
+        window.speechSynthesis.speak(msg);
+    }
+}
+
+window.addEventListener('load', initGalaxy);
+</script>
+
+</body>
+</html>
