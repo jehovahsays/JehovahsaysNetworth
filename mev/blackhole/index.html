@@ -5,6 +5,15 @@
 </head>
 <body>
     <script>
+	
+	// CHANGE THESE VARIABLES AT THE TOP OF YOUR SCRIPT
+const HUMAN_KEY = 'mev_human_verified';
+const BREACH_KEY = 'mev_breach_detected';
+// Use a relative path so it finds css.html in the parent or root correctly
+const BANNED_PAGE = 'css.html?reason=perimeter_breach'; 
+
+.
+
         // 1. Identify the Intruder
         const intruderIP = '127.0.0.1';
 
@@ -16,7 +25,7 @@
         // 3. Optimized Redirect
         // Using '../css.html' ensures it looks in the folder immediately above 'blackhole'
         // This works for both localhost/mev/ and github.io/mev/mev/
-        window.location.href = '../css.html?reason=perimeter_breach'; 
+        window.location.href = 'css.html?reason=perimeter_breach'; 
     </script>
 </body>
 </html>
