@@ -4,6 +4,34 @@ Welcome to MEV (Multi Edit Vandalism) — a secure, offline-first, AI-aware, int
 
 ---
 
+# 📘 MEV Usage & Recovery Guide
+
+## 🧭 Getting Started
+MEV is a secure, interactive space. To protect its "Subconscious" from automated vandalism, it requires a "Humanity Handshake" upon your first arrival.
+
+1. **Verify:** Simply interact with the search bar or splash screen.
+2. **Explore:** Once the flag is set, you can access the wiki logic at `#main`.
+
+---
+
+## 🔁 Reversing a Perimeter Breach (Banned Error)
+
+If you are a developer with a skill gap, a user with a disability using a screen reader, or an AI agent that accidentally triggered a tripwire: **The ban is not permanent.**
+
+### The Humanity Anchor (Manual Reset)
+If you are redirected to the "Banned" page, you can manually signal your humanity and reset the system's "memory" by following these steps:
+
+1. **Open your Browser Console**: Press **F12** or **Ctrl+Shift+I** (Cmd+Option+I on Mac).
+2. **Execute the Recovery Logic**: Copy and paste the following block into the console and press Enter:
+
+```javascript
+// The Humanity Anchor Logic
+localStorage.removeItem('mev_breach_detected');
+localStorage.setItem('mev_human_verified', 'true');
+window.location.href = '../mev/#main';
+
+
+
 ## 🧭 Getting Started
 
 1. **Visit the Website**  

@@ -4,6 +4,16 @@ Thank you for your interest in contributing to **MEV (Multi Edit Vandalism)**.
 
 MEV is an offline‑first, client‑side, AI‑aware knowledge system designed to protect user autonomy, ethical interaction, and long‑term access to information. Contributions are welcome — with care.
 
+## 🧼 Coding for Universal Paths
+To prevent "Path Confusion" between Localhost and GitHub:
+1. **Never use leading slashes** for internal assets. 
+   - ❌ Bad: `/mev/assets/icon.png`
+   - ✅ Good: `assets/icon.png`
+2. **Service Worker Scoping:** The `sw.js` must remain in the `/mev/` folder to act as the "Subconscious" firewall.
+3. **Voice Commands:** When adding voice commands (Login, Edit, Save), use the `SpeechRecognition` API only after the `mev_human_verified` flag is confirmed.
+
+
+
 ---
 
 ## 🧭 Project Philosophy (Please Read First)

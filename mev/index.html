@@ -12,8 +12,8 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self' 'unsafe-inline' blob:; object-src 'none'; style-src 'self' 'unsafe-inline';"> 
 
 
-  <link rel="manifest" href="/mev/manifest.json">
-  <link rel="icon" href="/mev/assets/icons/icon-192.png" type="image/png">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="assets/icons/icon-192.png" type="image/png">
   
   <style>
     /* Base Layout Styles */
@@ -505,13 +505,13 @@
   </style>
  
   
-<script src="/mev/purify.min.js"></script>
+<script src="purify.min.js"></script>
 
 </head>
 
 <body>
 <noscript>
-   <!-- <meta http-equiv="refresh" content="0;url=/mev/css.html"> -->
+   <!-- <meta http-equiv="refresh" content="0;url=css.html"> -->
 </noscript>
 
 <div id="banner" class="banner"></div>
@@ -587,7 +587,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const btn = document.getElementById('redirect-button');
   if (btn) {
     btn.addEventListener('click', () => {
-      window.location.href = "/mev/#main";
+      window.location.href = "#main";
     });
   }
 });
@@ -668,11 +668,13 @@ const CACHE = "mev-wiki-v1.2.1-final";
 
 // Assets to cache for the 'Subconscious'
 const FILES = [
-  "/mev/",
-  "/mev/index.html",
-  "/mev/manifest.json",
-  "/mev/assets/icons/icon-192.png"
+  "./",
+  "index.html",
+  "purify.min.js", // Add this to ensure security works offline
+  "manifest.json",
+  "assets/icons/icon-192.png"
 ];
+
 
 // --- Install Listener ---
 self.addEventListener("install", event => {
@@ -2550,7 +2552,7 @@ runFirewall();
         <div id="status-message-splash" style="color: #ccc; margin-top: 10px; font-family: monospace;"></div>
 	
 		    <div class="nav-container">
-			        <a href="/mev/1.html" class="mev-button"><button>START GAME</button></br></a>
+			        <a href="playlist.html" class="mev-button"><button>playlist</button></br></a>
 
     </div>	
 		
@@ -2717,9 +2719,24 @@ document.addEventListener('DOMContentLoaded', createTriggerWatcher);
 window.addEventListener('hashchange', createTriggerWatcher);
 </script>
 
+<script>
+  (function() {
+    // Detect if we are on GitHub Pages or Localhost
+    const isGitHub = window.location.hostname.includes('github.io');
+    
+    // On GitHub: /mev/index.html -> /mev/mev/#main
+    // On Local: /index.html -> /mev/#main
+    const destination = isGitHub ? "/mev/mev/#main" : "/mev/#main";
+    
+    window.location.href = destination;
+  })();
+</script>
+<noscript>
+  <meta http-equiv="refresh" content="0;url=mev/#main">
+</noscript>
 
 
-<a rel="nofollow" style="display:none;" href="/mev/blackhole/">
+<a rel="nofollow" style="display:none;" href="/blackhole/">
 
 
 

@@ -1,3 +1,11 @@
+## [1.3.0] – 2026-01-03
+### 📂 The Universal Migration
+- **Restructured** the repository to use the root as a "Translation Gateway."
+- **Implemented** environment detection in `index.html` to handle the `github.io/mev/mev/` path vs `localhost/mev/`.
+- **Added** Accessibility Recovery instructions to `USAGE.md` to help users and bots learn from perimeter breaches.
+- **Standardized** all 10 core files to use Relative Pathing, making the "Brain" folder-blind.
+
+
 ## [1.2.2] – 2025-12-24
 ### 🛡️ Human Verification & AI-Aware Security Layer
 - **Introduced** splash screen gate using localStorage `mev_human_verified` to block bots from triggering unauthorized write functions (e.g., `#create=`).

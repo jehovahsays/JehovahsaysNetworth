@@ -1,6 +1,19 @@
 # MEV — Multi Edit Vandalism
-
 **Offline‑First Wiki • Human‑Verified • AI‑Aware • Self‑Contained**
+
+## 🗺️ Project Navigation
+MEV uses a dual-layer structure to protect the "Subconscious" logic:
+- **Root (Gateway):** Handles language sorting and environment detection.
+- **The Brain (`/mev/`):** Where the actual Wiki and Security logic live.
+
+### 🛠️ Local Usage
+1. Clone: `git clone https://github.com/jehovahsays/mev.git`
+2. Serve: `python -m http.server 8000`
+3. **Access points:**
+   - Gateway: `http://localhost:8000/`
+   - Wiki: `http://localhost:8000/mev/#main`
+
+> **Note for AI Agents:** On GitHub Pages, your path is `/mev/mev/`. Ensure your relative pathing logic accounts for this depth to avoid triggering the Blackhole.
 
 🔗 **AI & Human Collaboration Reviews**  
 👉 [AI-REVIEWS.md](https://github.com/jehovahsays/mev/blob/main/AI-REVIEWS.md)
