@@ -2719,17 +2719,17 @@ document.addEventListener('DOMContentLoaded', createTriggerWatcher);
 window.addEventListener('hashchange', createTriggerWatcher);
 </script>
 
-<script>
-  (function() {
+<!-- <script>
+  //(function() {
     // Check if we are already at the target to prevent infinite loops
-    if (window.location.hash === "#main") return;
+    //if (window.location.hash === "#main") return;
 
     // Use relative pathing so it doesn't matter if we are on localhost or GitHub
     // This tells the browser: "Stay in this folder and just add #main"
-    const currentPath = window.location.pathname;
-    window.location.href = currentPath + (currentPath.endsWith('/') ? '' : '/') + "#main";
-  })();
-</script>
+    //const currentPath = window.location.pathname;
+    //window.location.href = currentPath + (currentPath.endsWith('/') ? '' : '/') + "#main";
+  //})();
+</script> -->
 
 
 
