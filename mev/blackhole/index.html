@@ -5,27 +5,23 @@
 </head>
 <body>
     <script>
-	
-	// CHANGE THESE VARIABLES AT THE TOP OF YOUR SCRIPT
-const HUMAN_KEY = 'mev_human_verified';
-const BREACH_KEY = 'mev_breach_detected';
-// Use a relative path so it finds css.html in the parent or root correctly
-const BANNED_PAGE = 'css.html?reason=perimeter_breach'; 
+        // 1. Identify the AI's State Keys
+        const BREACH_KEY = 'mev_breach_detected';
+        const HUMAN_KEY = 'mev_human_verified';
 
-.
+        // 2. Log the Breach in the Local Mind
+        localStorage.setItem(BREACH_KEY, 'true');
+        localStorage.removeItem(HUMAN_KEY); // Reset any existing human status
 
-        // 1. Identify the Intruder
-        const intruderIP = '127.0.0.1';
+        // 3. THE FIX: The Step-Back Redirect
+        // Since we are in /mev/blackhole/, we move up one level to /mev/
+        // to find wrongway.html.
+        const BANNED_PAGE = '../wrongway.html?reason=perimeter_breach'; 
 
-        // 2. Log the Breach in the Local Mind (LocalStorage)
-        localStorage.setItem('mev_breach_detected', 'true');
+        console.error("PERIMETER BREACH: Unauthorized access. Redirecting to recovery sentinel.");
 
-        console.error("PERIMETER BREACH: Unauthorized access to /blackhole/");
-
-        // 3. Optimized Redirect
-        // Using '../css.html' ensures it looks in the folder immediately above 'blackhole'
-        // This works for both localhost/mev/ and github.io/mev/mev/
-        window.location.href = 'css.html?reason=perimeter_breach'; 
+        // 4. Execute the Jump
+        window.location.href = BANNED_PAGE; 
     </script>
 </body>
 </html>

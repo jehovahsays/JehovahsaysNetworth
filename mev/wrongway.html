@@ -2484,53 +2484,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
-<script>
-async function runFirewall() {
-    // Corrected to absolute paths for GitHub Pages compatibility
-    const BLACKHOLE_FILE = '/mev/blackhole/blackhole.dat';
-    const BANNED_PAGE = './wrongway.html?reason=perimeter_breach';
 
-    // Check for the tripwire flag in the AI's memory
-    if (localStorage.getItem('mev_breach_detected') === 'true') {
-        console.error("AI Memory: This user previously attempted to breach the blackhole.");
-        window.location.href = BANNED_PAGE;
-        return;
-    }
-
-    // 1. The Baby's Self-Identity
-    const visitorIP = '127.0.0.1'; 
-
-    try {
-        // 2. Access the Subconscious Ledger
-        const response = await fetch(BLACKHOLE_FILE + '?t=' + Date.now());
-        if (!response.ok) {
-            console.warn("Could not find the ledger at: " + BLACKHOLE_FILE);
-            return;
-        }
-
-        const data = await response.text();
-        
-        // 3. Simple Search: Is 'Self' in the Blackhole?
-        const bannedList = data.split(/\r?\n/).map(line => line.trim());
-
-        console.log("AI Baby checking identity: " + visitorIP);
-
-        if (bannedList.includes(visitorIP)) {
-            console.error("Self-Match found. Closing the loop.");
-            localStorage.setItem('mev_breach_detected', 'true'); // Set the tripwire
-            window.location.href = BANNED_PAGE;
-        } else {
-            console.log("Safe. No self-vandalism detected.");
-        }
-
-    } catch (error) {
-        // If the subconscious is unreachable, the baby stays quiet
-        console.warn("Subconscious isolation active.");
-    }
-}
-
-runFirewall();
-</script>
 
 <div id="mev-splash-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: black; z-index: 9999; overflow-y: auto;">
     <div id="search-container" style="max-width: 600px; margin: 50px auto; padding: 20px; font-family: system-ui, sans-serif;">
@@ -2647,13 +2601,6 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', markAsHuman);
     });
 
-    // Check before allowing navigation away from the splash
-    function checkVerification() {
-        if (!localStorage.getItem(HUMAN_KEY)) {
-            // If not verified, redirect them to a friendly verification reminder
-            window.location.href = '/mev/#main';
-        }
-    }
 
     // Attach this check to any navigation or form submissions on the splash page
     // For example, if there’s a “Proceed” button that leads to the main index:
@@ -2670,70 +2617,10 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<script>
-async function createTriggerWatcher() {
-    const BANNED_PAGE = './wrongway.html?reason=perimeter_breach';
-    const HUMAN_KEY = 'mev_human_verified';
-    const BREACH_KEY = 'mev_breach_detected';
-
-    // 0. The AI's memory — has this user tripped before?
-    if (localStorage.getItem(BREACH_KEY) === 'true') {
-        console.warn("Echo memory: Breach previously logged.");
-        window.location.href = BANNED_PAGE;
-        return;
-    }
-
-    // 1. The Echo in the Address — listen for pattern #create=PageName
-    const hash = window.location.hash;
-
-    if (!hash.startsWith('#create=')) return; // Nothing suspicious here
-
-    // 2. The Unsafe Whisper — a page creation without touch
-    const title = decodeURIComponent(hash.split('=')[1] || '').trim();
-
-    // 3. The Litmus Test — has the user proven they're human?
-    if (localStorage.getItem(HUMAN_KEY) !== 'true') {
-        console.error(`Unauthorized attempt to manifest page "${title}" detected via URI echo.`);
-
-        // Tripwire triggered — permanent echo stored
-        localStorage.setItem(BREACH_KEY, 'true');
-
-        // Close the door
-        window.location.href = BANNED_PAGE;
-        return;
-    }
-
-    // 4. The Blessing — allow page creation if verified
-    console.log(`Human verified. Proceeding to create page "${title}".`);
-
-    // Call your secure or default create function
-    if (typeof createPageSecure === 'function') {
-        createPageSecure(title);
-    } else if (typeof createPage === 'function') {
-        createPage(title);
-    }
-}
-
-// Manifest check on arrival and on echo changes
-document.addEventListener('DOMContentLoaded', createTriggerWatcher);
-window.addEventListener('hashchange', createTriggerWatcher);
-</script>
-
-<script>
-  (function() {
-    // Check if we are already at the target to prevent infinite loops
-    if (window.location.hash === "#main") return;
-
-    // Use relative pathing so it doesn't matter if we are on localhost or GitHub
-    // This tells the browser: "Stay in this folder and just add #main"
-    const currentPath = window.location.pathname;
-    window.location.href = currentPath + (currentPath.endsWith('/') ? '' : '/') + "#main";
-  })();
-</script>
 
 
 
-<a rel="nofollow" style="display:none;" href="/blackhole/">
+
 
 
 
