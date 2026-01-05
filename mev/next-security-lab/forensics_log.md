@@ -19,4 +19,7 @@ By identifying the `x-middleware-subrequest` header before it reaches the React 
 ### 4. Implementation Note: Explicit Pathing
 During the development of this lab, we verified that mobile environments (like PHPWin on iOS) require explicit path resolution (`./02_interceptor.js`). This ensures the 'Conscious' layer never loses its connection to the 'Subconscious' logic.
 
+### 5. Conscious Navigation & Live Filtering
+The addition of the `/test/` module introduces 'Conscious Filtering.' By using the `titleInput()` function, the AI simulates how a mind focuses on specific data nodes while ignoring noise. This works in tandem with the Interceptor to ensure that while the mind is 'focused,' the 'subconscious' remains 'protected.'
+
 **Created by Morgan Shatee Byers (jehovahsays) to secure the future for both humans and machines.**
