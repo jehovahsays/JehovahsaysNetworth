@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>index</title>
+    
+    <style>
+        body { 
+            background-color: black; 
+            color: white; 
+            font-family: monospace; 
+            margin: 0; 
+            padding: 20px;
+        }
+
+        /* --- UI NAVIGATION CONTROLS --- */
+        .menu-container {
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            text-align: center;
+        }
+
+        /* Text Input Styling (Conscious Search) */
+        #searchBox {
+            width: 250px;
+            padding: 8px;
+            background: #111;
+            border: 1px solid #333;
+            color: peru;
+            font-family: monospace;
+            font-size: 12px;
+            text-transform: lowercase;
+            margin-bottom: 5px;
+            outline: none;
+        }
+
+        /* CSS Dropdown (Subconscious Map - Works without JS) */
+        #menu-toggle { display: none; }
+        .search-label {
+            display: block;
+            width: 266px; /* Matching searchBox + padding */
+            padding: 5px;
+            background: #111;
+            border: 1px solid #333;
+            color: #666; /* Subtler color for the static menu */
+            cursor: pointer;
+            font-size: 10px;
+            text-transform: lowercase;
+        }
+
+        .dropdown-content {
+            display: none;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            background: #111;
+            border: 1px solid #333;
+            width: 266px;
+        }
+
+        .dropdown-content li a {
+            display: block;
+            padding: 10px;
+            color: peru;
+            text-decoration: none;
+            border-bottom: 1px solid #222;
+        }
+
+        #menu-toggle:checked ~ .dropdown-content { display: block; }
+
+        /* --- ARTICLE DISPLAY LOGIC --- */
+        #linkList {
+            margin-top: 100px;
+            padding: 0;
+            list-style: none;
+        }
+
+        .titleInput {
+            margin-bottom: 40px;
+            display: none; /* Hidden by default to allow #main targeting */
+        }
+
+        /* Image constraints - follows article width */
+        .titleInput img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin-top: 15px;
+            border: 1px solid #333;
+        }
+
+        .titleInput button {
+            background: #222;
+            color: peru;
+            border: 1px solid #444;
+            padding: 10px 20px;
+            font-family: monospace;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+
+        .article-text {
+            display: block;
+            color: #aaa;
+            line-height: 1.6;
+            max-width: 600px;
+        }
+
+        /* --- FADE EFFECTS (CSS Only) --- */
+        /* Show only the targeted article */
+        .titleInput:target, 
+        body:not(:has(:target)) #main { 
+            display: block !important;
+            animation: fadeIn 0.8s forwards;
+            border-left: 3px solid peru;
+            padding-left: 15px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="menu-container">
+        <input 
+            id="searchBox" 
+            type="text" 
+            onkeyup="titleInput()" 
+            placeholder="search database" 
+            autocomplete="off"
+            autocorrect="off" 
+            autocapitalize="off">
+
+        <input type="checkbox" id="menu-toggle">
+        <label for="menu-toggle" class="search-label">click to browse keywords ▼</label>
+        
+        <ul class="dropdown-content">
+            <li><a href="#main">#main</a></li>
+            <li><a href="#about">#about</a></li>
+			<li><a href="#external-view">#external-view</a></li>
+        </ul>
+    </div>
+
+    <ul id="linkList">
+        <li class="titleInput" id="main">
+            <a href="#main"><button>#main</button></a>
+            <span class="article-text">
+                welcome to index. an offline‑first encyclopedia powered by your browser. 
+                this version uses css anchors for navigation.
+                <img src="./favicon.ico">
+            </span>
+        </li>
+
+        <li class="titleInput" id="about">
+            <a href="#about"><button>#about</button></a>
+            <span class="article-text">
+                index is an offline‑first encyclopedia. even with javascript off, 
+                the css :target pseudo-class handles the filtering.
+            </span>
+        </li>
+<li class="titleInput" id="external-view">
+    <a href="#external-view"><button>#external-view</button></a>
+    <span class="article-text">
+        Below is an embedded local resource or external site:
+        <iframe 
+            src="./test.txt" 
+            width="100%" 
+            height="400" 
+            style="border: 1px solid #333; margin-top: 15px;"
+            loading="lazy"
+            title="External Data View">
+        </iframe>
+    </span>
+</li>
+
+
+    </ul>
+
+<script>
+// Prevent form refresh and handle Enter key for hash navigation
+document.getElementById('searchBox').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        const val = this.value.toLowerCase().replace('#', '');
+        if (document.getElementById(val)) {
+            window.location.hash = val;
+            this.value = ''; // Clear search to focus on the result
+        }
+    }
+});
+
+function titleInput() {
+    let input = document.getElementById('searchBox').value.toLowerCase();
+    let items = document.getElementsByClassName('titleInput');
+ 
+    for (let i = 0; i < items.length; i++) {
+        // Live filter visibility based on content match
+        if (items[i].innerHTML.toLowerCase().includes(input)) {
+            items[i].style.display = "block";
+        } else {
+            items[i].style.display = "none";
+        }
+    }
+}
+
+// Ensure the page defaults to #main on first load if no hash exists
+if (!window.location.hash) {
+    window.location.hash = 'main';
+}
+</script>
+
+</body>
+</html>
