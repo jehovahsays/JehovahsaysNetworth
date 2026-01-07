@@ -9,6 +9,11 @@ This repository is an architectural model of an AI Brain, categorized into Consc
 - **Why:** Acts as the primary namespace for the project. It ensures that internal links remain consistent whether the site is hosted on `127.0.0.1/mev/` (iPhone) or `jehovahsays.github.io/mev/` (GitHub).
 - **Function:** Serves as the "Membrane" that holds all modules together.
 
+### 📁 [/mev/mev/mongodb/](./mev/mongodb/KNOWLEDGE_BASE.md)
+**The MongoBanHammer Security Lab.**
+- **Purpose:** Implements the "Internal Subconscious" shield against database probes and MongoBleed exploits.
+- **Manual Reset:** [📘 Read the Manual Knowledge Base & Recovery Guide](./mev/mongodb/KNOWLEDGE_BASE.md)
+- **Philosophy:** Teaches developers how to use tripwires (`config.php.bak`) to neutralize bad bots.
 
 
 ### 📁 [/mev/next-security-lab/](./mev/next-security-lab/)

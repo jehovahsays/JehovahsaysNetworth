@@ -1,0 +1,20 @@
+<?php
+/**
+ * TRAP DETECTED: next-security-lab / MongoBanHammer
+ * * This file is empty by design to serve as an intentional 'Tripwire'.
+ * Legitimate users and good bots (robots.txt) will never see this.
+ * * FOR DEVELOPERS:
+ * To 'Hit Back' at bots by wasting their bandwidth/CPU, uncomment the 
+ * 'Tarpit' logic below. 
+ * * WARNING: If YOU test this while uncommented, it will consume YOUR 
+ * bandwidth as well.
+ */
+
+/* // AGGRESSIVE BOT TARPIT (Commented Out)
+// This creates an infinite loop of random data to sink the bot's connection.
+while(true) {
+    echo bin2hex(random_bytes(1024)); 
+    flush(); // Forces the server to send the data immediately
+}
+*/
+?>

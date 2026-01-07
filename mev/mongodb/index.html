@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MEV - MongoBanHammer Lab</title>
+    <style>
+        body { background: #000; color: #0f0; font-family: monospace; padding: 50px; text-align: center; }
+        .banned-ui { color: #f00; border: 5px solid #f00; padding: 20px; margin-top: 20px; }
+        button { background: #333; color: #0f0; border: 1px solid #0f0; padding: 10px; cursor: pointer; margin-top: 20px; }
+        button:hover { background: #0f0; color: #000; }
+    </style>
+</head>
+<body>
+
+    <div id="lab-interface">
+        <h1>[SECURITY LAB: MONGODB]</h1>
+        <p>This is the External Conscious (GitHub) simulation of the Internal Subconscious shield.</p>
+        
+        <div id="status-monitor">
+            <p>Scanning Perimeter... <span id="status-text" style="color: yellow;">PASSIVE</span></p>
+        </div>
+
+        <p>Probing this link simulates a Direct Connection bot attack:</p>
+        <a href="action.php" id="trap-link" style="color: cyan;">/mongodb/action.php</a>
+    </div>
+
+    <div id="hammer-ui" style="display: none;" class="banned-ui">
+        <h1>[IP NEUTRALIZED]</h1>
+        <p>Your session has been blackholed in the Local Mind.</p>
+        <p><b>Reason:</b> Second unauthorized probe detected.</p>
+        
+        <button onclick="resetLab()">Reset Lab (Clear Local Ban)</button>
+    </div>
+
+    <script>
+        const STATUS_KEY = 'mev_bot_status';
+        const visitCount = parseInt(localStorage.getItem('mev_visit_count') || '0');
+
+        // Logic for the "Sticky Trap"
+        if (visitCount >= 1) {
+            // SECOND VISIT+: Show the Ban UI
+            document.getElementById('lab-interface').style.display = 'none';
+            document.getElementById('hammer-ui').style.display = 'block';
+            console.error("BLACKHOLE ACTIVE: Permanent block engaged.");
+        } else {
+            // FIRST VISIT: Monitor and tag
+            document.getElementById('trap-link').addEventListener('click', function() {
+                localStorage.setItem('mev_visit_count', '1');
+                // The next time they load the page, they are banned.
+            });
+        }
+
+        function resetLab() {
+            localStorage.removeItem('mev_visit_count');
+            alert("Local Status Cleared. The Internal Subconscious has forgotten the breach.");
+            location.reload();
+        }
+    </script>
+</body>
+</html>

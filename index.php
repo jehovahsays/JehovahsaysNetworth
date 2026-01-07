@@ -22,7 +22,7 @@ header( 'Referrer-Policy:  same-origin' );
 	if (file_exists($file_pointer))  
 	{ 
 	echo "The file $file_pointer already exists <br>"; 
-	//echo "<meta name='viewport' content='width=device-width'><a href='./en/$value.html'>$value</a>";
+	//echo "<meta name='viewport' content='width=device-width'><a href='./mev/$value.html'>$value</a>";
 	echo "<script> var msg = new SpeechSynthesisUtterance('connected'); window.speechSynthesis.speak(msg); </script>";
 	echo "<body onload='loadout()'><script>function loadout(){window.location.href = './mev/index.html'}</script>";
 	exit();
