@@ -20,7 +20,8 @@ This repository is an architectural model of an AI Brain, categorized into Consc
 **The "Intercepting Fist" Security Suite.**
 - **Purpose:** Teaches and implements protection against Next.js Server Action bypasses (CVE-2025-29927).
 - **Philosophy:** Uses the attacker's own force to trigger a redirect back to their own local machine (`127.0.0.1`).
-- **Access:** Requires human verification at the Gate (`index.html`) to reach the Subconscious Lab (`success.html`).
+- **Access:** Requires human verification at the Gate that code is MEV_PROTECTION_2026
+ (`index.html`) to reach the Subconscious Lab (`success.html`).
 
 ### 📁 [/mev/test/](./mev/test/)
 **The UI Logic & Discovery Lab.**

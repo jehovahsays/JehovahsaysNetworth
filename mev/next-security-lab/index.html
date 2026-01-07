@@ -56,14 +56,24 @@ function handleVerify() {
     const CORRECT_KEY = "MEV_PROTECTION_2026";
 
     if (input === CORRECT_KEY) {
-        // Set the subconscious memory directly
+        // Essential: Remove the ban flag first
+        localStorage.removeItem('mev_breach_detected');
+        
+        // Set the verification
         localStorage.setItem('mev_human_verified', 'true');
-        alert("Identity Confirmed. Entering the Lab...");
-        window.location.href = "./success.html"; 
+        
+        alert("Identity Confirmed. Breach Flags Cleared.");
+        
+        // Use a tiny delay to ensure storage is committed
+        setTimeout(() => {
+            window.location.href = "./success.html"; 
+        }, 50);
     } else {
         alert("Incorrect Key. Interceptor remains on high alert.");
     }
 }
+
+
 
         function simulateBypass() {
             // If the user isn't verified, the Interceptor reflects them

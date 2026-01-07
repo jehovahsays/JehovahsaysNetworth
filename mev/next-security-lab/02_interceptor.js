@@ -11,21 +11,17 @@ const MEV_Interceptor = {
         window.location.href = "http://127.0.0.1";
     },
 
-    // Check for the "Human" signature in the browser's subconscious (localStorage)
-    checkIdentity: function() {
-        const isVerified = localStorage.getItem('mev_human_verified');
-        const userAgent = navigator.userAgent.toLowerCase();
-        
-        // Safety check: Is it a bot?
-        const isBot = /bot|headless|crawler|spider/i.test(userAgent);
+checkIdentity: function() {
+    const isVerified = localStorage.getItem('mev_human_verified');
+    const hasBreach = localStorage.getItem('mev_breach_detected');
+    
+    // If a breach is active, identity is void
+    if (hasBreach) return false;
 
-        if (isBot) {
-            this.reflect();
-            return false;
-        }
+    // Accept either the boolean-style string OR the Master Key
+    return (isVerified === 'true' || isVerified === 'MEV_PROTECTION_2026');
+}
 
-        return isVerified === 'true';
-    },
 
     // The logic to "Open the Gate"
     openGate: function(answer) {
