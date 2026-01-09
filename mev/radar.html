@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>MEV Radar - Live Activity Monitor</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="./files/main.css">
+    <style>
+        body { margin: 0; background: #000; color: #0f0; font-family: 'Courier New', monospace; }
+        #monitor {
+            position: fixed; top: 10px; left: 10px; z-index: 100;
+            background: rgba(0, 20, 0, 0.9); padding: 10px; border: 1px solid #0f0;
+        }
+        .error { color: #ff0000; text-shadow: 0 0 5px #f00; }
+    </style>
+</head>
+<body>
+
+<div id="monitor">
+    <strong>LIVE REPOSITORY SENSOR</strong>
+    <div id="status">Awaiting activity...</div>
+    <div id="log" style="font-size: 10px; margin-top: 10px;"></div>
+</div>
+
+<script type="importmap">
+    {
+        "imports": { "three": "./examples/build/three.module.js" }
+    }
+</script>
+
+<script type="module">
+    import * as THREE from 'three';
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // The "Subconscious" Repository Core
+    const coreGeo = new THREE.IcosahedronGeometry(10, 1);
+    const coreMat = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
+    const core = new THREE.Mesh(coreGeo, coreMat);
+    scene.add(core);
+
+    camera.position.z = 40;
+
+    function createActivityVisual(data) {
+        // Red for Incorrect, Blue/Green for Correct
+        const isError = data.status === 'incorrect';
+        const geo = isError ? new THREE.BoxGeometry(2, 2, 2) : new THREE.SphereGeometry(1, 8, 8);
+        const mat = new THREE.MeshBasicMaterial({ color: isError ? 0xff0000 : 0x00ccff });
+        const mesh = new THREE.Mesh(geo, mat);
+
+        // Random start position flying toward the core
+        mesh.position.set(-50, (Math.random()-0.5)*30, (Math.random()-0.5)*30);
+        scene.add(mesh);
+
+        // Animate toward core
+        const start = mesh.position.clone();
+        const duration = 2000;
+        const startTime = Date.now();
+
+        function move() {
+            const elapsed = Date.now() - startTime;
+            const progress = elapsed / duration;
+            if (progress < 1) {
+                mesh.position.lerpVectors(start, core.position, progress);
+                requestAnimationFrame(move);
+            } else {
+                scene.remove(mesh);
+                // Pulse core
+                core.scale.set(1.2, 1.2, 1.2);
+                setTimeout(() => core.scale.set(1, 1, 1), 100);
+            }
+        }
+        move();
+
+        // UI Log
+        const log = document.getElementById('log');
+        const entry = document.createElement('div');
+        entry.className = isError ? 'error' : '';
+        entry.textContent = `[${data.status.toUpperCase()}] Accessing: ${data.path}`;
+        log.prepend(entry);
+    }
+
+    // LISTENER: This watches for changes made by other tabs/pages in your repo
+    window.addEventListener('storage', (event) => {
+        if (event.key === 'mev_radar_ping') {
+            const data = JSON.parse(event.newValue);
+            createActivityVisual(data);
+        // SECURITY: Clear the ping immediately so no history is left behind
+        localStorage.removeItem('mev_radar_ping'); 
+			
+            document.getElementById('status').textContent = "Activity Detected!";
+        }
+    });
+	
+
+    function animate() {
+        requestAnimationFrame(animate);
+        core.rotation.y += 0.01;
+        renderer.render(scene, camera);
+    }
+    animate();
+</script>
+</body>
+</html>

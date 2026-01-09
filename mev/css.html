@@ -75,6 +75,23 @@
             #menu-toggle:checked ~ #main-display { margin-left: 250px; }
         }
     </style>
+	<script>
+    // The "Conscious" reporting to the "Subconscious" Radar
+    (function() {
+        const report = {
+            path: window.location.pathname,
+            type: window.location.pathname.endsWith('.html') ? 'html' : 'logic',
+            timestamp: Date.now(),
+            status: 'correct' 
+        };
+        // If the user tries to access a hidden folder or missing nuance
+        if(window.location.hash.includes('admin') || !document.title) {
+            report.status = 'incorrect';
+        }
+        localStorage.setItem('mev_radar_ping', JSON.stringify(report));
+    })();
+</script>
+
 </head>
 <body>
 
