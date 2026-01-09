@@ -34,9 +34,12 @@
     </script>
 
 <script type="module">
-    import * as THREE from 'three';
+    // Ensure this matches your latest commit logic
+import * as THREE from 'three';
+// Optional: Add WebGPU check if you want the Radar to pulse differently for modern browsers
+import { color, nodeFrame } from 'three/tsl'; 
 
-    const scene = new THREE.Scene();
+        const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
