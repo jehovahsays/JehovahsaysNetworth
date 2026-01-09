@@ -22,16 +22,25 @@
 </div>
 
 <script type="importmap">
-    {
-        "imports": { "three": "./examples/build/three.module.js" }
-    }
-</script>
+        {
+            "imports": {
+                "three": "./examples/build/three.webgpu.js",
+                "three/webgpu": "./examples/build/three.webgpu.js",
+                "three/tsl": "./examples/build/three.tsl.js",
+                "three/addons/": "./examples/jsm/",
+                "three": "./examples/build/three.module.js"				
+            }
+        }
+    </script>
 
 <script type="module">
     import * as THREE from 'three';
+    // Remove the TSL imports for now to keep the animation smooth
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    
+    // Standard WebGL renderer is the "Conscious" choice for stability
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
