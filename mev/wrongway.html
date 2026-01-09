@@ -513,7 +513,7 @@
             path: window.location.pathname,
             type: window.location.pathname.endsWith('.html') ? 'html' : 'logic',
             timestamp: Date.now(),
-            status: 'correct' 
+            status: 'incorrect' 
         };
         // If the user tries to access a hidden folder or missing nuance
         if(window.location.hash.includes('admin') || !document.title) {
