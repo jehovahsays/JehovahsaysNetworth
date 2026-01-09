@@ -22,10 +22,16 @@
 </div>
 
 <script type="importmap">
-    {
-        "imports": { "three": "./examples/build/three.module.js" }
-    }
-</script>
+        {
+            "imports": {
+                "three": "./examples/build/three.webgpu.js",
+                "three/webgpu": "./examples/build/three.webgpu.js",
+                "three/tsl": "./examples/build/three.tsl.js",
+                "three/addons/": "./examples/jsm/",
+                "three": "./examples/build/three.module.js"				
+            }
+        }
+    </script>
 
 <script type="module">
     import * as THREE from 'three';
