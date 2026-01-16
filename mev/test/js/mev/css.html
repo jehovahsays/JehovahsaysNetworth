@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEV Index - Static Mode</title>
+    <style>
+        :root {
+            --bg: #f4f4f9;
+            --sidebar-bg: #2c3e50;
+            --text-main: #333;
+            --accent: #3498db;
+            --success: #27ae60;
+            --warning: #2980b9;
+        }
+
+        body { font-family: sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; background: var(--bg); color: var(--text-main); }
+
+        /* --- THE HAMBURGER HACK --- */
+        #menu-toggle { display: none; }
+        .menu-icon {
+            position: fixed; top: 10px; left: 10px; z-index: 100;
+            cursor: pointer; background: var(--sidebar-bg); color: white;
+            padding: 10px; border-radius: 5px; font-weight: bold;
+        }
+
+        /* --- SIDEBAR LOGIC --- */
+        #sidebar {
+            width: 250px; background: var(--sidebar-bg); color: white;
+            position: fixed; height: 100%; left: -250px;
+            transition: 0.3s ease; z-index: 99; padding-top: 60px;
+        }
+
+        #menu-toggle:checked ~ #sidebar { left: 0; }
+        
+        nav a {
+            display: block; color: white; padding: 15px;
+            text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        nav a:hover { background: var(--accent); }
+
+        /* --- MAIN CONTENT --- */
+        #main-display {
+            flex: 1; padding: 20px; overflow-y: auto; margin-left: 0;
+            transition: 0.3s ease;
+        }
+
+        .article { 
+            background: white; padding: 25px; border-radius: 8px; 
+            margin-bottom: 40px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            max-width: 800px; margin-left: auto; margin-right: auto;
+        }
+
+        .gateway-card {
+            border: 2px solid var(--accent);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            background: #fff;
+        }
+
+        .btn {
+            display: block; width: 100%; padding: 15px; margin: 10px 0;
+            border: none; border-radius: 6px; font-weight: bold;
+            font-size: 1rem; cursor: pointer; color: white;
+            transition: opacity 0.2s;
+        }
+        .btn-green { background: var(--success); }
+        .btn-blue { background: var(--warning); }
+        .btn:hover { opacity: 0.9; }
+
+        .desc { font-size: 0.85rem; color: #666; margin-top: -5px; margin-bottom: 15px; padding-left: 5px; }
+
+        @media (min-width: 768px) {
+            #menu-toggle:checked ~ #main-display { margin-left: 250px; }
+        }
+    </style>
+	<script>
+    // The "Conscious" reporting to the "Subconscious" Radar
+    (function() {
+        const report = {
+            path: window.location.pathname,
+            type: window.location.pathname.endsWith('.html') ? 'html' : 'logic',
+            timestamp: Date.now(),
+            status: 'correct' 
+        };
+        // If the user tries to access a hidden folder or missing nuance
+        if(window.location.hash.includes('admin') || !document.title) {
+            report.status = 'incorrect';
+        }
+        localStorage.setItem('mev_radar_ping', JSON.stringify(report));
+    })();
+</script>
+
+</head>
+<body>
+
+<script>
+    /**
+     * MEV SUBSTANTIAL RECOVERY LOGIC
+     * Unified for both Localhost and GitHub environments.
+     */
+    
+    // ACTION 1: The Direct Entry
+    function enableJSAndEnter() {
+        localStorage.removeItem('mev_breach_detected');
+        localStorage.setItem('mev_human_verified', 'true');
+        
+        // Use relative pathing to avoid the /mev/mev/ error
+        window.location.href = './index.html#main';
+    }
+
+    // ACTION 2: The Deep Clean & Auto-Redirect
+    async function forceVersionSync() {
+        // Unregister old Service Workers to clear the "Out-of-Sync" Subconscious
+        if ('serviceWorker' in navigator) {
+            try {
+                const registrations = await navigator.serviceWorker.getRegistrations();
+                for(let registration of registrations) {
+                    await registration.unregister();
+                }
+            } catch (e) {
+                console.warn("SW unregistration failed, proceeding with cache clear.");
+            }
+        }
+        
+        // Clear all breach flags and storage
+        localStorage.clear();
+        
+        // Pre-verify humanity so the Gateway lets them in instantly
+        localStorage.setItem('mev_human_verified', 'true');
+
+        // Execute the redirect to the main Brain
+        alert("Subconscious Reset Complete. Synchronizing with the main Wiki...");
+        window.location.href = './index.html#main';
+    }
+</script>
+
+
+
+    <input type="checkbox" id="menu-toggle">
+    <label for="menu-toggle" class="menu-icon">☰ MENU</label>
+
+    <aside id="sidebar">
+        <nav>
+            <a href="#main">#main</a>
+            <a href="#settings">#settings</a>
+            <a href="#recent">#recent</a>
+            <a href="#about">#about</a>
+        </nav>
+    </aside>
+
+    <main id="main-display">
+        <br><br>
+
+        <article id="main" class="article">
+            <div class="gateway-card">
+                <h2>MEV Inclusive Gateway</h2>
+                <p>Choose your entry method into the AI Brain.</p>
+                
+                <button onclick="enableJSAndEnter()" class="btn btn-green">🚀 Turn on JavaScript & Enter Wiki</button>
+                <p class="desc">Clears perimeter flags and activates the interactive subconscious (#main).</p>
+
+                <button onclick="forceVersionSync()" class="btn btn-blue">🔄 Sync Version & Clear Cache</button>
+                <p class="desc">Forces a Service Worker update. Use this if you are trapped by an old communication error.</p>
+            </div>
+
+            <h1>Main Content</h1>
+            <p>This is the primary entry point for the MEV Wiki. This page allows No-JavaScript users to browse the encyclopedia while providing a safe way to enable full functionality.</p>
+        </article>
+
+        <article id="settings" class="article">
+            <h2>Settings</h2>
+            <p>Configuration parameters for the Blackhole for Bad Bots and internal localhost page routing.</p>
+            <a href="./index.html#settings"><button style="padding: 8px 15px; cursor: pointer;">View Interactive Page</button></a>
+        </article>
+
+        <article id="recent" class="article">
+            <h2>Recent</h2>
+            <p>A log of the most recently updated mathematical definitions and bot protection logs.</p>
+            <a href="./index.html#recent"><button style="padding: 8px 15px; cursor: pointer;">View Interactive Page</button></a>
+        </article>
+
+        <article id="about" class="article">
+            <h2>About</h2>
+            <p>MEV (Multi Edit Vandalism) Wiki is a zero-server search engine designed for maximum privacy and offline stability. [cite: 2025-12-18].</p>
+            <a href="./index.html#about"><button style="padding: 8px 15px; cursor: pointer;">View Interactive Page</button></a>
+        </article>
+
+    </main>
+
+</body>
+</html>

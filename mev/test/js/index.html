@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>MEV Wiki Gateway</title>
+    <script>
+        (function() {
+            const isGitHub = window.location.hostname.includes('github.io');
+            const hasBreach = localStorage.getItem('mev_breach_detected') === 'true';
+            const isVerified = localStorage.getItem('mev_human_verified') === 'true';
+
+            // Determine the base path correctly
+            const base = isGitHub ? "/mev/mev/" : "/mev/";
+
+            if (hasBreach) {
+                // Redirect to the CSS status page if banned
+                window.location.href = base + "css.html";
+            } else if (isVerified) {
+                // Send to the Brain
+                window.location.href = base + "#main";
+            } else {
+                // First visit: send to the splash screen folder
+                window.location.href = base;
+            }
+        })();
+    </script>
+</head>
+<body>
+    <p>Loading MEV Subconscious... If you are not redirected, <a href="mev/css.html">click here</a>.</p>
+</body>
+</html>
