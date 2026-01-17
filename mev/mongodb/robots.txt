@@ -1,4 +1,0 @@
-User-agent: *
-Disallow: /mev/mongodb/
-# If a bot enters the folder above, it has violated the rules 
-# and is now a valid target for the BanHammer.
