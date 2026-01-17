@@ -2359,7 +2359,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         // Points to the physical sw.js file with correct scope
-        navigator.serviceWorker.register('assets/js/sw.js', { scope: '../../' })
+        navigator.serviceWorker.register('./sw.js', { scope: './' })
             .then(reg => {
                 console.log('✅ Service Worker registered via Physical File. Scope:', reg.scope);
             })
