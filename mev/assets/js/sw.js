@@ -1,5 +1,5 @@
 /* MEV Wiki Service Worker v1.2.1 */
-const CACHE_NAME = 'mev-subconscious-v15';
+const CACHE_NAME = 'mev-wiki-v1.2.1';
 
 // Use relative paths so it works in any subfolder
 const FILES_TO_CACHE = [
@@ -7,9 +7,7 @@ const FILES_TO_CACHE = [
   'index.html',
   'manifest.json',
   'assets/js/purify.min.js',
-    'assets/js/sw.js',
-	'assets/js/chat.js',
-	  'assets/js/script.js',
+  'assets/js/sw.js',
   'assets/icons/icon-192.png'
 ];
 

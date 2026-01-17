@@ -9,7 +9,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <meta http-equiv="Referrer-Policy" content="no-referrer">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self' 'unsafe-inline' blob:; object-src 'none'; style-src 'self' 'unsafe-inline';"> 
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self' 'unsafe-inline' blob:; object-src 'none'; style-src 'self' 'unsafe-inline'; worker-src 'self' blob:;">
 
 
   <link rel="manifest" href="manifest.json">
@@ -527,7 +527,7 @@
 
 <body>
 <noscript>
-   <!-- <meta http-equiv="refresh" content="0;url=less.html"> -->
+   <!-- <meta http-equiv="refresh" content="0;url=../index.html"> -->
 </noscript>
 
 <div id="banner" class="banner"></div>
@@ -680,12 +680,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // --- Service Worker Content (Subconscious) ---
 const SERVICE_WORKER_CONTENT = `
-const CACHE = "mev-wiki-v1.2.1-final";
+const CACHE = "mev-wiki-v1.2.1";
 
 // Assets to cache for the 'Subconscious'
 const FILES = [
   "./",
   "./index.html",
+  "./assets/js/sw.js",
   "./assets/js/purify.min.js", // Add this to ensure security works offline
   "./manifest.json",
   "./assets/icons/icon-192.png"
@@ -1213,7 +1214,7 @@ async function showAbout() {
       <li>Voice Search Filtering</li>
       <li>Basic Wiki Markup (==Headers, '''Bold, ''Italics, [[Links]])</li>
     </ul>
-    <p>Source Version: 1.2.1-CSP-Hardened-SingleFile</p>
+    <p>Source Version: mev-wiki-v1.2.1</p>
     </section>`;
   location.hash = "#about";
 }
@@ -2358,13 +2359,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         // Points to the physical sw.js file with correct scope
-        navigator.serviceWorker.register('/mev/sw.js', { scope: '/mev/' })
+        navigator.serviceWorker.register('assets/js/sw.js', { scope: '../../' })
             .then(reg => {
                 console.log('✅ Service Worker registered via Physical File. Scope:', reg.scope);
             })
             .catch(err => {
                 console.error('❌ SW registration failed (Physical File):', err);
-                console.warn('Check if sw.js exists at the root of the /mev/ directory.');
+                console.warn('Check if sw.js exists at the root of the ./ directory.');
             });
     });
 }
@@ -2504,7 +2505,7 @@ document.addEventListener("DOMContentLoaded", () => {
 async function runFirewall() {
     // Corrected to absolute paths for GitHub Pages compatibility
     const BLACKHOLE_FILE = '/mev/blackhole/blackhole.dat';
-    const BANNED_PAGE = './less.html?reason=perimeter_breach';
+    const BANNED_PAGE = '../index.html?reason=perimeter_breach';
 
     // Check for the tripwire flag in the AI's memory
     if (localStorage.getItem('mev_breach_detected') === 'true') {
@@ -2686,7 +2687,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <script>
 async function createTriggerWatcher() {
-    const BANNED_PAGE = './less.html?reason=perimeter_breach';
+    const BANNED_PAGE = '../index.html?reason=perimeter_breach';
     const HUMAN_KEY = 'mev_human_verified';
     const BREACH_KEY = 'mev_breach_detected';
 
@@ -2733,22 +2734,7 @@ document.addEventListener('DOMContentLoaded', createTriggerWatcher);
 window.addEventListener('hashchange', createTriggerWatcher);
 </script>
 
-<!-- <script>
-  //(function() {
-    // Check if we are already at the target to prevent infinite loops
-    //if (window.location.hash === "#main") return;
-
-    // Use relative pathing so it doesn't matter if we are on localhost or GitHub
-    // This tells the browser: "Stay in this folder and just add #main"
-    //const currentPath = window.location.pathname;
-    //window.location.href = currentPath + (currentPath.endsWith('/') ? '' : '/') + "#main";
-  //})();
-</script> -->
-
-
 <a rel="nofollow" style="display:none;" href="/blackhole/">
-
-
 
 </body>
 </html>
