@@ -14,10 +14,10 @@
 
             if (hasBreach) {
                 // Redirect to the CSS status page if banned
-                window.location.href = base + "css.html";
+                window.location.href = base + "/mev/less.html";
             } else if (isVerified) {
                 // Send to the Brain
-                window.location.href = base + "#main";
+                window.location.href = base + "/mev/#main";
             } else {
                 // First visit: send to the splash screen folder
                 window.location.href = base;
@@ -26,6 +26,6 @@
     </script>
 </head>
 <body>
-    <p>Loading MEV Subconscious... If you are not redirected, <a href="mev/css.html">click here</a>.</p>
+    <p>Loading MEV Subconscious... If you are not redirected, <a href="/mev/css.html">click here</a>.</p>
 </body>
 </html>
