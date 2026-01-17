@@ -1,81 +1,267 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>MEV Wiki Gateway</title>
-    <script>
-        (function() {
-            // 1. Detect Environment & Set Base Path
-            const isGitHub = window.location.hostname.includes('github.io');
-            // GitHub: /mev/  |  Localhost: /
-            const repoPath = isGitHub ? "/mev/" : "/";
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>index</title>
+    
+    <style>
+        body { 
+            background-color: black; 
+            color: white; 
+            font-family: monospace; 
+            margin: 0; 
+            padding: 20px;
+        }
 
-            let hasBreach = false;
-            let isVerified = false;
+        /* --- UI NAVIGATION CONTROLS --- */
+        .menu-container {
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            text-align: center;
+        }
 
-            // 2. Safely check Storage (prevents crash if cookies/storage are disabled)
+        /* Text Input Styling (Conscious Search) */
+        #searchBox {
+            width: 250px;
+            padding: 8px;
+            background: #111;
+            border: 1px solid #333;
+            color: peru;
+            font-family: monospace;
+            font-size: 12px;
+            text-transform: lowercase;
+            margin-bottom: 5px;
+            outline: none;
+        }
+
+        /* CSS Dropdown (Subconscious Map - Works without JS) */
+        #menu-toggle { display: none; }
+        .search-label {
+            display: block;
+            width: 266px; /* Matching searchBox + padding */
+            padding: 5px;
+            background: #111;
+            border: 1px solid #333;
+            color: #666; /* Subtler color for the static menu */
+            cursor: pointer;
+            font-size: 10px;
+            text-transform: lowercase;
+        }
+
+        .dropdown-content {
+            display: none;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            background: #111;
+            border: 1px solid #333;
+            width: 266px;
+        }
+
+        .dropdown-content li a {
+            display: block;
+            padding: 10px;
+            color: peru;
+            text-decoration: none;
+            border-bottom: 1px solid #222;
+        }
+
+        #menu-toggle:checked ~ .dropdown-content { display: block; }
+
+        /* --- ARTICLE DISPLAY LOGIC --- */
+        #linkList {
+            margin-top: 100px;
+            padding: 0;
+            list-style: none;
+        }
+
+        .titleInput {
+            margin-bottom: 40px;
+            display: none; /* Hidden by default to allow #main targeting */
+        }
+
+        /* Image constraints - follows article width */
+        .titleInput img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin-top: 15px;
+            border: 1px solid #333;
+        }
+
+        .titleInput button {
+            background: #222;
+            color: peru;
+            border: 1px solid #444;
+            padding: 10px 20px;
+            font-family: monospace;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+
+        .article-text {
+            display: block;
+            color: #aaa;
+            line-height: 1.6;
+            max-width: 600px;
+        }
+
+        /* --- FADE EFFECTS (CSS Only) --- */
+        /* Show only the targeted article */
+        .titleInput:target, 
+        body:not(:has(:target)) #main { 
+            display: block !important;
+            animation: fadeIn 0.8s forwards;
+            border-left: 3px solid peru;
+            padding-left: 15px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="menu-container">
+        <input 
+            id="searchBox" 
+            type="text" 
+            onkeyup="titleInput()" 
+            placeholder="search database" 
+            autocomplete="off"
+            autocorrect="off" 
+            autocapitalize="off">
+
+        <input type="checkbox" id="menu-toggle">
+        <label for="menu-toggle" class="search-label">click to browse keywords ▼</label>
+        
+        <ul class="dropdown-content">
+            <li><a href="#main">#main</a></li>
+            <li><a href="#about">#about</a></li>
+			<li><a href="#robots">#robots</a></li>
+        </ul>
+    </div>
+
+    <ul id="linkList">
+        <li class="titleInput" id="main">
+            <a href="#main"><button>#main</button></a>
+            <span class="article-text">
+                welcome to index. an offline‑first encyclopedia powered by your browser. 
+                this version uses css anchors for navigation.
+                               <button onclick="enableJSAndEnter()" class="btn btn-green">🚀 Turn on JavaScript & Enter Wiki</button>
+                <p class="desc">Clears perimeter flags and activates the interactive subconscious (#main).</p>
+
+                <button onclick="forceVersionSync()" class="btn btn-blue">🔄 Sync Version & Clear Cache</button>
+                <p class="desc">Forces a Service Worker update. Use this if you are trapped by an old communication error.</p>
+            </div>
+            </span>
+        </li>
+
+        <li class="titleInput" id="about">
+            <a href="#about"><button>#about</button></a>
+            <span class="article-text">
+                index is an offline‑first encyclopedia. even with javascript off, 
+                the css :target pseudo-class handles the filtering.
+            </span>
+        </li>
+<li class="titleInput" id="robots">
+    <a href="#robots"><button>#robots</button></a>
+    <span class="article-text">
+This iframe represents the AI's ability to pull data from its External Conscious (public files) into its Internal Subconscious (private processing). It demonstrates how local resources like test.txt are indexed and displayed.
+        <iframe 
+            src="./mev/robots.txt" 
+            width="100%" 
+            height="400" 
+            style="border: 1px solid #333; margin-top: 15px;"
+            loading="lazy"
+            title="iframe txt file">
+        </iframe>
+    </span>
+</li>
+
+
+    </ul>
+
+<script>
+// Prevent form refresh and handle Enter key for hash navigation
+document.getElementById('searchBox').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        const val = this.value.toLowerCase().replace('#', '');
+        if (document.getElementById(val)) {
+            window.location.hash = val;
+            this.value = ''; // Clear search to focus on the result
+        }
+    }
+});
+
+function titleInput() {
+    let input = document.getElementById('searchBox').value.toLowerCase();
+    let items = document.getElementsByClassName('titleInput');
+ 
+    for (let i = 0; i < items.length; i++) {
+        // Live filter visibility based on content match
+        if (items[i].innerHTML.toLowerCase().includes(input)) {
+            items[i].style.display = "block";
+        } else {
+            items[i].style.display = "none";
+        }
+    }
+}
+
+// Ensure the page defaults to #main on first load if no hash exists
+if (!window.location.hash) {
+    window.location.hash = 'main';
+}
+</script>
+
+<script>
+    /**
+     * MEV SUBSTANTIAL RECOVERY LOGIC
+     * Unified for both Localhost and GitHub environments.
+     */
+    
+    // ACTION 1: The Direct Entry
+    function enableJSAndEnter() {
+        localStorage.removeItem('mev_breach_detected');
+        localStorage.setItem('mev_human_verified', 'true');
+        
+        // Use relative pathing to avoid the /mev/mev/ error
+        window.location.href = './mev/index.html#main';
+    }
+
+    // ACTION 2: The Deep Clean & Auto-Redirect
+    async function forceVersionSync() {
+        // Unregister old Service Workers to clear the "Out-of-Sync" Subconscious
+        if ('serviceWorker' in navigator) {
             try {
-                hasBreach = localStorage.getItem('mev_breach_detected') === 'true';
-                isVerified = localStorage.getItem('mev_human_verified') === 'true';
-            } catch (e) {
-                console.warn("Storage access denied. Proceeding as guest.");
-            }
-
-            // 3. Redirection Logic
-            if (hasBreach) {
-                // Redirect to the CSS status page if banned
-                window.location.href = repoPath + "mev/less.html";
-            } else if (isVerified) {
-                // Send to the Internal Brain (External Conscious)
-                window.location.href = repoPath + "mev/#main";
-            } else {
-                // First visit or cookies off: stay at the root splash screen
-                // We use a check to prevent infinite loops if already at root
-                if (window.location.pathname !== repoPath) {
-                    window.location.href = repoPath;
+                const registrations = await navigator.serviceWorker.getRegistrations();
+                for(let registration of registrations) {
+                    await registration.unregister();
                 }
+            } catch (e) {
+                console.warn("SW unregistration failed, proceeding with cache clear.");
             }
-        })();
-    </script>
-</head>
-<body>
-<noscript>
-    <meta http-equiv="refresh" content="0;url=mev/less.html"> 
-</noscript>
-    <p>Loading MEV Subconscious... If you are not redirected, <a href="mev/less.html">click here</a>.</p>
-</body>
-</html>
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>MEV Wiki Gateway</title>
-    <script>
-        (function() {
-            const isGitHub = window.location.hostname.includes('github.io');
-            const hasBreach = localStorage.getItem('mev_breach_detected') === 'true';
-            const isVerified = localStorage.getItem('mev_human_verified') === 'true';
+        }
+        
+        // Clear all breach flags and storage
+        localStorage.clear();
+        
+        // Pre-verify humanity so the Gateway lets them in instantly
+        localStorage.setItem('mev_human_verified', 'true');
 
-            // Determine the base path correctly
-            const base = isGitHub ? "/mev/mev/" : "/mev/";
+        // Execute the redirect to the main Brain
+        alert("Subconscious Reset Complete. Synchronizing with the main Wiki...");
+        window.location.href = './mev/index.html#main';
+    }
+</script>
 
-            if (hasBreach) {
-                // Redirect to the CSS status page if banned
-                window.location.href = base + "/mev/mev/less.html";
-            } else if (isVerified) {
-                // Send to the Brain
-                window.location.href = base + "/mev/mev/#main";
-            } else {
-                // First visit: send to the splash screen folder
-                window.location.href = base;
-            }
-        })();
-    </script>
-</head>
-<body>
-<noscript>
-    <meta http-equiv="refresh" content="0;url=/mev/less.html"> 
-</noscript>
-    <p>Loading MEV Subconscious... If you are not redirected, <a href="/mev/mev/less.html">click here</a>.</p>
+
 </body>
 </html>
