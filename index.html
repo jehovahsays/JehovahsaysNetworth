@@ -233,7 +233,7 @@ if (!window.location.hash) {
         localStorage.setItem('mev_human_verified', 'true');
         
         // Use relative pathing to avoid the /mev/mev/ error
-        window.location.href = './mev/index.html#main';
+        window.location.href = './mev/#main';
     }
 
     // ACTION 2: The Deep Clean & Auto-Redirect
@@ -258,10 +258,24 @@ if (!window.location.hash) {
 
         // Execute the redirect to the main Brain
         alert("Subconscious Reset Complete. Synchronizing with the main Wiki...");
-        window.location.href = './mev/index.html#main';
+        window.location.href = './mev/#main';
     }
 </script>
 
+<script>
+// Force #main on first load for "Pretty URL" appearance
+window.addEventListener('load', () => {
+    if (!window.location.hash || window.location.hash === '#') {
+        window.location.hash = 'main';
+    }
+});
+
+function enableJSAndEnter() {
+    localStorage.setItem('mev_human_verified', 'true');
+    // Redirects from localhost/ to localhost/mev/#main
+    window.location.href = './mev/#main';
+}
+</script>
 
 </body>
 </html>
