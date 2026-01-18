@@ -1,4 +1,4 @@
-
+  
     /* Base Layout Styles */
     html, body {
       overflow: hidden;
@@ -81,7 +81,6 @@
       #container {
         display: flex;
         flex-direction: row;
-        /* Adjusted height to account for header and footer */
         height: calc(100vh - 120px); 
       }
       #sidebar {
@@ -90,7 +89,6 @@
         border-right: 1px solid #ccc;
         overflow-y: auto;
         padding: 10px;
-        /* MODIFICATION: Change display: none to display: block to show menu by default */
         display: block; 
         flex-shrink: 0;
       }
@@ -106,14 +104,12 @@
       }
       #sidebar a:hover { background-color: #e9ecef; border-radius: 4px; }
       
-      /* Main Content Area - RENAME for clarity */
       #main-content-wrapper {
         flex: 1 1 100%;
         padding: 20px;
         overflow-y: auto;
       }
       #ai-bar {
-        /* Search/Voice bar integrated into header */
         flex-grow: 1; 
         margin-left: 15px; 
         display: flex;
@@ -187,12 +183,10 @@
         justify-content: space-between;
         padding: 0 20px;
         border-radius: 8px 8px 0 0;
-        /* FIX CONTRAST: Ensure all general footer text is dark enough */
-        color: #333333; 
+        color: #1a1a1a; 
       }
 
-      /* FIX CONTRAST: Status indicator color was #555 (too light) */
-      #status-indicator { font-size: 14px; color: #333333; font-weight: 600;}
+      #status-indicator { font-size: 14px; color: #1a1a1a; font-weight: 600;}
       
       #ticker { white-space: nowrap; overflow: hidden; width: 100%; position: relative; margin: 0 15px; }
       #ticker span {
@@ -214,7 +208,6 @@
         transition: width 0.5s;
       }
 
-      /* Modal Styling */
       .modal-overlay {
         display: none;
         position: fixed;
@@ -234,54 +227,6 @@
         box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         text-align: left;
       }
-      .modal-actions { margin-top: 20px; text-align: right; }
-      .modal-actions button { margin-left: 10px; }
-
-      /* Dark Mode */
-      body.dark {
-        background: #121212;
-        color: #e0e0e0;
-      }
-      body.dark header { background: #1f1f1f; }
-      body.dark #sidebar {
-        background: #1c1c1c;
-        border-right: 1px solid #444;
-      }
-      body.dark #sidebar h3 { border-bottom-color: #333; }
-      body.dark #sidebar a { color: #80bfff; }
-      body.dark #sidebar a:hover { background-color: #2c2c2c; }
-      body.dark #main-content-wrapper { background: #181818; }
-      body.dark #ai-input {
-        background: #2c2c2c; color: #e0e0e0; border: 1px solid #555;
-      }
-      body.dark #ai-button {
-        background: #665500;
-        color: #fff;
-      }
-      body.dark #ai-button:hover {
-        background: #776600;
-      }
-      body.dark section.page { background-color: #1f1f1f; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-      body.dark textarea, body.dark input {
-        background: #2c2c2c; color: #e0e0e0; border: 1px solid #555;
-      }
-      body.dark .modal-box { background: #1f1f1f; }
-      body.dark .edit-btn, body.dark .delete-btn {
-        background: #444;
-      }
-      body.dark #storage-bar {
-        background: #333; border-color: #555;
-      }
-      body.dark #storage-bar-inner {
-        background: #80bfff;
-      }
-      body.dark footer {
-        background: #181818; border-top: 1px solid #444;
-      }
-      body.dark #status-indicator {
-        /* Ensure status indicator text is visible in dark mode, inheriting body color or setting explicitly */
-        color: #e0e0e0; 
-      }
 
       #page-container {
         display: block;
@@ -295,193 +240,74 @@
         background-color: inherit;
         color: inherit;
       }
-      body.dark #page-container {
-        background-color: #181818;
-        color: #e0e0e0;
-      }
-      #offline-message {
-        display: none;
-        background: #ffcc00;
-        color: #000;
-        text-align: center;
-        padding: 10px;
-        font-weight: bold;
-        font-family: inherit;
-        z-index: 9999;
-        border-bottom: 1px solid #aaa;
-        position: relative;
-      }
-      body.dark #offline-message {
-        background: #665500;
-        color: #fff;
-        border-bottom-color: #333;
-      }
+
       .semantic-status {
         margin-top: 15px;
-        color: green;
+        color: #1a5c1a; 
         font-weight: bold;
         font-size: 0.95em;
       }
 
-      /* Styles for Quick Filter Buttons (New Component) */
-      #quick-filters {
-        list-style: none;
-        padding: 0;
-        margin-top: 10px;
+      .mev-button {
+        display: block;
+        background: rgba(0, 0, 0, 0.8);
+        color: #0f0;
+        padding: 12px 25px; 
+        font-size: 1.0em;
+        width: 100%; 
+        border: 1px solid #0f0;
+        border-radius: 5px;
+        text-decoration: none;
+        text-align: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 0 10px rgba(0, 255, 0, 0.1);
+        margin-bottom: 5px;
       }
-      /* .titleInput class is used by JS for filtering, applying to the LI */
-      .titleInput button {
-        background: #e9ecef; 
-        border: 1px solid #ccc;
-        padding: 6px 10px;
-        margin-top: 5px;
-        border-radius: 4px;
-        cursor: pointer;
-        display: block; 
-        width: 100%;
-        text-align: left;
-        color: #3366cc;
-        font-weight: 500;
-        transition: background-color 0.2s, color 0.2s;
-      }
-      .titleInput button:hover {
-        background: #d4d8db;
-      }
-      body.dark .titleInput button {
-        background: #2c2c2c;
-        color: #80bfff;
-        border-color: #555;
-      }
-      body.dark .titleInput button:hover {
-        background: #3c3c3c;
+      .mev-button:hover {
+        background: #0f0;
+        color: #000;
+        box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
       }
 
-      @media (max-width: 600px) {
-        header {
-          padding: 10px;
-        }
-        #ai-bar {
-          margin-left: 10px;
-        }
-        #ai-input {
-          font-size: 0.9rem;
-          padding: 6px 10px;
-        }
-        #ai-button {
-          padding: 6px 10px;
-          font-size: 0.9rem;
-        }
-        #sidebar {
-          width: 100%;
-          position: fixed;
-          height: calc(100vh - 50px);
-          top: 50px;
-          left: 0;
-          z-index: 900;
-        }
-        #container {
-          height: calc(100vh - 120px);
-        }
-        #main-content-wrapper {
-          padding: 10px;
-        }
+      /* Dark Mode Section */
+      body.dark { background: #121212; color: #e0e0e0; }
+      body.dark header { background: #1f1f1f; }
+      body.dark #sidebar { background: #1c1c1c; border-right: 1px solid #444; }
+      body.dark #sidebar a { color: #80bfff; }
+      body.dark #main-content-wrapper { background: #181818; }
+      body.dark footer { background: #181818; border-top: 1px solid #444; }
+      body.dark #status-indicator { color: #e0e0e0; }
+      
+      /* Dark Mode High-Contrast Visibility */
+      body.dark .meta-info { color: #bbbbbb !important; }
+      body.dark .semantic-status { color: #4ade80 !important; }
+      body.dark #status-message-find { color: #e0e0e0 !important; }
+      
+      body.dark section.page {
+          background-color: #1f1f1f;
+          box-shadow: 0 2px 5px rgba(0,0,0,0.4);
       }
-      /* ==================================================== */
-      /* STYLES FOR INITIAL FIND VIEW (From find.html) */
-      /* ==================================================== */
-      #find-view {
-          /* MODIFICATION: Hide by default. JS will show/hide as needed. */
-          display: none; 
-          position: fixed;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          width: 90%;
-          max-width: 600px;
-          z-index: 999;
-          /* Inherit Dark Mode colors */
-          background-color: inherit; 
-          color: inherit;
-      }
-      #filterInput-find {
-          width: 100%;
-          padding: 15px;
-          margin-bottom: 20px;
-          font-size: 1.2em;
-          border-radius: 8px;
-          border: 1px solid #555;
-          box-sizing: border-box;
-          background-color: #f8f9fa;
-          color: #000;
-      }
-      body.dark #filterInput-find {
-          background-color: #2c2c2c;
-          color: #e0e0e0;
-          border: 1px solid #555;
-      }
-      #page-list-find {
-          list-style: none;
-          padding: 0;
-          margin: 0;
-          max-height: 40vh; /* Limit height for long lists */
-          overflow-y: auto;
-      }
-      .titleInput-find {
-          margin: 5px 0;
-          animation: fadeIn 0.5s ease-in-out;
-      }
-      .titleInput-find button {
-          width: 100%;
-          padding: 12px;
-          text-align: left;
-          background-color: #3366cc;
-          color: white;
-          border: none;
-          border-radius: 5px;
-          cursor: pointer;
-          font-size: 1.0em;
-          transition: background-color 0.2s;
-      }
-      .titleInput-find button:hover {
-          background-color: #254a9e;
-      }
-      body.dark .titleInput-find button {
-          background-color: #444;
-      }
-      body.dark .titleInput-find button:hover {
-          background-color: #555;
-      }
-      /* FIX CONTRAST: Status message color was #888 (failed contrast) */
-      #status-message-find { color: #444444; margin-top: 10px; text-align: center; font-size: 0.9em; }
 
-      @keyframes fadeIn {
-         from { opacity: 0; transform: translateY(-10px); }
-         to   { opacity: 1; transform: translateY(0); }
+      /* FIX: Create Account / Login Text Visibility in Dark Mode */
+      body.dark #auth-view, 
+      body.dark #account-view, 
+      body.dark .auth-container,
+      body.dark .auth-card {
+        background-color: #1f1f1f !important;
+        color: #ffffff !important; 
+        border: 1px solid #444 !important;
       }
-	  
-	  /* Updated Navigation Button Styles */
-.mev-button {
-    display: block;
-    background: rgba(0, 0, 0, 0.8);
-    color: #0f0;
-    
-    /* Increased size to match larger buttons */
-    padding: 12px 25px; 
-    font-size: 1.0em;
-    width: 100%; /* Ensures they fill the container like the find-view buttons */
-    
-    border: 1px solid #0f0;
-    border-radius: 5px;
-    text-decoration: none;
-    text-align: center;
-    transition: all 0.3s ease;
-    box-shadow: 0 0 10px rgba(0, 255, 0, 0.1);
-    margin-bottom: 5px; /* Adds space between the buttons */
-}
 
-.mev-button:hover {
-    background: #0f0;
-    color: #000;
-    box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
-}
+      body.dark #auth-view h2, 
+      body.dark #account-view h2,
+      body.dark #auth-view p,
+      body.dark #auth-view label {
+        color: #ffffff !important;
+      }
 
+      body.dark textarea, body.dark input {
+        background: #2c2c2c !important; 
+        color: #ffffff !important; 
+        border: 1px solid #555 !important;
+      }
+  
