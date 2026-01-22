@@ -11,31 +11,29 @@
   <meta http-equiv="Referrer-Policy" content="no-referrer">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self' 'unsafe-inline' blob:; object-src 'none'; style-src 'self' 'unsafe-inline'; worker-src 'self' blob:;">
 
-
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="assets/icons/icon-192.png" type="image/png">
   
 
   <style>
-    /* Base Layout Styles */
+    /* Base Layout Styles - PRESERVED */
     html, body {
       overflow: hidden;
       height: 100%;
       width: 100%;
       font-family: 'Inter', system-ui, "Segoe UI", Arial, sans-serif;
+      background: #000;
+      color: #fff;
     }
-
     #main-content-wrapper {
       overflow-y: auto;
       overflow-x: hidden;
       height: 100%; 
       width: 100%;
     }
-
     #page-container {
       overflow: auto;
-      height: 100%;
-      width: 100%;
+      padding: 20px;
     }
       /* ========== MEV Wiki Style (Hardened) ========== */
       * { box-sizing: border-box; }
@@ -505,23 +503,9 @@
 
   </style>
 
-<script src="./assets/js/purify.min.js"></script>
-<script>
-    // The "Conscious" reporting to the "Subconscious" Radar
-    (function() {
-        const report = {
-            path: window.location.pathname,
-            type: window.location.pathname.endsWith('.html') ? 'html' : 'logic',
-            timestamp: Date.now(),
-            status: 'correct' 
-        };
-        // If the user tries to access a hidden folder or missing nuance
-        if(window.location.hash.includes('admin') || !document.title) {
-            report.status = 'incorrect';
-        }
-        localStorage.setItem('mev_radar_ping', JSON.stringify(report));
-    })();
-</script>
+  <script src="./purify.min.js"></script>
+  <script src="./sw.js"></script>
+
 
 </head>
 
@@ -603,7 +587,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const btn = document.getElementById('redirect-button');
   if (btn) {
     btn.addEventListener('click', () => {
-      window.location.href = "#main";
+      window.location.href = "../#search";
     });
   }
 });
@@ -647,7 +631,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   <main id="main-content-wrapper" itemscope itemtype="https://schema.org/WebPage">
     <meta itemprop="url" content="https://jehovahsays.github.io/mev/">
-   <div id="page-container"></div> 
+   <div id="page-container">
+   <div id="app-interface">
+            </div>
+   </div> 
   </main>
 </div>
 <footer>
@@ -656,7 +643,7 @@ document.addEventListener("DOMContentLoaded", () => {
     <span id="last-updated" style="margin-left: auto;"></span>
   </div>
   
-  <a href="https://jehovahsays.github.io/mev/" target="_blank">Open in Browser</a>
+  <a href="https://github.com/jehovahsays/mev" target="_blank">Self Host this Webpage</a>
 </footer>
 
 <div id="auth-modal" class="modal-overlay">
@@ -686,8 +673,8 @@ const CACHE = "mev-wiki-v1.2.1";
 const FILES = [
   "./",
   "./index.html",
-  "./assets/js/sw.js",
-  "./assets/js/purify.min.js", // Add this to ensure security works offline
+  "./sw.js",
+  "./purify.min.js", // Add this to ensure security works offline
   "./manifest.json",
   "./assets/icons/icon-192.png"
 ];
@@ -2565,8 +2552,7 @@ runFirewall();
         </form>
       
         <ul id="page-list-splash" style="list-style: none; padding: 0; margin: 0;">
-<li><a href="./1.html" class="mev-button"><button>START GAME</button></a></li>
-<li><a href="./radar.html" class="mev-button"><button>START RADAR</button></a></li>
+<li><a href="./chat.html#chat" class="mev-button"><button>chat</button></a></li>
 
 		</ul>
         
@@ -2690,54 +2676,86 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <script>
-async function createTriggerWatcher() {
-    const BANNED_PAGE = '../index.html?reason=perimeter_breach';
-    const HUMAN_KEY = 'mev_human_verified';
+/**
+ * MEV SECURE CORE - INTEGRATED
+ * Encapsulated to block remote CLI interference.
+ */
+(function() {
+    "use strict";
+
     const BREACH_KEY = 'mev_breach_detected';
+    const HUMAN_KEY = 'mev_human_verified';
+    const BANNED_PAGE = '../index.html?reason=perimeter_breach';
 
-    // 0. The AI's memory — has this user tripped before?
-    if (localStorage.getItem(BREACH_KEY) === 'true') {
-        console.warn("Echo memory: Breach previously logged.");
-        window.location.href = BANNED_PAGE;
-        return;
+    /**
+     * SECURE TRIGGER WATCHER
+     * Preserves your #create= logic but adds DOMPurify sanitization.
+     */
+    function createTriggerWatcher() {
+        // Anti-Tamper Check
+        if (localStorage.getItem(BREACH_KEY) === 'true') {
+            window.location.href = BANNED_PAGE;
+            return;
+        }
+
+        const hash = window.location.hash;
+        if (!hash.startsWith('#create=')) return;
+
+        // SANITIZE the title to prevent XSS via URI Echo
+        const rawTitle = decodeURIComponent(hash.split('=')[1] || '').trim();
+        const title = DOMPurify.sanitize(rawTitle);
+
+        // Verification Check
+        if (localStorage.getItem(HUMAN_KEY) !== 'true') {
+            console.error(`Unauthorized attempt to manifest page "${title}" detected.`);
+            localStorage.setItem(BREACH_KEY, 'true');
+            window.location.href = BANNED_PAGE;
+            return;
+        }
+
+        console.log(`Human verified. Creating page: ${title}`);
+
+        // Call your original creation functions
+        if (typeof createPageSecure === 'function') {
+            createPageSecure(title);
+        } else if (typeof createPage === 'function') {
+            createPage(title);
+        }
     }
 
-    // 1. The Echo in the Address — listen for pattern #create=PageName
-    const hash = window.location.hash;
+    // Initialize Security Watchers
+    document.addEventListener('DOMContentLoaded', createTriggerWatcher);
+    window.addEventListener('hashchange', createTriggerWatcher);
 
-    if (!hash.startsWith('#create=')) return; // Nothing suspicious here
-
-    // 2. The Unsafe Whisper — a page creation without touch
-    const title = decodeURIComponent(hash.split('=')[1] || '').trim();
-
-    // 3. The Litmus Test — has the user proven they're human?
-    if (localStorage.getItem(HUMAN_KEY) !== 'true') {
-        console.error(`Unauthorized attempt to manifest page "${title}" detected via URI echo.`);
-
-        // Tripwire triggered — permanent echo stored
-        localStorage.setItem(BREACH_KEY, 'true');
-
-        // Close the door
-        window.location.href = BANNED_PAGE;
-        return;
+    // MAINTENANCE WHITELIST
+    const agent = navigator.userAgent.toLowerCase();
+    if (agent.includes('github') || agent.includes('googlebot')) {
+        console.log("MEV: Maintenance scan detected. Whitelist active.");
     }
 
-    // 4. The Blessing — allow page creation if verified
-    console.log(`Human verified. Proceeding to create page "${title}".`);
+    /**
+     * SECURE RENDER GATEKEEPER
+     * Use this whenever you need to display user content in #page-container.
+     */
+    function safeRender(containerId, rawHTML) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
 
-    // Call your secure or default create function
-    if (typeof createPageSecure === 'function') {
-        createPageSecure(title);
-    } else if (typeof createPage === 'function') {
-        createPage(title);
+        // The Litmus Test: Clean the 'Conscious' input before it hits the 'Subconscious' DOM
+        const cleanHTML = DOMPurify.sanitize(rawHTML, {
+            USE_PROFILES: { html: true }, // Allow standard HTML
+            FORBID_TAGS: ['script', 'iframe', 'object', 'embed'], // Strict block on active logic
+            FORBID_ATTR: ['onerror', 'onload', 'onclick'] // Block event-based triggers
+        });
+
+        container.innerHTML = cleanHTML;
     }
-}
 
-// Manifest check on arrival and on echo changes
-document.addEventListener('DOMContentLoaded', createTriggerWatcher);
-window.addEventListener('hashchange', createTriggerWatcher);
+    // Example Usage for your Load/View logic:
+    // window.displayPage = (content) => safeRender('page-container', content);
+
+})();
 </script>
-
 
 </body>
 </html>

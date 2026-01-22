@@ -1,14 +1,14 @@
 /* MEV Wiki Service Worker v1.2.1 */
 const CACHE_NAME = 'mev-wiki-v1.2.1';
 
-// Use relative paths so it works in the /mev/ subfolder
+// Use relative paths so it works in any subfolder
 const FILES_TO_CACHE = [
-  './',                          // This represents localhost/mev/
+  './',
   './index.html',
   './manifest.json',
   './purify.min.js',
   './sw.js',
-  './assets/icons/icon-192.png'  // Updated with ./ to ensure relative consistency
+  'assets/icons/icon-192.png'
 ];
 
 self.addEventListener('install', (event) => {

@@ -3,279 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>index</title>
+    <title>MEV Wiki - Gateway</title>
     
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self' 'unsafe-inline' blob:; object-src 'none'; style-src 'self' 'unsafe-inline'; worker-src 'self' blob:;">
+    <meta http-equiv="Referrer-Policy" content="no-referrer">
+
     <style>
-        body { 
-            background-color: black; 
-            color: white; 
-            font-family: monospace; 
-            margin: 0; 
-            padding: 20px;
-        }
-
-        /* --- UI NAVIGATION CONTROLS --- */
-        .menu-container {
-            position: fixed;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
-            text-align: center;
-        }
-
-        /* Text Input Styling (Conscious Search) */
-        #searchBox {
-            width: 250px;
-            padding: 8px;
-            background: #111;
-            border: 1px solid #333;
-            color: peru;
-            font-family: monospace;
-            font-size: 12px;
-            text-transform: lowercase;
-            margin-bottom: 5px;
-            outline: none;
-        }
-
-        /* CSS Dropdown (Subconscious Map - Works without JS) */
-        #menu-toggle { display: none; }
-        .search-label {
-            display: block;
-            width: 266px; /* Matching searchBox + padding */
-            padding: 5px;
-            background: #111;
-            border: 1px solid #333;
-            color: #666; /* Subtler color for the static menu */
-            cursor: pointer;
-            font-size: 10px;
-            text-transform: lowercase;
-        }
-
-        .dropdown-content {
-            display: none;
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            background: #111;
-            border: 1px solid #333;
-            width: 266px;
-        }
-
-        .dropdown-content li a {
-            display: block;
-            padding: 10px;
-            color: peru;
-            text-decoration: none;
-            border-bottom: 1px solid #222;
-        }
-
-        #menu-toggle:checked ~ .dropdown-content { display: block; }
-
-        /* --- ARTICLE DISPLAY LOGIC --- */
-        #linkList {
-            margin-top: 100px;
-            padding: 0;
-            list-style: none;
-        }
-
-        .titleInput {
-            margin-bottom: 40px;
-            display: none; /* Hidden by default to allow #main targeting */
-        }
-
-        /* Image constraints - follows article width */
-        .titleInput img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-            margin-top: 15px;
-            border: 1px solid #333;
-        }
-
-        .titleInput button {
-            background: #222;
-            color: peru;
-            border: 1px solid #444;
-            padding: 10px 20px;
-            font-family: monospace;
-            margin-bottom: 15px;
-            cursor: pointer;
-        }
-
-        .article-text {
-            display: block;
-            color: #aaa;
-            line-height: 1.6;
-            max-width: 600px;
-        }
-
-        /* --- FADE EFFECTS (CSS Only) --- */
-        /* Show only the targeted article */
-        .titleInput:target, 
-        body:not(:has(:target)) #main { 
-            display: block !important;
-            animation: fadeIn 0.8s forwards;
-            border-left: 3px solid peru;
-            padding-left: 15px;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        body { background-color: black; color: white; font-family: monospace; padding: 20px; }
+        .menu-container { position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 1000; text-align: center; }
+        #searchBox { width: 250px; padding: 8px; background: #111; border: 1px solid #333; color: peru; outline: none; }
+        .titleInput { margin-bottom: 40px; display: none; border-left: 3px solid peru; padding-left: 15px; }
+        .titleInput:target, body:not(:has(:target)) #main { display: block !important; }
+        button { background: #222; color: peru; border: 1px solid #444; padding: 10px; cursor: pointer; margin: 5px; }
     </style>
+
+    <script src="./purify.min.js"></script>
+    <script src="./sw.js"></script>
 </head>
 <body>
 
     <div class="menu-container">
-        <input 
-            id="searchBox" 
-            type="text" 
-            onkeyup="titleInput()" 
-            placeholder="search database" 
-            autocomplete="off"
-            autocorrect="off" 
-            autocapitalize="off">
-
-        <input type="checkbox" id="menu-toggle">
-        <label for="menu-toggle" class="search-label">click to browse keywords ▼</label>
-        
-        <ul class="dropdown-content">
-            <li><a href="#main">#main</a></li>
-            <li><a href="#about">#about</a></li>
-			<li><a href="#robots">#robots</a></li>
-        </ul>
+        <input id="searchBox" type="text" placeholder="search database" autocomplete="off">
+        <div style="margin-top:10px; font-size:10px; color:#666;">#MAIN | #ABOUT</div>
     </div>
 
-    <ul id="linkList">
+    <ul id="linkList" style="list-style:none; margin-top:100px;">
         <li class="titleInput" id="main">
-            <a href="#main"><button>#main</button></a>
-            <span class="article-text">
-                welcome to index. an offline‑first encyclopedia powered by your browser. 
-                this version uses css anchors for navigation.
-                               <button onclick="enableJSAndEnter()" class="btn btn-green">🚀 Turn on JavaScript & Enter Wiki</button>
-                <p class="desc">Clears perimeter flags and activates the interactive subconscious (#main).</p>
-
-                <button onclick="forceVersionSync()" class="btn btn-blue">🔄 Sync Version & Clear Cache</button>
-                <p class="desc">Forces a Service Worker update. Use this if you are trapped by an old communication error.</p>
-            </div>
-            </span>
+            <h2>#MAIN</h2>
+            <p>Welcome to the Internal Subconscious Gateway.</p>
+            <button onclick="enableJSAndEnter()">🚀 Enter Wiki Search</button>
+            <button onclick="forceVersionSync()">🔄 Sync System</button>
         </li>
-
         <li class="titleInput" id="about">
-            <a href="#about"><button>#about</button></a>
-            <span class="article-text">
-                index is an offline‑first encyclopedia. even with javascript off, 
-                the css :target pseudo-class handles the filtering.
-            </span>
+            <h2>#ABOUT</h2>
+            <p>MEV Security Lab Environment - Localhost Root.</p>
         </li>
-<li class="titleInput" id="robots">
-    <a href="#robots"><button>#robots</button></a>
-    <span class="article-text">
-This iframe represents the AI's ability to pull data from its External Conscious (public files) into its Internal Subconscious (private processing). It demonstrates how local resources like test.txt are indexed and displayed.
-        <iframe 
-            src="./mev/robots.txt" 
-            width="100%" 
-            height="400" 
-            style="border: 1px solid #333; margin-top: 15px;"
-            loading="lazy"
-            title="iframe txt file">
-        </iframe>
-    </span>
-</li>
-
-
     </ul>
 
 <script>
-// Prevent form refresh and handle Enter key for hash navigation
-document.getElementById('searchBox').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        e.preventDefault();
-        const val = this.value.toLowerCase().replace('#', '');
-        if (document.getElementById(val)) {
-            window.location.hash = val;
-            this.value = ''; // Clear search to focus on the result
-        }
-    }
-});
+    (function() {
+        "use strict";
 
-function titleInput() {
-    let input = document.getElementById('searchBox').value.toLowerCase();
-    let items = document.getElementsByClassName('titleInput');
- 
-    for (let i = 0; i < items.length; i++) {
-        // Live filter visibility based on content match
-        if (items[i].innerHTML.toLowerCase().includes(input)) {
-            items[i].style.display = "block";
-        } else {
-            items[i].style.display = "none";
-        }
-    }
-}
+        const GOOD_ROBOTS = ['github', 'googlebot', 'bingbot'];
+        const isBot = () => GOOD_ROBOTS.some(r => navigator.userAgent.toLowerCase().includes(r));
+        const searchBox = document.getElementById('searchBox');
 
-// Ensure the page defaults to #main on first load if no hash exists
-if (!window.location.hash) {
-    window.location.hash = 'main';
-}
-</script>
-
-<script>
-    /**
-     * MEV SUBSTANTIAL RECOVERY LOGIC
-     * Unified for both Localhost and GitHub environments.
-     */
-    
-    // ACTION 1: The Direct Entry
-    function enableJSAndEnter() {
-        localStorage.removeItem('mev_breach_detected');
-        localStorage.setItem('mev_human_verified', 'true');
-        
-        // Use relative pathing to avoid the /mev/mev/ error
-        window.location.href = './mev/#main';
-    }
-
-    // ACTION 2: The Deep Clean & Auto-Redirect
-    async function forceVersionSync() {
-        // Unregister old Service Workers to clear the "Out-of-Sync" Subconscious
-        if ('serviceWorker' in navigator) {
-            try {
-                const registrations = await navigator.serviceWorker.getRegistrations();
-                for(let registration of registrations) {
-                    await registration.unregister();
-                }
-            } catch (e) {
-                console.warn("SW unregistration failed, proceeding with cache clear.");
+        // Secure Search
+        searchBox.addEventListener('keyup', () => {
+            const cleanInput = DOMPurify.sanitize(searchBox.value.toLowerCase());
+            const items = document.getElementsByClassName('titleInput');
+            for (let item of items) {
+                item.style.display = item.textContent.toLowerCase().includes(cleanInput) ? "block" : "none";
             }
-        }
-        
-        // Clear all breach flags and storage
-        localStorage.clear();
-        
-        // Pre-verify humanity so the Gateway lets them in instantly
-        localStorage.setItem('mev_human_verified', 'true');
+        });
 
-        // Execute the redirect to the main Brain
-        alert("Subconscious Reset Complete. Synchronizing with the main Wiki...");
-        window.location.href = './mev/#main';
-    }
+        // Secure Enter Navigation
+        searchBox.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const val = DOMPurify.sanitize(searchBox.value.toLowerCase().replace(/#/g, ''));
+                if (document.getElementById(val)) { window.location.hash = val; searchBox.value = ''; }
+            }
+        });
+
+        // UPDATED REDIRECTS
+        window.enableJSAndEnter = () => {
+            localStorage.setItem('mev_human_verified', 'true');
+            window.location.href = './mev/#search';
+        };
+
+        window.forceVersionSync = async () => {
+            if ('serviceWorker' in navigator) {
+                const regs = await navigator.serviceWorker.getRegistrations();
+                for(let r of regs) await r.unregister();
+            }
+            localStorage.clear();
+            localStorage.setItem('mev_human_verified', 'true');
+            window.location.href = './mev/#search';
+        };
+
+        window.addEventListener('load', () => {
+            if (isBot()) console.log("MEV: Maintenance Whitelist Active.");
+            if (!window.location.hash) window.location.hash = 'main';
+        });
+    })();
 </script>
-
-<script>
-// Force #main on first load for "Pretty URL" appearance
-window.addEventListener('load', () => {
-    if (!window.location.hash || window.location.hash === '#') {
-        window.location.hash = 'main';
-    }
-});
-
-function enableJSAndEnter() {
-    localStorage.setItem('mev_human_verified', 'true');
-    // Redirects from localhost/ to localhost/mev/#main
-    window.location.href = './mev/#main';
-}
-</script>
-
 </body>
 </html>

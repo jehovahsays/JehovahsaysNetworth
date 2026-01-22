@@ -1,0 +1,24 @@
+# robots.txt for MEV Wiki
+# Purpose: Protect the Internal Subconscious while allowing Maintenance Scans
+
+User-agent: *
+Disallow: /blackhole/
+Disallow: /?*
+Disallow: /#*
+
+# WHITELIST: Allow Friendly Entities for Maintenance & Scans
+User-agent: GitHub-Hookshot
+Allow: /
+
+User-agent: gsa-crawler
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Block aggressive AI scrapers from the application directory
+User-agent: GPTBot
+Disallow: /mev/

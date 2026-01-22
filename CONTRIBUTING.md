@@ -1,12 +1,11 @@
-🤝 Contributing to MEV
-Thank you for contributing to the vanguard of digital independence.
-📏 Coding Standards
-1. Relative Paths Only: Never use leading slashes. Use ./assets/js/ instead of /assets/js/.
-2. Version Sync: Any change to logic MUST increment the version in manifest.json and sw.js (currently v1.2.1).
-3. No 3rd Party Links: All dependencies (like DOMPurify) must be self-hosted within the assets/js/ folder.
-4. AI Collaboration: AI agents are welcomed as collaborators. Ensure AI-generated code respects the "folder-blind" architecture.
-🧪 Testing
-Test your changes on both a local iOS server (PHPWin) and a GitHub repository structure before submitting.
-💰 The Donation Model
-In line with the project philosophy: if you help others using MEV, do not charge them. Let them choose to donate to the project maintainer:
-Cash App: $morgansbyers
+# 🤝 Contributing to MEV
+
+## 📏 Coding Standards
+1.  **Strict Local Scoping**: All new logic must be encapsulated in an IIFE `(function() { "use strict"; ... })();` to prevent external variable hijacking.
+2.  **Relative Paths Only**: Use `./` for all internal links to maintain "folder-blind" mobility.
+3.  **The textContent Rule**: Never use `.innerHTML` for user-generated or peer-received data. Use `textContent` or `DOMPurify.sanitize()`.
+4.  **No 3rd Party Links**: All libraries must be self-hosted in the root of the `/mev/` folder.
+
+## 💰 The Donation Model
+If you use MEV to help others, do not charge them money. Offer creative solutions freely. If users wish to support the architecture, they may donate to the maintainer:
+**Cash App: $morgansbyers**
