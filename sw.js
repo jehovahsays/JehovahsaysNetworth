@@ -8,7 +8,8 @@ const FILES_TO_CACHE = [
   './manifest.json',
   './purify.min.js',
   './sw.js',
-  'assets/icons/icon-192.png'
+  './assets/icons/icon-512.png',
+  './assets/icons/icon-192.png'
 ];
 
 self.addEventListener('install', (event) => {

@@ -8,6 +8,7 @@ const FILES_TO_CACHE = [
   './manifest.json',
   './purify.min.js',
   './sw.js',
+  './assets/icons/icon-512.png',
   './assets/icons/icon-192.png'  // Updated with ./ to ensure relative consistency
 ];
 
