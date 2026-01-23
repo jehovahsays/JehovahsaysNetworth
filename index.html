@@ -3,89 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MEV Wiki - Gateway</title>
+    <title>MEV - Gateway</title>
+    <link rel="manifest" href="mev/manifest.json">
+    <link rel="icon" href="mev/assets/icons/icon-192.png" type="image/png">
     
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self' 'unsafe-inline' blob:; object-src 'none'; style-src 'self' 'unsafe-inline'; worker-src 'self' blob:;">
-    <meta http-equiv="Referrer-Policy" content="no-referrer">
-
     <style>
-        body { background-color: black; color: white; font-family: monospace; padding: 20px; }
-        .menu-container { position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 1000; text-align: center; }
-        #searchBox { width: 250px; padding: 8px; background: #111; border: 1px solid #333; color: peru; outline: none; }
-        .titleInput { margin-bottom: 40px; display: none; border-left: 3px solid peru; padding-left: 15px; }
-        .titleInput:target, body:not(:has(:target)) #main { display: block !important; }
-        button { background: #222; color: peru; border: 1px solid #444; padding: 10px; cursor: pointer; margin: 5px; }
-    </style>
+body { 
+    background: #000; 
+    color: peru; 
+    font-family: monospace; 
+    display: flex; 
+    flex-direction: column; /* Stack items vertically */
+    justify-content: flex-start; /* Move alignment to the top */
+    align-items: center; 
+    height: 100vh; 
+    margin: 0; 
+    padding-top: 20vh; /* This pushes content up to the top 20% of the screen */
+}
 
-    <script src="./purify.min.js"></script>
-    <script src="./sw.js"></script>
+button { 
+    background: transparent; 
+    border: 2px solid peru; 
+    color: peru; 
+    padding: 15px 30px; 
+    font-size: 1.2rem; 
+    cursor: pointer; 
+    font-family: inherit;
+    z-index: 10; /* Ensure it stays above the banner logic */
+}
+    </style>
 </head>
 <body>
 
-    <div class="menu-container">
-        <input id="searchBox" type="text" placeholder="search database" autocomplete="off">
-        <div style="margin-top:10px; font-size:10px; color:#666;">#MAIN | #ABOUT</div>
-    </div>
+    <button onclick="enterMEV()">ENTER SOVEREIGN BRAIN</button>
+	
+	<div id="cookie-banner" style="position:fixed; bottom:0; width:100%; background:#111; color:peru; padding:15px; text-align:center; border-top:1px solid peru; display:none;">
+    We use local storage to verify humanity and secure your session. 
+    Read our <a href="privacy.html" style="color:white;">Privacy Policy</a>.
+    <button onclick="acceptPrivacy()" style="margin-left:20px; border:1px solid peru; background:transparent; color:peru; cursor:pointer;">I ACCEPT</button>
+</div>
 
-    <ul id="linkList" style="list-style:none; margin-top:100px;">
-        <li class="titleInput" id="main">
-            <h2>#MAIN</h2>
-            <p>Welcome to the Internal Subconscious Gateway.</p>
-            <button onclick="enableJSAndEnter()">🚀 Enter Wiki Search</button>
-            <button onclick="forceVersionSync()">🔄 Sync System</button>
-        </li>
-        <li class="titleInput" id="about">
-            <h2>#ABOUT</h2>
-            <p>MEV Security Lab Environment - Localhost Root.</p>
-        </li>
-    </ul>
+<div id="cookie-banner" style="position:fixed; bottom:0; width:100%; background:#111; color:peru; padding:15px; text-align:center; border-top:1px solid peru; display:none;">
+    We use local storage to verify humanity and secure your session. 
+    Read our <a href="privacy.html" style="color:white;">Privacy Policy</a>.
+    <button onclick="acceptPrivacy()" style="margin-left:20px; border:1px solid peru; background:transparent; color:peru; cursor:pointer;">I ACCEPT</button>
+</div>
 
 <script>
-    (function() {
-        "use strict";
+    // Show banner if not yet accepted
+    if (!localStorage.getItem('mev_privacy_consent')) {
+        document.getElementById('cookie-banner').style.display = 'block';
+    }
 
-        const GOOD_ROBOTS = ['github', 'googlebot', 'bingbot'];
-        const isBot = () => GOOD_ROBOTS.some(r => navigator.userAgent.toLowerCase().includes(r));
-        const searchBox = document.getElementById('searchBox');
-
-        // Secure Search
-        searchBox.addEventListener('keyup', () => {
-            const cleanInput = DOMPurify.sanitize(searchBox.value.toLowerCase());
-            const items = document.getElementsByClassName('titleInput');
-            for (let item of items) {
-                item.style.display = item.textContent.toLowerCase().includes(cleanInput) ? "block" : "none";
-            }
-        });
-
-        // Secure Enter Navigation
-        searchBox.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                const val = DOMPurify.sanitize(searchBox.value.toLowerCase().replace(/#/g, ''));
-                if (document.getElementById(val)) { window.location.hash = val; searchBox.value = ''; }
-            }
-        });
-
-        // UPDATED REDIRECTS
-        window.enableJSAndEnter = () => {
-            localStorage.setItem('mev_human_verified', 'true');
-            window.location.href = './mev/#search';
-        };
-
-        window.forceVersionSync = async () => {
-            if ('serviceWorker' in navigator) {
-                const regs = await navigator.serviceWorker.getRegistrations();
-                for(let r of regs) await r.unregister();
-            }
-            localStorage.clear();
-            localStorage.setItem('mev_human_verified', 'true');
-            window.location.href = './mev/#search';
-        };
-
-        window.addEventListener('load', () => {
-            if (isBot()) console.log("MEV: Maintenance Whitelist Active.");
-            if (!window.location.hash) window.location.hash = 'main';
-        });
-    })();
+    function acceptPrivacy() {
+        localStorage.setItem('mev_privacy_consent', 'true');
+        document.getElementById('cookie-banner').style.display = 'none';
+    }
 </script>
+
+
+<script>
+    // Show banner if not yet accepted
+    if (!localStorage.getItem('mev_privacy_consent')) {
+        document.getElementById('cookie-banner').style.display = 'block';
+    }
+
+    function acceptPrivacy() {
+        localStorage.setItem('mev_privacy_consent', 'true');
+        document.getElementById('cookie-banner').style.display = 'none';
+    }
+</script>
+
+
+    <script>
+// Register the centralized Service Worker from the root
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        // Pointing to the /mev/ folder assets
+        navigator.serviceWorker.register('mev/sw.js', { scope: '/mev/' })
+            .then(reg => console.log('MEV: Centralized Brain Synced'))
+            .catch(err => console.log('MEV: Sync Failed', err));
+    });
+}
+
+function enterMEV() {
+    // Check if cookies/privacy were accepted before allowing entry
+    if (localStorage.getItem('mev_privacy_consent') !== 'true') {
+        alert("Please review and accept the Privacy Policy before entering.");
+        return;
+    }
+    localStorage.setItem('mev_human_verified', 'true');
+    window.location.href = './mev/#main';
+}
+    </script>
 </body>
 </html>
