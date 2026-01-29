@@ -1,0 +1,68 @@
+// --- Service Worker Content (Subconscious) ---
+const CACHE = "mev-wiki-v1.2.1";
+
+// Assets to cache for the 'Subconscious'
+const FILES = [
+  "./",
+  "./index.html",
+  "./purify.min.js", // Add this to ensure security works offline
+  "./manifest.json",
+  "./assets/icons/icon-192.png"
+];
+
+// --- Install Listener ---
+self.addEventListener("install", event => {
+  console.log('[Service Worker] Install Event - Caching App Shell:', CACHE);
+  event.waitUntil(
+    caches.open(CACHE)
+      .then(cache => cache.addAll(FILES))
+      .then(() => self.skipWaiting())
+      .catch(err => console.error('[Service Worker] Install Failed:', err))
+  );
+});
+
+// --- Activate Listener ---
+self.addEventListener("activate", event => {
+  console.log('[Service Worker] Activate Event - Cleaning old caches.');
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cacheName => {
+          if (cacheName !== CACHE) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    }).then(() => self.clients.claim())
+  );
+});
+
+// --- Fetch Listener ---
+self.addEventListener("fetch", event => {
+  if (event.request.method !== "GET") return;
+
+  const url = new URL(event.request.url);
+  
+  // Logic: Using endsWith to catch the perimeter safely
+  const isMainDocument = url.pathname.endsWith('/') || url.pathname.endsWith('/index.html');
+  
+  if (isMainDocument) {
+    event.respondWith(
+      fetch(event.request)
+        .then(networkRes => {
+          if (networkRes.status === 200) {
+            const resToCache = networkRes.clone();
+            caches.open(CACHE).then(cache => cache.put(event.request, resToCache));
+          }
+          return networkRes;
+        })
+        .catch(() => caches.match(event.request)) 
+    );
+    return;
+  }
+
+  // Fallback for icons/manifest
+  event.respondWith(
+    caches.match(event.request).then(cacheRes => cacheRes || fetch(event.request))
+  );
+});

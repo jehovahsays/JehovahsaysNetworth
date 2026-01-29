@@ -1,24 +1,14 @@
-# robots.txt for MEV Wiki
-# Purpose: Protect the Internal Subconscious while allowing Maintenance Scans
-
+# robots.txt for MEV Offline Wiki 
+# Index homepage only — block user-generated & dynamic paths.
 User-agent: *
-Disallow: /blackhole/
-Disallow: /?*
 Disallow: /#*
+Disallow: /?*
+Disallow: /recent
+Disallow: /settings
+Disallow: /profile
+Disallow: /edit
+Disallow: /search
+Disallow: /notfound
 
-# WHITELIST: Allow Friendly Entities for Maintenance & Scans
-User-agent: GitHub-Hookshot
+# Let crawlers index only the base route
 Allow: /
-
-User-agent: gsa-crawler
-Allow: /
-
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-# Block aggressive AI scrapers from the application directory
-User-agent: GPTBot
-Disallow: /mev/

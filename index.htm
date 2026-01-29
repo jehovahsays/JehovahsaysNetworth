@@ -1,0 +1,479 @@
+<head>
+  <meta charset="UTF-8" />
+  <title>MEV Wiki</title>
+  <meta name="description" content="MEV Wiki – Offline Encyclopedia. Learn, edit, explore." />
+  <meta name="theme-color" content="#3366cc" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self' 'unsafe-inline' blob:; object-src 'none'; style-src 'self' 'unsafe-inline'; worker-src 'self' blob:;">
+
+<meta http-equiv="Referrer-Policy" content="no-referrer">
+
+<meta http-equiv="Permissions-Policy" content="microphone=(), camera=(), geolocation=()">
+
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="./assets/icons/icon-192.png" type="image/png">
+  
+  <link rel="stylesheet" href="./styles.css" type="text/css">
+
+  <script src="./purify.min.js"></script>
+  <script src="./a.js" defer></script>
+</head>
+
+<body>
+
+<div id="banner" class="banner"></div>
+
+<div id="offline-message">
+  ⚠️ You’re offline. Some features may be unavailable.
+</div>
+
+<header>
+  <button id="menu-btn" aria-label="Toggle menu navigation">☰</button>
+  <div id="ai-bar">
+    <input 
+      type="text" 
+      id="ai-input" 
+      placeholder="search or speak your query…" 
+      aria-label="Search or question input"
+      data-action="filter-sidebar"
+      list="search-suggestions">
+	
+	      <datalist id="search-suggestions">
+        <option value="Main Page">
+        <option value="About">
+        <option value="Recent Changes">
+        <option value="Formatting Examples">
+      </datalist>
+
+    <button id="ai-button">OK</button>
+	
+  </div>
+  
+
+  <button id="menu-btn" aria-label="Toggle menu navigation">☰</button>
+  <button id="theme-toggle-btn" class="mev-button" style="width: auto; margin-left: 10px; padding: 5px 10px;">
+    Toggle "Less" Theme
+  </button>
+  <div id="header-title">MEV Wiki</div>
+  <button id="search-btn" aria-label="Search">🔍</button>
+
+
+</header>
+
+<noscript>
+<p id="noscript-warning" style="text-align: center; color: red; padding: 20px;">
+  This application requires JavaScript. <br>
+  Please enable JavaScript for MEV Wiki to function.
+</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>index</title>
+    
+    <style>
+        body { 
+            background-color: black; 
+            color: white; 
+            font-family: monospace; 
+            margin: 0; 
+            padding: 20px;
+        }
+
+        /* --- UI NAVIGATION CONTROLS --- */
+        .menu-container {
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            text-align: center;
+        }
+
+        /* Text Input Styling (Conscious Search) */
+        #searchBox {
+            width: 250px;
+            padding: 8px;
+            background: #111;
+            border: 1px solid #333;
+            color: peru;
+            font-family: monospace;
+            font-size: 12px;
+            text-transform: lowercase;
+            margin-bottom: 5px;
+            outline: none;
+        }
+
+        /* CSS Dropdown (Subconscious Map - Works without JS) */
+        #menu-toggle { display: none; }
+        .search-label {
+            display: block;
+            width: 266px; /* Matching searchBox + padding */
+            padding: 5px;
+            background: #111;
+            border: 1px solid #333;
+            color: #666; /* Subtler color for the static menu */
+            cursor: pointer;
+            font-size: 10px;
+            text-transform: lowercase;
+        }
+
+        .dropdown-content {
+            display: none;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            background: #111;
+            border: 1px solid #333;
+            width: 266px;
+        }
+
+        .dropdown-content li a {
+            display: block;
+            padding: 10px;
+            color: peru;
+            text-decoration: none;
+            border-bottom: 1px solid #222;
+        }
+
+        #menu-toggle:checked ~ .dropdown-content { display: block; }
+
+        /* --- ARTICLE DISPLAY LOGIC --- */
+        #linkList {
+            margin-top: 100px;
+            padding: 0;
+            list-style: none;
+        }
+
+        .titleInput {
+            margin-bottom: 40px;
+            display: none; /* Hidden by default to allow #main targeting */
+        }
+
+        /* Image constraints - follows article width */
+        .titleInput img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin-top: 15px;
+            border: 1px solid #333;
+        }
+
+        .titleInput button {
+            background: #222;
+            color: peru;
+            border: 1px solid #444;
+            padding: 10px 20px;
+            font-family: monospace;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+
+        .article-text {
+            display: block;
+            color: #aaa;
+            line-height: 1.6;
+            max-width: 600px;
+        }
+
+        /* --- FADE EFFECTS (CSS Only) --- */
+        /* Show only the targeted article */
+        .titleInput:target, 
+        body:not(:has(:target)) #main { 
+            display: block !important;
+            animation: fadeIn 0.8s forwards;
+            border-left: 3px solid peru;
+            padding-left: 15px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="menu-container">
+        <input 
+            id="searchBox" 
+            type="text" 
+            onkeyup="titleInput()" 
+            placeholder="search database" 
+            autocomplete="off"
+            autocorrect="off" 
+            autocapitalize="off">
+
+        <input type="checkbox" id="menu-toggle">
+        <label for="menu-toggle" class="search-label">click to browse keywords ▼</label>
+        
+        <ul class="dropdown-content">
+			<li><a href="#main">#main</a></li>
+
+        </ul>
+    </div>
+
+    <ul id="linkList">
+<li class="titleInput" id="main">
+    <a href="index.htm#main"><button style="background: peru; color: black; font-weight: bold;">Enter MEV Wiki</button></a>
+    <br>
+    <span class="article-text">
+        welcome to index. an offline‑first encyclopedia powered by your browser. 
+        you are currently in the <strong>external conscious</strong>. 
+        click the button above to initialize the internal subconscious wiki.
+    </span>
+</li>
+
+
+    </ul>
+
+<script>
+// Prevent form refresh and handle Enter key for hash navigation
+document.getElementById('searchBox').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        const val = this.value.toLowerCase().replace('#', '');
+        if (document.getElementById(val)) {
+            window.location.hash = val;
+            this.value = ''; // Clear search to focus on the result
+        }
+    }
+});
+
+function titleInput() {
+    let input = document.getElementById('searchBox').value.toLowerCase();
+    let items = document.getElementsByClassName('titleInput');
+ 
+    for (let i = 0; i < items.length; i++) {
+        // Live filter visibility based on content match
+        if (items[i].innerHTML.toLowerCase().includes(input)) {
+            items[i].style.display = "block";
+        } else {
+            items[i].style.display = "none";
+        }
+    }
+}
+
+// Ensure the page defaults to #main on first load if no hash exists
+if (!window.location.hash) {
+    window.location.hash = 'main';
+}
+</script>
+
+</body>
+</html>
+
+</noscript>
+<a href="index.html#main" class="titleInput">
+    <button style="border: 1px dashed peru;">Exit to Splash Page</button>
+</a>
+
+<div id="find-view">
+    <div id="search-container">
+	<p id="search-note" style="font-size: 0.9em; margin-bottom: 10px;"></p>
+        <input
+            id="filterInput-find"
+            data-action="filter-findview" 
+            autocomplete="off"
+            autocorrect="off"  
+            autocapitalize="off" 
+            spellcheck="false"
+            type="text" 
+            placeholder="Search wiki pages..." 
+            aria-label="Search wiki pages" 
+            aria-describedby="search-note"
+            required>
+        
+        <ul id="page-list-find"></ul>
+        
+        <div id="status-message-find">Start typing to filter pages...</div>
+    </div>
+</div>
+
+<div id="container">
+  <nav id="sidebar">
+    <div id="auth-links">
+      <div id="user-status">Not logged in</div>
+      <a href="#create" id="create-account-link">Create Account</a><br>
+      <a href="#login" id="login-link">Log In</a><br>
+      <a href="#profile" id="profile-link">My Profile</a><br>
+      <a href="#logout" id="logout-link" class="hidden">Log Out</a> 
+    </div>
+    <hr/>
+	
+    <h3>Navigation Filters</h3>
+    <ul id="quick-filters">
+        <li class="titleInput"><button data-page-target="Main-Page">Main-Page</button></li>
+        <li class="titleInput"><button data-nav-target="recent">Recent Changes</button></li>
+        <li class="titleInput"><button data-nav-target="settings">Settings</button></li>
+        <li class="titleInput"><button data-nav-target="about">About</button></li>
+        <li class="titleInput"><button data-page-target="Formatting Examples">Wiki Formatting Help</button></li>
+    </ul>
+
+    <hr />
+    <h3>Wiki Pages</h3>
+
+    <ul id="page-list"></ul>
+    
+    <button id="create-page-btn" class="edit-btn" style="width: 100%; margin-top: 10px;">+ New Page</button>
+    <!-- 🌐 Language Selector (CSP-Safe: defined statically) -->
+<hr />
+<button id="language-btn" class="edit-btn" style="width:100%;margin-top:10px;">🌐 Language</button>
+
+<div id="language-menu" class="hidden" style="margin-top:8px;">
+  <select id="language-select" style="width:100%;padding:6px;border-radius:6px;">
+    <option value="en-US">English (US)</option>
+    <option value="fr-FR">Français</option>
+    <option value="de-DE">Deutsch</option>
+    <option value="es-ES">Español</option>
+    <option value="it-IT">Italiano</option>
+    <option value="ja-JP">日本語</option>
+  </select>
+  <button id="apply-language-btn" class="edit-btn" style="width:100%;margin-top:6px;">Apply</button>
+</div>
+    <div id="storage-bar">
+      <div id="storage-bar-inner"></div>
+    </div>
+  </nav>
+
+  <main id="main-content-wrapper" itemscope itemtype="https://schema.org/WebPage">
+    <meta itemprop="url" content="https://jehovahsays.github.io/mev/">
+   <div id="page-container">
+   <div id="app-interface">
+            </div>
+   </div> 
+  </main>
+</div>
+<footer>
+		
+  <div id="status-indicator">🔴 Offline</div>
+  <div id="ticker"><span id="ticker-content"></span></div>
+    <span id="last-updated" style="margin-left: auto;"></span>
+  </div> 
+</footer>
+
+<div id="auth-modal" class="modal-overlay">
+  <div class="modal-box">
+    <h2 id="auth-modal-title">Enter Username</h2>
+    <label for="auth-username">Username:</label>
+    <input id="auth-username" type="text" autocomplete="username" /><br><br>
+    
+    <label for="auth-pin">PIN/Passphrase (4-12 characters recommended):</label>
+    <input id="auth-pin" type="password" maxlength="12" autocomplete="current-password" />
+    <p style="font-size: 0.8em; color: red; margin-top: 10px;">⚠️ If you set a PIN/Passphrase, **all your data will be encrypted**. If you forget the PIN, the data will be permanently inaccessible.</p>
+    
+    <div class="modal-actions">
+      <button id="submit-auth">Submit</button>
+      <button id="cancel-auth">Cancel</button>
+    </div>
+  </div>
+</div>
+
+
+	<script>
+	// Add this to the beginning of your script blocks
+if (window.location.pathname.endsWith('.html') || window.location.pathname.endsWith('.htm')) {
+    const cleanURL = window.location.href.replace(/index\.(html|htm)/, '');
+    window.history.replaceState(null, '', cleanURL);
+}
+
+// Ensure the default hash is set without refreshing the page
+if (!window.location.hash) {
+    window.location.hash = 'main';
+}
+</script>
+
+
+
+<script>
+/**
+ * MEV SECURE CORE - HARDENED
+ * Encapsulated to prevent global scope leakage and unauthorized access.
+ */
+(function(DOMPurify, navigator) {
+    "use strict";
+
+    // 1. Secure Service Worker Registration
+    if (navigator && 'serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js', { scope: './' })
+                .then(reg => {
+                    // Prevent external access to the registration object
+                    Object.freeze(reg);
+                    console.log('SW Registered');
+                })
+                .catch(err => console.error('Registration failed:', err));
+        });
+    }
+	
+	// --- Theme Toggle Logic ---
+const themeBtn = document.getElementById('theme-toggle-btn');
+if (themeBtn) {
+    // Check for saved preference
+    if (localStorage.getItem('mev_theme') === 'less') {
+        document.body.classList.add('less-mode');
+        themeBtn.textContent = 'Standard UI';
+    }
+
+    themeBtn.addEventListener('click', () => {
+        const isLess = document.body.classList.toggle('less-mode');
+        
+        if (isLess) {
+            localStorage.setItem('mev_theme', 'less');
+            themeBtn.textContent = 'Standard UI';
+        } else {
+            localStorage.setItem('mev_theme', 'standard');
+            themeBtn.textContent = 'Toggle "Less" Theme';
+        }
+    });
+}
+
+
+    /**
+     * SECURE RENDER GATEKEEPER
+     * Hardened to freeze configuration and prevent prototype pollution.
+     */
+    const safeRender = (containerId, rawHTML) => {
+        const container = document.getElementById(containerId);
+        if (!container || !DOMPurify) return;
+
+        // Strict Sanitization Config
+        const config = Object.freeze({
+            USE_PROFILES: { html: true },
+            FORBID_TAGS: ['script', 'iframe', 'object', 'embed', 'base'],
+            FORBID_ATTR: ['onerror', 'onload', 'onclick', 'onmouseover', 'style'], // style blocked to prevent CSS injection
+            RETURN_DOM: false,
+            FORCE_BODY: true
+        });
+
+        const cleanHTML = DOMPurify.sanitize(rawHTML, config);
+        container.innerHTML = cleanHTML;
+    };
+
+    // 2. Lock the rendering function so it cannot be redefined by other scripts
+    Object.defineProperty(window, 'mevRender', {
+        value: safeRender,
+        writable: false,
+        configurable: false
+    });
+
+    // 3. Freeze the Internal State to prevent external CLI modification
+    if (Object.seal) {
+        Object.seal(window.mevRender);
+    }
+
+    // 4. Protection against 'this' binding attacks
+    Object.freeze(this);
+
+})(window.DOMPurify, window.navigator);
+</script>
+
+
+
+</body>
+</html>
+
+
