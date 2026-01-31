@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Polarity - MEV Branching Animation</title>
+    <style>
+        body { margin: 0; background: #000; overflow: hidden; color: #0f0; font-family: monospace; }
+        canvas { display: block; }
+        #info { position: absolute; top: 10px; left: 10px; pointer-events: none; }
+    </style>
+</head>
+<body>
+    <div id="info">MEV Wiki: Polarity Mapping (index.html -> nodes)</div>
+    <canvas id="canvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Define the nodes based on file structure
+        const nodes = [
+            { id: 'splash', label: 'index.html', x: canvas.width / 2, y: canvas.height / 2, size: 20, color: 'peru' },
+            { id: 'wiki', label: 'index.htm', x: 0, y: 0, size: 15, color: '#3366cc' },
+            { id: 'about', label: 'About', x: 0, y: 0, size: 10, color: '#0f0' },
+            { id: 'settings', label: 'Settings', x: 0, y: 0, size: 10, color: '#0f0' },
+            { id: 'recent', label: 'Recent Changes', x: 0, y: 0, size: 10, color: '#0f0' },
+            { id: 'profile', label: 'Profile', x: 0, y: 0, size: 10, color: '#0f0' },
+            { id: 'import', label: 'Import_Data', x: 0, y: 0, size: 8, color: 'orange' }
+        ];
+
+        // Define connections (Branching From -> To)
+        const links = [
+            { from: 'splash', to: 'wiki' },
+            { from: 'wiki', to: 'splash' }, // Bidirectional link found in code
+            { from: 'wiki', to: 'about' },
+            { from: 'wiki', to: 'settings' },
+            { from: 'wiki', to: 'recent' },
+            { from: 'wiki', to: 'profile' },
+            { from: 'settings', to: 'import' }
+        ];
+
+        // Initialize positions in a branching circle
+        const angleStep = (Math.PI * 2) / (nodes.length - 1);
+        nodes.forEach((node, i) => {
+            if (node.id === 'splash') return;
+            node.x = node.id === 'import' ? nodes[3].x + 100 : canvas.width / 2 + Math.cos(i * angleStep) * 200;
+            node.y = node.id === 'import' ? nodes[3].y + 50 : canvas.height / 2 + Math.sin(i * angleStep) * 200;
+            node.vx = (Math.random() - 0.5);
+            node.vy = (Math.random() - 0.5);
+        });
+
+        function animate() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw Links
+            links.forEach(link => {
+                const start = nodes.find(n => n.id === link.from);
+                const end = nodes.find(n => n.id === link.to);
+                
+                ctx.beginPath();
+                ctx.moveTo(start.x, start.y);
+                ctx.lineTo(end.x, end.y);
+                ctx.strokeStyle = 'rgba(0, 255, 0, 0.2)';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            });
+
+            // Draw Nodes
+            nodes.forEach(node => {
+                // Gentle floating movement
+                if (node.id !== 'splash') {
+                    node.x += node.vx;
+                    node.y += node.vy;
+                    if (node.x < 0 || node.x > canvas.width) node.vx *= -1;
+                    if (node.y < 0 || node.y > canvas.height) node.vy *= -1;
+                }
+
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, node.size, 0, Math.PI * 2);
+                ctx.fillStyle = node.color;
+                ctx.fill();
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = node.color;
+
+                ctx.fillStyle = '#fff';
+                ctx.fillText(node.label, node.x + node.size + 5, node.y + 5);
+                ctx.shadowBlur = 0;
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
