@@ -154,13 +154,12 @@
         <label for="menu-toggle" class="search-label">click to browse keywords ▼</label>
         
         <ul class="dropdown-content">
-		<li><a href="#main">#main</a></li>	
+		<li><a href="#main">#main</a></li>
 		<li><a href="#about">#about</a></li>	
 		<li><a href="#robots">#robots</a></li>	
 		<li><a href="#privacy">#privacy</a></li>
 		<li><a href="#polarity">#polarity</a></li>					
-        <li><a href="#download">#download</a></li>					
-
+        <li><a href="#download">#download</a></li>
         </ul>
 		
     </div>
@@ -172,7 +171,9 @@
 Welcome to MEV Wiki
 An offline‑first encyclopedia powered by your browser. 
 No tracking, no server. 
-You can also <a href="./index.htm#main"><button>create</button></a> a new page now!
+You can also 
+<button onclick="navigateToCore('#main')">create </button>
+ a new page now!
 </span>
 </li>
 
@@ -304,6 +305,33 @@ window.addEventListener('load', () => {
     }
 });
 
+</script>
+
+<script>
+/**
+ * MEV Button Bridge
+ * Connects the 'create' button directly to the Subconscious Iframe layer.
+ */
+(function() {
+    // Defines the bridge function globally if it isn't already 
+    // to ensure the inline 'onclick' attribute can find it.
+    window.navigateToCore = window.navigateToCore || function(targetHash) {
+        const iframeOverlay = document.getElementById('mev-core-overlay');
+        const iframe = document.getElementById('mev-iframe');
+        
+        if (iframe && iframeOverlay) {
+            const cleanHash = targetHash.replace('#', '');
+            // Updates the internal iframe source without a full page refresh
+            iframe.src = `./index.htm#${cleanHash}`;
+            // Reveals the internal Wiki layer
+            iframeOverlay.style.display = 'block';
+            console.log(`MEV: Navigation bridged to internal hash: #${cleanHash}`);
+        } else {
+            // Fallback for legacy systems or if the iframe isn't built yet
+            window.location.href = `./index.htm${targetHash}`;
+        }
+    };
+})();
 </script>
 
 </body>

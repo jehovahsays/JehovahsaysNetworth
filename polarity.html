@@ -2,104 +2,198 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Polarity - MEV Branching Animation</title>
+    <title>MEV Architecture - Galactic Root</title>
     <style>
-        body { margin: 0; background: #000; overflow: hidden; color: #0f0; font-family: monospace; }
-        canvas { display: block; }
-        #info { position: absolute; top: 10px; left: 10px; pointer-events: none; }
+        body { margin: 0; background: #000; overflow: hidden; color: #0f0; font-family: 'Courier New', monospace; touch-action: none; }
+        canvas { display: block; touch-action: none; }
+        #ui { position: absolute; top: 20px; left: 20px; pointer-events: none; border-left: 2px solid #0f0; padding-left: 10px; }
+        .legend { color: #888; font-size: 10px; text-transform: uppercase; }
     </style>
 </head>
 <body>
-    <div id="info">MEV Wiki: Polarity Mapping (index.html -> nodes)</div>
+
+    <div id="ui">
+        <div class="legend">System: MEV Localhost</div>
+        <div style="color:white; font-size: 14px;">POLARITY MAP v3.1 - Orbital Transfer</div>
+    </div>
+
     <canvas id="canvas"></canvas>
 
     <script>
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
+        let width, height, scale = 0.45, offsetX = 0, offsetY = 0;
+        let rotationAngle = 0;
+        let transferProgress = 0; // Track the seed transfer animation
 
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        // 1. STARFIELD GENERATION (Brightened and Dynamic)
+        const stars = Array.from({ length: 250 }, () => ({
+            x: Math.random() * 4000 - 2000,
+            y: Math.random() * 4000 - 2000,
+            size: Math.random() * 3 + 1, // Increased size for visibility
+            speed: Math.random() * 0.005,
+            pulse: Math.random() * 0.05
+        }));
 
-        // Define the nodes based on file structure
-        const nodes = [
-            { id: 'splash', label: 'index.html', x: canvas.width / 2, y: canvas.height / 2, size: 20, color: 'peru' },
-            { id: 'wiki', label: 'index.htm', x: 0, y: 0, size: 15, color: '#3366cc' },
-            { id: 'about', label: 'About', x: 0, y: 0, size: 10, color: '#0f0' },
-            { id: 'settings', label: 'Settings', x: 0, y: 0, size: 10, color: '#0f0' },
-            { id: 'recent', label: 'Recent Changes', x: 0, y: 0, size: 10, color: '#0f0' },
-            { id: 'profile', label: 'Profile', x: 0, y: 0, size: 10, color: '#0f0' },
-            { id: 'import', label: 'Import_Data', x: 0, y: 0, size: 8, color: 'orange' }
-        ];
+        // 2. NODESTRUCTURE (Linear Flow + Branching)
+        const consciousHashes = ['#main', '#about', '#robots', '#privacy', '#download', '#search'];
+        const subconsciousHashes = ['#settings', '#edit', '#delete', '#create', '#recent', '#profile'];
+        const systemFiles = ['a.js', 'sw.js', 'styles.css', 'robots.txt', 'manifest.json', 'privacy.html', 'polarity.html', '404.html', 'purify.min.js', 'localhost.zip'];
 
-        // Define connections (Branching From -> To)
-        const links = [
-            { from: 'splash', to: 'wiki' },
-            { from: 'wiki', to: 'splash' }, // Bidirectional link found in code
-            { from: 'wiki', to: 'about' },
-            { from: 'wiki', to: 'settings' },
-            { from: 'wiki', to: 'recent' },
-            { from: 'wiki', to: 'profile' },
-            { from: 'settings', to: 'import' }
-        ];
-
-        // Initialize positions in a branching circle
-        const angleStep = (Math.PI * 2) / (nodes.length - 1);
-        nodes.forEach((node, i) => {
-            if (node.id === 'splash') return;
-            node.x = node.id === 'import' ? nodes[3].x + 100 : canvas.width / 2 + Math.cos(i * angleStep) * 200;
-            node.y = node.id === 'import' ? nodes[3].y + 50 : canvas.height / 2 + Math.sin(i * angleStep) * 200;
-            node.vx = (Math.random() - 0.5);
-            node.vy = (Math.random() - 0.5);
-        });
-
-        function animate() {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Draw Links
-            links.forEach(link => {
-                const start = nodes.find(n => n.id === link.from);
-                const end = nodes.find(n => n.id === link.to);
-                
-                ctx.beginPath();
-                ctx.moveTo(start.x, start.y);
-                ctx.lineTo(end.x, end.y);
-                ctx.strokeStyle = 'rgba(0, 255, 0, 0.2)';
-                ctx.lineWidth = 1;
-                ctx.stroke();
-            });
-
-            // Draw Nodes
-            nodes.forEach(node => {
-                // Gentle floating movement
-                if (node.id !== 'splash') {
-                    node.x += node.vx;
-                    node.y += node.vy;
-                    if (node.x < 0 || node.x > canvas.width) node.vx *= -1;
-                    if (node.y < 0 || node.y > canvas.height) node.vy *= -1;
-                }
-
-                ctx.beginPath();
-                ctx.arc(node.x, node.y, node.size, 0, Math.PI * 2);
-                ctx.fillStyle = node.color;
-                ctx.fill();
-                ctx.shadowBlur = 15;
-                ctx.shadowColor = node.color;
-
-                ctx.fillStyle = '#fff';
-                ctx.fillText(node.label, node.x + node.size + 5, node.y + 5);
-                ctx.shadowBlur = 0;
-            });
-
-            requestAnimationFrame(animate);
+        function resize() {
+            width = window.innerWidth; height = window.innerHeight;
+            canvas.width = width * window.devicePixelRatio;
+            canvas.height = height * window.devicePixelRatio;
+            ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
         }
 
-        animate();
-
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+        // --- INTERACTION ---
+        let isDragging = false, lastX, lastY, pinchDist = null;
+        canvas.addEventListener('touchstart', e => {
+            if (e.touches.length === 1) { isDragging = true; lastX = e.touches[0].clientX; lastY = e.touches[0].clientY; }
+            else if (e.touches.length === 2) { pinchDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY); }
         });
+        canvas.addEventListener('touchmove', e => {
+            if (isDragging && e.touches.length === 1) {
+                offsetX += (e.touches[0].clientX - lastX) / scale;
+                offsetY += (e.touches[0].clientY - lastY) / scale;
+                lastX = e.touches[0].clientX; lastY = e.touches[0].clientY;
+            } else if (e.touches.length === 2) {
+                const dist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+                if (pinchDist) { scale *= (dist / pinchDist); pinchDist = dist; }
+            }
+        });
+        canvas.addEventListener('touchend', () => { isDragging = false; pinchDist = null; });
+
+        function drawNode(x, y, label, color, size = 10, glow = false) {
+            // Draw Orbital Ring around each node
+            ctx.beginPath();
+            ctx.arc(x, y, size * 2.5, 0, Math.PI * 2);
+            ctx.strokeStyle = color + '33'; // 20% opacity orbital ring
+            ctx.setLineDash([5, 15]);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            ctx.beginPath();
+            ctx.arc(x, y, size, 0, Math.PI * 2);
+            ctx.fillStyle = color;
+            if (glow) { ctx.shadowBlur = 15; ctx.shadowColor = color; }
+            ctx.fill();
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = "#fff";
+            ctx.font = `${Math.max(10, 10 / scale)}px monospace`;
+            ctx.fillText(label, x + size + 8, y + 5);
+        }
+
+        function draw() {
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, width, height);
+            ctx.save();
+            ctx.translate(width / 2, height / 2);
+            ctx.scale(scale, scale);
+            ctx.translate(offsetX, offsetY);
+
+            rotationAngle += 0.002;
+            transferProgress = (transferProgress + 0.005) % 1; // Cycle transfer animation
+
+            // DRAW STARS (Brightened and Orbiting the Client Node)
+            stars.forEach(s => {
+                const ang = rotationAngle * s.speed * 100;
+                const sx = s.x * Math.cos(ang) - s.y * Math.sin(ang);
+                const sy = s.x * Math.sin(ang) + s.y * Math.cos(ang);
+                const brightness = 0.4 + Math.abs(Math.sin(Date.now() * 0.001 + s.pulse)) * 0.6;
+                ctx.fillStyle = `rgba(255,255,255,${brightness})`;
+                ctx.fillRect(sx - 500, sy - 800, s.size, s.size);
+            });
+
+            const p = {
+                client: {x: -500, y: -800},
+                storage: {x: -500, y: -500},
+                localhost: {x: -500, y: -200},
+                root: {x: 0, y: 0},
+                idxHtml: {x: -300, y: 300},
+                idxHtm: {x: 300, y: 300},
+                assets: {x: 600, y: 500}
+            };
+
+            // Main Backbone Lines
+            ctx.strokeStyle = "rgba(0, 255, 0, 0.4)";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(p.client.x, p.client.y);
+            ctx.lineTo(p.storage.x, p.storage.y);
+            ctx.lineTo(p.localhost.x, p.localhost.y);
+            ctx.lineTo(p.root.x, p.root.y);
+            ctx.stroke();
+
+            // Bridge Line (White)
+            ctx.beginPath();
+            ctx.strokeStyle = "#fff";
+            ctx.moveTo(p.root.x, p.root.y);
+            ctx.lineTo(p.idxHtml.x, p.idxHtml.y);
+            ctx.lineTo(p.idxHtm.x, p.idxHtm.y);
+            ctx.stroke();
+
+            // ANIMATED TRANSFER: Localhost to Client (P2P Seed Sharing)
+            const tx = p.localhost.x + (p.client.x - p.localhost.x) * transferProgress;
+            const ty = p.localhost.y + (p.client.y - p.localhost.y) * transferProgress;
+            ctx.beginPath();
+            ctx.arc(tx, ty, 4, 0, Math.PI * 2);
+            ctx.fillStyle = "#fff";
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = "#fff";
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            // 1. Client & Storage
+            drawNode(p.client.x, p.client.y, "CLIENT (HUMAN)", "#fff", 20, true);
+            drawNode(p.storage.x, p.storage.y, "localStorage", "#ff0", 12);
+            drawNode(p.localhost.x, p.localhost.y, "Localhost", "#0f0", 15);
+            drawNode(p.root.x, p.root.y, "ROOT", "#0f0", 25, true);
+
+            // 2. index.html BRANCHES (Conscious)
+            drawNode(p.idxHtml.x, p.idxHtml.y, "index.html", "peru", 15);
+            consciousHashes.forEach((h, i) => {
+                const orbitAngle = rotationAngle * 5 + i;
+                const bx = p.idxHtml.x + Math.cos(orbitAngle) * 150;
+                const by = p.idxHtml.y + Math.sin(orbitAngle) * 150;
+                ctx.beginPath(); ctx.moveTo(p.idxHtml.x, p.idxHtml.y); ctx.lineTo(bx, by);
+                ctx.strokeStyle = "rgba(205, 133, 63, 0.3)"; ctx.stroke();
+                drawNode(bx, by, h, "peru", 6);
+            });
+
+            // 3. index.htm BRANCHES (Subconscious)
+            drawNode(p.idxHtm.x, p.idxHtm.y, "index.htm", "#3366cc", 15);
+            subconsciousHashes.forEach((h, i) => {
+                const orbitAngle = -rotationAngle * 5 + i;
+                const bx = p.idxHtm.x + Math.cos(orbitAngle) * 150;
+                const by = p.idxHtm.y + Math.sin(orbitAngle) * 150;
+                ctx.beginPath(); ctx.moveTo(p.idxHtm.x, p.idxHtm.y); ctx.lineTo(bx, by);
+                ctx.strokeStyle = "rgba(51, 102, 204, 0.3)"; ctx.stroke();
+                drawNode(bx, by, h, "#3366cc", 6);
+            });
+
+            // 4. SYSTEM FILES & SEED (Branching from Root)
+            systemFiles.forEach((file, i) => {
+                const baseAngle = (i / systemFiles.length) * Math.PI - Math.PI/2;
+                const orbitAngle = baseAngle + Math.sin(rotationAngle * 2) * 0.1;
+                const fx = p.root.x + Math.cos(orbitAngle) * 450;
+                const fy = p.root.y + Math.sin(orbitAngle) * 450;
+                ctx.beginPath(); ctx.moveTo(p.root.x, p.root.y); ctx.lineTo(fx, fy);
+                ctx.strokeStyle = "rgba(0, 255, 0, 0.2)"; ctx.stroke();
+                
+                const color = file === "localhost.zip" ? "#fff" : "#0f0";
+                const size = file === "localhost.zip" ? 12 : 5;
+                drawNode(fx, fy, file, color, size, file === "localhost.zip");
+            });
+
+            ctx.restore();
+            requestAnimationFrame(draw);
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+        draw();
     </script>
 </body>
 </html>
