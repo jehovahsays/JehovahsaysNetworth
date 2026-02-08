@@ -1,30 +1,25 @@
 ---
 name: 🐛 Bug Report
-about: Report a bug or issue with MEV AI Wiki
+about: Report a bug or issue with the Localhost Sovereign Brain
 title: "[BUG] "
 labels: bug
 ---
 
 **Describe the bug**
-A clear description of the problem.
+[span_9](start_span)A clear description of the problem.[span_9](end_span)
 
 **Steps to reproduce**
-Steps to trigger the issue:
-
-1. Go to '...'
+1. [span_10](start_span)Go to './'[span_10](end_span)
 2. Click on '....'
-3. See error
+3. [span_11](start_span)See error[span_11](end_span)
 
 **Expected behavior**
-A description of what you expected to happen.
-
-**Screenshots (optional)**
-If applicable, add screenshots.
+[span_12](start_span)A description of what you expected to happen.[span_12](end_span)
 
 **Environment**
-- Browser (e.g. Chrome, Firefox):
-- Device (e.g. Desktop, Android):
-- Version: `v1.2.0-standalone`
+- Browser:
+- Device:
+- [span_13](start_span)Version: `v1.2.1-standalone`[span_13](end_span)
 
 **Additional context**
-Any other information.
+Is this happening in the 'Subconscious' (sw.js) or the 'Conscious' (a.js) layer?

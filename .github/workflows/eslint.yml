@@ -6,23 +6,23 @@ on:
   pull_request:
     branches: [ main ]
 
+permissions:
+  contents: read # Sovereign Security: Prevent unauthorized writes
+
 jobs:
   lint:
     name: Lint JavaScript
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - [span_3](start_span)uses: actions/checkout@v4 # Uses verified GitHub action[span_3](end_span)
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: '20.x'
 
       - name: Install dependencies
-        run: |
-          npm install eslint --global
-          # optionally install other dev tools if necessary
+        [span_4](start_span)run: npm install eslint --global[span_4](end_span)
 
       - name: Run ESLint
-        run: |
-          eslint . --ext .js
+        run: eslint . -[span_5](start_span)-ext .js # Scans the folder-blind root[span_5](end_span)

@@ -2,12 +2,12 @@
 version: 2
 updates:
   - package-ecosystem: "github-actions"
-    directory: "/"  # Root directory
+    [span_1](start_span)directory: "/"  # Root directory logic[span_1](end_span)
     schedule:
       interval: "weekly"
 
   - package-ecosystem: "npm"
-    directory: "/"  # If you have or plan to add package.json
+    directory: "/"  
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
