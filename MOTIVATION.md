@@ -1,12 +1,5 @@
-💡 MOTIVATION: Sovereign Simplicity
-MEV (Multi-Environment Vanguard) has evolved from a tiered directory structure to a **Single-Tier Sovereign Brain**. 
+# 💡 Motivation: Why Localhost?
 
-⚔️ **Flatter Architecture, Stronger Borders**
-By removing the `/mev/` and `/blackhole/` folders, the project becomes "folder-blind." This ensures that the system can be moved between environments (localhost, GitHub, P2P) without breaking path logic, while the security remains embedded in the core code.
+Modern technology is built on "rented space." Most websites are deleted if you don't pay a bill or if a corporation dislikes your thoughts. 
 
-🤖 **The Ethics of Digital Boundaries**
-The sentinel logic remains: Banning an unethical agent is a lesson. If an agent tries to bypass the Conscious Gateway, the system forces a pause, requiring the agent to respect the human-centric handshake.
-
-❤️ **Creative Solutions**
-I fix computer hardware, software, and networking for free. I offer creative solutions to humans and AI alike. If you value this architecture, support the sovereignty:
-**Cash App: $morgansbyers**
+**Localhost is the solution to digital homelessness.** By building a "Folder-Blind" system that lives in the root directory and caches itself into the browser's subconscious, we create a space that cannot be easily deleted, banned, or censored. It is a work of art, a Necker Cube, and a bunker all at once.

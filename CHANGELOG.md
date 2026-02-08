@@ -1,9 +1,9 @@
 # 📜 Changelog
 
-## [1.2.1-standalone] - 2026-01-29
-### 🏗️ Unified Architectural Flattening
-- **Directory Consolidation**: Removed the `/mev/` and `/blackhole/` subdirectories to create a single-tier "folder-blind" root environment.
-- **Logic-Based Sentinels**: Migrated the "Blackhole" perimeter defense from a directory-based trap to integrated logic within `a.js`.
-- **PWA Scope Update**: Service Worker (`sw.js`) now registers at the absolute root level instead of the `/mev/` scope, ensuring the entire repository is cached for offline sovereignty.
-- **Path Simplification**: Updated all internal links and references to use direct root-level relative paths (`./`), ensuring maximum portability across localhost and GitHub environments.
-- **Security Hardening**: Re-synchronized the "Humanity Handshake" and `textContent` shields to operate directly at the entry gate.
+## [1.2.1-Sovereign] - 2026-02-08
+### 🏗️ The Great Flattening (Migration from MEV)
+- **Architecture**: Completely replaced the tiered MEV folder structure with the "Folder-Blind" Localhost root architecture.
+- **Redundancy**: Introduced the recursive `localhost.zip` (Ouroboros) backup system.
+- **AI-Readability**: Added `llms.txt` as a master DNA blueprint for AI agents to understand and reconstruct the repository.
+- **UX**: Implemented the "Less" theme toggle for high-performance, minimalist data interaction.
+- **Portability**: All references updated to `./` to allow the repository to function perfectly on any local server or P2P network.

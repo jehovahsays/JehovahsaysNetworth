@@ -1,16 +1,13 @@
-# 🔐 Security Policy: The Integrated Immune System
+# 🔐 Security Policy
 
-With the removal of directory-based traps, security is now enforced through **Active Logic Sentinels** within the root environment.
+In the Localhost architecture, security is not a "wall" you build; it is an **Immune System** integrated into the code.
 
-## 🛡️ The Unified Membrane
-Access is guarded by a "Humanity Handshake". Local storage tokens (`mev_human_verified`) are strictly required to interact with the core features.
+## 🛡️ Active Logic Sentinels
+By removing the `/blackhole/` directory, we have moved from "Passive Traps" to "Active Sentinels." Logic within `a.js` monitors behavior:
+1.  **Handshake Requirement:** Users must pass the "Humanity Handshake" on the splash page.
+2.  **Breach Detection:** If an automated agent attempts to bypass the gateway or trigger "write" functions without verification, the system revokes access and ejects the session.
+3.  **Self-XSS Shield:** The browser console issues a hard **"STOP!"** warning to prevent users from being tricked into pasting malicious code.
 
-## ⚡ Logic Sentinels (Integrated Blackhole)
-Security logic within `a.js` monitors for unethical agent behavior. If an agent attempts to trigger write functions (like `#create=`) without interacting with the gateway:
-1. The `mev_breach_detected` flag is raised.
-2. The `mev_human_verified` status is revoked.
-3. The session is ejected to the initial splash state.
-
-## 💉 Input Sanitization
-* **Wiki Logic**: Sanitized via the root-level `purify.min.js`.
-* **Chat Security**: Employs the `textContent` shield to ensure all peer data is non-executable.
+## 💉 Content Integrity
+* **Sanitization:** Every piece of data rendered is scrubbed by the root-level `purify.min.js`.
+* **Code-Blindness:** We use a strict Content Security Policy (CSP) that blocks `unsafe-eval`, ensuring that even if a script is injected, it cannot execute.

@@ -3,121 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>index</title>
+    <title>localhost</title>
     
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self' 'unsafe-inline'; object-src 'none'; style-src 'self' 'unsafe-inline';">
+    <meta http-equiv="Referrer-Policy" content="no-referrer">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="Permissions-Policy" content="microphone=(), camera=(), geolocation=(), interest-cohort=()">
+    <meta http-equiv="Cache-Control" content="no-store, max-age=0">
+<script src="./purify.min.js"></script>
+<link rel="apple-touch-icon" href="./icon-192.png">
+
     <style>
-        body { 
-            background-color: black; 
-            color: white; 
-            font-family: monospace; 
-            margin: 0; 
-            padding: 20px;
-        }
-
-        /* --- UI NAVIGATION CONTROLS --- */
-        .menu-container {
-            position: fixed;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
-            text-align: center;
-        }
-
-        /* Text Input Styling (Conscious Search) */
-        #searchBox {
-            width: 250px;
-            padding: 8px;
-            background: #111;
-            border: 1px solid #333;
-            color: peru;
+        /* Base Setup: Minimalist terminal aesthetic */
+        body {
+            background-color: black;
+            color: white;
             font-family: monospace;
-            font-size: 12px;
-            text-transform: lowercase;
-            margin-bottom: 5px;
-            outline: none;
-        }
-
-        /* CSS Dropdown (Subconscious Map - Works without JS) */
-        #menu-toggle { display: none; }
-        .search-label {
-            display: block;
-            width: 266px; /* Matching searchBox + padding */
-            padding: 5px;
-            background: #111;
-            border: 1px solid #333;
-            color: #666; /* Subtler color for the static menu */
-            cursor: pointer;
-            font-size: 10px;
-            text-transform: lowercase;
-        }
-
-        .dropdown-content {
-            display: none;
-            list-style: none;
-            padding: 0;
             margin: 0;
-            background: #111;
-            border: 1px solid #333;
-            width: 266px;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
         }
 
-        .dropdown-content li a {
-            display: block;
-            padding: 10px;
+        /* The Checkbox Hack for secure navigation */
+        #menu-toggle { display: none; }
+
+        .hamburger {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            font-size: 30px;
+            cursor: pointer;
+            z-index: 1000;
+            color: peru;
+            user-select: none;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.98);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+
+        nav a {
             color: peru;
             text-decoration: none;
-            border-bottom: 1px solid #222;
+            font-size: 24px;
+            margin: 15px 0;
+            text-transform: lowercase;
         }
 
-        #menu-toggle:checked ~ .dropdown-content { display: block; }
+        #menu-toggle:checked ~ nav { display: flex; }
+        #menu-toggle:checked ~ .hamburger::before { content: "✕"; }
+        .hamburger::before { content: "☰"; }
 
-        /* --- ARTICLE DISPLAY LOGIC --- */
-        #linkList {
-            margin-top: 100px;
-            padding: 0;
-            list-style: none;
-        }
-
-        .titleInput {
-            margin-bottom: 40px;
-            display: none; /* Hidden by default to allow #main targeting */
-        }
-
-        /* Image constraints - follows article width */
-        .titleInput img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-            margin-top: 15px;
-            border: 1px solid #333;
-        }
-
-        .titleInput button {
-            background: #222;
-            color: peru;
-            border: 1px solid #444;
-            padding: 10px 20px;
-            font-family: monospace;
-            margin-bottom: 15px;
-            cursor: pointer;
-        }
-
-        .article-text {
-            display: block;
-            color: #aaa;
-            line-height: 1.6;
+        article {
+            display: none;
             max-width: 600px;
+            margin-top: 80px;
+            line-height: 1.6;
+            color: #aaa;
+            animation: fadeIn 0.5s forwards;
         }
 
-        /* --- FADE EFFECTS (CSS Only) --- */
-        /* Show only the targeted article */
-        .titleInput:target, 
-        body:not(:has(:target)) #main { 
-            display: block !important;
-            animation: fadeIn 0.8s forwards;
-            border-left: 3px solid peru;
-            padding-left: 15px;
+        article:target { display: block; }
+
+        .close-btn {
+            display: inline-block;
+            margin-top: 20px;
+            color: peru;
+            text-decoration: none;
+            border: 1px solid #333;
+            padding: 5px 10px;
+            font-size: 12px;
+            text-transform: lowercase;
         }
 
         @keyframes fadeIn {
@@ -125,174 +94,90 @@
             to { opacity: 1; transform: translateY(0); }
         }
     </style>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self' 'unsafe-inline' blob:; object-src 'none'; style-src 'self' 'unsafe-inline'; worker-src 'self' blob:;">
-
-<meta http-equiv="Referrer-Policy" content="no-referrer">
-
-<meta http-equiv="Permissions-Policy" content="microphone=(), camera=(), geolocation=()">
-
-  <link rel="manifest" href="./manifest.json">
-  <link rel="icon" href="./assets/icons/icon-192.png" type="image/png">
-  
-
-  <script src="./purify.min.js"></script>
-  	
 </head>
 <body>
 
-    <div class="menu-container">
-        <input 
-            id="searchBox" 
-            type="text" 
-            onkeyup="titleInput()" 
-            placeholder="search database" 
-            autocomplete="off"
-            autocorrect="off" 
-            autocapitalize="off">
+    <input type="checkbox" id="menu-toggle">
+    <label for="menu-toggle" class="hamburger"></label>
 
-        <input type="checkbox" id="menu-toggle">
-        <label for="menu-toggle" class="search-label">click to browse keywords ▼</label>
-        
-        <ul class="dropdown-content">
-		<li><a href="#main">#main</a></li>
-		<li><a href="#about">#about</a></li>	
-		<li><a href="#robots">#robots</a></li>	
-		<li><a href="#privacy">#privacy</a></li>
-		<li><a href="#polarity">#polarity</a></li>					
-        <li><a href="#download">#download</a></li>
-        </ul>
+    <nav>
+	    <a href="#main" onclick="document.getElementById('menu-toggle').checked = false">#main</a>
+        <a href="#about" onclick="document.getElementById('menu-toggle').checked = false">#about</a>
+        <a href="#terms" onclick="document.getElementById('menu-toggle').checked = false">#terms</a>
+        <a href="#privacy" onclick="document.getElementById('menu-toggle').checked = false">#privacy</a>
+        <a href="#download" onclick="document.getElementById('menu-toggle').checked = false">#download</a>
+    </nav>
+
+    <main>
+	
+        <article id="about">
+            <h2>About</h2>
+            <p>localhost 127.0.0.1 - Hardware-Software Sovereignty.</p>
+            <a href="#" class="close-btn">close article</a>
+        </article>
+
+        <article id="terms">
+            <h2>Terms</h2>
+            <p>This internal subconscious environment is self-hosted and local-first.</p>
+            <a href="#" class="close-btn">close article</a>
+        </article>
+
+        <article id="privacy">
+            <h2>Privacy</h2>
+            <p>Zero third-party dependencies. Your data belongs to your machine.</p>
+            <a href="#" class="close-btn">close article</a>
+        </article>
+
+        <article id="download">
+            <h2>Download</h2>
+            <p><a href="./localhost.zip" class="close-btn">Download</a> the source code to create your own secure local instance.</p>
+            <a href="#" class="close-btn">close article</a>
+        </article>
 		
-    </div>
-
-    <ul id="linkList">
+	    <article id="main">
+            <h2>main</h2>
+            <a href="./index.htm#main" class="close-btn">
+			Turn on Javascript</a><br>
+        </article>		
+    </main>
 	
-<li class="titleInput" id="main">
-    <span class="article-text">
-Welcome to MEV Wiki
-An offline‑first encyclopedia powered by your browser. 
-No tracking, no server. 
-You can also 
-<button onclick="navigateToCore('#main')">create </button>
- a new page now!
-</span>
-</li>
+<script>
+'use strict';
 
+/**
+ * Sovereign Interaction Protections
+ */
+(function() {
+    // 1. Disable Right-Click Context Menu
+    document.addEventListener('contextmenu', event => event.preventDefault());
 
-<li class="titleInput" id="about">
-    <br>
-    <span class="article-text">
-About
+    // 2. Disable Inspection Keyboard Shortcuts (F12, Ctrl+Shift+I/J, Ctrl+U)
+    document.addEventListener('keydown', function(e) {
+        if (
+            e.keyCode === 123 || 
+            (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || 
+            (e.ctrlKey && e.keyCode === 85)
+        ) {
+            e.preventDefault();
+            console.warn("Security: Inspection shortcuts are restricted.");
+        }
+    });
 
-MEV AI Wiki is an offline‑first encyclopedia powered by your browser. It uses your browser's local storage to save all data. No tracking, no server needed.
+    // 3. The STOP! Security Warning (Self-XSS Protection)
+    const warningTitle = "STOP!";
+    const warningText = "This is a developer feature. Copy-pasting code here is a scam and will compromise your data.";
+    
+    console.log(`%c${warningTitle}`, "color: red; font-size: 50px; font-weight: bold; -webkit-text-stroke: 1px black;");
+    console.log(`%c${warningText}`, "color: peru; font-size: 16px; font-family: monospace;");
+})();
+</script>
 
-Features
-
-Offline Editing and Viewing
-**Encrypted Storage (PIN required to unlock data)**
-Full-text search (for page titles)
-Voice Search Filtering
-Basic Wiki Markup (==Headers, '''Bold, ''Italics, [[Links]])
-Source Version: mev-wiki-v1.2.1
-		</span>	
-</li>
-
-<li class="titleInput" id="robots">
-    <span class="article-text">
-# robots.txt for MEV Offline Wiki 
-# Index homepage only — block user-generated & dynamic paths.
-User-agent: *
-Disallow: /#*
-Disallow: /?*
-Disallow: /recent
-Disallow: /settings
-Disallow: /profile
-Disallow: /edit
-Disallow: /search
-Disallow: /notfound
-
-# Let crawlers index only the base route
-Allow: /
-		</span>
-</li>
-
-<li class="titleInput" id="privacy">
-    <span class="article-text">
-    <h1>Privacy</h1>
-    <p>The MEV project is built on the principle of <span class="highlight">Hardware-Software Sovereignty</span>. Unlike traditional web applications, your data does not belong to a cloud; it belongs to your machine.</p>
-
-    <h2>1. Local-First Storage</h2>
-    <p>We do not use tracking cookies. We utilize <span class="highlight">Web Storage (localStorage)</span> to maintain your session state, humanity verification, and security flags. This data never leaves your browser and is never transmitted to a central server.</p>
-
-    <h2>2. Zero Third-Party Dependencies</h2>
-    <p>This application is built from scratch. No external trackers, analytics, or third-party scripts are permitted to touch your internal "Subconscious" brain. The only external entity allowed is the maintainer's whitelist for software updates.</p>
-
-    <h2>3. Your Right to Delete</h2>
-    <p>To wipe all trace of this application, simply clear your browser's "Site Data." Since we hold no copies of your data on a server, your local deletion is final and absolute.</p>
-		</span>
-</li>
-
-<li class="titleInput" id="polarity">
-    <span class="article-text">
-Welcome to analytics polarity
-you can self host and edit the html.
-<a href="./polarity.html"><button>polarity</button></a>
-</span>
-</li>
-
-<li class="titleInput" id="download">
-    <span class="article-text">
-Welcome to download and self host and create a better version.
-<a href="./localhost.zip"><button>localhost.zip</button></a>
-</span>
-</li>
-    </ul>
-	
 	<script>
-	// Add this to the beginning of your script blocks
 if (window.location.pathname.endsWith('.html') || window.location.pathname.endsWith('.htm')) {
     const cleanURL = window.location.href.replace(/index\.(html|htm)/, '');
     window.history.replaceState(null, '', cleanURL);
 }
-
-// Ensure the default hash is set without refreshing the page
-if (!window.location.hash) {
-    window.location.hash = 'main';
-}
 </script>
-
-<script>
-// Prevent form refresh and handle Enter key for hash navigation
-document.getElementById('searchBox').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        e.preventDefault();
-        const val = this.value.toLowerCase().replace('#', '');
-        if (document.getElementById(val)) {
-            window.location.hash = val;
-            this.value = ''; // Clear search to focus on the result
-        }
-    }
-});
-
-function titleInput() {
-    let input = document.getElementById('searchBox').value.toLowerCase();
-    let items = document.getElementsByClassName('titleInput');
- 
-    for (let i = 0; i < items.length; i++) {
-        // Live filter visibility based on content match
-        if (items[i].innerHTML.toLowerCase().includes(input)) {
-            items[i].style.display = "block";
-        } else {
-            items[i].style.display = "none";
-        }
-    }
-}
-
-// Ensure the page defaults to #main on first load if no hash exists
-if (!window.location.hash) {
-    window.location.hash = 'main';
-}
-</script>
-
 
 <script>
 // Add to the script block in index.html
@@ -304,34 +189,6 @@ window.addEventListener('load', () => {
         console.log("External Conscious Initialized.");
     }
 });
-
-</script>
-
-<script>
-/**
- * MEV Button Bridge
- * Connects the 'create' button directly to the Subconscious Iframe layer.
- */
-(function() {
-    // Defines the bridge function globally if it isn't already 
-    // to ensure the inline 'onclick' attribute can find it.
-    window.navigateToCore = window.navigateToCore || function(targetHash) {
-        const iframeOverlay = document.getElementById('mev-core-overlay');
-        const iframe = document.getElementById('mev-iframe');
-        
-        if (iframe && iframeOverlay) {
-            const cleanHash = targetHash.replace('#', '');
-            // Updates the internal iframe source without a full page refresh
-            iframe.src = `./index.htm#${cleanHash}`;
-            // Reveals the internal Wiki layer
-            iframeOverlay.style.display = 'block';
-            console.log(`MEV: Navigation bridged to internal hash: #${cleanHash}`);
-        } else {
-            // Fallback for legacy systems or if the iframe isn't built yet
-            window.location.href = `./index.htm${targetHash}`;
-        }
-    };
-})();
 </script>
 
 </body>

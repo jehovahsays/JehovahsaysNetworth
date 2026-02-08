@@ -1,13 +1,16 @@
 // --- Service Worker Content (Subconscious) ---
-const CACHE = "mev-wiki-v1.2.1";
+const CACHE = "localhost-wiki-v1.2.1";
 
 // Assets to cache for the 'Subconscious'
 const FILES = [
   "./",
   "./index.html",
-  "./purify.min.js", // Add this to ensure security works offline
+  "./index.htm", 
+  "./a.js",      
+  "./styles.css", 
+  "./purify.min.js",
   "./manifest.json",
-  "./assets/icons/icon-192.png"
+  "./icon-192.png"
 ];
 
 // --- Install Listener ---

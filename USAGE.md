@@ -1,22 +1,14 @@
-# 📘 MEV Usage & Recovery Guide
+# 📘 Localhost Usage Guide
 
-The MEV environment is now flatter and more direct. All files and functions are located in the root directory for maximum portability.
+## 🚀 Deployment
+1.  Download or clone the repository.
+2.  Open `index.html` via a local server (localhost:8000 or similar).
+3.  Install as a PWA (Progressive Web App) using the "Install" prompt to keep the brain on your home screen.
 
-## 🔑 Accessing the Brain
-1.  **Entry**: Start at the root `index.html`.
-2.  **Verification**: Accept the Privacy Policy banner to generate the `mev_privacy_consent` flag.
-3.  **Unlock**: Click **ENTER SOVEREIGN BRAIN** to reveal the wiki and communication modules.
+## 🛠️ Navigating the Subconscious
+* **The Toggle:** Use the "Less" theme for a distraction-free environment.
+* **The Cache:** Once loaded, you can turn off your internet. The Service Worker (`sw.js`) will continue to serve the wiki from your "subconscious" memory.
+* **The Backup:** Periodically download the `localhost.zip` to ensure you have the recursive version of your thoughts stored safely.
 
-## 📂 File Functionality Map
-* **`a.js`**: Controls security, state management, and the Humanity Handshake.
-* **`sw.js`**: The Service Worker providing full offline availability for the PWA.
-* **`visual.html`**: The 3D Thermal Grid rendering engine for visual data mapping.
-* **`purify.min.js`**: The local sanitization engine for secure content rendering.
-
-## 🔁 Reversing a Perimeter Breach
-If a logic-based sentinel triggers a lockout during testing, use the browser console (F12) to reset your environment:
-```javascript
-localStorage.removeItem('mev_breach_detected');
-localStorage.setItem('mev_privacy_consent', 'true');
-localStorage.setItem('mev_human_verified', 'true');
-location.href = './';
+## 🔁 Recovery
+If you are locked out by a Sentinel, clear your `localStorage` or manually reset the `mev_human_verified` flag in the console to re-enter.

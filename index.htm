@@ -1,7 +1,7 @@
 <head>
   <meta charset="UTF-8" />
-  <title>MEV Wiki</title>
-  <meta name="description" content="MEV Wiki – Offline Encyclopedia. Learn, edit, explore." />
+  <title>localhost Wiki</title>
+  <meta name="description" content="localhost Wiki – Offline Encyclopedia. Learn, edit, explore." />
   <meta name="theme-color" content="#3366cc" />
   <meta name="color-scheme" content="light dark" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,7 +13,7 @@
 <meta http-equiv="Permissions-Policy" content="microphone=(), camera=(), geolocation=()">
 
   <link rel="manifest" href="./manifest.json">
-  <link rel="icon" href="./assets/icons/icon-192.png" type="image/png">
+  <link rel="icon" href="./icon-192.png" type="image/png">
   
   <link rel="stylesheet" href="./styles.css" type="text/css">
 
@@ -54,7 +54,7 @@
   </div>
   
 
-  <button id="theme-toggle-btn" class="mev-button" style="width: auto; margin-left: 10px; padding: 5px 10px;">
+  <button id="theme-toggle-btn" class="localhost-button" style="width: auto; margin-left: 10px; padding: 5px 10px;">
     Toggle "Less" Theme
   </button>
 
@@ -64,7 +64,7 @@
 <noscript>
 <p id="noscript-warning" style="text-align: center; color: red; padding: 20px;">
   This application requires JavaScript. <br>
-  Please enable JavaScript for MEV Wiki to function.
+  Please enable JavaScript for localhost Wiki to function.
 </p>
 
 
@@ -142,7 +142,7 @@
   </nav>
 
   <main id="main-content-wrapper" itemscope itemtype="https://schema.org/WebPage">
-    <meta itemprop="url" content="https://jehovahsays.github.io/mev/">
+    <meta itemprop="url" content="https://jehovahsays.github.io/localhost/">
    <div id="page-container">
    <div id="app-interface">
             </div>
@@ -174,106 +174,48 @@
   </div>
 </div>
 
-
-	<script>
-	// Add this to the beginning of your script blocks
-if (window.location.pathname.endsWith('.html') || window.location.pathname.endsWith('.htm')) {
-    const cleanURL = window.location.href.replace(/index\.(html|htm)/, '');
-    window.history.replaceState(null, '', cleanURL);
-}
-
-// Ensure the default hash is set without refreshing the page
-if (!window.location.hash) {
-    window.location.hash = 'main';
-}
-</script>
-
-
-
 <script>
-/**
- * MEV SECURE CORE - HARDENED
- * Encapsulated to prevent global scope leakage and unauthorized access.
- */
-(function(DOMPurify, navigator) {
+(function() {
     "use strict";
 
-    // 1. Secure Service Worker Registration
-    if (navigator && 'serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js', { scope: './' })
-                .then(reg => {
-                    // Prevent external access to the registration object
-                    Object.freeze(reg);
-                    console.log('SW Registered');
-                })
-                .catch(err => console.error('Registration failed:', err));
-        });
-    }
-	
-	// --- Theme Toggle Logic ---
-const themeBtn = document.getElementById('theme-toggle-btn');
-if (themeBtn) {
-    // Check for saved preference
-    if (localStorage.getItem('mev_theme') === 'less') {
-        document.body.classList.add('less-mode');
-        themeBtn.textContent = 'Standard UI';
+    // 1. URL Stealth: Clean index.htm from the address bar
+    if (window.location.pathname.match(/index\.(html|htm)$/)) {
+        const cleanURL = window.location.href.replace(/index\.(html|htm)/, '');
+        window.history.replaceState(null, '', cleanURL);
     }
 
-    themeBtn.addEventListener('click', () => {
-        const isLess = document.body.classList.toggle('less-mode');
-        
-        if (isLess) {
-            localStorage.setItem('mev_theme', 'less');
-            themeBtn.textContent = 'Standard UI';
-        } else {
-            localStorage.setItem('mev_theme', 'standard');
-            themeBtn.textContent = 'Toggle "Less" Theme';
+    // 2. Sovereign Theme Control
+    const themeBtn = document.getElementById('theme-toggle-btn');
+    const body = document.body;
+
+    const applyTheme = (isLess) => {
+        body.classList.toggle('less-mode', isLess);
+        if (themeBtn) {
+            themeBtn.textContent = isLess ? 'Standard UI' : 'Toggle "Less" Theme';
         }
-    });
-}
-
-
-    /**
-     * SECURE RENDER GATEKEEPER
-     * Hardened to freeze configuration and prevent prototype pollution.
-     */
-    const safeRender = (containerId, rawHTML) => {
-        const container = document.getElementById(containerId);
-        if (!container || !DOMPurify) return;
-
-        // Strict Sanitization Config
-        const config = Object.freeze({
-            USE_PROFILES: { html: true },
-            FORBID_TAGS: ['script', 'iframe', 'object', 'embed', 'base'],
-            FORBID_ATTR: ['onerror', 'onload', 'onclick', 'onmouseover', 'style'], // style blocked to prevent CSS injection
-            RETURN_DOM: false,
-            FORCE_BODY: true
-        });
-
-        const cleanHTML = DOMPurify.sanitize(rawHTML, config);
-        container.innerHTML = cleanHTML;
     };
 
-    // 2. Lock the rendering function so it cannot be redefined by other scripts
-    Object.defineProperty(window, 'mevRender', {
-        value: safeRender,
-        writable: false,
-        configurable: false
-    });
+    // Initialize Theme from Memory
+    const isSavedLess = localStorage.getItem('localhost_theme') === 'less';
+    applyTheme(isSavedLess);
 
-    // 3. Freeze the Internal State to prevent external CLI modification
-    if (Object.seal) {
-        Object.seal(window.mevRender);
+    if (themeBtn) {
+        themeBtn.addEventListener('click', () => {
+            const nowLess = body.classList.toggle('less-mode');
+            localStorage.setItem('localhost_theme', nowLess ? 'less' : 'standard');
+            applyTheme(nowLess);
+        });
     }
 
-    // 4. Protection against 'this' binding attacks
-    Object.freeze(this);
-
-})(window.DOMPurify, window.navigator);
+    // 3. Navigation Initialization
+    window.addEventListener('load', () => {
+        if (!window.location.hash || window.location.hash === '#') {
+            window.location.hash = 'main';
+        }
+        console.log("External Conscious Initialized.");
+    });
+})();
 </script>
-
-
 
 </body>
 </html>
