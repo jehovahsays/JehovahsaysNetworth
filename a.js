@@ -799,12 +799,28 @@ async function createPage(titleFromSearch = null) {
   const title = titleFromSearch || prompt("Enter new page title:");
   if (!title || title.trim() === '') return;
   const cleanTitle = title.trim();
+
+  // --- LOGIC SENTINEL: Prototype Pollution Protection (FIX #44) ---
+  const protectedKeywords = ['__proto__', 'constructor', 'prototype'];
+  if (protectedKeywords.includes(cleanTitle.toLowerCase())) {
+      console.warn("STOP! Unauthorized property manipulation attempt detected.");
+      // Integrated Blackhole: Raise breach flag and eject session
+      localStorage.setItem('mev_breach_detected', 'true');
+      location.href = './'; 
+      return;
+  }
+  // --- END SENTINEL ---
   
   const pages = await loadData(STORAGE_KEYS.pages, {}); 
   const changes = await loadData(STORAGE_KEYS.changes, []); 
   const user = getCurrentUser();
   
-  if (pages[cleanTitle]) { console.error("Page already exists."); speak(`Page ${cleanTitle} already exists.`); showPage(cleanTitle); return; }
+  if (pages[cleanTitle]) { 
+      console.error("Page already exists."); 
+      speak(`Page ${cleanTitle} already exists.`); 
+      showPage(cleanTitle); 
+      return; 
+  }
   
   pages[cleanTitle] = { 
       title: cleanTitle, 
@@ -814,15 +830,10 @@ async function createPage(titleFromSearch = null) {
   };
   
   await saveData(STORAGE_KEYS.pages, pages); 
-  changes.unshift({ type:'create', title: cleanTitle, time:new Date().toISOString(), user:user?user.name:'Guest' });
-  await saveData(STORAGE_KEYS.changes, changes); 
-  
-  await updatePageListSidebar();
-  await generatePageButtonsFindView();
-  console.log(`✅ Page "${cleanTitle}" created!`);
-  speak(`Page ${cleanTitle} created.`);
-  await showPage(cleanTitle);
+  // ... rest of your code ...
 }
+
+
 
 async function deletePage(title) {
   console.log("Deleting page:", title);
@@ -1040,10 +1051,23 @@ async function savePage(title) {
   if (!editor) { console.error("Editor not found."); return; }
   
   const rawContent = editor.value;
+  
+  // --- LOGIC SENTINEL: Prototype Pollution Protection ---
+const protectedKeywords = ['__proto__', 'constructor', 'prototype'];
 
-  pages[title].content = rawContent;
-  pages[title].lastEdited = new Date().toISOString();
-  pages[title].createdBy = user ? user.name : 'Guest';
+if (protectedKeywords.includes(title)) {
+    console.warn("STOP! Unauthorized property manipulation attempt detected.");
+    // Trigger your "Integrated Blackhole" logic
+    localStorage.setItem('mev_breach_detected', 'true');
+    location.href = './'; 
+    return;
+}
+
+// Proceed with standard sovereign assignment
+if (!pages[title]) pages[title] = {}; 
+pages[title].content = rawContent;
+pages[title].lastEdited = new Date().toISOString();
+pages[title].createdBy = user ? user.name : 'Guest';
   
   await saveData(STORAGE_KEYS.pages, pages); 
   // --- START PR 3 FIX: User Contribution Consistency ---
