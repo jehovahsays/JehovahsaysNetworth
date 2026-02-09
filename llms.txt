@@ -419,6 +419,8 @@ body.less-mode .banner {
 
 index.htm
 
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>localhost Wiki</title>
@@ -476,7 +478,7 @@ index.htm
   
 
   <button id="theme-toggle-btn" class="localhost-button" style="width: auto; margin-left: 10px; padding: 5px 10px;">
-    Toggle "Less" Theme
+    Standard UI
   </button>
 
 
@@ -616,8 +618,10 @@ index.htm
         }
     };
 
-    // Initialize Theme from Memory
-    const isSavedLess = localStorage.getItem('localhost_theme') === 'less';
+    // Initialize Theme: Default to 'less' if not set in memory
+    const savedTheme = localStorage.getItem('localhost_theme');
+    const isSavedLess = savedTheme === null ? true : savedTheme === 'less';
+    
     applyTheme(isSavedLess);
 
     if (themeBtn) {
@@ -639,7 +643,8 @@ index.htm
 </script>
 
 </body>
-</html>
+
+
 
 
 index.html
