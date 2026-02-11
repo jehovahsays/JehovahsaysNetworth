@@ -1,4 +1,4 @@
-# localhost
+# mev
 
 A sovereign, self-hosted offline wiki and AI interface. This repository serves as a "digital subconscious"—a hardened environment designed for local data persistence and secure interaction without reliance on the public internet.
 
