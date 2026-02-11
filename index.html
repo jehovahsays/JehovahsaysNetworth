@@ -4,13 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>localhost</title>
-    
+     <meta name="description" content="localhost Wiki – Offline Encyclopedia. Learn, edit, explore." />
+  <meta name="theme-color" content="#3366cc" />
+  <meta name="color-scheme" content="light dark" />
+ 
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self' 'unsafe-inline'; object-src 'none'; style-src 'self' 'unsafe-inline';">
     <meta http-equiv="Referrer-Policy" content="no-referrer">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="Permissions-Policy" content="microphone=(), camera=(), geolocation=(), interest-cohort=()">
     <meta http-equiv="Cache-Control" content="no-store, max-age=0">
 <script src="./purify.min.js"></script>
+  <script src="./a.js" defer></script>
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="./icon-192.png" type="image/png">
+  
+  <link rel="stylesheet" href="./styles.css" type="text/css">
+
 <link rel="apple-touch-icon" href="./icon-192.png">
 
     <style>
@@ -98,11 +107,88 @@
 <body>
 
     <input type="checkbox" id="menu-toggle">
-    <label for="menu-toggle" class="hamburger"></label>
+    <label for="menu-toggle" class="hamburger">
+    <input type="text" id="globalInput" placeholder="Enter command..." onkeypress="if(event.key === 'Enter') processInput('globalInput')">
+    <button onclick="processInput('globalInput')">search</button>
+<script>
+// index.html - Global Logic
+const responseMap = {
+    "main": { speech: "Navigating to the main dashboard.", path: "./#main" },
+    "about": { speech: "Navigating to the about section.", path: "./#about" },
+    "recent": { speech: "Reviewing recent changes.", path: "./#recent" },
+    "terms": { speech: "Opening terms of service.", path: "./#terms" },
+    "privacy": { speech: "Opening privacy policy.", path: "./#privacy" },
+    "download": { speech: "Accessing the download portal.", path: "./#download" }
+};
+
+function processInput(inputId) {
+    const inputField = document.getElementById(inputId);
+    if (!inputField) return; // Guard clause if input doesn't exist
+
+    const text = inputField.value.toLowerCase().trim();
+    if (!text) return;
+
+    const response = responseMap[text];
+
+    if (response) {
+        speakAndNavigate(response.speech, response.path);
+    } else {
+        // Fallback for unrecognized commands
+        const msg = new SpeechSynthesisUtterance("Command not recognized in the knowledge base.");
+        window.speechSynthesis.speak(msg);
+    }
+    inputField.value = ''; 
+}
+
+function speakAndNavigate(message, url) {
+    const utterance = new SpeechSynthesisUtterance(message);
+    
+    // Check if visual avatar elements exist on the current page
+    const mouth = document.getElementById('mouth');
+    const avatar = document.getElementById('avatar-container');
+
+    utterance.onstart = () => {
+        if (avatar) {
+            avatar.classList.remove('hidden');
+            avatar.classList.add('visible');
+        }
+        if (mouth) mouth.classList.add('speaking');
+    };
+
+    utterance.onend = () => {
+        if (mouth) mouth.classList.remove('speaking');
+        
+        // Brief delay allows the speech to feel natural before the hash changes
+        setTimeout(() => {
+            window.location.hash = url.split('#')[1]; // Updates hash safely
+            if (avatar && !avatar.matches(':hover')) { 
+                avatar.classList.add('hidden'); 
+            }
+        }, 600);
+    };
+
+    window.speechSynthesis.speak(utterance);
+}
+
+// Wiki Parser for internal linking
+function parseWiki(text) {
+    if (!text) return "";
+    // Converts [[Page Name]] into <a href="#Page-Name">Page Name</a>
+    // Updated to replace spaces with underscores to match your URL preference
+    return text.replace(/\[\[([^\]]+)\]\]/g, (match, p1) => {
+        const anchor = p1.trim().replace(/ /g, "_");
+        return `<a href="#${anchor}" class="wiki-link">${p1}</a>`;
+    });
+}
+</script>			
+            <br>
+	</label>
 
     <nav>
 	    <a href="#main" onclick="document.getElementById('menu-toggle').checked = false">#main</a>
         <a href="#about" onclick="document.getElementById('menu-toggle').checked = false">#about</a>
+		
+        <a href="#recent" onclick="document.getElementById('menu-toggle').checked = false">#recent</a>
         <a href="#terms" onclick="document.getElementById('menu-toggle').checked = false">#terms</a>
         <a href="#privacy" onclick="document.getElementById('menu-toggle').checked = false">#privacy</a>
         <a href="#download" onclick="document.getElementById('menu-toggle').checked = false">#download</a>
@@ -135,9 +221,19 @@
         </article>
 		
 	    <article id="main">
+		
             <h2>main</h2>
             <a href="./index.htm#main" class="close-btn">
 			Turn on Javascript</a><br>
+        </article>	
+
+        <article id="recent">
+            <h2>Recent</h2>
+            <p>url was incorrect format when it creates and shows users %20 instead of<br>
+            _ or - for example if a user created a new page named Formatting Examples<br>
+			https://127.0.0.1/#Formatting%20Examples.<br>
+			</p>
+            <a href="#" class="close-btn">close article</a>
         </article>		
     </main>
 	
