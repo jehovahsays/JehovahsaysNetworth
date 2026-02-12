@@ -13,89 +13,110 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="Permissions-Policy" content="microphone=(), camera=(), geolocation=(), interest-cohort=()">
     <meta http-equiv="Cache-Control" content="no-store, max-age=0">
-<script src="./purify.min.js"></script>
-  <script src="./a.js" defer></script>
+  <script src="./purify.min.js"></script>
   <link rel="manifest" href="./manifest.json">
   <link rel="icon" href="./icon-192.png" type="image/png">
-  
-  <link rel="stylesheet" href="./styles.css" type="text/css">
-
-<link rel="apple-touch-icon" href="./icon-192.png">
-
+  <link rel="apple-touch-icon" href="./icon-192.png">
+    
     <style>
-        /* Base Setup: Minimalist terminal aesthetic */
-        body {
-            background-color: black;
-            color: white;
-            font-family: monospace;
-            margin: 0;
+        body { 
+            background-color: black; 
+            color: white; 
+            font-family: monospace; 
+            margin: 0; 
             padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
         }
 
-        /* The Checkbox Hack for secure navigation */
-        #menu-toggle { display: none; }
-
-        .hamburger {
+        /* --- UI NAVIGATION CONTROLS --- */
+        .menu-container {
             position: fixed;
-            top: 20px;
-            left: 20px;
-            font-size: 30px;
-            cursor: pointer;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
             z-index: 1000;
-            color: peru;
-            user-select: none;
+            text-align: center;
         }
 
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.98);
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 999;
-        }
-
-        nav a {
-            color: peru;
-            text-decoration: none;
-            font-size: 24px;
-            margin: 15px 0;
-            text-transform: lowercase;
-        }
-
-        #menu-toggle:checked ~ nav { display: flex; }
-        #menu-toggle:checked ~ .hamburger::before { content: "✕"; }
-        .hamburger::before { content: "☰"; }
-
-        article {
-            display: none;
-            max-width: 600px;
-            margin-top: 80px;
-            line-height: 1.6;
-            color: #aaa;
-            animation: fadeIn 0.5s forwards;
-        }
-
-        article:target { display: block; }
-
-        .close-btn {
-            display: inline-block;
-            margin-top: 20px;
-            color: peru;
-            text-decoration: none;
+        /* CSS Dropdown (Subconscious Map - Works without JS) */
+        #menu-toggle { display: none; }
+        .search-label {
+            display: block;
+            width: 266px; /* Matching searchBox + padding */
+            padding: 5px;
+            background: #111;
             border: 1px solid #333;
-            padding: 5px 10px;
-            font-size: 12px;
+            color: #666; /* Subtler color for the static menu */
+            cursor: pointer;
+            font-size: 10px;
             text-transform: lowercase;
+        }
+
+        .dropdown-content {
+            display: none;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            background: #111;
+            border: 1px solid #333;
+            width: 266px;
+        }
+
+        .dropdown-content li a {
+            display: block;
+            padding: 10px;
+            color: peru;
+            text-decoration: none;
+            border-bottom: 1px solid #222;
+        }
+
+        #menu-toggle:checked ~ .dropdown-content { display: block; }
+
+        /* --- ARTICLE DISPLAY LOGIC --- */
+        #linkList {
+            margin-top: 100px;
+            padding: 0;
+            list-style: none;
+        }
+
+        .titleInput {
+            margin-bottom: 40px;
+            display: none; /* Hidden by default to allow #main targeting */
+        }
+
+        /* Image constraints - follows article width */
+        .titleInput img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin-top: 15px;
+            border: 1px solid #333;
+        }
+
+        .titleInput button {
+            background: #222;
+            color: peru;
+            border: 1px solid #444;
+            padding: 10px 20px;
+            font-family: monospace;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+
+        .article-text {
+            display: block;
+            color: #aaa;
+            line-height: 1.6;
+            max-width: 600px;
+        }
+
+        /* --- FADE EFFECTS (CSS Only) --- */
+        /* Show only the targeted article */
+        .titleInput:target, 
+        body:not(:has(:target)) #main { 
+            display: block !important;
+            animation: fadeIn 0.8s forwards;
+            border-left: 3px solid peru;
+            padding-left: 15px;
         }
 
         @keyframes fadeIn {
@@ -106,137 +127,66 @@
 </head>
 <body>
 
-    <input type="checkbox" id="menu-toggle">
-    <label for="menu-toggle" class="hamburger">
-    <input type="text" id="globalInput" placeholder="Enter command..." onkeypress="if(event.key === 'Enter') processInput('globalInput')">
-    <button onclick="processInput('globalInput')">search</button>
-<script>
-// index.html - Global Logic
-const responseMap = {
-    "main": { speech: "Navigating to the main dashboard.", path: "./#main" },
-    "about": { speech: "Navigating to the about section.", path: "./#about" },
-    "recent": { speech: "Reviewing recent changes.", path: "./#recent" },
-    "terms": { speech: "Opening terms of service.", path: "./#terms" },
-    "privacy": { speech: "Opening privacy policy.", path: "./#privacy" },
-    "download": { speech: "Accessing the download portal.", path: "./#download" }
-};
-
-function processInput(inputId) {
-    const inputField = document.getElementById(inputId);
-    if (!inputField) return; // Guard clause if input doesn't exist
-
-    const text = inputField.value.toLowerCase().trim();
-    if (!text) return;
-
-    const response = responseMap[text];
-
-    if (response) {
-        speakAndNavigate(response.speech, response.path);
-    } else {
-        // Fallback for unrecognized commands
-        const msg = new SpeechSynthesisUtterance("Command not recognized in the knowledge base.");
-        window.speechSynthesis.speak(msg);
-    }
-    inputField.value = ''; 
-}
-
-function speakAndNavigate(message, url) {
-    const utterance = new SpeechSynthesisUtterance(message);
-    
-    // Check if visual avatar elements exist on the current page
-    const mouth = document.getElementById('mouth');
-    const avatar = document.getElementById('avatar-container');
-
-    utterance.onstart = () => {
-        if (avatar) {
-            avatar.classList.remove('hidden');
-            avatar.classList.add('visible');
-        }
-        if (mouth) mouth.classList.add('speaking');
-    };
-
-    utterance.onend = () => {
-        if (mouth) mouth.classList.remove('speaking');
+    <div class="menu-container">
+        <input type="checkbox" id="menu-toggle">
+        <label for="menu-toggle" class="search-label">click to browse keywords ▼</label>
         
-        // Brief delay allows the speech to feel natural before the hash changes
-        setTimeout(() => {
-            window.location.hash = url.split('#')[1]; // Updates hash safely
-            if (avatar && !avatar.matches(':hover')) { 
-                avatar.classList.add('hidden'); 
-            }
-        }, 600);
-    };
-
-    window.speechSynthesis.speak(utterance);
-}
-
-// Wiki Parser for internal linking
-function parseWiki(text) {
-    if (!text) return "";
-    // Converts [[Page Name]] into <a href="#Page-Name">Page Name</a>
-    // Updated to replace spaces with underscores to match your URL preference
-    return text.replace(/\[\[([^\]]+)\]\]/g, (match, p1) => {
-        const anchor = p1.trim().replace(/ /g, "_");
-        return `<a href="#${anchor}" class="wiki-link">${p1}</a>`;
-    });
-}
-</script>			
-            <br>
-	</label>
-
-    <nav>
-	    <a href="#main" onclick="document.getElementById('menu-toggle').checked = false">#main</a>
-        <a href="#about" onclick="document.getElementById('menu-toggle').checked = false">#about</a>
+        <ul class="dropdown-content">
+		<li><a href="#main">#main</a></li>
+		<li><a href="#about">#about</a></li>	
+		<li><a href="#privacy">#privacy</a></li>
+        <li><a href="#download">#download</a></li>
+        </ul>
 		
-        <a href="#recent" onclick="document.getElementById('menu-toggle').checked = false">#recent</a>
-        <a href="#terms" onclick="document.getElementById('menu-toggle').checked = false">#terms</a>
-        <a href="#privacy" onclick="document.getElementById('menu-toggle').checked = false">#privacy</a>
-        <a href="#download" onclick="document.getElementById('menu-toggle').checked = false">#download</a>
-    </nav>
+    </div>
 
-    <main>
+    <ul id="linkList">
 	
-        <article id="about">
-            <h2>About</h2>
-            <p>localhost 127.0.0.1 - Hardware-Software Sovereignty.</p>
-            <a href="#" class="close-btn">close article</a>
-        </article>
+<li class="titleInput" id="main">
+    <span class="article-text">
+            <h2>Main</h2>
+            <a href="./index.htm#main">
+			<button>Turn on Javascript</button></a><br>
+</span>
+</li>
 
-        <article id="terms">
-            <h2>Terms</h2>
-            <p>This internal subconscious environment is self-hosted and local-first.</p>
-            <a href="#" class="close-btn">close article</a>
-        </article>
 
-        <article id="privacy">
-            <h2>Privacy</h2>
-            <p>Zero third-party dependencies. Your data belongs to your machine.</p>
-            <a href="#" class="close-btn">close article</a>
-        </article>
+<li class="titleInput" id="about">
+    <br>
+    <span class="article-text">
+About
 
-        <article id="download">
-            <h2>Download</h2>
-            <p><a href="./localhost.zip" class="close-btn">Download</a> the source code to create your own secure local instance.</p>
-            <a href="#" class="close-btn">close article</a>
-        </article>
-		
-	    <article id="main">
-		
-            <h2>main</h2>
-            <a href="./index.htm#main" class="close-btn">
-			Turn on Javascript</a><br>
-        </article>	
+localhost Wiki is an offline‑first encyclopedia powered by your browser. It uses your browser's local storage to save all data. No tracking, no server needed.
 
-        <article id="recent">
-            <h2>Recent</h2>
-            <p>url was incorrect format when it creates and shows users %20 instead of<br>
-            _ or - for example if a user created a new page named Formatting Examples<br>
-			https://127.0.0.1/#Formatting%20Examples.<br>
-			</p>
-            <a href="#" class="close-btn">close article</a>
-        </article>		
-    </main>
-	
+Features
+
+Offline Editing and Viewing
+**Encrypted Storage (PIN required to unlock data)**
+Full-text search (for page titles)
+Voice Search Filtering
+Basic Wiki Markup (==Headers, '''Bold, ''Italics, [[Links]])
+Source Version: mev-wiki-v1.2.1
+		</span>	
+</li>
+
+<li class="titleInput" id="privacy">
+    <span class="article-text">
+	<br><br>
+    <h1>Privacy</h1>
+    <h2>2. Zero Third-Party Dependencies</h2>
+    <p>This application is built from scratch. No external trackers, analytics, or third-party scripts are permitted to touch your internal "Subconscious" brain. The only external entity allowed is the maintainer's whitelist for software updates.</p>
+		</span>
+</li>
+
+<li class="titleInput" id="download">
+    <span class="article-text">
+Welcome to download and self host and create a better version.
+<a href="./localhost.zip"><button>localhost.zip</button></a>
+</span>
+</li>
+    </ul>
+
+
 <script>
 'use strict';
 
@@ -286,6 +236,7 @@ window.addEventListener('load', () => {
     }
 });
 </script>
+
 
 </body>
 </html>

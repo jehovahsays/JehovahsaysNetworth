@@ -1,4 +1,82 @@
 
+// index.html voice conmands- Global Logic
+const responseMap = {
+    "main": { speech: "Navigating to the main dashboard.", path: "./#main" },
+    "about": { speech: "Navigating to the about section.", path: "./#about" },
+    "recent": { speech: "Reviewing recent changes.", path: "./#recent" },
+    "terms": { speech: "Opening terms of service.", path: "./#terms" },
+    "privacy": { speech: "Opening privacy policy.", path: "./#privacy" },
+    "download": { speech: "Accessing the download portal.", path: "./#download" }
+};
+
+function processInput(inputId) {
+    const inputField = document.getElementById(inputId);
+    if (!inputField) return;
+
+    const text = inputField.value.trim();
+    if (!text) return;
+
+    const lowerText = text.toLowerCase();
+    const response = responseMap[lowerText];
+
+    if (response) {
+        speakAndNavigate(response.speech, response.path);
+    } else {
+        // Store the keyword so showRecent() can display it as "Not Found"
+        localStorage.setItem('last_not_found', text);
+        
+        const msg = new SpeechSynthesisUtterance(`Keyword ${text} not found. Showing recent changes.`);
+        window.speechSynthesis.speak(msg);
+        
+        // Use your actual function instead of a simple redirect
+        showRecent(); 
+    }
+    inputField.value = ''; 
+}
+
+
+function speakAndNavigate(message, url) {
+    const utterance = new SpeechSynthesisUtterance(message);
+    
+    // Check if visual avatar elements exist on the current page
+    const mouth = document.getElementById('mouth');
+    const avatar = document.getElementById('avatar-container');
+
+    utterance.onstart = () => {
+        if (avatar) {
+            avatar.classList.remove('hidden');
+            avatar.classList.add('visible');
+        }
+        if (mouth) mouth.classList.add('speaking');
+    };
+
+    utterance.onend = () => {
+        if (mouth) mouth.classList.remove('speaking');
+        
+        // Brief delay allows the speech to feel natural before the hash changes
+        setTimeout(() => {
+            window.location.hash = url.split('#')[1]; // Updates hash safely
+            if (avatar && !avatar.matches(':hover')) { 
+                avatar.classList.add('hidden'); 
+            }
+        }, 600);
+    };
+
+    window.speechSynthesis.speak(utterance);
+}
+
+// Wiki Parser for internal linking
+function parseWiki(text) {
+    if (!text) return "";
+    // Converts [[Page Name]] into <a href="#Page-Name">Page Name</a>
+    // Updated to replace spaces with underscores to match your URL preference
+    return text.replace(/\[\[([^\]]+)\]\]/g, (match, p1) => {
+        const anchor = p1.trim().replace(/ /g, "_");
+        return `<a href="#${anchor}" class="wiki-link">${p1}</a>`;
+    });
+}
+
+
 function parseWiki(text) {
     if (!text) return "";
     // Converts [[Page Name]] into <a href="#Page-Name">Page Name</a>

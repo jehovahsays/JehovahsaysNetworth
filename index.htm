@@ -108,7 +108,10 @@
       <a href="#logout" id="logout-link" class="hidden">Log Out</a> 
     </div>
     <hr/>
-	
+	<input type="text" id="globalInput" placeholder="Enter command..." onkeypress="if(event.key === 'Enter') processInput('globalInput')">
+    <button onclick="processInput('globalInput')">search</button>
+            <br>
+
     <h3>Navigation Filters</h3>
     <ul id="quick-filters">
         <li class="titleInput"><button data-page-target="Main-Page">Main-Page</button></li>
