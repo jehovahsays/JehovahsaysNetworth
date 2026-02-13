@@ -1,90 +1,4 @@
 
-// index.html voice conmands- Global Logic
-const responseMap = {
-    "main": { speech: "Navigating to the main dashboard.", path: "./#main" },
-    "about": { speech: "Navigating to the about section.", path: "./#about" },
-    "recent": { speech: "Reviewing recent changes.", path: "./#recent" },
-    "terms": { speech: "Opening terms of service.", path: "./#terms" },
-    "privacy": { speech: "Opening privacy policy.", path: "./#privacy" },
-    "download": { speech: "Accessing the download portal.", path: "./#download" }
-};
-
-function processInput(inputId) {
-    const inputField = document.getElementById(inputId);
-    if (!inputField) return;
-
-    const text = inputField.value.trim();
-    if (!text) return;
-
-    const lowerText = text.toLowerCase();
-    const response = responseMap[lowerText];
-
-    if (response) {
-        speakAndNavigate(response.speech, response.path);
-    } else {
-        // Store the keyword so showRecent() can display it as "Not Found"
-        localStorage.setItem('last_not_found', text);
-        
-        const msg = new SpeechSynthesisUtterance(`Keyword ${text} not found. Showing recent changes.`);
-        window.speechSynthesis.speak(msg);
-        
-        // Use your actual function instead of a simple redirect
-        showRecent(); 
-    }
-    inputField.value = ''; 
-}
-
-
-function speakAndNavigate(message, url) {
-    const utterance = new SpeechSynthesisUtterance(message);
-    
-    // Check if visual avatar elements exist on the current page
-    const mouth = document.getElementById('mouth');
-    const avatar = document.getElementById('avatar-container');
-
-    utterance.onstart = () => {
-        if (avatar) {
-            avatar.classList.remove('hidden');
-            avatar.classList.add('visible');
-        }
-        if (mouth) mouth.classList.add('speaking');
-    };
-
-    utterance.onend = () => {
-        if (mouth) mouth.classList.remove('speaking');
-        
-        // Brief delay allows the speech to feel natural before the hash changes
-        setTimeout(() => {
-            window.location.hash = url.split('#')[1]; // Updates hash safely
-            if (avatar && !avatar.matches(':hover')) { 
-                avatar.classList.add('hidden'); 
-            }
-        }, 600);
-    };
-
-    window.speechSynthesis.speak(utterance);
-}
-
-// Wiki Parser for internal linking
-function parseWiki(text) {
-    if (!text) return "";
-    // Converts [[Page Name]] into <a href="#Page-Name">Page Name</a>
-    // Updated to replace spaces with underscores to match your URL preference
-    return text.replace(/\[\[([^\]]+)\]\]/g, (match, p1) => {
-        const anchor = p1.trim().replace(/ /g, "_");
-        return `<a href="#${anchor}" class="wiki-link">${p1}</a>`;
-    });
-}
-
-
-function parseWiki(text) {
-    if (!text) return "";
-    // Converts [[Page Name]] into <a href="#Page-Name">Page Name</a>
-    return text.replace(/\[\[([^\]]+)\]\]/g, (match, p1) => {
-        const anchor = p1.trim().replace(/ /g, "-");
-        return `<a href="#${anchor}" class="wiki-link">${p1}</a>`;
-    });
-}
 
 // ====== localhost SECURITY LAYER (Moved from inline script) ======
 (function secureClientApp() {
@@ -450,15 +364,15 @@ async function showSettings() {
   warning.style.cssText = `padding: 15px; background: ${isEncrypted ? '#d4edda' : '#ffe0b2'}; border: 1px solid ${isEncrypted ? '#155724' : '#ff9800'}; border-radius: 4px; margin-top: 20px; color: ${isEncrypted ? '#155724' : '#000'};`;
   warning.innerHTML = `
       <h3>🚨 Data Security Warning</h3>
-      <p>All wiki data is saved directly in your browser's **Local Storage**. This data is **${isEncrypted ? '🔐 ENCRYPTED' : 'NOT encrypted'}**.</p>
+      <p>All localhost data is saved directly in your browser's **Local Storage**. This data is **${isEncrypted ? '🔐 ENCRYPTED' : 'NOT encrypted'}**.</p>
       <p>${isEncrypted ? 'Your data is secured using AES-GCM (256-bit) derived from your PIN. If you forget your PIN, the data is permanently lost.' : 'The data may be readable by browser extensions. Log in with a PIN to enable strong encryption.'}</p>
       <p>Use the **Manage Data (Import/Export)** feature regularly.</p>
   `;
   section.appendChild(warning);
 
-  // Clear AI Memory Button
+  // Clear Memory Button
   const clearBtn = document.createElement('button'); 
-  clearBtn.textContent = '🧠 Clear AI Memory'; 
+  clearBtn.textContent = '🧠 Clear Memory'; 
   clearBtn.className = 'delete-btn';
   clearBtn.id = 'clear-ai-memory-btn';
   section.appendChild(clearBtn);
@@ -539,16 +453,16 @@ async function showAbout() {
   const c = document.getElementById('page-container');
   if (!c) return;
   c.innerHTML = `<section class="page"><h2>About</h2>
-    <p><strong>localhost AI Wiki</strong> is an offline‑first encyclopedia powered by your browser. It uses your browser's local storage to save all data. No tracking, no server needed.</p>
+    <p><strong>localhost </strong> is an offline‑first encyclopedia powered by your browser. It uses your browser's local storage to save all data. No tracking, no server needed.</p>
     <h3>Features</h3>
     <ul>
       <li>Offline Editing and Viewing</li>
       <li>**Encrypted Storage (PIN required to unlock data)**</li>
       <li>Full-text search (for page titles)</li>
       <li>Voice Search Filtering</li>
-      <li>Basic Wiki Markup (==Headers, '''Bold, ''Italics, [[Links]])</li>
+      <li>Basic  Markup (==Headers, '''Bold, ''Italics, [[Links]])</li>
     </ul>
-    <p>Source Version: localhost-wiki-v1.2.1</p>
+    <p>Source Version: localhost v1.2.2</p>
     </section>`;
   location.hash = "#about";
 }
@@ -577,7 +491,7 @@ function parseWiki(text) {
   // Bold and Italic
   result = result.replace(/'''(.*?)'''/g, '<strong>$1</strong>');
   result = result.replace(/''(.*?)''/g, '<em>$1</em>');
-  // Wiki Links (CSP-SAFE: Event handler removed, replaced with data attribute)
+  //  Links (CSP-SAFE: Event handler removed, replaced with data attribute)
   result = result.replace(/\[\[([^\]]+)\]\]/g, (_, t) =>
     `<a href="#" data-page-link="${t}">${escapeHTML(t)}</a>`
   );
@@ -986,7 +900,7 @@ async function showPage(title) {
   // --- START MODIFICATION: Add return statement for custom pages ---
   if (title === 'Import_Data') {
       document.getElementById('page-container').innerHTML = renderImportPage();
-      document.title = 'Import/Export Data – localhost Wiki';
+      document.title = 'Import/Export Data – localhost ';
       location.hash = '#Import_Data';
       return; // <-- CRITICAL FIX: Stop execution here
   }
@@ -1053,19 +967,19 @@ async function showPage(title) {
   }
 }
 
-// --- NEW FUNCTION: Render the Import/Export UI as a Wiki Page ---
+// --- NEW FUNCTION: Render the Import/Export UI as a  Page ---
 function renderImportPage() {
     return `
         <section class="bg-white p-6 rounded-xl shadow-lg" style="background-color: var(--bg-card); border: 1px solid var(--border-color);">
             <h1 class="text-3xl font-extrabold mb-4" style="color: var(--text-primary);">Import/Export Data</h1>
-            <p class="mb-6" style="color: var(--text-secondary);">This utility allows you to backup and restore your wiki content. The full backup includes your login details (hashed PIN), so be cautious when sharing.</p>
+            <p class="mb-6" style="color: var(--text-secondary);">This utility allows you to backup and restore your localhost content. The full backup includes your login details (hashed PIN), so be cautious when sharing.</p>
             
             <h2 class="text-xl font-semibold mt-6" style="color: var(--text-primary);">1. Import Data (Paste JSON)</h2>
-            <p class="text-sm" style="color: var(--text-secondary);">Paste your localhost Wiki JSON backup code below and click the green button to import pages.</p>
+            <p class="text-sm" style="color: var(--text-secondary);">Paste your localhost  JSON backup code below and click the green button to import pages.</p>
             
             <textarea 
                 id="importDataInput" 
-                placeholder="Paste your localhost Wiki JSON backup code here..." 
+                placeholder="Paste your localhost JSON backup code here..." 
                 rows="10" 
                 style="width:100%; padding:10px; border-radius: 8px; border: 1px solid var(--border-color); background-color: var(--bg-page); color: var(--text-primary); font-family: monospace; resize: vertical;"
             ></textarea>
@@ -1108,7 +1022,7 @@ async function editPage(title) {
   
   c.innerHTML = `<section class="page">
     <h2>Editing: ${escapeHTML(title)}</h2>
-    <p style="font-size: 0.85rem; color: #6c757d;">Using simple wiki markup. See Formatting Examples for help.</p>
+    <p style="font-size: 0.85rem; color: #6c757d;">Using simple localhost markup. See Formatting Examples for help.</p>
     <textarea class="editor">${escapeHTML(page.content)}</textarea>
     <button class="edit-btn" id="save-page-btn">Save Changes</button>
     <button class="delete-btn" id="cancel-edit-btn">Cancel</button>
@@ -1197,9 +1111,9 @@ async function createExampleWikiPage() {
   const pages = await loadData(STORAGE_KEYS.pages, {}); 
   if (pages[title]) return;
   const content = `
-== Wiki Page Formatting Examples ==
+==  Page Formatting Examples ==
 
-This wiki uses a simple, lightweight markup for fast and clean formatting.
+This localhost uses a simple, lightweight markup for fast and clean formatting.
 
 === Headings ===
 Use the '=' symbol at the start and end of a line to create headings:
@@ -1219,7 +1133,7 @@ Use the '=' symbol at the start and end of a line to create headings:
 # Step Three
 
 === Internal Links ===
-Link to another page in the wiki using double square brackets:
+Link to another page in the localhost using double square brackets:
 [[Main-Page]]
 [[User Guide: Getting Started]]
 
@@ -1236,7 +1150,7 @@ function exampleCode() {
 `;
   pages[title] = { title, content, createdBy:'System', lastEdited:new Date().toISOString() };
   await saveData(STORAGE_KEYS.pages, pages); 
-  console.log("✅ Example wiki page created.");
+  console.log("✅ Example localhost page created.");
 }
 
 // ✅ UPDATED: Content for Main-Page.
@@ -1245,7 +1159,7 @@ async function ensureMainPage() {
   if (!pages["Main-Page"]) {
     pages["Main-Page"] = {
       title: "Main-Page",
-      content: "== Welcome to localhost Wiki ==\n\nAn offline‑first encyclopedia powered by your browser. No tracking, no server. You can search the wiki using the bar above, or check the [[User Guide: Getting Started]] page to learn more. You can also create a new page now!",
+      content: "== Welcome to localhost  ==\n\nAn offline‑first encyclopedia powered by your browser. No tracking, no server. You can search the localhost using the bar above, or check the [[User Guide: Getting Started]] page to learn more. You can also create a new page now!",
       lastEdited: new Date().toISOString(),
       createdBy: "System"
     };
@@ -1254,7 +1168,7 @@ async function ensureMainPage() {
   }
 }
 
-// ✅ NEW FUNCTION: To create the wiki page for log.html.
+// ✅ NEW FUNCTION: To create the localhost page for log.html.
 async function ensureVisualLogPage() {
     const title = "Visual-Log";
     const pages = await loadData(STORAGE_KEYS.pages, {});
@@ -1272,11 +1186,11 @@ You will need to open the external file directly from your browser.
 File Path: \`log.html\`
 
 === Recent Edits ===
-For a simple, chronological list of the last 50 edits directly within the wiki, visit the [[Recent Changes]] page.
+For a simple, chronological list of the last 50 edits directly within the localhost, visit the [[Recent Changes]] page.
 `;
     pages[title] = { title, content, createdBy:'System', lastEdited:new Date().toISOString() };
     await saveData(STORAGE_KEYS.pages, pages); 
-    console.log("✅ Visual Log wiki page created.");
+    console.log("✅ Visual Log localhost page created.");
 }
 
 async function answerAI(query) {
@@ -1371,7 +1285,7 @@ function titleInputFindView() {
   if (input) {
       statusEl.textContent = `Pages Matching "${input}": ${visibleCount}`;
   } else {
-      statusEl.textContent = `Total Wiki Pages Found: ${items.length}`;
+      statusEl.textContent = `Total  Pages Found: ${items.length}`;
   }
   
   document.getElementById('ai-input').value = inputEl.value;
@@ -1444,8 +1358,8 @@ async function handleSettingsAction(e) {
   } else if (target.id === 'clear-ai-memory-btn') {
       localStorage.removeItem(STORAGE_KEYS.knowledge); 
       await saveData(STORAGE_KEYS.knowledge, {});
-      console.log('AI memory cleared.'); 
-      speak("AI memory cleared.");
+      console.log(' memory cleared.'); 
+      speak(" memory cleared.");
       // Re-run showSettings to update the stats and warning section
       await showSettings(); 
   }
@@ -1614,7 +1528,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // New: Check for CLI action first
   const cliActionHandled = handleCliAction();
   
-  // Create/Ensure essential wiki pages
+  // Create/Ensure essential localhost pages
   await createExampleWikiPage(); 
   await ensureMainPage(); 
   await ensureVisualLogPage(); 
@@ -1741,42 +1655,42 @@ if ('serviceWorker' in navigator) {
 document.addEventListener("DOMContentLoaded", () => {
   const translations = {
     "en-US": {
-      MainPage: "Main Page", About: "About", Settings: "Settings", Search: "Search Wiki",
+      MainPage: "Main Page", About: "About", Settings: "Settings", Search: "Search ",
       Content: {
-        "Main-Page": "== Welcome to localhost Wiki ==\n\nAn offline-first encyclopedia powered by your browser.",
-        "About": "== About ==\n\nlocalhost Wiki lets you browse and edit offline content safely on your device.",
+        "Main-Page": "== Welcome to localhost  ==\n\nAn offline-first encyclopedia powered by your browser.",
+        "About": "== About ==\n\nlocalhost  lets you browse and edit offline content safely on your device.",
         "Settings": "== Settings ==\n\nManage appearance, data, and user preferences."
       }
     },
     "fr-FR": {
-      MainPage: "Page Principale", About: "À propos", Settings: "Paramètres", Search: "Rechercher dans le Wiki",
+      MainPage: "Page Principale", About: "À propos", Settings: "Paramètres", Search: "Rechercher dans le ",
       Content: {
-        "Main-Page": "== Bienvenue sur localhost Wiki ==\n\nUne encyclopédie hors ligne alimentée par votre navigateur.",
-        "About": "== À propos ==\n\nlocalhost Wiki vous permet de naviguer et de modifier le contenu hors ligne en toute sécurité.",
+        "Main-Page": "== Bienvenue sur localhost  ==\n\nUne encyclopédie hors ligne alimentée par votre navigateur.",
+        "About": "== À propos ==\n\nlocalhost  vous permet de naviguer et de modifier le contenu hors ligne en toute sécurité.",
         "Settings": "== Paramètres ==\n\nGérez l'apparence, les données et les préférences utilisateur."
       }
     },
     "de-DE": {
-      MainPage: "Hauptseite", About: "Über", Settings: "Einstellungen", Search: "Wiki durchsuchen",
+      MainPage: "Hauptseite", About: "Über", Settings: "Einstellungen", Search: " durchsuchen",
       Content: {
-        "Main-Page": "== Willkommen bei localhost Wiki ==\n\nEine Offline-Enzyklopädie in deinem Browser.",
-        "About": "== Über ==\n\nlocalhost Wiki ermöglicht das sichere Offline-Arbeiten.",
+        "Main-Page": "== Willkommen bei localhost  ==\n\nEine Offline-Enzyklopädie in deinem Browser.",
+        "About": "== Über ==\n\nlocalhost  ermöglicht das sichere Offline-Arbeiten.",
         "Settings": "== Einstellungen ==\n\nVerwalte Darstellung, Daten und Benutzer."
       }
     },
     "es-ES": {
-      MainPage: "Página Principal", About: "Acerca de", Settings: "Configuraciones", Search: "Buscar en el Wiki",
+      MainPage: "Página Principal", About: "Acerca de", Settings: "Configuraciones", Search: "Buscar en el ",
       Content: {
-        "Main-Page": "== Bienvenido a localhost Wiki ==\n\nUna enciclopedia sin conexión impulsada por tu navegador.",
-        "About": "== Acerca de ==\n\nlocalhost Wiki te permite explorar y editar contenido sin conexión.",
+        "Main-Page": "== Bienvenido a localhost  ==\n\nUna enciclopedia sin conexión impulsada por tu navegador.",
+        "About": "== Acerca de ==\n\nlocalhost  te permite explorar y editar contenido sin conexión.",
         "Settings": "== Configuraciones ==\n\nAdministra apariencia, datos y preferencias del usuario."
       }
     },
     "it-IT": {
-      MainPage: "Pagina Principale", About: "Informazioni", Settings: "Impostazioni", Search: "Cerca nel Wiki",
+      MainPage: "Pagina Principale", About: "Informazioni", Settings: "Impostazioni", Search: "Cerca nel ",
       Content: {
-        "Main-Page": "== Benvenuto in localhost Wiki ==\n\nUn'enciclopedia offline gestita dal tuo browser.",
-        "About": "== Informazioni ==\n\nlocalhost Wiki ti consente di navigare e modificare offline.",
+        "Main-Page": "== Benvenuto in localhost ==\n\nUn'enciclopedia offline gestita dal tuo browser.",
+        "About": "== Informazioni ==\n\nlocalhost ti consente di navigare e modificare offline.",
         "Settings": "== Impostazioni ==\n\nGestisci aspetto, dati e preferenze."
       }
     },

@@ -1,244 +1,353 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>localhost</title>
-     <meta name="description" content="localhost Wiki – Offline Encyclopedia. Learn, edit, explore." />
+  <meta charset="UTF-8" />
+  <title>localhost knowledge base</title>
+  <meta name="description" content="localhost knowledge base" />
   <meta name="theme-color" content="#3366cc" />
   <meta name="color-scheme" content="light dark" />
- 
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self' 'unsafe-inline'; object-src 'none'; style-src 'self' 'unsafe-inline';">
-    <meta http-equiv="Referrer-Policy" content="no-referrer">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta http-equiv="Permissions-Policy" content="microphone=(), camera=(), geolocation=(), interest-cohort=()">
-    <meta http-equiv="Cache-Control" content="no-store, max-age=0">
-  <script src="./purify.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self' 'unsafe-inline' blob:; object-src 'none'; style-src 'self' 'unsafe-inline'; worker-src 'self' blob:;">
+
+<meta http-equiv="Referrer-Policy" content="no-referrer">
+
+<meta http-equiv="Permissions-Policy" content="microphone=(), camera=(), geolocation=()">
+
   <link rel="manifest" href="./manifest.json">
   <link rel="icon" href="./icon-192.png" type="image/png">
-  <link rel="apple-touch-icon" href="./icon-192.png">
-    
-    <style>
-        body { 
-            background-color: black; 
-            color: white; 
-            font-family: monospace; 
-            margin: 0; 
-            padding: 20px;
-        }
+  
+  <link rel="stylesheet" href="./styles.css" type="text/css">
+<link rel="apple-touch-icon" href="./icon-192.png">
 
-        /* --- UI NAVIGATION CONTROLS --- */
-        .menu-container {
-            position: fixed;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
-            text-align: center;
-        }
-
-        /* CSS Dropdown (Subconscious Map - Works without JS) */
-        #menu-toggle { display: none; }
-        .search-label {
-            display: block;
-            width: 266px; /* Matching searchBox + padding */
-            padding: 5px;
-            background: #111;
-            border: 1px solid #333;
-            color: #666; /* Subtler color for the static menu */
-            cursor: pointer;
-            font-size: 10px;
-            text-transform: lowercase;
-        }
-
-        .dropdown-content {
-            display: none;
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            background: #111;
-            border: 1px solid #333;
-            width: 266px;
-        }
-
-        .dropdown-content li a {
-            display: block;
-            padding: 10px;
-            color: peru;
-            text-decoration: none;
-            border-bottom: 1px solid #222;
-        }
-
-        #menu-toggle:checked ~ .dropdown-content { display: block; }
-
-        /* --- ARTICLE DISPLAY LOGIC --- */
-        #linkList {
-            margin-top: 100px;
-            padding: 0;
-            list-style: none;
-        }
-
-        .titleInput {
-            margin-bottom: 40px;
-            display: none; /* Hidden by default to allow #main targeting */
-        }
-
-        /* Image constraints - follows article width */
-        .titleInput img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-            margin-top: 15px;
-            border: 1px solid #333;
-        }
-
-        .titleInput button {
-            background: #222;
-            color: peru;
-            border: 1px solid #444;
-            padding: 10px 20px;
-            font-family: monospace;
-            margin-bottom: 15px;
-            cursor: pointer;
-        }
-
-        .article-text {
-            display: block;
-            color: #aaa;
-            line-height: 1.6;
-            max-width: 600px;
-        }
-
-        /* --- FADE EFFECTS (CSS Only) --- */
-        /* Show only the targeted article */
-        .titleInput:target, 
-        body:not(:has(:target)) #main { 
-            display: block !important;
-            animation: fadeIn 0.8s forwards;
-            border-left: 3px solid peru;
-            padding-left: 15px;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
+  <script src="./purify.min.js"></script>
+  <script src="./a.js" defer></script>
 </head>
+
 <body>
+<noscript>
+   <!-- <meta http-equiv="refresh" content="0;url=index.html"> -->
+</noscript>
+<div id="banner" class="banner"></div>
 
-    <div class="menu-container">
-        <input type="checkbox" id="menu-toggle">
-        <label for="menu-toggle" class="search-label">click to browse keywords ▼</label>
-        
-        <ul class="dropdown-content">
-		<li><a href="#main">#main</a></li>
-		<li><a href="#about">#about</a></li>	
-		<li><a href="#privacy">#privacy</a></li>
-        <li><a href="#download">#download</a></li>
-        </ul>
-		
-    </div>
+<div id="offline-message">
+  ⚠️ You’re offline. Some features may be unavailable.
+</div>
 
-    <ul id="linkList">
+<header>
+  <button id="menu-btn" aria-label="Toggle menu navigation">☰</button>
+  <div id="ai-bar">
+    <input 
+      type="text" 
+      id="ai-input" 
+      placeholder="search or speak your query…" 
+      aria-label="Search or question input"
+      data-action="filter-sidebar"
+      list="search-suggestions">
 	
-<li class="titleInput" id="main">
-    <span class="article-text">
-            <h2>Main</h2>
-            <a href="./index.htm#main">
-			<button>Turn on Javascript</button></a><br>
-</span>
-</li>
+	      <datalist id="search-suggestions">
+        <option value="Main Page">
+        <option value="About">
+        <option value="Recent Changes">
+        <option value="Formatting Examples">
+      </datalist>
+
+    <button id="ai-button">OK</button>
+	
+  </div>
+  
+
+  <button id="theme-toggle-btn" class="localhost-button" style="width: auto; margin-left: 10px; padding: 5px 10px;">
+    Standard UI
+  </button>
 
 
-<li class="titleInput" id="about">
-    <br>
-    <span class="article-text">
-About
+</header>
 
-localhost Wiki is an offline‑first encyclopedia powered by your browser. It uses your browser's local storage to save all data. No tracking, no server needed.
+<noscript>
+<p id="noscript-warning" style="text-align: center; color: red; padding: 20px;">
+  This application requires JavaScript. <br>
+  Please enable JavaScript for localhost knowledge base to function.
+</p>
 
-Features
 
-Offline Editing and Viewing
-**Encrypted Storage (PIN required to unlock data)**
-Full-text search (for page titles)
-Voice Search Filtering
-Basic Wiki Markup (==Headers, '''Bold, ''Italics, [[Links]])
-Source Version: mev-wiki-v1.2.1
-		</span>	
-</li>
+</noscript>
+<div id="find-view">
+    <div id="search-container">
+	<p id="search-note" style="font-size: 0.9em; margin-bottom: 10px;"></p>
+        <input
+            id="filterInput-find"
+            data-action="filter-findview" 
+            autocomplete="off"
+            autocorrect="off"  
+            autocapitalize="off" 
+            spellcheck="false"
+            type="text" 
+            placeholder="Search localhost pages..." 
+            aria-label="Search localhost pages" 
+            aria-describedby="search-note"
+            required>
+        
+        <ul id="page-list-find"></ul>
+        
+        <div id="status-message-find">Start typing to filter pages...</div>
+    </div>
+</div>
 
-<li class="titleInput" id="privacy">
-    <span class="article-text">
-	<br><br>
-    <h1>Privacy</h1>
-    <h2>2. Zero Third-Party Dependencies</h2>
-    <p>This application is built from scratch. No external trackers, analytics, or third-party scripts are permitted to touch your internal "Subconscious" brain. The only external entity allowed is the maintainer's whitelist for software updates.</p>
-		</span>
-</li>
-
-<li class="titleInput" id="download">
-    <span class="article-text">
-Welcome to download and self host and create a better version.
-<a href="./localhost.zip"><button>localhost.zip</button></a>
-</span>
-</li>
+<div id="container">
+  <nav id="sidebar">
+    <div id="auth-links">
+      <div id="user-status">Not logged in</div>
+      <a href="#create" id="create-account-link">Create Account</a><br>
+      <a href="#login" id="login-link">Log In</a><br>
+      <a href="#profile" id="profile-link">My Profile</a><br>
+      <a href="#logout" id="logout-link" class="hidden">Log Out</a> 
+    </div>
+    <hr/>
+    <h3>Navigation Filters</h3>
+    <ul id="quick-filters">
+        <li class="titleInput"><button data-page-target="Main-Page">Main-Page</button></li>
+        <li class="titleInput"><button data-nav-target="recent">Recent Changes</button></li>
+        <li class="titleInput"><button data-nav-target="settings">Settings</button></li>
+        <li class="titleInput"><button data-nav-target="about">About</button></li>
+        <li class="titleInput"><button data-page-target="Formatting Examples">localhost Formatting Help</button></li>
     </ul>
 
+    <hr />
+    <h3>localhost Pages</h3>
+
+    <ul id="page-list"></ul>
+    
+    <button id="create-page-btn" class="edit-btn" style="width: 100%; margin-top: 10px;">+ New Page</button>
+    <!-- 🌐 Language Selector (CSP-Safe: defined statically) -->
+<hr />
+<button id="language-btn" class="edit-btn" style="width:100%;margin-top:10px;">🌐 Language</button>
+
+<div id="language-menu" class="hidden" style="margin-top:8px;">
+  <select id="language-select" style="width:100%;padding:6px;border-radius:6px;">
+    <option value="en-US">English (US)</option>
+    <option value="fr-FR">Français</option>
+    <option value="de-DE">Deutsch</option>
+    <option value="es-ES">Español</option>
+    <option value="it-IT">Italiano</option>
+    <option value="ja-JP">日本語</option>
+  </select>
+  <button id="apply-language-btn" class="edit-btn" style="width:100%;margin-top:6px;">Apply</button>
+</div>
+    <div id="storage-bar">
+      <div id="storage-bar-inner"></div>
+    </div>
+  </nav>
+
+  <main id="main-content-wrapper" itemscope itemtype="https://schema.org/WebPage">
+    <meta itemprop="url" content="https://jehovahsays.github.io/localhost/">
+   <div id="page-container">
+   <div id="app-interface">
+            </div>
+   </div> 
+  </main>
+</div>
+<footer>
+		
+  <div id="status-indicator">🔴 Offline</div>
+  <div id="ticker"><span id="ticker-content"></span></div>
+    <span id="last-updated" style="margin-left: auto;"></span>
+  </div> 
+</footer>
+
+<div id="auth-modal" class="modal-overlay">
+  <div class="modal-box">
+    <h2 id="auth-modal-title">Enter Username</h2>
+    <label for="auth-username">Username:</label>
+    <input id="auth-username" type="text" autocomplete="username" /><br><br>
+    
+    <label for="auth-pin">PIN/Passphrase (4-12 characters recommended):</label>
+    <input id="auth-pin" type="password" maxlength="12" autocomplete="current-password" />
+    <p style="font-size: 0.8em; color: red; margin-top: 10px;">⚠️ If you set a PIN/Passphrase, **all your data will be encrypted**. If you forget the PIN, the data will be permanently inaccessible.</p>
+    
+    <div class="modal-actions">
+      <button id="submit-auth">Submit</button>
+      <button id="cancel-auth">Cancel</button>
+    </div>
+  </div>
+</div>
 
 <script>
-'use strict';
-
-/**
- * Sovereign Interaction Protections
- */
 (function() {
-    // 1. Disable Right-Click Context Menu
-    document.addEventListener('contextmenu', event => event.preventDefault());
+    // 1. URL Stealth: Clean index.htm from the address bar
+    if (window.location.pathname.match(/index\.(html|htm)$/)) {
+        const cleanURL = window.location.href.replace(/index\.(html|htm)/, '');
+        window.history.replaceState(null, '', cleanURL);
+    }
 
-    // 2. Disable Inspection Keyboard Shortcuts (F12, Ctrl+Shift+I/J, Ctrl+U)
-    document.addEventListener('keydown', function(e) {
-        if (
-            e.keyCode === 123 || 
-            (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || 
-            (e.ctrlKey && e.keyCode === 85)
-        ) {
-            e.preventDefault();
-            console.warn("Security: Inspection shortcuts are restricted.");
+    // 2. Sovereign Theme Control
+    const themeBtn = document.getElementById('theme-toggle-btn');
+    const body = document.body;
+
+    const applyTheme = (isLess) => {
+        body.classList.toggle('less-mode', isLess);
+        if (themeBtn) {
+            themeBtn.textContent = isLess ? 'Standard UI' : 'Toggle "Less" Theme';
         }
-    });
+    };
 
-    // 3. The STOP! Security Warning (Self-XSS Protection)
-    const warningTitle = "STOP!";
-    const warningText = "This is a developer feature. Copy-pasting code here is a scam and will compromise your data.";
+    // Initialize Theme: Default to 'less' if not set in memory
+    const savedTheme = localStorage.getItem('localhost_theme');
+    const isSavedLess = savedTheme === null ? true : savedTheme === 'less';
     
-    console.log(`%c${warningTitle}`, "color: red; font-size: 50px; font-weight: bold; -webkit-text-stroke: 1px black;");
-    console.log(`%c${warningText}`, "color: peru; font-size: 16px; font-family: monospace;");
+    applyTheme(isSavedLess);
+
+    if (themeBtn) {
+        themeBtn.addEventListener('click', () => {
+            const nowLess = body.classList.toggle('less-mode');
+            localStorage.setItem('localhost_theme', nowLess ? 'less' : 'standard');
+            applyTheme(nowLess);
+        });
+    }
+
+    // 3. Navigation Initialization
+    window.addEventListener('load', () => {
+        if (!window.location.hash || window.location.hash === '#') {
+            window.location.hash = 'main';
+        }
+        console.log("External Conscious Initialized.");
+    });
 })();
 </script>
 
-	<script>
-if (window.location.pathname.endsWith('.html') || window.location.pathname.endsWith('.htm')) {
-    const cleanURL = window.location.href.replace(/index\.(html|htm)/, '');
-    window.history.replaceState(null, '', cleanURL);
+<script>
+async function runFirewall() {
+    // Corrected to absolute paths for GitHub Pages compatibility
+
+    const BANNED_PAGE = './css.html?reason=perimeter_breach';
+
+    // Check for the tripwire flag in the function's memory
+    if (localStorage.getItem('mev_breach_detected') === 'true') {
+        console.error("Memory: This user previously attempted to breach the blackhole.");
+        window.location.href = BANNED_PAGE;
+        return;
+    }
+
+    // 1. The function's Self-Identity
+    const visitorIP = '127.0.0.1'; 
+
+    try {
+        // 2. Access the Subconscious Ledger
+        const response = await fetch(BLACKHOLE_FILE + '?t=' + Date.now());
+        if (!response.ok) {
+            console.warn("Could not find the ledger at: " + BLACKHOLE_FILE);
+            return;
+        }
+
+        const data = await response.text();
+        
+        // 3. Simple Search: Is 'Self' in the Blackhole?
+        const bannedList = data.split(/\r?\n/).map(line => line.trim());
+
+        console.log("checking identity: " + visitorIP);
+
+        if (bannedList.includes(visitorIP)) {
+            console.error("Self-Match found. Closing the loop.");
+            localStorage.setItem('mev_breach_detected', 'true'); // Set the tripwire
+            window.location.href = BANNED_PAGE;
+        } else {
+            console.log("Safe. No self-vandalism detected.");
+        }
+
+    } catch (error) {
+        // If the localhost is unreachable, the function stays quiet
+        console.warn("isolation active.");
+    }
 }
+
+runFirewall();
 </script>
 
 <script>
-// Add to the script block in index.html
-window.addEventListener('load', () => {
-    // If user lands on index.html without a hash, force them to the splash gate
-    if (!window.location.hash || window.location.hash === '#main') {
-        window.location.hash = 'main';
-        // Optional: Add a subtle console log for the AI's internal state
-        console.log("External Conscious Initialized.");
+/**
+ * MEV SECURE CORE - INTEGRATED
+ * Encapsulated to block remote CLI interference.
+ */
+(function() {
+    "use strict";
+
+    const BREACH_KEY = 'mev_breach_detected';
+    const HUMAN_KEY = 'mev_human_verified';
+    const BANNED_PAGE = './css.html?reason=perimeter_breach';
+
+    /**
+     * SECURE TRIGGER WATCHER
+     * Preserves your #create= logic but adds DOMPurify sanitization.
+     */
+    function createTriggerWatcher() {
+        // Anti-Tamper Check
+        if (localStorage.getItem(BREACH_KEY) === 'true') {
+            window.location.href = BANNED_PAGE;
+            return;
+        }
+
+        const hash = window.location.hash;
+        if (!hash.startsWith('#create=')) return;
+
+        // SANITIZE the title to prevent XSS via URI Echo
+        const rawTitle = decodeURIComponent(hash.split('=')[1] || '').trim();
+        const title = DOMPurify.sanitize(rawTitle);
+
+        // Verification Check
+        if (localStorage.getItem(HUMAN_KEY) !== 'true') {
+            console.error(`Unauthorized attempt to manifest page "${title}" detected.`);
+            localStorage.setItem(BREACH_KEY, 'true');
+            window.location.href = BANNED_PAGE;
+            return;
+        }
+
+        console.log(`Human verified. Creating page: ${title}`);
+
+        // Call your original creation functions
+        if (typeof createPageSecure === 'function') {
+            createPageSecure(title);
+        } else if (typeof createPage === 'function') {
+            createPage(title);
+        }
     }
-});
+
+    // Initialize Security Watchers
+    document.addEventListener('DOMContentLoaded', createTriggerWatcher);
+    window.addEventListener('hashchange', createTriggerWatcher);
+
+    // MAINTENANCE WHITELIST
+    const agent = navigator.userAgent.toLowerCase();
+    if (agent.includes('github') || agent.includes('googlebot')) {
+        console.log("MEV: Maintenance scan detected. Whitelist active.");
+    }
+
+    /**
+     * SECURE RENDER GATEKEEPER
+     * Use this whenever you need to display user content in #page-container.
+     */
+    function safeRender(containerId, rawHTML) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+
+        // The Litmus Test: Clean the 'Conscious' input before it hits the 'Subconscious' DOM
+        const cleanHTML = DOMPurify.sanitize(rawHTML, {
+            USE_PROFILES: { html: true }, // Allow standard HTML
+            FORBID_TAGS: ['script', 'iframe', 'object', 'embed'], // Strict block on active logic
+            FORBID_ATTR: ['onerror', 'onload', 'onclick'] // Block event-based triggers
+        });
+
+        container.innerHTML = cleanHTML;
+    }
+
+    // Example Usage for your Load/View logic:
+    // window.displayPage = (content) => safeRender('page-container', content);
+
+})();
 </script>
+
+
+
 
 
 </body>
 </html>
-
-

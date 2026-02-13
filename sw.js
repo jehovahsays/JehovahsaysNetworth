@@ -1,11 +1,10 @@
 // --- Service Worker Content (Subconscious) ---
-const CACHE = "localhost-wiki-v1.2.1";
+const CACHE = "localhost-wiki-v1.2.2";
 
 // Assets to cache for the 'Subconscious'
 const FILES = [
   "./",
   "./index.html",
-  "./index.htm", 
   "./a.js",      
   "./styles.css", 
   "./purify.min.js",
