@@ -2,27 +2,32 @@ name: "ESLint Check"
 
 on:
   push:
-    branches: [ main ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ main ]
+    branches: [ "main" ]
 
 permissions:
-  contents: read # Sovereign Security: Prevent unauthorized writes
+  contents: read # Sovereign Security: Minimal permissions to prevent unauthorized writes
 
 jobs:
   lint:
     name: Lint JavaScript
     runs-on: ubuntu-latest
+    
     steps:
-      - uses: actions/checkout@v4 # Uses verified GitHub action
+      - name: Checkout Repository
+        uses: actions/checkout@v4 # Uses the verified v4 action
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
+          node-version: '20' # Using the stable v20 LTS branch
 
-      - name: Install dependencies
-        run: npm install eslint --global
+      - name: Install ESLint
+        # Using npx later, but we ensure a clean environment here
+        run: npm install eslint --save-dev
 
-      - name: Run ESLint
-        run: eslint . --ext .js # Scans the folder-blind root
+      - name: Run ESLint Scan
+        # We target the root '.' and let ESLint auto-detect files
+        # using the modern flat-config style (standard in 2026)
+        run: npx eslint .
