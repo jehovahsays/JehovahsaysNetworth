@@ -14,7 +14,7 @@ jobs:
     name: Lint JavaScript
     runs-on: ubuntu-latest
     steps:
-      - [span_3](start_span)uses: actions/checkout@v4 # Uses verified GitHub action[span_3](end_span)
+      - uses: actions/checkout@v4 # Uses verified GitHub action
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -22,7 +22,7 @@ jobs:
           node-version: '20.x'
 
       - name: Install dependencies
-        [span_4](start_span)run: npm install eslint --global[span_4](end_span)
+        run: npm install eslint --global
 
       - name: Run ESLint
-        run: eslint . -[span_5](start_span)-ext .js # Scans the folder-blind root[span_5](end_span)
+        run: eslint . --ext .js # Scans the folder-blind root
