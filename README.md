@@ -6,11 +6,6 @@
 
 [![Deploy to Pages](https://github.com/jehovahsays/mev/actions/workflows/pages.yml/badge.svg)](https://github.com/jehovahsays/mev/actions/workflows/pages.yml)
 
----
-
-### ☕ Support the Mission
-If you find these creative solutions helpful, donations are welcome:
-[![Cash App](https://img.shields.io/badge/Cash%20App-%24morgansbyers-00D632?style=flat&logo=cashapp&logoColor=white)](https://cash.app/$morgansbyers)
 
 
 # 🌀 Localhost: The Sovereign Digital Subconscious
