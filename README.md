@@ -2,10 +2,11 @@
 
 # 🌐 Sovereign Security Dashboard
 
+# 🌐 Sovereign Security Dashboard
+
 [![CodeQL Security Scan](https://github.com/jehovahsays/mev/actions/workflows/codeql.yml/badge.svg)](https://github.com/jehovahsays/mev/actions/workflows/codeql.yml)
 
 [![Deploy to Pages](https://github.com/jehovahsays/mev/actions/workflows/pages.yml/badge.svg)](https://github.com/jehovahsays/mev/actions/workflows/pages.yml)
-
 
 
 # 🌀 Localhost: The Sovereign Digital Subconscious
