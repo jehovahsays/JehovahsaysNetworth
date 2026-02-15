@@ -2,7 +2,7 @@
 version: 2
 updates:
   - package-ecosystem: "github-actions"
-    [span_1](start_span)directory: "/"  # Root directory logic[span_1](end_span)
+    directory: "/"  # Root directory logic
     schedule:
       interval: "weekly"
 
