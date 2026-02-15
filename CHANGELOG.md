@@ -1,9 +1,10 @@
-# 📜 Changelog
+# 📜 The Evolution of Localhost
 
-## [1.2.1-Sovereign] - 2026-02-08
-### 🏗️ The Great Flattening (Migration from MEV)
-- **Architecture**: Completely replaced the tiered MEV folder structure with the "Folder-Blind" Localhost root architecture.
-- **Redundancy**: Introduced the recursive `localhost.zip` (Ouroboros) backup system.
-- **AI-Readability**: Added `llms.txt` as a master DNA blueprint for AI agents to understand and reconstruct the repository.
-- **UX**: Implemented the "Less" theme toggle for high-performance, minimalist data interaction.
-- **Portability**: All references updated to `./` to allow the repository to function perfectly on any local server or P2P network.
+## [1.2.2-Sentinel] - 2026-02-15
+### **Added**
+* **Global Input Sentinel:** Real-time firewall for the search box.
+* **Localhost Documentation:** Complete rewrite of core metadata files to explain the "How, What, When, Where" doctrine.
+* **Dictionary Logic:** Fixed the "Ghost" translation variables in `a.js` to ensure the console stays clean.
+
+### **Changed**
+* **The Great Flattening:** Refined the root directory to ensure 100% portability.

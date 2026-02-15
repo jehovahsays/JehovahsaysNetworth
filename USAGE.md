@@ -1,14 +1,16 @@
-# 📘 Localhost Usage Guide
+# 📘 How to Initialize the Subconscious
 
-## 🚀 Deployment
-1.  Download or clone the repository.
-2.  Open `index.html` via a local server (localhost:8000 or similar).
-3.  Install as a PWA (Progressive Web App) using the "Install" prompt to keep the brain on your home screen.
+### **1. Deployment**
+* Download the repository to a local folder.
+* Run a local server (e.g., `python -m http.server 8000`).
+* Open `localhost:8000` in your browser.
 
-## 🛠️ Navigating the Subconscious
-* **The Toggle:** Use the "Less" theme for a distraction-free environment.
-* **The Cache:** Once loaded, you can turn off your internet. The Service Worker (`sw.js`) will continue to serve the wiki from your "subconscious" memory.
-* **The Backup:** Periodically download the `localhost.zip` to ensure you have the recursive version of your thoughts stored safely.
+### **2. The Humanity Handshake**
+* Upon entry, you must pass the gate. This ensures that a human or a verified AI agent is the one initiating the "Conscious" session.
 
-## 🔁 Recovery
-If you are locked out by a Sentinel, clear your `localStorage` or manually reset the `mev_human_verified` flag in the console to re-enter.
+### **3. PWA Installation**
+* Click "Install" in your browser address bar. This "pins" the local brain to your OS, allowing it to function like a native app.
+
+### **4. Navigation**
+* Use the **"Less"** theme for high-performance data entry.
+* Internal links use `#Page-Name` to keep the URL clean and folder-blind.

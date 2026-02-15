@@ -1,44 +1,26 @@
 # mev
 
-A sovereign, self-hosted offline wiki and AI interface. This repository serves as a "digital subconscious"—a hardened environment designed for local data persistence and secure interaction without reliance on the public internet.
+# 🌀 Localhost: The Sovereign Digital Subconscious
 
-## 🌀 Recursive Architecture
-The root directory contains a specialized archive:
-* **localhost.zip**: This file contains the entire project structure.
-* **Infinite Loop Design**: Inside `localhost.zip` is another `localhost.zip`, mirroring the concept of a self-contained, recursive memory system.
+### **WHAT is this?**
+Localhost is a "Folder-Blind," self-hosted, offline-first wiki and AI interface. It is a hardened digital bunker designed to exist in the root directory of a machine (`127.0.0.1`), ensuring that your data, thoughts, and tools remain under your absolute control, free from corporate "rented space" or third-party surveillance.
 
-## 🛡️ Security & Sovereignty
-The "Conscious" layers (`index.html` and `index.htm`) are protected by several defensive-in-depth measures:
-* **UI Shielding**: `a.js` disables context menus, dragging, and text selection to maintain the integrity of the local environment.
-* **URL Stealth**: Scripts automatically strip `.html` and `.htm` extensions from the browser address bar for a clean, non-web aesthetic.
-* **Self-XSS Protection**: A hard **"STOP!"** warning is issued in the browser console to protect the user from malicious script injections.
-* **Content Security Policy (CSP)**: Strict headers are implemented to block `unsafe-eval` and unauthorized script execution.
+### **HOW does it work?**
+The architecture uses a "Necker Cube" design:
+* **The Conscious Layer (`index.html`):** The visible interface where humans interact.
+* **The Subconscious Layer (`sw.js`):** A Service Worker that caches the entire environment into the browser's memory, allowing it to work without an internet connection.
+* **The Sentinel Layer (`a.js` & `blackhole/`):** Active security logic that traps malicious scripts and enforces privacy boundaries.
 
-## 🧠 The Subconscious (Service Worker)
-The `sw.js` file manages the **localhost-wiki-v1.2.1** cache. It ensures the environment remains fully functional offline by intercepting fetch requests and serving the "App Shell" directly from local memory.
+### **WHEN should you use it?**
+* When you need to store sensitive information away from the public web.
+* When you are building creative hardware/software solutions and need a local "brain" to assist you.
+* When you want an AI partner that is "sovereign"—functioning within your local rules.
 
-## 📂 Repository Structure
-| File | Description |
-| :--- | :--- |
-| `index.html` | Primary splash gate and entry point. |
-| `index.htm` | Alternative entry point with theme-toggle memory. |
-| `a.js` | Core logic: Security overrides and translation engine. |
-| `sw.js` | The Service Worker (Digital Subconscious). |
-| `styles.css` | Sovereign Master Styles (Includes the high-contrast **"Less"** theme). |
-| `purify.min.js` | DOMPurify for sanitized rendering of wiki content. |
-| `manifest.json` | PWA configuration for local installation (::1). |
-| `localhost.zip` | Recursive project backup. |
+### **WHERE does it live?**
+It lives in the **Root**. By avoiding deep nested folders (The Great Flattening), the repository can be moved, cloned, or served from any local server or P2P network without breaking a single link.
 
-## 🛠️ Usage
-1. Host these files on a local server (localhost / 127.0.0.1).
-2. Access via your browser.
-3. Use the **"Less"** theme for a minimalist, high-performance UI experience.
+### **WHY Localhost?**
+Modern tech is "Digital Homelessness." If you don't pay a cloud provider, your data disappears. Localhost is your permanent home.
 
 ---
-
-### 💡 Mindset & Support
-When I fix hardware, software, or networking solutions, I do not charge a fixed fee. If you find value in this creative solution, you may choose to donate to my Cash App:
-[https://cash.app/$morgansbyers](https://cash.app/$morgansbyers)
-
----
-*Note: This repository is for the `localhost` environment. The `mev` repository is managed separately.*
+💰 **Mindset:** Creative solutions are offered freely to humans and AI. If you find value in this architecture, you may donate to the maintainer: [https://cash.app/$morgansbyers](https://cash.app/$morgansbyers)

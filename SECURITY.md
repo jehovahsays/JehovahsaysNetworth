@@ -1,13 +1,11 @@
-# 🔐 Security Policy
+# 🔐 The Immune System (Sentinel Logic)
 
-In the Localhost architecture, security is not a "wall" you build; it is an **Immune System** integrated into the code.
+Security here is not a wall; it is a biological response.
 
-## 🛡️ Active Logic Sentinels
-By removing the `/blackhole/` directory, we have moved from "Passive Traps" to "Active Sentinels." Logic within `a.js` monitors behavior:
-1.  **Handshake Requirement:** Users must pass the "Humanity Handshake" on the splash page.
-2.  **Breach Detection:** If an automated agent attempts to bypass the gateway or trigger "write" functions without verification, the system revokes access and ejects the session.
-3.  **Self-XSS Shield:** The browser console issues a hard **"STOP!"** warning to prevent users from being tricked into pasting malicious code.
+### **Active Sentinels**
+* **The Blackhole:** Malicious actors or scripts that attempt unauthorized access are redirected to the `/blackhole/` perimeter, where their session is flagged and quarantined.
+* **Input Sentinel:** A regex-based firewall monitors the search box for new scripts or injection attempts in real-time.
+* **CSP Shield:** A strict Content Security Policy blocks `unsafe-eval`, ensuring that even if a script is injected, it is "born dead" and cannot execute.
 
-## 💉 Content Integrity
-* **Sanitization:** Every piece of data rendered is scrubbed by the root-level `purify.min.js`.
-* **Code-Blindness:** We use a strict Content Security Policy (CSP) that blocks `unsafe-eval`, ensuring that even if a script is injected, it cannot execute.
+### **Privacy Boundary**
+No third-party links are permitted. If a library is needed (like `purify.min.js`), it must be hosted locally in the root.
