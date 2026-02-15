@@ -16,6 +16,6 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Run dependency review
-        uses: github/dependency-review-action@v4
+        uses: actions/dependency-review-action@v4
         with:
           security-severity-threshold: 'high'
