@@ -1743,9 +1743,22 @@ async function savePage(title) {
   
   const rawContent = editor.value;
 
-  pages[title].content = rawContent;
-  pages[title].lastEdited = new Date().toISOString();
-  pages[title].createdBy = user ? user.name : 'Guest';
+// --- LOGIC SENTINEL: Prototype Pollution Protection ---
+const protectedKeywords = ['__proto__', 'constructor', 'prototype'];
+
+if (protectedKeywords.includes(title)) {
+    console.warn("STOP! Unauthorized property manipulation attempt detected.");
+    // Trigger your "Integrated Blackhole" logic
+    localStorage.setItem('mev_breach_detected', 'true');
+    location.href = './'; 
+    return;
+}
+
+// Proceed with standard sovereign assignment
+if (!pages[title]) pages[title] = {}; 
+pages[title].content = rawContent;
+pages[title].lastEdited = new Date().toISOString();
+pages[title].createdBy = user ? user.name : 'Guest';
   
   await saveData(STORAGE_KEYS.pages, pages); 
   // --- START PR 3 FIX: User Contribution Consistency ---
