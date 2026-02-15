@@ -18,4 +18,4 @@ jobs:
       - name: Run dependency review
         uses: github/dependency-review-action@v4
         with:
-          [span_7](start_span)security-severity-threshold: 'high'[span_7](end_span)
+          security-severity-threshold: 'high'
