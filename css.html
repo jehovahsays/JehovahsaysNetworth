@@ -4,19 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>localhost</title>
-     <meta name="description" content="localhost Wiki – Offline Encyclopedia. Learn, edit, explore." />
-  <meta name="theme-color" content="#3366cc" />
-  <meta name="color-scheme" content="light dark" />
+    <meta name="description" content="localhost Wiki – Offline Encyclopedia. Learn, edit, explore." />
+    <meta name="theme-color" content="#3366cc" />
+    <meta name="color-scheme" content="light dark" />
  
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self' 'unsafe-inline'; object-src 'none'; style-src 'self' 'unsafe-inline';">
     <meta http-equiv="Referrer-Policy" content="no-referrer">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="Permissions-Policy" content="microphone=(), camera=(), geolocation=(), interest-cohort=()">
     <meta http-equiv="Cache-Control" content="no-store, max-age=0">
-  <script src="./purify.min.js"></script>
-  <link rel="manifest" href="./manifest.json">
-  <link rel="icon" href="./icon-192.png" type="image/png">
-  <link rel="apple-touch-icon" href="./icon-192.png">
+    
+    <script src="./purify.min.js"></script>
+    <link rel="manifest" href="./manifest.json">
+    <link rel="icon" href="./icon-192.png" type="image/png">
+    <link rel="apple-touch-icon" href="./icon-192.png">
     
     <style>
         body { 
@@ -41,11 +42,11 @@
         #menu-toggle { display: none; }
         .search-label {
             display: block;
-            width: 266px; /* Matching searchBox + padding */
+            width: 266px; 
             padding: 5px;
             background: #111;
             border: 1px solid #333;
-            color: #666; /* Subtler color for the static menu */
+            color: #666; 
             cursor: pointer;
             font-size: 10px;
             text-transform: lowercase;
@@ -80,10 +81,9 @@
 
         .titleInput {
             margin-bottom: 40px;
-            display: none; /* Hidden by default to allow #main targeting */
+            display: none; 
         }
 
-        /* Image constraints - follows article width */
         .titleInput img {
             max-width: 100%;
             height: auto;
@@ -110,7 +110,6 @@
         }
 
         /* --- FADE EFFECTS (CSS Only) --- */
-        /* Show only the targeted article */
         .titleInput:target, 
         body:not(:has(:target)) #main { 
             display: block !important;
@@ -132,99 +131,120 @@
         <label for="menu-toggle" class="search-label">click to browse keywords ▼</label>
         
         <ul class="dropdown-content">
-		<li><a href="#main">#main</a></li>
-		<li><a href="#about">#about</a></li>	
-		<li><a href="#privacy">#privacy</a></li>
+            <li><a href="#main">#main</a></li>
+            <li><a href="#about">#about</a></li>	
+            <li><a href="#privacy">#privacy</a></li>
         </ul>
-		
     </div>
 
     <ul id="linkList">
-	
-<li class="titleInput" id="main">
-    <span class="article-text">
-            <h2>Main</h2>
-            <a href="./index.html#main">
-			<button>Turn on Javascript</button></a><br>
-</span>
-</li>
+        <li class="titleInput" id="recovery-sentinel" style="display:none;">
+            <span class="article-text">
+                <h2>Perimeter Breach Detected</h2>
+                <p>Unauthorized access logged. Manual re-initialization required.</p>
+                <button onclick="restorePerimeter()">RE-INITIALIZE SYSTEM</button>
+                <br>
+                <a href="./index.html#main">
+                    <button>Return to Conscious Interface</button>
+                </a>
+            </span>
+        </li>
 
+        <li class="titleInput" id="main">
+            <span class="article-text">
+                <h2>Main</h2>
+                <a href="./index.html#main">
+                    <button>Turn on Javascript</button>
+                </a><br>
+            </span>
+        </li>
 
-<li class="titleInput" id="about">
-    <br>
-    <span class="article-text">
-About
+        <li class="titleInput" id="about">
+            <br>
+            <span class="article-text">
+                <h2>About</h2>
+                localhost <br>
+                Source Version: v1.2.1
+            </span>	
+        </li>
 
-localhost 
-Source Version: v1.2.1
-		</span>	
-</li>
-
-<li class="titleInput" id="privacy">
-    <span class="article-text">
-	<br><br>
-    <h1>Privacy</h1>
-    <h2>2. Zero Third-Party Dependencies</h2>
-    <p>This application is built from scratch. 
-	No external trackers, analytics, 
-	or third-party scripts are permitted.</p>
-		</span>
-</li>
-
+        <li class="titleInput" id="privacy">
+            <span class="article-text">
+                <br><br>
+                <h1>Privacy</h1>
+                <h2>2. Zero Third-Party Dependencies</h2>
+                <p>This application is built from scratch. 
+                No external trackers, analytics, 
+                or third-party scripts are permitted.</p>
+            </span>
+        </li>
     </ul>
 
+    <script>
+    'use strict';
 
-<script>
-'use strict';
+    (function() {
+        /** * 1. RECOVERY SENTINEL INITIALIZATION
+         */
+        const urlParams = new URLSearchParams(window.location.search);
+        const reason = urlParams.get('reason');
+        const BREACH_KEY = 'mev_breach_detected';
+        const sentinelElement = document.getElementById('recovery-sentinel');
 
-/**
- * Sovereign Interaction Protections
- */
-(function() {
-    // 1. Disable Right-Click Context Menu
-    document.addEventListener('contextmenu', event => event.preventDefault());
+        if (reason === 'perimeter_breach' || localStorage.getItem(BREACH_KEY)) {
+            if (sentinelElement) {
+                sentinelElement.style.display = 'block';
+                window.location.hash = 'recovery-sentinel'; // Force focus to recovery
+            }
+        }
 
-    // 2. Disable Inspection Keyboard Shortcuts (F12, Ctrl+Shift+I/J, Ctrl+U)
-    document.addEventListener('keydown', function(e) {
-        if (
-            e.keyCode === 123 || 
-            (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || 
-            (e.ctrlKey && e.keyCode === 85)
-        ) {
-            e.preventDefault();
-            console.warn("Security: Inspection shortcuts are restricted.");
+        /** * 2. SOVEREIGN INTERACTION PROTECTIONS
+         */
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        document.addEventListener('keydown', function(e) {
+            if (
+                e.keyCode === 123 || 
+                (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || 
+                (e.ctrlKey && e.keyCode === 85)
+            ) {
+                e.preventDefault();
+                console.warn("Security: Inspection shortcuts are restricted.");
+            }
+        });
+
+        // The STOP! Security Warning
+        console.log(`%cSTOP!`, "color: red; font-size: 50px; font-weight: bold; -webkit-text-stroke: 1px black;");
+        console.log(`%cThis is a developer feature. Copy-pasting code here is a scam.`, "color: peru; font-size: 16px; font-family: monospace;");
+    })();
+
+    /**
+     * RESTORE PERIMETER: Clears breach flags
+     */
+    function restorePerimeter() {
+        const BREACH_KEY = 'mev_breach_detected';
+        const HUMAN_KEY = 'mev_human_verified';
+
+        localStorage.removeItem(BREACH_KEY);
+        localStorage.setItem(HUMAN_KEY, 'true'); 
+        
+        alert("Perimeter Restored. Re-entering Conscious State.");
+        window.location.href = './index.html#main'; 
+    }
+
+    // URL CLEANER
+    if (window.location.pathname.endsWith('.html') || window.location.pathname.endsWith('.htm')) {
+        const cleanURL = window.location.href.replace(/index\.(html|htm)/, '');
+        window.history.replaceState(null, '', cleanURL);
+    }
+
+    // STATE INITIALIZATION
+    window.addEventListener('load', () => {
+        if (!window.location.hash) {
+            window.location.hash = 'main';
+            console.log("External Conscious Initialized.");
         }
     });
-
-    // 3. The STOP! Security Warning (Self-XSS Protection)
-    const warningTitle = "STOP!";
-    const warningText = "This is a developer feature. Copy-pasting code here is a scam and will compromise your data.";
-    
-    console.log(`%c${warningTitle}`, "color: red; font-size: 50px; font-weight: bold; -webkit-text-stroke: 1px black;");
-    console.log(`%c${warningText}`, "color: peru; font-size: 16px; font-family: monospace;");
-})();
-</script>
-
-	<script>
-if (window.location.pathname.endsWith('.html') || window.location.pathname.endsWith('.htm')) {
-    const cleanURL = window.location.href.replace(/index\.(html|htm)/, '');
-    window.history.replaceState(null, '', cleanURL);
-}
-</script>
-
-<script>
-// Add to the script block in index.html
-window.addEventListener('load', () => {
-    // If user lands on index.html without a hash, force them to the splash gate
-    if (!window.location.hash || window.location.hash === '#main') {
-        window.location.hash = 'main';
-        // Optional: Add a subtle console log for the AI's internal state
-        console.log("External Conscious Initialized.");
-    }
-});
-</script>
-
-
+    </script>
 </body>
 </html>
-

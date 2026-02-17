@@ -2607,7 +2607,149 @@ runFirewall();
 
 </script>
 
+<!-- feb 17 edit start -->
 
+<div id="mev-splash-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: black; z-index: 9999; overflow-y: auto;">
+    <div id="search-container" style="max-width: 600px; margin: 50px auto; padding: 20px; font-family: system-ui, sans-serif;">
+        <form id="splash-form" action="#search">	
+            <input
+                id="filterInput-splash"
+                autocomplete="off"
+                autocorrect="off"  
+                autocapitalize="off" 
+                spellcheck="false"
+                type="text" 
+                placeholder="Search wiki pages..." 
+                style="width: 100%; padding: 15px; margin-bottom: 20px; font-size: 1.2em; border-radius: 5px; border: 1px solid #333; background-color: #222; color: peru; box-sizing: border-box;"
+                required>
+        </form>
+      
+        <ul id="page-list-splash" style="list-style: none; padding: 0; margin: 0;">
+		
+		<li class="titleInput-find">
+
+		</ul>
+        
+        <div id="status-message-splash" style="color: #ccc; margin-top: 10px; font-family: monospace;"></div>
+	
+		    <div class="nav-container">
+	    </div>	
+		
+    </div>
+</div>
+
+<script>
+(function() {
+    const STORAGE_KEY = 'wiki_pages';
+
+    function loadWikiData() {
+        try {
+            const v = localStorage.getItem(STORAGE_KEY);
+            return v ? JSON.parse(v) : {};
+        } catch { return {}; }
+    }
+
+    function createSplashButton(title, hash) {
+        const li = document.createElement('li');
+        li.style.margin = "10px 0";
+        
+        const button = document.createElement('button');
+        button.textContent = title;
+        button.style.cssText = "width: 100%; padding: 12px; text-align: left; background-color: #3366cc; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 1.1em;";
+        
+        button.onclick = () => {
+            document.getElementById('mev-splash-screen').style.display = 'none';
+            window.location.hash = hash;
+        };
+
+        li.appendChild(button);
+        return li;
+    }
+
+    function initSplashScreen() {
+        const listEl = document.getElementById('page-list-splash');
+        const inputEl = document.getElementById('filterInput-splash');
+        const pages = loadWikiData();
+        
+        // Populate with static and dynamic "Neurons"
+        const staticLinks = [
+            { title: "Main Page", hash: "main" },
+            { title: "Recent Changes", hash: "recent" }
+        ];
+
+        staticLinks.forEach(link => listEl.appendChild(createSplashButton(link.title, link.hash)));
+        
+        Object.keys(pages).sort().forEach(title => {
+            listEl.appendChild(createSplashButton(title, encodeURIComponent(title)));
+        });
+
+        // Real-time Filtering logic
+        inputEl.addEventListener('input', function() {
+            const filter = this.value.toLowerCase();
+            const items = listEl.querySelectorAll('li');
+            items.forEach(li => {
+                const text = li.querySelector('button').textContent.toLowerCase();
+                li.style.display = text.includes(filter) ? "block" : "none";
+            });
+        });
+
+        // Handle Enter key for "Calculated" navigation
+        document.getElementById('splash-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const firstVisible = listEl.querySelector('li[style*="display: block"] button, li:not([style*="display"]) button');
+            if (firstVisible) firstVisible.click();
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', initSplashScreen);
+})();
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const HUMAN_KEY = 'mev_human_verified';
+
+    // Function to set the user as verified human
+    function markAsHuman() {
+        localStorage.setItem(HUMAN_KEY, 'true');
+    }
+
+    // Listen for input in the search box
+    const searchInput = document.getElementById('filterInput-splash');
+    if (searchInput) {
+        searchInput.addEventListener('input', markAsHuman);
+    }
+
+    // Listen for clicks on the buttons
+    const buttons = document.querySelectorAll('#page-list-splash button');
+    buttons.forEach(button => {
+        button.addEventListener('click', markAsHuman);
+    });
+
+    // Check before allowing navigation away from the splash
+    function checkVerification() {
+        if (!localStorage.getItem(HUMAN_KEY)) {
+            // If not verified, redirect them to a friendly verification reminder
+            window.location.href = './#main';
+        }
+    }
+
+    // Attach this check to any navigation or form submissions on the splash page
+    // For example, if there’s a “Proceed” button that leads to the main index:
+    const proceedButton = document.getElementById('proceedButton');
+    if (proceedButton) {
+        proceedButton.addEventListener('click', function(event) {
+            checkVerification();
+            // Optionally prevent default navigation if not verified
+            if (!localStorage.getItem(HUMAN_KEY)) {
+                event.preventDefault();
+            }
+        });
+    }
+});
+</script>
+
+<!-- feb 17 edit end -->
 
 
 </body>
