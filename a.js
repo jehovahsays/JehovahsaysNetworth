@@ -1113,12 +1113,11 @@ async function editPage(title) {
 async function savePage(title) {
   console.log("Saving page:", title);
   
-  // 1. SECURITY CHECK: Prototype Pollution Protection
+  // 🛡️ 1. SECURITY CHECK (Keep this at the top)
   const protectedKeywords = ['__proto__', 'constructor', 'prototype'];
   
   if (protectedKeywords.includes(title.toLowerCase())) {
       console.warn("STOP! Unauthorized property manipulation attempt detected.");
-      // Integrated Blackhole logic:
       localStorage.setItem('mev_breach_detected', 'true');
       location.href = './index.html'; 
       return;
@@ -1132,7 +1131,7 @@ async function savePage(title) {
   
   const rawContent = editor.value;
 
-  // 3. SOVEREIGN ASSIGNMENT
+  // 🛡️ 3. SOVEREIGN ASSIGNMENT (Duplicates removed)
   if (!pages[title]) pages[title] = {}; 
   pages[title].content = rawContent;
   pages[title].lastEdited = new Date().toISOString();
@@ -1140,6 +1139,9 @@ async function savePage(title) {
   
   // 4. PERSISTENCE
   await saveData(STORAGE_KEYS.pages, pages); 
+  // ... rest of the function remains the same
+
+  
 
   // 5. UPDATE CONTRIBUTION HISTORY
   const newChangeEntry = { 
