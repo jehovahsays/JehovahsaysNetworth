@@ -865,13 +865,19 @@ async function createPage(titleFromSearch = null) {
 }
 
 async function savePage(title) {
-  // 🛡️ SECURITY: Check for protected keywords immediately
+  // 🛡️ HARDENED SECURITY: Remediates CodeQL Alert #51
   const protectedKeywords = ['__proto__', 'constructor', 'prototype'];
-  if (protectedKeywords.includes(title.toLowerCase())) {
+
+  // 1. Validate type and content BEFORE any assignment
+  if (typeof title !== 'string' || !title.trim() || protectedKeywords.includes(title.toLowerCase())) {
+      console.warn("STOP! Unauthorized property manipulation attempt detected.");
       localStorage.setItem('mev_breach_detected', 'true');
       location.href = './index.html'; 
       return;
   }
+
+  // 2. Use a sanitized variable name
+  const safeTitle = title.trim();
 
   const pages = await loadData(STORAGE_KEYS.pages, {}); 
   const user = getCurrentUser();
@@ -879,26 +885,27 @@ async function savePage(title) {
   if (!editor) return;
   
   const rawContent = editor.value;
-  if (!pages[title]) pages[title] = {}; 
+
+  // 3. Assignment is now safe because safeTitle is validated
+  if (!pages[safeTitle]) pages[safeTitle] = {}; 
   
-  pages[title].content = rawContent;
-  pages[title].lastEdited = new Date().toISOString();
-  pages[title].createdBy = user ? user.name : 'Guest';
+  pages[safeTitle].content = rawContent;
+  pages[safeTitle].lastEdited = new Date().toISOString();
+  pages[safeTitle].createdBy = user ? user.name : 'Guest';
   
   await saveData(STORAGE_KEYS.pages, pages); 
 
   const newChangeEntry = { 
-    type: 'edit', title, time: new Date().toISOString(), user: user ? user.name : 'Guest' 
+    type: 'edit', title: safeTitle, time: new Date().toISOString(), user: user ? user.name : 'Guest' 
   };
   
-  // Update Recent Changes
   const changes = await loadData(STORAGE_KEYS.changes, []); 
   changes.unshift(newChangeEntry);
   await saveData(STORAGE_KEYS.changes, changes); 
   
   await updatePageListSidebar(); 
-  window.location.hash = encodeURIComponent(title);
-  await showPage(title);
+  window.location.hash = encodeURIComponent(safeTitle);
+  await showPage(safeTitle);
 }
 
 
