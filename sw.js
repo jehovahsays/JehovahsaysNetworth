@@ -5,6 +5,8 @@ const CACHE = "localhost-wiki-v1.2.2";
 const FILES = [
   "./",
   "./index.html",
+  "./wiki.html", // Added wiki.html to the cache list
+  "./css.html", // Added wiki.html to the cache list  
   "./a.js",      
   "./styles.css", 
   "./purify.min.js",
@@ -35,7 +37,7 @@ self.addEventListener("activate", event => {
           }
         })
       );
-    }).then(() => self.clients.claim())
+    }).then(() => self.clients.claim()) // Claims clients immediately to fix "first click" issues
   );
 });
 
@@ -45,10 +47,12 @@ self.addEventListener("fetch", event => {
 
   const url = new URL(event.request.url);
   
-  // Logic: Using endsWith to catch the perimeter safely
-  const isMainDocument = url.pathname.endsWith('/') || url.pathname.endsWith('/index.html');
+  // FIXED LOGIC: Include wiki.html in the Network-First strategy
+  const isAppShell = url.pathname.endsWith('/') || 
+                     url.pathname.endsWith('/index.html') || 
+                     url.pathname.endsWith('/wiki.html');
   
-  if (isMainDocument) {
+  if (isAppShell) {
     event.respondWith(
       fetch(event.request)
         .then(networkRes => {
@@ -63,7 +67,7 @@ self.addEventListener("fetch", event => {
     return;
   }
 
-  // Fallback for icons/manifest
+  // Fallback for icons/manifest/static assets
   event.respondWith(
     caches.match(event.request).then(cacheRes => cacheRes || fetch(event.request))
   );

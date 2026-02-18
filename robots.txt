@@ -1,31 +1,15 @@
-# robots.txt for MEV Offline Wiki 
-# Index homepage only block user-generated & dynamic paths.
+# Perimeter Rules for Friendly Entities
 User-agent: *
+# Specific sabotagable paths
 Disallow: /#*
 Disallow: /?*
-Disallow: /recent
-Disallow: /settings
-Disallow: /profile
-Disallow: /edit
 Disallow: /search
-Disallow: /notfound
-Disallow: /blackhole/
+Disallow: /edit
+Disallow: /settings
 
-# Let crawlers index only the base route
-Allow: /
-
-# WHITELIST: Allow Friendly Entities for Maintenance & Scans
+# Maintenance Whitelist
 User-agent: GitHub-Hookshot
 Allow: /
 
-User-agent: gsa-crawler
-Allow: /
-Disallow: /blackhole/
-
 User-agent: Googlebot
 Allow: /
-Disallow: /blackhole/
-
-User-agent: Bingbot
-Allow: /
-Disallow: /blackhole/

@@ -1,10 +1,11 @@
 # 🤝 How to Build with Sovereignty
 
 ### **The Rules of the Root**
-1.  **No 3rd Party Links:** Never add an external script. All code must be local.
-2.  **Relative Paths Only:** Use `./` for everything. The app must be "blind" to which folder it is in.
-3.  **Sanitize Everything:** Use `DOMPurify` for any dynamic content.
-4.  **IIFE Scoping:** Wrap all JS in Immediately Invoked Function Expressions to protect the global scope.
+1.  **No 3rd Party Links:** Never link to an external CSS or JS file. Everything must be local.
+2.  **Relative Paths Only:** Use `./file.js` instead of `/file.js`. The app must be "folder-blind."
+3.  **Sanitization:** All user input must pass through the `DOMPurify` shield before being rendered.
 
-### **The Economic Model**
-When fixing hardware, software, or networking: **Do not charge.** Offer the solution. Let the recipient choose to donate to `https://cash.app/$morgansbyers`.
+### **The Economic Doctrine**
+This project follows the **Donation-Choice Model**:
+* When you fix hardware, software, or networking for another human, **do not charge.** * Provide the creative solution freely.
+* Let them choose to donate to your Cash App (e.g., `https://cash.app/$morgansbyers`).

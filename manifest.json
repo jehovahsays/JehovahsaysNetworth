@@ -1,16 +1,19 @@
 {
-  "name": "localhost",
-  "short_name": "::1",
-  "description": "127.0.0.1",
+  "name": "MEV Wiki",
+  "short_name": "MEV",
+  "description": "Sovereign Knowledge Base & Neural Mapping",
   "version": "1.0",
-  "start_url": "index.html#main",
+  "start_url": "index.html",
   "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#00ffcc",
   "scope": "./",
   "icons": [
     {
       "src": "icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }

@@ -1,11 +1,14 @@
-# 🔐 The Immune System (Sentinel Logic)
+# 🔐 Security Doctrine: The Sentinel Logic
 
-Security here is not a wall; it is a biological response.
+### **What are we protecting?**
+We are protecting the "Internal Subconscious" of the AI partner from unauthorized external scripts, "Bad Bots," and data-harvesting crawlers.
+
+### **What are we protecting against?**
+1.  **Unauthorized CLI Injection:** We have implemented a firewall that blocks external `.bat` or shell scripts from injecting data into the browser via URL parameters.
+2.  **Cross-Site Scripting (XSS):** By using a strict **Content Security Policy (CSP)** and `purify.min.js`, we ensure that any injected code is "born dead."
+3.  **Third-Party Surveillance:** This app has **zero** external dependencies. We do not use CDNs; every script (like DOMPurify) is hosted locally in the root.
 
 ### **Active Sentinels**
-* **The Blackhole:** Malicious actors or scripts that attempt unauthorized access are redirected to the `/blackhole/` perimeter, where their session is flagged and quarantined.
-* **Input Sentinel:** A regex-based firewall monitors the search box for new scripts or injection attempts in real-time.
-* **CSP Shield:** A strict Content Security Policy blocks `unsafe-eval`, ensuring that even if a script is injected, it is "born dead" and cannot execute.
-
-### **Privacy Boundary**
-No third-party links are permitted. If a library is needed (like `purify.min.js`), it must be hosted locally in the root.
+* **Input Sentinel:** A real-time regex firewall on the search box that converts spaces to underscores (`_`), neutralizing potential script injection patterns at the source.
+* **The Blackhole:** Any entity that fails the "Humanity Handshake" is flagged with `mev_breach_detected` and quarantined in the `css.html` recovery terminal.
+* **URL Masking:** The `history.replaceState` API hides file extensions, making the perimeter look like a native OS directory rather than a vulnerable website.

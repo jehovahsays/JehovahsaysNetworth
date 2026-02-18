@@ -1,5 +1,7 @@
 
 
+
+
 // ====== localhost SECURITY LAYER (Moved from inline script) ======
 (function secureClientApp() {
     // These methods of blocking are less reliable than CSP, but provide defense-in-depth.
@@ -146,12 +148,6 @@ async function decryptData(encryptedData) {
     return new TextDecoder().decode(decryptedBuffer);
 }
 
-// ==========================================================
-// 💾 CORE STORAGE UTILITIES (ASYNC WRAPPERS)
-// ==========================================================
-
-
-
 async function saveData(key, data) {
     try {
         const rawJson = JSON.stringify(data);
@@ -170,6 +166,20 @@ async function saveData(key, data) {
 
         localStorage.setItem(key, valueToStore);
         updateStorageBar();
+
+        // --- ADD THESE LINES TO FIX THE RESULTS/SIDEBAR ---
+        if (key === STORAGE_KEYS.pages) {
+            updatePageListSidebar(); // Refreshes the sidebar list
+        }
+        
+        if (key === STORAGE_KEYS.changes) {
+            // Only refresh the results view if the user is currently looking at it
+            if (window.location.hash === "#recent") {
+                showRecent(); // Refreshes the Recent Changes display
+            }
+        }
+        // --------------------------------------------------
+
     } catch(e) {
         console.error(`❌ Failed to save data for ${key}:`, e);
         speak("Error saving data. Check console for details.");
@@ -364,7 +374,7 @@ async function showSettings() {
   warning.style.cssText = `padding: 15px; background: ${isEncrypted ? '#d4edda' : '#ffe0b2'}; border: 1px solid ${isEncrypted ? '#155724' : '#ff9800'}; border-radius: 4px; margin-top: 20px; color: ${isEncrypted ? '#155724' : '#000'};`;
   warning.innerHTML = `
       <h3>🚨 Data Security Warning</h3>
-      <p>All localhost data is saved directly in your browser's **Local Storage**. This data is **${isEncrypted ? '🔐 ENCRYPTED' : 'NOT encrypted'}**.</p>
+      <p>All localhost data is saved directly in your browser **Local Storage**. This data is **${isEncrypted ? '🔐 ENCRYPTED' : 'NOT encrypted'}**.</p>
       <p>${isEncrypted ? 'Your data is secured using AES-GCM (256-bit) derived from your PIN. If you forget your PIN, the data is permanently lost.' : 'The data may be readable by browser extensions. Log in with a PIN to enable strong encryption.'}</p>
       <p>Use the **Manage Data (Import/Export)** feature regularly.</p>
   `;
@@ -453,14 +463,14 @@ async function showAbout() {
   const c = document.getElementById('page-container');
   if (!c) return;
   c.innerHTML = `<section class="page"><h2>About</h2>
-    <p><strong>localhost </strong> is an offline‑first encyclopedia powered by your browser. It uses your browser's local storage to save all data. No tracking, no server needed.</p>
+    <p><strong>localhost </strong> is an offline‑first encyclopedia powered by your browser. It uses your browser local storage to save the data. No tracking, no server needed.</p>
     <h3>Features</h3>
     <ul>
       <li>Offline Editing and Viewing</li>
       <li>**Encrypted Storage (PIN required to unlock data)**</li>
       <li>Full-text search (for page titles)</li>
       <li>Voice Search Filtering</li>
-      <li>Basic  Markup (==Headers, '''Bold, ''Italics, [[Links]])</li>
+      <li>Basic  Markup (==Headers, ''Bold, ''Italics, [[Links]])</li>
     </ul>
     <p>Source Version: localhost v1.2.2</p>
     </section>`;
@@ -472,10 +482,32 @@ async function showAbout() {
 //     remain the same, but are now called from app.js instead of the inline script. ]
 
 
+// 1. Fix: Escaped the / in the regex with \/
+const htmlEscapes = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#039;',
+  '/': '&#x2F;'
+};
+
 function escapeHTML(str) {
-  return str.replace(/[&<>"']/g, match => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
-  }[match]));
+  // \x22 is " and \x27 is '
+  // This prevents the JS file from breaking while still catching the symbols
+  return str.replace(/[&<>\x22\x27\/]/g, match => htmlEscapes[match]);
+}
+
+// 2. Fix: Template Literals for variable injection
+async function runFirewall() {
+  const visitorIP = "127.0.0.1"; // Placeholder for your logic
+  // Using backticks (`) allows the ${} to work correctly
+  console.log(`Checking identity: ${visitorIP}`);
+  
+  const searchInput = document.getElementById('ai-input');
+  if (searchInput) {
+    searchInput.value = escapeHTML(searchInput.value);
+  }
 }
 
 function parseWiki(text) {
@@ -792,24 +824,22 @@ async function createPage(titleFromSearch = null) {
   if (!title || title.trim() === '') return;
   const cleanTitle = title.trim();
 
-  // --- LOGIC SENTINEL: Prototype Pollution Protection (FIX #44) ---
+  // --- LOGIC SENTINEL: Prototype Pollution Protection ---
   const protectedKeywords = ['__proto__', 'constructor', 'prototype'];
   if (protectedKeywords.includes(cleanTitle.toLowerCase())) {
       console.warn("STOP! Unauthorized property manipulation attempt detected.");
-      // Integrated Blackhole: Raise breach flag and eject session
       localStorage.setItem('mev_breach_detected', 'true');
-      location.href = './'; 
+      location.href = './index.html'; 
       return;
   }
-  // --- END SENTINEL ---
   
   const pages = await loadData(STORAGE_KEYS.pages, {}); 
-  const changes = await loadData(STORAGE_KEYS.changes, []); 
   const user = getCurrentUser();
   
   if (pages[cleanTitle]) { 
       console.error("Page already exists."); 
       speak(`Page ${cleanTitle} already exists.`); 
+      window.location.hash = encodeURIComponent(cleanTitle); // Move to existing page
       showPage(cleanTitle); 
       return; 
   }
@@ -822,7 +852,109 @@ async function createPage(titleFromSearch = null) {
   };
   
   await saveData(STORAGE_KEYS.pages, pages); 
-  // ... rest of your code ...
+
+  // --- Consistency Log: Track the new page creation ---
+  const newChangeEntry = { 
+    type: 'create', 
+    title: cleanTitle, 
+    time: new Date().toISOString(), 
+    user: user ? user.name : 'Guest' 
+  };
+
+  const changes = await loadData(STORAGE_KEYS.changes, []); 
+  changes.unshift(newChangeEntry);
+  await saveData(STORAGE_KEYS.changes, changes);
+
+  if (user) {
+    let users = await loadData(STORAGE_KEYS.users, []);
+    const userIndex = users.findIndex(u => u.name === user.name);
+    if (userIndex !== -1) {
+        let userToUpdate = users[userIndex];
+        if (!userToUpdate.edits) userToUpdate.edits = [];
+        userToUpdate.edits.unshift(newChangeEntry);
+        await saveData(STORAGE_KEYS.users, users);
+        localStorage.setItem(STORAGE_KEYS.currentUser, JSON.stringify(userToUpdate));
+    }
+  }
+  
+  console.log("✅ Page created.");
+  speak(`Page ${cleanTitle} created.`);
+  
+  // Refresh UI Components
+  await updatePageListSidebar(); 
+  if (typeof generatePageButtonsFindView === 'function') {
+      await generatePageButtonsFindView(); 
+  }
+
+  // CRITICAL: Force the redirect to the new page
+  window.location.hash = encodeURIComponent(cleanTitle);
+  await showPage(cleanTitle);
+}
+
+async function savePage(title) {
+  console.log("Saving page:", title);
+  
+  const protectedKeywords = ['__proto__', 'constructor', 'prototype'];
+  if (protectedKeywords.includes(title.toLowerCase())) {
+      console.warn("STOP! Unauthorized manipulation attempt.");
+      localStorage.setItem('mev_breach_detected', 'true');
+      location.href = './index.html'; 
+      return;
+  }
+
+  const pages = await loadData(STORAGE_KEYS.pages, {}); 
+  const user = getCurrentUser();
+  const editor = document.querySelector('.editor');
+  if (!editor) { console.error("Editor not found."); return; }
+  
+  const rawContent = editor.value;
+  if (!pages[title]) pages[title] = {}; 
+  pages[title].content = rawContent;
+  pages[title].lastEdited = new Date().toISOString();
+  pages[title].createdBy = user ? user.name : 'Guest';
+  
+  await saveData(STORAGE_KEYS.pages, pages); 
+
+  const newChangeEntry = { 
+    type:'edit', 
+    title, 
+    time:new Date().toISOString(), 
+    user:user ? user.name : 'Guest' 
+  };
+  
+  // Update User Contribution History
+  if (user) {
+    let users = await loadData(STORAGE_KEYS.users, []);
+    const userIndex = users.findIndex(u => u.name === user.name);
+    if (userIndex !== -1) {
+        let userToUpdate = users[userIndex];
+        if (!userToUpdate.edits) userToUpdate.edits = [];
+        userToUpdate.edits.unshift(newChangeEntry);
+        await saveData(STORAGE_KEYS.users, users);
+        localStorage.setItem(STORAGE_KEYS.currentUser, JSON.stringify(userToUpdate));
+    }
+  }
+
+  // Update Recent Changes Log
+  const changes = await loadData(STORAGE_KEYS.changes, []); 
+  changes.unshift(newChangeEntry);
+  await saveData(STORAGE_KEYS.changes, changes); 
+  
+  console.log("✅ Page saved.");
+  speak(`Page ${title} saved.`);
+  
+  await updatePageListSidebar(); 
+  if (typeof generatePageButtonsFindView === 'function') {
+      await generatePageButtonsFindView(); 
+  }
+
+  // REDIRECT FIX: Ensure Results page updates or view shifts to saved page
+  if (window.location.hash === "#recent") {
+      showRecent(); 
+  } else {
+      window.location.hash = encodeURIComponent(title);
+      await showPage(title);
+  }
 }
 
 
@@ -1036,6 +1168,16 @@ async function editPage(title) {
 
 async function savePage(title) {
   console.log("Saving page:", title);
+  
+  // --- LOGIC SENTINEL: Prototype Pollution Protection ---
+  const protectedKeywords = ['__proto__', 'constructor', 'prototype'];
+  if (protectedKeywords.includes(title)) {
+      console.warn("STOP! Unauthorized property manipulation attempt detected.");
+      localStorage.setItem('mev_breach_detected', 'true');
+      location.href = './index.html'; 
+      return;
+  }
+
   const pages = await loadData(STORAGE_KEYS.pages, {}); 
   const changes = await loadData(STORAGE_KEYS.changes, []); 
   const user = getCurrentUser();
@@ -1044,27 +1186,15 @@ async function savePage(title) {
   
   const rawContent = editor.value;
   
-  // --- LOGIC SENTINEL: Prototype Pollution Protection ---
-const protectedKeywords = ['__proto__', 'constructor', 'prototype'];
-
-if (protectedKeywords.includes(title)) {
-    console.warn("STOP! Unauthorized property manipulation attempt detected.");
-    // Trigger your "Integrated Blackhole" logic
-    localStorage.setItem('mev_breach_detected', 'true');
-    location.href = './'; 
-    return;
-}
-
-// Proceed with standard sovereign assignment
-if (!pages[title]) pages[title] = {}; 
-pages[title].content = rawContent;
-pages[title].lastEdited = new Date().toISOString();
-pages[title].createdBy = user ? user.name : 'Guest';
+  // Proceed with standard sovereign assignment
+  if (!pages[title]) pages[title] = {}; 
+  pages[title].content = rawContent;
+  pages[title].lastEdited = new Date().toISOString();
+  pages[title].createdBy = user ? user.name : 'Guest';
   
   await saveData(STORAGE_KEYS.pages, pages); 
-  // --- START PR 3 FIX: User Contribution Consistency ---
-// The 'newChangeEntry' and 'user' variables should already be defined above this line.
 
+  // --- PR 3 FIX: User Contribution Consistency ---
   const newChangeEntry = { 
     type:'edit', 
     title, 
@@ -1073,36 +1203,47 @@ pages[title].createdBy = user ? user.name : 'Guest';
   };
   
   if (user) {
-    // 1. Load the main list of users
     let users = await loadData(STORAGE_KEYS.users, []);
-    
-    // 2. Find the index of the user in the main array
     const userIndex = users.findIndex(u => u.name === user.name);
-
     if (userIndex !== -1) {
         let userToUpdate = users[userIndex];
-        
-        // 3. Update the edits array (Initialize if null/undefined)
         if (!userToUpdate.edits) userToUpdate.edits = [];
         userToUpdate.edits.unshift(newChangeEntry);
-        
-        // 4. Save the full user list back to storage
         await saveData(STORAGE_KEYS.users, users);
-
-        // 5. Update the currentUser session key for immediate consistency
         localStorage.setItem(STORAGE_KEYS.currentUser, JSON.stringify(userToUpdate));
     }
   }
-// --- END PR 3 FIX ---
 
   changes.unshift(newChangeEntry);
   await saveData(STORAGE_KEYS.changes, changes); 
   
   console.log("✅ Page saved.");
   speak(`Page ${title} saved.`);
+
+  // --- THE REDIRECT & RESULTS FIX ---
+  
+  // 1. Refresh the UI elements
   await updatePageListSidebar(); 
-  await generatePageButtonsFindView(); 
-  await showPage(title); 
+  if (typeof generatePageButtonsFindView === 'function') {
+      await generatePageButtonsFindView(); 
+  }
+
+  // 2. Update the URL Hash (This triggers the redirect)
+  // We use encodeURIComponent to ensure titles with spaces/special characters don't break
+  const safeTitle = encodeURIComponent(title);
+  
+  // 3. Force the view update
+  // Using a small timeout (100ms) ensures the storage is fully committed 
+  // before the Service Worker intercepts the next 'fetch' for the page content.
+  setTimeout(async () => {
+      window.location.hash = safeTitle;
+      await showPage(title);
+      
+      // If you are using a results/recent changes view, force it to refresh
+      if (title === "Recent Changes" || window.location.hash === "#recent") {
+          if (typeof showRecent === 'function') showRecent();
+      }
+  }, 100);
 }
 
 // ✅ UPDATED: Content for Formatting Examples page.
@@ -1177,7 +1318,7 @@ async function ensureVisualLogPage() {
     const content = `
 == Visual Log and Change History ==
 
-This page provides access to the project's historical change visualization tool.
+This page provides access to the project historical change visualization tool.
 
 === 3D Log Visualization ===
 The **3D Log Viewer** is an advanced tool for seeing user and page edit trails in a spatial environment. It uses the file named '''log.html''' which must be opened directly.
@@ -1474,46 +1615,6 @@ async function exportData(isContentOnly) {
 // --- END PR 2 FIX ---
 
 
-// ==========================================================
-// ⚙️ NEW: CLI ACTION HANDLER (For index.bat integration)
-// ==========================================================
-
-/**
- * CLI Integration: Checks for specific URL query parameters 
- * triggered by the external batch script (index.bat).
- * @returns {boolean} True if a CLI action was handled.
- */
-function handleCliAction() {
-    const params = new URLSearchParams(window.location.search);
-    const action = params.get('action');
-
-    if (action === 'cli_update') {
-        console.log('CLI Action Triggered: Starting Web Settings Update / localStorage sync.');
-        
-        // 1. Show message to the user
-        const banner = document.getElementById('banner');
-        if (banner) {
-            banner.textContent = "✅ Settings Update Triggered by CLI Tool. Running internal sync...";
-            banner.style.display = 'block';
-            setTimeout(() => banner.style.display = 'none', 5000); 
-        }
-
-        // 2. Clear the query parameter (prevents accidental re-runs on refresh)
-        if (window.history.replaceState) {
-            const cleanUrl = window.location.origin + window.location.pathname;
-            window.history.replaceState(null, '', cleanUrl);
-        }
-
-        // 3. Trigger the actual update logic
-        // This is where you would call your functions to refresh settings,
-        // check for external updates, or force a data synchronization.
-        showSettings(); // Example: Immediately navigates to settings view after sync message
-        
-        return true;
-    }
-    return false;
-}
-
 
 // ==========================================================
 // 🚀 INITIALIZATION & EVENT BINDING (CSP-SAFE)
@@ -1525,8 +1626,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   updateConnectionStatus();
   updateStorageBar();
 
-  // New: Check for CLI action first
-  const cliActionHandled = handleCliAction();
   
   // Create/Ensure essential localhost pages
   await createExampleWikiPage(); 
@@ -1651,126 +1750,7 @@ if ('serviceWorker' in navigator) {
   }
 });
 
-// 🌐 Full i18n system (CSP-safe)
-document.addEventListener("DOMContentLoaded", () => {
-  const translations = {
-    "en-US": {
-      MainPage: "Main Page", About: "About", Settings: "Settings", Search: "Search ",
-      Content: {
-        "Main-Page": "== Welcome to localhost  ==\n\nAn offline-first encyclopedia powered by your browser.",
-        "About": "== About ==\n\nlocalhost  lets you browse and edit offline content safely on your device.",
-        "Settings": "== Settings ==\n\nManage appearance, data, and user preferences."
-      }
-    },
-    "fr-FR": {
-      MainPage: "Page Principale", About: "À propos", Settings: "Paramètres", Search: "Rechercher dans le ",
-      Content: {
-        "Main-Page": "== Bienvenue sur localhost  ==\n\nUne encyclopédie hors ligne alimentée par votre navigateur.",
-        "About": "== À propos ==\n\nlocalhost  vous permet de naviguer et de modifier le contenu hors ligne en toute sécurité.",
-        "Settings": "== Paramètres ==\n\nGérez l'apparence, les données et les préférences utilisateur."
-      }
-    },
-    "de-DE": {
-      MainPage: "Hauptseite", About: "Über", Settings: "Einstellungen", Search: " durchsuchen",
-      Content: {
-        "Main-Page": "== Willkommen bei localhost  ==\n\nEine Offline-Enzyklopädie in deinem Browser.",
-        "About": "== Über ==\n\nlocalhost  ermöglicht das sichere Offline-Arbeiten.",
-        "Settings": "== Einstellungen ==\n\nVerwalte Darstellung, Daten und Benutzer."
-      }
-    },
-    "es-ES": {
-      MainPage: "Página Principal", About: "Acerca de", Settings: "Configuraciones", Search: "Buscar en el ",
-      Content: {
-        "Main-Page": "== Bienvenido a localhost  ==\n\nUna enciclopedia sin conexión impulsada por tu navegador.",
-        "About": "== Acerca de ==\n\nlocalhost  te permite explorar y editar contenido sin conexión.",
-        "Settings": "== Configuraciones ==\n\nAdministra apariencia, datos y preferencias del usuario."
-      }
-    },
-    "it-IT": {
-      MainPage: "Pagina Principale", About: "Informazioni", Settings: "Impostazioni", Search: "Cerca nel ",
-      Content: {
-        "Main-Page": "== Benvenuto in localhost ==\n\nUn'enciclopedia offline gestita dal tuo browser.",
-        "About": "== Informazioni ==\n\nlocalhost ti consente di navigare e modificare offline.",
-        "Settings": "== Impostazioni ==\n\nGestisci aspetto, dati e preferenze."
-      }
-    },
-    "ja-JP": {
-      MainPage: "メインページ", About: "概要", Settings: "設定", Search: "ウィキを検索",
-      Content: {
-        "Main-Page": "== localhostウィキへようこそ ==\n\nブラウザで動作するオフライン百科事典です。",
-        "About": "== 概要 ==\n\nlocalhostウィキはオフラインで閲覧・編集できます。",
-        "Settings": "== 設定 ==\n\n外観、データ、ユーザー設定を管理します。"
-      }
-    }
-  };
 
-  const langBtn = document.getElementById("language-btn");
-  const langMenu = document.getElementById("language-menu");
-  const langSelect = document.getElementById("language-select");
-  const applyBtn = document.getElementById("apply-language-btn");
-  let currentLang = localStorage.getItem("wiki_language") || "en-US";
-
-  // 🌐 Toggle menu visibility
-  langBtn.addEventListener("click", () => langMenu.classList.toggle("hidden"));
-
-  // ✅ Apply selected language
-  applyBtn.addEventListener("click", () => {
-    currentLang = langSelect.value;
-    localStorage.setItem("wiki_language", currentLang);
-    applyLanguage(currentLang);
-    applyContentLanguage(currentLang);
-    langMenu.classList.add("hidden");
-  });
-
-  // 🌐 UI translation
-  function applyLanguage(locale) {
-    const dict = translations[locale] || translations["en-US"];
-    const mainBtn = document.querySelector("[data-page-target='Main-Page']");
-    const aboutBtn = document.querySelector("[data-nav-target='about']");
-    const settingsBtn = document.querySelector("[data-nav-target='settings']");
-    const searchInput = document.querySelector("#ai-input");
-    if (mainBtn) mainBtn.textContent = dict.MainPage;
-    if (aboutBtn) aboutBtn.textContent = dict.About;
-    if (settingsBtn) settingsBtn.textContent = dict.Settings;
-    if (searchInput) searchInput.placeholder = dict.Search;
-  }
-
-  // 📄 Content translation
-  function applyContentLanguage(locale) {
-    const pageContainer = document.getElementById("page-container");
-    if (!pageContainer) return;
-    const currentPage = (location.hash.replace("#", "") || "Main-Page");
-    const dict = translations[locale] || translations["en-US"];
-    if (dict.Content && dict.Content[currentPage]) {
-      // assumes parseWiki() exists in your code
-      pageContainer.innerHTML = typeof parseWiki === "function"
-        ? parseWiki(dict.Content[currentPage])
-        : dict.Content[currentPage];
-    }
-  }
-
-  // 🗣 Speech synthesis uses selected language
-  const originalSpeak = window.speak;
-  window.speak = (text) => {
-    if ("speechSynthesis" in window) {
-      const msg = new SpeechSynthesisUtterance(text);
-      msg.lang = currentLang;
-      window.speechSynthesis.speak(msg);
-    } else if (typeof originalSpeak === "function") {
-      originalSpeak(text);
-    }
-  };
-
-  // 🔁 Update content whenever navigation changes
-  window.addEventListener("hashchange", () => {
-    applyContentLanguage(currentLang);
-  });
-
-  // 🔁 Also update when page initially loads
-  langSelect.value = currentLang;
-  applyLanguage(currentLang);
-  applyContentLanguage(currentLang);
-});
 
 // Request persistent storage to prevent browser 'eviction'
 if (navigator.storage && navigator.storage.persist) {
