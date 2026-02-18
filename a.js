@@ -819,15 +819,14 @@ function setMainView(showMain) {
 
 async function createPage(titleFromSearch = null) {
   setMainView(true);
-  console.log("Creating page:", titleFromSearch);
   const title = titleFromSearch || prompt("Enter new page title:");
   if (!title || title.trim() === '') return;
   const cleanTitle = title.trim();
 
-  // --- LOGIC SENTINEL: Prototype Pollution Protection ---
+  // 🛡️ SECURITY: Prototype Pollution Protection (One declaration only)
   const protectedKeywords = ['__proto__', 'constructor', 'prototype'];
   if (protectedKeywords.includes(cleanTitle.toLowerCase())) {
-      console.warn("STOP! Unauthorized property manipulation attempt detected.");
+      console.warn("Unauthorized property manipulation attempt.");
       localStorage.setItem('mev_breach_detected', 'true');
       location.href = './index.html'; 
       return;
@@ -837,66 +836,38 @@ async function createPage(titleFromSearch = null) {
   const user = getCurrentUser();
   
   if (pages[cleanTitle]) { 
-      console.error("Page already exists."); 
       speak(`Page ${cleanTitle} already exists.`); 
-      window.location.hash = encodeURIComponent(cleanTitle); // Move to existing page
+      window.location.hash = encodeURIComponent(cleanTitle);
       showPage(cleanTitle); 
       return; 
   }
   
   pages[cleanTitle] = { 
       title: cleanTitle, 
-      content: `== ${cleanTitle} ==\n\nThis is your new page. Click Edit to customize it.`, 
+      content: `== ${cleanTitle} ==\n\nThis is your new page.`, 
       lastEdited: new Date().toISOString(), 
       createdBy: user ? user.name : 'Guest' 
   };
   
   await saveData(STORAGE_KEYS.pages, pages); 
 
-  // --- Consistency Log: Track the new page creation ---
+  // Log change
   const newChangeEntry = { 
-    type: 'create', 
-    title: cleanTitle, 
-    time: new Date().toISOString(), 
-    user: user ? user.name : 'Guest' 
+    type: 'create', title: cleanTitle, time: new Date().toISOString(), user: user ? user.name : 'Guest' 
   };
-
   const changes = await loadData(STORAGE_KEYS.changes, []); 
   changes.unshift(newChangeEntry);
   await saveData(STORAGE_KEYS.changes, changes);
 
-  if (user) {
-    let users = await loadData(STORAGE_KEYS.users, []);
-    const userIndex = users.findIndex(u => u.name === user.name);
-    if (userIndex !== -1) {
-        let userToUpdate = users[userIndex];
-        if (!userToUpdate.edits) userToUpdate.edits = [];
-        userToUpdate.edits.unshift(newChangeEntry);
-        await saveData(STORAGE_KEYS.users, users);
-        localStorage.setItem(STORAGE_KEYS.currentUser, JSON.stringify(userToUpdate));
-    }
-  }
-  
-  console.log("✅ Page created.");
-  speak(`Page ${cleanTitle} created.`);
-  
-  // Refresh UI Components
   await updatePageListSidebar(); 
-  if (typeof generatePageButtonsFindView === 'function') {
-      await generatePageButtonsFindView(); 
-  }
-
-  // CRITICAL: Force the redirect to the new page
   window.location.hash = encodeURIComponent(cleanTitle);
   await showPage(cleanTitle);
 }
 
 async function savePage(title) {
-  console.log("Saving page:", title);
-  
+  // 🛡️ SECURITY: Check for protected keywords immediately
   const protectedKeywords = ['__proto__', 'constructor', 'prototype'];
   if (protectedKeywords.includes(title.toLowerCase())) {
-      console.warn("STOP! Unauthorized manipulation attempt.");
       localStorage.setItem('mev_breach_detected', 'true');
       location.href = './index.html'; 
       return;
@@ -905,10 +876,11 @@ async function savePage(title) {
   const pages = await loadData(STORAGE_KEYS.pages, {}); 
   const user = getCurrentUser();
   const editor = document.querySelector('.editor');
-  if (!editor) { console.error("Editor not found."); return; }
+  if (!editor) return;
   
   const rawContent = editor.value;
   if (!pages[title]) pages[title] = {}; 
+  
   pages[title].content = rawContent;
   pages[title].lastEdited = new Date().toISOString();
   pages[title].createdBy = user ? user.name : 'Guest';
@@ -916,45 +888,17 @@ async function savePage(title) {
   await saveData(STORAGE_KEYS.pages, pages); 
 
   const newChangeEntry = { 
-    type:'edit', 
-    title, 
-    time:new Date().toISOString(), 
-    user:user ? user.name : 'Guest' 
+    type: 'edit', title, time: new Date().toISOString(), user: user ? user.name : 'Guest' 
   };
   
-  // Update User Contribution History
-  if (user) {
-    let users = await loadData(STORAGE_KEYS.users, []);
-    const userIndex = users.findIndex(u => u.name === user.name);
-    if (userIndex !== -1) {
-        let userToUpdate = users[userIndex];
-        if (!userToUpdate.edits) userToUpdate.edits = [];
-        userToUpdate.edits.unshift(newChangeEntry);
-        await saveData(STORAGE_KEYS.users, users);
-        localStorage.setItem(STORAGE_KEYS.currentUser, JSON.stringify(userToUpdate));
-    }
-  }
-
-  // Update Recent Changes Log
+  // Update Recent Changes
   const changes = await loadData(STORAGE_KEYS.changes, []); 
   changes.unshift(newChangeEntry);
   await saveData(STORAGE_KEYS.changes, changes); 
   
-  console.log("✅ Page saved.");
-  speak(`Page ${title} saved.`);
-  
   await updatePageListSidebar(); 
-  if (typeof generatePageButtonsFindView === 'function') {
-      await generatePageButtonsFindView(); 
-  }
-
-  // REDIRECT FIX: Ensure Results page updates or view shifts to saved page
-  if (window.location.hash === "#recent") {
-      showRecent(); 
-  } else {
-      window.location.hash = encodeURIComponent(title);
-      await showPage(title);
-  }
+  window.location.hash = encodeURIComponent(title);
+  await showPage(title);
 }
 
 
@@ -1169,48 +1113,40 @@ async function editPage(title) {
 async function savePage(title) {
   console.log("Saving page:", title);
   
-  // --- LOGIC SENTINEL: Prototype Pollution Protection ---
+  // 1. SECURITY CHECK: Prototype Pollution Protection
   const protectedKeywords = ['__proto__', 'constructor', 'prototype'];
-  if (protectedKeywords.includes(title)) {
+  
+  if (protectedKeywords.includes(title.toLowerCase())) {
       console.warn("STOP! Unauthorized property manipulation attempt detected.");
+      // Integrated Blackhole logic:
       localStorage.setItem('mev_breach_detected', 'true');
       location.href = './index.html'; 
       return;
   }
 
+  // 2. DATA PREPARATION
   const pages = await loadData(STORAGE_KEYS.pages, {}); 
-  const changes = await loadData(STORAGE_KEYS.changes, []); 
   const user = getCurrentUser();
   const editor = document.querySelector('.editor');
   if (!editor) { console.error("Editor not found."); return; }
   
   const rawContent = editor.value;
-  
-  // --- LOGIC SENTINEL: Prototype Pollution Protection ---
-const protectedKeywords = ['__proto__', 'constructor', 'prototype'];
 
-if (protectedKeywords.includes(title)) {
-    console.warn("STOP! Unauthorized property manipulation attempt detected.");
-    // Trigger your "Integrated Blackhole" logic
-    localStorage.setItem('mev_breach_detected', 'true');
-    location.href = './'; 
-    return;
-}
-
-// Proceed with standard sovereign assignment
-if (!pages[title]) pages[title] = {}; 
-pages[title].content = rawContent;
-pages[title].lastEdited = new Date().toISOString();
-pages[title].createdBy = user ? user.name : 'Guest';
+  // 3. SOVEREIGN ASSIGNMENT
+  if (!pages[title]) pages[title] = {}; 
+  pages[title].content = rawContent;
+  pages[title].lastEdited = new Date().toISOString();
+  pages[title].createdBy = user ? user.name : 'Guest';
   
+  // 4. PERSISTENCE
   await saveData(STORAGE_KEYS.pages, pages); 
 
-  // --- PR 3 FIX: User Contribution Consistency ---
+  // 5. UPDATE CONTRIBUTION HISTORY
   const newChangeEntry = { 
-    type:'edit', 
+    type: 'edit', 
     title, 
-    time:new Date().toISOString(), 
-    user:user ? user.name : 'Guest' 
+    time: new Date().toISOString(), 
+    user: user ? user.name : 'Guest' 
   };
   
   if (user) {
@@ -1225,35 +1161,24 @@ pages[title].createdBy = user ? user.name : 'Guest';
     }
   }
 
+  // 6. UPDATE RECENT CHANGES
+  const changes = await loadData(STORAGE_KEYS.changes, []); 
   changes.unshift(newChangeEntry);
   await saveData(STORAGE_KEYS.changes, changes); 
   
   console.log("✅ Page saved.");
   speak(`Page ${title} saved.`);
-
-  // --- THE REDIRECT & RESULTS FIX ---
   
-  // 1. Refresh the UI elements
+  // 7. UI REFRESH
   await updatePageListSidebar(); 
   if (typeof generatePageButtonsFindView === 'function') {
       await generatePageButtonsFindView(); 
   }
 
-  // 2. Update the URL Hash (This triggers the redirect)
-  // We use encodeURIComponent to ensure titles with spaces/special characters don't break
-  const safeTitle = encodeURIComponent(title);
-  
-  // 3. Force the view update
-  // Using a small timeout (100ms) ensures the storage is fully committed 
-  // before the Service Worker intercepts the next 'fetch' for the page content.
+  // 8. NAVIGATION
   setTimeout(async () => {
-      window.location.hash = safeTitle;
+      window.location.hash = encodeURIComponent(title);
       await showPage(title);
-      
-      // If you are using a results/recent changes view, force it to refresh
-      if (title === "Recent Changes" || window.location.hash === "#recent") {
-          if (typeof showRecent === 'function') showRecent();
-      }
   }, 100);
 }
 
