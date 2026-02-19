@@ -1,15 +1,23 @@
 # Perimeter Rules for Friendly Entities
+
+# Maintenance Whitelist - GitHub's automated services
+User-agent: GitHub-Hookshot
+Allow: /
+
+User-agent: GitHub-crawlers
+Allow: /
+
+User-agent: dependabot
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+# Rules for General Public/Unknown Bots
 User-agent: *
-# Specific sabotagable paths
+# Specific sabotagable paths protected from scraping
 Disallow: /#*
 Disallow: /?*
 Disallow: /search
 Disallow: /edit
 Disallow: /settings
-
-# Maintenance Whitelist
-User-agent: GitHub-Hookshot
-Allow: /
-
-User-agent: Googlebot
-Allow: /
