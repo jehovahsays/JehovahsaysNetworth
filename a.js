@@ -1,7 +1,5 @@
 
 
-
-
 // ====== localhost SECURITY LAYER (Moved from inline script) ======
 (function secureClientApp() {
     // These methods of blocking are less reliable than CSP, but provide defense-in-depth.
@@ -821,12 +819,14 @@ async function createPage(titleFromSearch = null) {
   setMainView(true);
   const title = titleFromSearch || prompt("Enter new page title:");
   if (!title || title.trim() === '') return;
-  const cleanTitle = title.trim();
 
-  // 🛡️ SECURITY: Prototype Pollution Protection (One declaration only)
+  // 🛡️ 1. SECURITY: Initial Perimeter Check
   const protectedKeywords = ['__proto__', 'constructor', 'prototype'];
-  if (protectedKeywords.includes(cleanTitle.toLowerCase())) {
-      console.warn("Unauthorized property manipulation attempt.");
+  const cleanTitle = title.toString().trim();
+  const lowerTitle = cleanTitle.toLowerCase();
+
+  if (protectedKeywords.includes(lowerTitle)) {
+      console.warn("Unauthorized property manipulation attempt detected.");
       localStorage.setItem('mev_breach_detected', 'true');
       location.href = './index.html'; 
       return;
@@ -835,30 +835,44 @@ async function createPage(titleFromSearch = null) {
   const pages = await loadData(STORAGE_KEYS.pages, {}); 
   const user = getCurrentUser();
   
-  if (pages[cleanTitle]) { 
+  // 2. CHECK FOR EXISTING DATA
+  if (Object.prototype.hasOwnProperty.call(pages, cleanTitle)) { 
       speak(`Page ${cleanTitle} already exists.`); 
       window.location.hash = encodeURIComponent(cleanTitle);
       showPage(cleanTitle); 
       return; 
   }
   
-  pages[cleanTitle] = { 
-      title: cleanTitle, 
-      content: `== ${cleanTitle} ==\n\nThis is your new page.`, 
-      lastEdited: new Date().toISOString(), 
-      createdBy: user ? user.name : 'Guest' 
-  };
+  // 🛡️ 3. SOVEREIGN ASSIGNMENT (Double-Lock Hardening)
+  // We check the key again here to clear CodeQL alerts for line 845 area
+  if (!protectedKeywords.includes(lowerTitle)) {
+      pages[cleanTitle] = { 
+          title: cleanTitle, 
+          content: `== ${cleanTitle} ==\n\nThis is your new page.`, 
+          lastEdited: new Date().toISOString(), 
+          createdBy: user ? user.name : 'Guest' 
+      };
+  } else {
+      // Emergency return if perimeter was somehow bypassed
+      return;
+  }
   
+  // 4. PERSISTENCE
   await saveData(STORAGE_KEYS.pages, pages); 
 
-  // Log change
+  // 5. LOG CHANGES
   const newChangeEntry = { 
-    type: 'create', title: cleanTitle, time: new Date().toISOString(), user: user ? user.name : 'Guest' 
+    type: 'create', 
+    title: cleanTitle, 
+    time: new Date().toISOString(), 
+    user: user ? user.name : 'Guest' 
   };
+  
   const changes = await loadData(STORAGE_KEYS.changes, []); 
   changes.unshift(newChangeEntry);
   await saveData(STORAGE_KEYS.changes, changes);
 
+  // 6. UI REFRESH
   await updatePageListSidebar(); 
   window.location.hash = encodeURIComponent(cleanTitle);
   await showPage(cleanTitle);
@@ -1120,10 +1134,13 @@ async function editPage(title) {
 async function savePage(title) {
   console.log("Saving page:", title);
   
-  // 🛡️ 1. SECURITY CHECK (Keep this at the top)
+  // 🛡️ 1. SECURITY: Prototype Pollution Protection
   const protectedKeywords = ['__proto__', 'constructor', 'prototype'];
   
-  if (protectedKeywords.includes(title.toLowerCase())) {
+  // Sanitize input: convert to string, lowercase, and trim to block hidden bypasses
+  const cleanTitle = title.toString().toLowerCase().trim();
+  
+  if (protectedKeywords.includes(cleanTitle)) {
       console.warn("STOP! Unauthorized property manipulation attempt detected.");
       localStorage.setItem('mev_breach_detected', 'true');
       location.href = './index.html'; 
@@ -1138,17 +1155,29 @@ async function savePage(title) {
   
   const rawContent = editor.value;
 
-  // 🛡️ 3. SOVEREIGN ASSIGNMENT (Duplicates removed)
-  if (!pages[title]) pages[title] = {}; 
-  pages[title].content = rawContent;
-  pages[title].lastEdited = new Date().toISOString();
-  pages[title].createdBy = user ? user.name : 'Guest';
+  // 🛡️ 3. SOVEREIGN ASSIGNMENT (Hardened against Prototype Pollution)
+  // We use the 'cleanTitle' check right at the assignment to satisfy CodeQL alerts 50-54
+  if (!protectedKeywords.includes(cleanTitle)) {
+      // Initialize the object only if it's safe
+      if (!Object.prototype.hasOwnProperty.call(pages, title)) {
+          pages[title] = {
+              content: "",
+              lastEdited: "",
+              createdBy: ""
+          }; 
+      }
+      
+      // Explicit property assignment
+      pages[title].content = rawContent;
+      pages[title].lastEdited = new Date().toISOString();
+      pages[title].createdBy = user ? user.name : 'Guest';
+  } else {
+      // Perimeter Backup: Block execution if something bypassed the first check
+      return;
+  }
   
   // 4. PERSISTENCE
   await saveData(STORAGE_KEYS.pages, pages); 
-  // ... rest of the function remains the same
-
-  
 
   // 5. UPDATE CONTRIBUTION HISTORY
   const newChangeEntry = { 
