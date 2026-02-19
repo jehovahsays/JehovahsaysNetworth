@@ -1,23 +1,22 @@
 version: 2
 updates:
+  # Maintain GitHub Actions (Checkout, Dependency Review, etc.)
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
     groups:
-      github-actions:
+      actions:
         patterns:
           - "*"
 
+  # Maintain npm packages for the mev lab
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
-    # Prevents breaking proto issues by staying on stable versions
+    # Protect against breaking proto issues
     ignore:
       - dependency-name: "protobufjs"
-        versions: [">= 7.0.0"] 
-    labels:
-      - "security"
-      - "dependencies"
+        versions: [">= 7.0.0"]
