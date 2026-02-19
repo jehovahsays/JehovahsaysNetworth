@@ -5,6 +5,7 @@ on:
     types: [ opened, synchronize ]
     branches: [ main ]
 
+# Secure the environment by only allowing read access to the AI's "internal" code
 permissions:
   contents: read
 
@@ -13,11 +14,16 @@ jobs:
     name: Dependency Review
     runs-on: ubuntu-latest
     steps:
+      # Use v4 to keep it stable with your current configuration
       - name: Checkout Repository
         uses: actions/checkout@v4
 
       - name: Run dependency review
         uses: actions/dependency-review-action@v4
         with:
-          # This replaces 'security-severity-threshold' to fix the error
+          # FIXED: 'security-severity-threshold' is now 'fail-on-severity'
           fail-on-severity: 'high'
+          
+          # Optional: Add this to bypass checks if the GitHub-crawlers/Dependabot 
+          # are having trouble with your self-hosted firewall whitelist
+          retry-on-snapshot-warnings: true
