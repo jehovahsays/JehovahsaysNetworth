@@ -1,13 +1,23 @@
-# .github/dependabot.yml
 version: 2
 updates:
   - package-ecosystem: "github-actions"
-    directory: "/"  # Root directory logic
+    directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
 
   - package-ecosystem: "npm"
-    directory: "/"  
+    directory: "/"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
+    # Prevents breaking proto issues by staying on stable versions
+    ignore:
+      - dependency-name: "protobufjs"
+        versions: [">= 7.0.0"] 
+    labels:
+      - "security"
+      - "dependencies"
