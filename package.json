@@ -1,0 +1,15 @@
+{
+  "name": "mev-security-lab",
+  "version": "1.0.0",
+  "description": "Perimeter defense and AI subconscious gateway",
+  "main": "a.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jehovahsays/mev.git"
+  },
+  "author": "MorgansByers",
+  "license": "MIT",
+  "dependencies": {
+    "protobufjs": "^6.11.3"
+  }
+}
