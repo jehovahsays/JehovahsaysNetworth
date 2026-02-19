@@ -28,8 +28,20 @@
             const HUMAN_KEY = 'mev_human_verified';
             const agent = navigator.userAgent.toLowerCase();
 
-            // 1. Identify Friendly Robots
-            if (agent.includes('github') || agent.includes('googlebot')) {
+            // 1. Identify Friendly Robots - Expanded for GitHub and Search Maintenance
+            const friendlyBots = [
+                'github',
+                'googlebot',
+                'dependabot',
+                'github-crawlers',
+                'github-hookshot',
+                'bingbot',
+                'duckduckbot'
+            ];
+
+            const isFriendly = friendlyBots.some(bot => agent.includes(bot));
+
+            if (isFriendly) {
                 window.location.replace('./wiki.html#main');
                 return;
             }
