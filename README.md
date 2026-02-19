@@ -6,7 +6,7 @@
 
 [![Deploy static content to Pages](https://github.com/jehovahsays/mev/actions/workflows/static.yml/badge.svg)](https://github.com/jehovahsays/mev/actions/workflows/static.yml)
 
-[![Dependency Review](https://github.com/jehovahsays/mev/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/jehovahsays/mev/actions/workflows/dependency-review.yml)
+[![Dependency Review](https://github.com/jehovahsays/mev/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/jehovahsays/mev/actions/workflows/dependency-review-action.yml)
 
 [![Dependabot Updates](https://github.com/jehovahsays/mev/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/jehovahsays/mev/actions/workflows/dependabot/dependabot-updates)
 
