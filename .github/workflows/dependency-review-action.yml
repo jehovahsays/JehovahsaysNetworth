@@ -16,7 +16,7 @@ jobs:
     steps:
       # Use v4 to keep it stable with your current configuration
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Run dependency review
         uses: actions/dependency-review-action@v4
