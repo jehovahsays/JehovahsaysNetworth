@@ -19,4 +19,5 @@ jobs:
       - name: Run dependency review
         uses: actions/dependency-review-action@v4
         with:
-          security-severity-threshold: 'high'
+          # This replaces 'security-severity-threshold' to fix the error
+          fail-on-severity: 'high'
