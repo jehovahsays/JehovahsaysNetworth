@@ -3,16 +3,17 @@
 ### **1. Entry via the Gateway**
 Always enter through `index.html`. This triggers the **Identity Check**. If you are a human, the sentinel will pass you to the "Conscious State" (`wiki.html`).
 
-### **2. The Search Box (The Sovereign Input)**
-The search box is protected. As you type, the sentinel converts spaces to underscores. This ensures that:
-* `My Search` becomes `My_Search`.
-* The URL remains clean and script-resistant.
-* The internal storage keys stay consistent.
+### **2. Deploying the Sovereign Seed**
+To deploy the environment on a new machine:
+* Rename `install.php.txt` to `install.php`.
+* Run it on a PHP-enabled server.
+* It will extract the 12 core files only if they do not already exist.
 
-### **3. Offline Sovereignty (PWA)**
-Once the page loads, the **Service Worker** (`sw.js`) begins the "Subconscious Sync." 
-* **Action:** Click the "Install" icon in your browser address bar.
-* **Result:** The app is now "Pinned" to your hardware. It will work even if your internet is cut, as it is served directly from the browser's cache.
+### **3. Merging and Branching (Advanced)**
+The `merge.php.txt` tool is used to compile your edits into a new seed:
+* **Editing MEV:** If you have modified the core HTML or JS, run this script to update your `install.php`.
+* **Creating a Branch:** If you are building a custom version, update the `$files_to_include` list in `merge.php.txt`.
+* **Warning:** Ensure your folder is clean. The assembler will pack whatever matches the file list in your current directory.
 
-### **4. Data Management**
-To save or edit pages, use the internal "Sovereign Link" system (`#Page_Name`). All data is saved to `localStorage` and marked as **Persistent**, meaning the browser will not auto-delete it.
+### **4. The Search Box (The Sovereign Input)**
+The search box is protected. As you type, the sentinel converts spaces to underscores (`My Search` -> `My_Search`). This ensures consistent storage keys and prevents script injection.

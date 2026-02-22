@@ -1,0 +1,79 @@
+<?php
+/**
+ * 🌀 MEV MERGE SENTINEL (v1.2.4)
+ * ====================================================================
+ * PURPOSE: DNA Assembler for the mev repository.
+ * PACKS: HTML, JS, CSS, and system files into one 'install.php' seed.
+ *
+ * ⚠️ TARGET FOLDER WARNING:
+ * This script is a "DNA Assembler." It packs whatever files currently 
+ * exist in this folder that match the perimeter list.
+ * * 1. FOR USERS EDITING MEV: This will merge your custom edits into 
+ * a new 'install.php'.
+ * 2. FOR NEW BRANCHES: Use this to intentionally create your own 
+ * version (branch) of the MEV Wiki and merge it into a single seed.
+ * 3. WARNING: If you run this in a folder with non-MEV files that 
+ * share these names, it will "swallow" your data into the DNA.
+ * Always verify your local files before merging.
+ * ====================================================================
+ */
+
+// 1. DEFINE THE COMPLETE PERIMETER LIST
+$files_to_include = [
+    'index.html', 'wiki.html', 'css.html', 'sw.js', 'a.js', 
+    'purify.min.js', '.htaccess', 'manifest.json', 'robots.txt', 
+    'icon-192.png', 'favicon.ico', 'styles.css'
+];
+
+$SOVEREIGN_DNA = [];
+
+// 2. ENCODE CORE FILES INTO DNA
+foreach ($files_to_include as $file) {
+    if (file_exists($file)) {
+        $SOVEREIGN_DNA[$file] = base64_encode(file_get_contents($file));
+    }
+}
+
+// 3. GENERATE THE PASSIVE INSTALLATION SCRIPT (install.php)
+// This string contains the README that will appear at the top of install.php
+$installScript = "<?php
+/**
+ * 🌀 MEV INSTALLER: SOVEREIGN SEED
+ * ====================================================================
+ * WHAT THIS IS:
+ * This is a self-extracting 'DNA' file for the mev Subconscious. 
+ * Placing this single file in a folder will recreate the entire 
+ * sovereign environment.
+ *
+ * HOW IT WORKS:
+ * 1. RUN: Open this file in a PHP-enabled browser/server.
+ * 2. EXTRACT: It automatically writes all core files to this folder.
+ * 3. PROTECT: It immediately redirects you to index.html to perform
+ * the 'Humanity Handshake' and initialize the Blackhole Sentinel.
+ *
+ * SECURITY:
+ * This installer is PASSIVE. It only writes files if they are missing, 
+ * preventing accidental overwrites of existing sovereign data.
+ * ====================================================================
+ */
+
+\$SOVEREIGN_DNA = " . var_export($SOVEREIGN_DNA, true) . ";
+
+// Passive Installation: Only write if files are missing to prevent lag
+foreach (\$SOVEREIGN_DNA as \$file => \$base64Content) {
+    if (!file_exists(\$file)) {
+        file_put_contents(\$file, base64_decode(\$base64Content));
+    }
+}
+
+// Force entry through the Blackhole Sentinel for Identity Handshake
+header('Location: ./index.html');
+exit;
+?>";
+
+// 4. EMIT THE SEED FILE
+file_put_contents('install.php', $installScript);
+
+echo "🌀 MEV DNA successfully merged into install.php\n";
+echo "Installer-specific README written to the seed header.\n";
+?>
