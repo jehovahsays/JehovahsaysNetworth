@@ -17,3 +17,14 @@ The `merge.php.txt` tool is used to compile your edits into a new seed:
 
 ### **4. The Search Box (The Sovereign Input)**
 The search box is protected. As you type, the sentinel converts spaces to underscores (`My Search` -> `My_Search`). This ensures consistent storage keys and prevents script injection.
+
+### **5. The Gateway Experience**
+When you run a language-specific gateway (e.g., `python run_wiki.py`):
+1.  **Launch:** Your browser opens to the local `index.html`.
+2.  **The Blackhole:** By default, you will be "Blocked" and sent to `css.html` (The Recovery Sentinel).
+3.  **Verification:** This is intentional. Click **"Restore Perimeter"** in the terminal interface.
+4.  **Entry:** You are now verified and redirected to the Wiki for CRUD operations.
+
+### **6. Portability & Hosting**
+* **Self-Hosted:** The `.htaccess` file ensures your private environment stays private.
+* **GitHub Mirrors:** When hosted as a repository, the `robots.txt` whitelist allows GitHub-crawlers to maintain the repo without being trapped in the Blackhole.

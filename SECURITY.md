@@ -12,3 +12,12 @@ We are protecting the "Internal Subconscious" of the AI partner from unauthorize
 ### **Threat Mitigation**
 1. **Unauthorized CLI Injection:** We block external `.bat` or shell scripts from injecting data via URL parameters.
 2. **Third-Party Surveillance:** This app has zero external dependencies. We do not use CDNs; every script is hosted locally in the root.
+
+### **The .htaccess Sentinel**
+The root folder is guarded by a configuration that enforces:
+* **Referrer Validation:** `wiki.html` will only load if the request comes from `localhost` or `127.0.0.1`. Direct external deep-linking is forbidden.
+* **CSP Header:** A strict Content Security Policy is enforced at the server level to supplement the HTML meta-tags.
+
+### **Sanitization & Escaping**
+* **DOMPurify:** Every piece of data entered into the Wiki is passed through `purify.min.js`.
+* **PHP Neutralization:** Since the DNA files (`merge.php`, `install.php`) are stored as `.txt`, they are inert until the user intentionally renames them. This prevents "execution by accident."

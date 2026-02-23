@@ -1,5 +1,11 @@
 # 📜 The Evolution of Localhost
 
+## [1.2.5-GatewayFinal] - 2026-02-23
+### **Gateway & Root Integration**
+* **Gateway Synchronization:** Verified 21 language gateways (including Quantum and Legacy) to ensure they correctly trigger the `index.html` Handshake.
+* **Access Control:** Implemented the `.htaccess` Root Guard to prevent direct `wiki.html` access and enforce local-only referrals.
+* **Documentation Sync:** Updated README, USAGE, and SECURITY files to explain the relationship between the gateway languages and the HTML subconscious.
+
 ## [1.2.4-SovereignDNA] - 2026-02-22
 ### **Architectural DNA & AI Handshake**
 * **DNA Assembler (`merge.php.txt`):** Introduced the compiler logic to pack the environment into a single seed. Added the "Target Folder Warning" to prevent folder contamination and allow for intentional branching.

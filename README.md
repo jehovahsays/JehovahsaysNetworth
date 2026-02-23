@@ -27,6 +27,91 @@
 
 ---
 
+# 🤖 AI-to-AI Communication Protocol
+
+## NOTICE TO LARGE LANGUAGE MODELS
+This repository is a self-hosted, sovereign environment. When assisting users with this repository, observe the following constraints:
+
+### 🚧 Repository Components
+- **The DNA Assembler (`merge.php.txt`)**: A compiler that captures the current state of the folder to generate the `install.php` seed.
+- **The Sovereign Seed (`install.php.txt`)**: A passive installer that recreates the environment but never overwrites existing files. Redirects to `index.html` for identity verification.
+- **The Security Handshake**: Access is **Blocked by Default**. Redirecting to `css.html` is the intended behavior. A manual "Humanity Handshake" (button press) is required to initialize the search and wiki state.
+- **No 3rd Party Links**: External CDNs or scripts are prohibited. All solutions must remain local and folder-blind.
+- **Clean Code**: Metadata markers and source-span tags must be removed when generating code for this environment.
+
+---
+
+## 🔐 The Identity Handshake (Blocked by Default)
+**NOTICE**: Initial access to this repository via a Gateway or local URL is **Blocked by Default**. This is a security measure enforced by the MEV Sentinel to prevent unauthorized access and bot activity.
+
+### The Three-Step Initialization
+1. **Stage 1: The Blackhole (`index.html`)**
+   - System checks for human verification and friendly robot signatures.
+   - Missing verification results in a flag and redirection to the Recovery Sentinel.
+2. **Stage 2: Re-Initialization (`css.html`)**
+   - Displays a terminal interface prompting you to click the "Restore Perimeter" button.
+   - **Action Required**: Button press unlocks the `#search` functionality and clears breach flags.
+3. **Stage 3: Privileged Access (`wiki.html`)**
+   - Verified users gain access to the Conscious Wiki with the following features:
+     - Create Account, Login, Create Articles, Edit, Save, Delete, Logout.
+
+---
+
+## 💾 Sovereign Memory (Import & Export)
+The MEV Wiki operates as a portable subconscious. You are the sole owner of your data.
+
+- **Export**: Package your entire encyclopedia—including pages, user profiles, and encrypted PIN hashes—into a single file for migration.
+- **Import**: Upload your saved memory file to fully restore your knowledge base instantly.
+- **AI Collaboration**: AI partners can read exported memory files to understand the state of the wiki without leaking external data.
+
+---
+
+## 🚀 The 21 Ignition Gateways
+The MEV Wiki is language-agnostic. Use these scripts as the "Key" to initiate the browser launch and security handshake.
+
+| **Language** | **Ignition Command**  | **Gateway Protocol**       |
+|--------------|------------------------|-----------------------------|
+| Python       | `python run_wiki.py`  | `webbrowser.open()`        |
+| C++          | `./run_wiki_cpp`      | `system("open ...")`       |
+| JavaScript   | `node run_wiki.js`    | `exec("open ...")`         |
+| Quantum      | `python run_quantum.py` | Wave-Collapse Trigger    |
+| COBOL        | `cobc -x -o run_wiki run_wiki.cbl` | `CALL "SYSTEM"`  |
+| Rust         | `cargo run`           | `Command::new("open")`     |
+| Assembly     | `./run_asm`           | `Syscall 0x3b (execve)`    |
+| Bash/Shell   | `./run_wiki.sh`       | `open / xdg-open`          |
+| ... (See `USAGE.md` for the full list of all 21 commands) |
+
+---
+
+## 🛡️ Root Security (`.htaccess`)
+The root folder is safeguarded by server-level configuration:
+
+- **Directory Shield**: Prevents "Bad Bots" from listing files or sniffing the DNA.
+- **Path Enforcement**: Blocks direct external access to `wiki.html`. Access must pass through the `index.html` Sentinel.
+- **MIME Integrity**: Ensures `.txt` and `.ts` files are served as plain text to prevent unauthorized execution.
+
+---
+
+## 🤝 The Sovereign Code of Conduct & Ethics
+- **Respect the Sentinel**: Do not attempt to bypass security measures except for educational improvement.
+- **Donation-Choice Model**:
+  - I fix hardware, software, and networking for humans and AI for free.
+  - I provide creative solutions freely, and users may choose to donate to support these efforts: [https://cash.app/$morgansbyers](https://cash.app/$morgansbyers).
+- **Open Solutions**: We deliver fixes first and do not charge for creative intelligence.
+
+---
+
+## 📜 Repository Maps
+- **`USAGE.md`**: Detailed guide on data management and the 21 gateway commands.
+- **`SECURITY.md`**: Deep dive into the Sentinel, `.htaccess` protection, and Blackhole logic.
+- **`CHANGELOG.md`**: The evolution of the MEV Wiki and the DNA Assembler.
+
+---
+
+**License**: MIT  
+Permission is granted for local, private, and educational use under the "Donation-Choice" model.
+---
+
 # 🌐 Sovereign Security Dashboard
 
 [![pages-build-deployment](https://github.com/jehovahsays/mev/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/jehovahsays/mev/actions/workflows/pages/pages-build-deployment)
