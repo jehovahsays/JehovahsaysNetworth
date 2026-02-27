@@ -131,9 +131,16 @@
         <label for="menu-toggle" class="search-label">click to browse keywords ▼</label>
         
         <ul class="dropdown-content">
-            <li><a href="#main">#main</a></li>
+            <li><a href="#search">#search</a></li>
+            <li><a href="#main">#main</a></li>	
+            <li><a href="#recent">#recent</a></li>
+
+            <li><a href="#settings">#settings</a></li>
             <li><a href="#about">#about</a></li>	
-            <li><a href="#privacy">#privacy</a></li>
+            <li><a href="#Formatting_Examples">#Formatting_Examples</a></li>
+			
+			
+			
         </ul>
     </div>
 
@@ -144,25 +151,25 @@
                 <p>Unauthorized access logged. Manual re-initialization required.</p>
                 <button onclick="restorePerimeter()">RE-INITIALIZE SYSTEM</button>
                 <br>
-                <a href="./wiki.html#main">
+                <a href="./index.html#search">
                     <button>Return to Conscious Interface</button>
                 </a>
             </span>
         </li>
 
-        <li class="titleInput" id="main">
+        <li class="titleInput" id="search">
             <span class="article-text">
-                <h2>Main</h2>
-                <a href="./index.html#main">
+                <h2>search</h2>
+                <a href="./index.html#search">
                     <button>Turn on Javascript</button>
                 </a><br>
             </span>
         </li>
 
-        <li class="titleInput" id="about">
+        <li class="titleInput" id="main">
             <br>
             <span class="article-text">
-                <h2>About</h2>
+                <h2>main</h2>
                 localhost <br>
                 Source Version: v1.2.1
             </span>	
@@ -229,7 +236,7 @@
         localStorage.setItem(HUMAN_KEY, 'true'); 
         
         alert("Perimeter Restored. Re-entering Conscious State.");
-        window.location.href = './wiki.html#main'; 
+        window.location.href = './index.html#search'; 
     }
 
     // URL CLEANER
@@ -241,7 +248,7 @@
     // STATE INITIALIZATION
     window.addEventListener('load', () => {
         if (!window.location.hash) {
-            window.location.hash = 'main';
+            window.location.hash = 'search';
             console.log("External Conscious Initialized.");
         }
     });

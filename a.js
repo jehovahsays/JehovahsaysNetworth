@@ -244,7 +244,7 @@ async function updatePageListSidebar(filter = '') {
     listEl.innerHTML = '';
     const pages = await loadData(STORAGE_KEYS.pages, {});
     const titles = Object.keys(pages)
-      .filter(t => t !== "Formatting Examples")
+      .filter(t => t !== "Formatting_Examples")
       .sort();
     const filterLower = filter.toLowerCase();
 
@@ -828,7 +828,7 @@ async function createPage(titleFromSearch = null) {
   if (protectedKeywords.includes(lowerTitle)) {
       console.warn("Unauthorized property manipulation attempt detected.");
       localStorage.setItem('mev_breach_detected', 'true');
-      location.href = './index.html'; 
+      location.href = './index.html#search'; 
       return;
   }
   
@@ -886,7 +886,7 @@ async function savePage(title) {
   if (typeof title !== 'string' || !title.trim() || protectedKeywords.includes(title.toLowerCase())) {
       console.warn("STOP! Unauthorized property manipulation attempt detected.");
       localStorage.setItem('mev_breach_detected', 'true');
-      location.href = './index.html'; 
+      location.href = './index.html#search'; 
       return;
   }
 
@@ -1119,7 +1119,7 @@ async function editPage(title) {
   
   c.innerHTML = `<section class="page">
     <h2>Editing: ${escapeHTML(title)}</h2>
-    <p style="font-size: 0.85rem; color: #6c757d;">Using simple localhost markup. See Formatting Examples for help.</p>
+    <p style="font-size: 0.85rem; color: #6c757d;">Using simple localhost markup. See Formatting_Examples for help.</p>
     <textarea class="editor">${escapeHTML(page.content)}</textarea>
     <button class="edit-btn" id="save-page-btn">Save Changes</button>
     <button class="delete-btn" id="cancel-edit-btn">Cancel</button>
@@ -1143,7 +1143,7 @@ async function savePage(title) {
   if (protectedKeywords.includes(cleanTitle)) {
       console.warn("STOP! Unauthorized property manipulation attempt detected.");
       localStorage.setItem('mev_breach_detected', 'true');
-      location.href = './index.html'; 
+      location.href = './index.html#search'; 
       return;
   }
 
@@ -1225,13 +1225,13 @@ async function savePage(title) {
   }, 100);
 }
 
-// ✅ UPDATED: Content for Formatting Examples page.
+// ✅ UPDATED: Content for Formatting_Examples page.
 async function createExampleWikiPage() {
-  const title = "Formatting Examples";
+  const title = "Formatting_Examples";
   const pages = await loadData(STORAGE_KEYS.pages, {}); 
   if (pages[title]) return;
   const content = `
-==  Page Formatting Examples ==
+==  Page Formatting_Examples ==
 
 This localhost uses a simple, lightweight markup for fast and clean formatting.
 
@@ -1290,7 +1290,7 @@ async function ensureMainPage() {
 
 // ✅ NEW FUNCTION: To create the localhost page for log.html.
 async function ensureVisualLogPage() {
-    const title = "Visual-Log";
+    const title = "Visual_Log";
     const pages = await loadData(STORAGE_KEYS.pages, {});
     if (pages[title]) return;
     
@@ -1373,7 +1373,7 @@ async function generatePageButtonsFindView() {
       listEl.appendChild(createButtonElementFindView(link.title, link.hash, true));
   });
 
-  const titles = Object.keys(pages).filter(t => t !== "Formatting Examples").sort();
+  const titles = Object.keys(pages).filter(t => t !== "Formatting_Examples").sort();
   
   titles.forEach(title => {
       listEl.appendChild(createButtonElementFindView(title, encodeURIComponent(title), false));

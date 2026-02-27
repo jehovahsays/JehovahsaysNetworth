@@ -1,6 +1,14 @@
-# Perimeter Rules for Friendly Entities
+# ====================================================================
+# 🌀 MEV SOVEREIGN PERIMETER: robots.txt
+# ====================================================================
+# PURPOSE: Identify Friendly Entities vs. Unknown Intent.
+# 1. ALLOW: Maintenance & Root Recognition (GitHub/Google).
+# 2. DISALLOW: All deep-links to the internal subconscious (# anchors).
+# ====================================================================
 
-# Maintenance Whitelist - GitHub's automated services
+# SECTION 1: WHITE-LISTED MAINTENANCE ENTITIES
+# These entities are allowed to verify the repository's health.
+
 User-agent: GitHub-Hookshot
 Allow: /
 
@@ -13,11 +21,18 @@ Allow: /
 User-agent: Googlebot
 Allow: /
 
-# Rules for General Public/Unknown Bots
+# SECTION 2: GENERAL PUBLIC / UNKNOWN BOTS
+# Unknown entities are restricted from scanning internal hashes/settings.
+
 User-agent: *
-# Specific sabotagable paths protected from scraping
+# Protect the Subconscious from Scraping
 Disallow: /#*
 Disallow: /?*
 Disallow: /search
 Disallow: /edit
 Disallow: /settings
+Disallow: /profile
+Disallow: /notfound
+
+# Let robots see the "Conscious" landing page only
+Allow: /index.html

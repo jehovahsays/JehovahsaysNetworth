@@ -5,8 +5,6 @@ const CACHE = "localhost-wiki-v1.2.2";
 const FILES = [
   "./",
   "./index.html",
-  "./wiki.html", // Added wiki.html to the cache list
-  "./css.html", // Added wiki.html to the cache list  
   "./a.js",      
   "./styles.css", 
   "./purify.min.js",
@@ -47,10 +45,9 @@ self.addEventListener("fetch", event => {
 
   const url = new URL(event.request.url);
   
-  // FIXED LOGIC: Include wiki.html in the Network-First strategy
-  const isAppShell = url.pathname.endsWith('/') || 
-                     url.pathname.endsWith('/index.html') || 
-                     url.pathname.endsWith('/wiki.html');
+  // FIXED LOGIC: Include index.html in the Network-First strategy
+  const isAppShell = url.pathname.endsWith('/') ||       
+                     url.pathname.endsWith('/index.html');
   
   if (isAppShell) {
     event.respondWith(

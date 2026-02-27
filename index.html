@@ -1,69 +1,381 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Perimeter Breach</title>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline';">
+  <meta charset="UTF-8" />
+  <title>localhost knowledge base</title>
+  <meta name="description" content="localhost knowledge base" />
+  <meta name="theme-color" content="#3366cc" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self' 'unsafe-inline' blob:; object-src 'none'; style-src 'self' 'unsafe-inline'; worker-src 'self' blob:;">
+
+<meta http-equiv="Referrer-Policy" content="no-referrer">
+
+<meta http-equiv="Permissions-Policy" content="microphone=(), camera=(), geolocation=()">
+
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="./icon-192.png" type="image/png">
+  
+  <link rel="stylesheet" href="./styles.css" type="text/css">
+<link rel="apple-touch-icon" href="./icon-192.png">
+
+  <script src="./purify.min.js"></script>
+  <script src="./a.js" defer></script>  
+
+
+
+
+
+
 </head>
+
+
+<body>
+
+
+<div id="offline-message">
+  ⚠️ You’re offline. Some features may be unavailable.
+</div>
+
+<header>
+  <button id="menu-btn" aria-label="Toggle menu navigation">☰</button>
+  <div id="ai-bar">
+    <input 
+      type="text" 
+      id="ai-input" 
+      placeholder="search or speak your query…" 
+      aria-label="Search or question input"
+      data-action="filter-sidebar"
+      list="search-suggestions">
+	
+	      <datalist id="search-suggestions">
+        <option value="Main Page">
+        <option value="About">
+        <option value="Recent Changes">
+        <option value="Formatting_Examples">
+      </datalist>
+
+    <button id="ai-button">Search Wiki</button>
+  </div>
+</header>
+
 <noscript>
 <p id="noscript-warning" style="text-align: center; color: red; padding: 20px;">
   This application requires JavaScript. <br>
   Please enable JavaScript for MEV Wiki to function.
 </p>
-<meta http-equiv="refresh" content="0;url=./css.html#main">
 </noscript>
-<body style="background: #000; color: #f00; font-family: monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0;">
-    
-    <div style="border: 1px solid #f00; padding: 20px; text-align: center;">
-        <h1>PERIMETER BREACH</h1>
-        <p>Unauthorized Application Access Logged.</p>
-        <p>Redirecting to Recovery Sentinel...</p>
+
+<div id="find-view">
+    <div id="search-container">
+	<p id="search-note" style="font-size: 0.9em; margin-bottom: 10px;"></p>
+        <input
+            id="filterInput-find"
+            data-action="filter-findview" 
+            autocomplete="off"
+            autocorrect="off"  
+            autocapitalize="off" 
+            spellcheck="false"
+            type="text" 
+            placeholder="Search wiki pages..." 
+            aria-label="Search wiki pages" 
+            aria-describedby="search-note"
+            required>
+        
+        <ul id="page-list-find"></ul>
+        
+        <div id="status-message-find">Start typing to filter pages...</div>
     </div>
+</div>
 
-    <script>
-        (function() {
-            "use strict";
+<div id="container">
+  <nav id="sidebar">
+    <div id="auth-links">
+      <div id="user-status">Not logged in</div>
+      <a href="#create" id="create-account-link">Create Account</a><br>
+      <a href="#login" id="login-link">Log In</a><br>
+      <a href="#profile" id="profile-link">My Profile</a><br>
+      <a href="#logout" id="logout-link" class="hidden">Log Out</a> 
+    </div>
+    <hr/>
+    <h3>Navigation Filters</h3>
+    <ul id="quick-filters">
+        <li class="titleInput"><button data-page-target="Main-Page">Main-Page</button></li>
+        <li class="titleInput"><button data-nav-target="recent">Recent Changes</button></li>
+        <li class="titleInput"><button data-nav-target="settings">Settings</button></li>
+        <li class="titleInput"><button data-nav-target="about">About</button></li>
+        <li class="titleInput"><button data-page-target="Formatting_Examples">Wiki Formatting Help</button></li>
+    </ul>
 
-            const BREACH_KEY = 'mev_breach_detected';
-            const HUMAN_KEY = 'mev_human_verified';
-            const agent = navigator.userAgent.toLowerCase();
+    <hr />
+    <h3>Wiki Pages</h3>
+    <ul id="page-list"></ul>
+    
+    <button id="create-page-btn" class="edit-btn" style="width: 100%; margin-top: 10px;">+ New Page</button>
 
-            // 1. Identify Friendly Robots - Expanded for GitHub and Search Maintenance
-            const friendlyBots = [
-                'github',
-                'googlebot',
-                'dependabot',
-                'github-crawlers',
-                'github-hookshot',
-                'bingbot',
-                'duckduckbot'
-            ];
+    <div id="storage-bar">
+      <div id="storage-bar-inner"></div>
+    </div>
+  </nav>
 
-            const isFriendly = friendlyBots.some(bot => agent.includes(bot));
+  <main id="main-content-wrapper" itemscope itemtype="https://schema.org/WebPage">
+    <meta itemprop="url" content="https://jehovahsays.github.io/mev/">
+    <div id="page-container"></div> 
+  </main>
+</div>
 
-            if (isFriendly) {
-                window.location.replace('./wiki.html#main');
-                return;
-            }
+<footer>
+  <div id="status-indicator">🔴 Offline</div>
+  <div id="ticker"><span id="ticker-content"></span></div>
+    <span id="last-updated" style="margin-left: auto;"></span>
+</footer>
 
-            // 2. Identify Returning Verified Humans
-            if (localStorage.getItem(HUMAN_KEY) === 'true' && !localStorage.getItem(BREACH_KEY)) {
-                window.location.replace('./wiki.html#search');
-                return;
-            }
+<div id="auth-modal" class="modal-overlay">
+  <div class="modal-box">
+    <h2 id="auth-modal-title">Enter Username</h2>
+    <label for="auth-username">Username:</label>
+    <input id="auth-username" type="text" autocomplete="username" /><br><br>
+    
+    <label for="auth-pin">PIN/Passphrase (4-12 characters recommended):</label>
+    <input id="auth-pin" type="password" maxlength="12" autocomplete="current-password" />
+    <p style="font-size: 0.8em; color: red; margin-top: 10px;">⚠️ If you set a PIN/Passphrase, **all your data will be encrypted**.</p>
+    
+    <div class="modal-actions">
+      <button id="submit-auth">Submit</button>
+      <button id="cancel-auth">Cancel</button>
+    </div>
+  </div>
+</div>
 
-            // 3. Identification Failure: Trigger Breach Logic
-            try {
-                localStorage.setItem(BREACH_KEY, 'true');
-                localStorage.removeItem(HUMAN_KEY);
+<script>
+(function() {
+    if (window.location.pathname.match(/index\.(html|htm)$/)) {
+        const cleanURL = window.location.href.replace(/index\.(html|htm)/, '');
+        window.history.replaceState(null, '', cleanURL);
+    }
+
+    const themeBtn = document.getElementById('theme-toggle-btn');
+    const body = document.body;
+
+    const applyTheme = (isLess) => {
+        body.classList.toggle('less-mode', isLess);
+        if (themeBtn) {
+            themeBtn.textContent = isLess ? 'Standard UI' : 'Toggle "Less" Theme';
+        }
+    };
+
+    const savedTheme = localStorage.getItem('localhost_theme');
+    const isSavedLess = savedTheme === null ? true : savedTheme === 'less';
+    applyTheme(isSavedLess);
+
+    if (themeBtn) {
+        themeBtn.addEventListener('click', () => {
+            const nowLess = body.classList.toggle('less-mode');
+            localStorage.setItem('localhost_theme', nowLess ? 'less' : 'standard');
+            applyTheme(nowLess);
+        });
+    }
+
+    window.addEventListener('load', () => {
+        if (!window.location.hash || window.location.hash === '#') {
+            window.location.hash = 'search';
+        }
+    });
+})();
+</script>
+
+<script>
+// Corrected trigger logic to ensure results refresh and redirect happens
+(function() {
+    "use strict";
+
+    const BREACH_KEY = 'mev_breach_detected';
+    const HUMAN_KEY = 'mev_human_verified';
+    const BANNED_PAGE = './css.html#search?reason=perimeter_breach';
+
+    async function createTriggerWatcher() {
+        if (localStorage.getItem(BREACH_KEY) === 'true') {
+            window.location.href = BANNED_PAGE;
+            return;
+        }
+
+        const hash = window.location.hash;
+        if (!hash.startsWith('#create=')) return;
+
+        const rawTitle = decodeURIComponent(hash.split('=')[1] || '').trim();
+        const title = DOMPurify.sanitize(rawTitle);
+
+        if (!title) return;
+
+        if (localStorage.getItem(HUMAN_KEY) !== 'true') {
+            localStorage.setItem(BREACH_KEY, 'true');
+            window.location.href = BANNED_PAGE;
+            return;
+        }
+
+        // CREATE LOGIC
+        if (typeof createPageSecure === 'function') {
+            await createPageSecure(title);
+        } else if (typeof createPage === 'function') {
+            await createPage(title);
+        }
+
+        // FIX: Update UI immediately so the link appears in Results/Sidebar
+        if (typeof updatePageListSidebar === 'function') updatePageListSidebar();
+        if (typeof showRecent === 'function') showRecent();
+
+        // FIX: Redirect to the newly created page (Solves first-click bug)
+        setTimeout(() => {
+            window.location.hash = encodeURIComponent(title);
+            if (typeof showPage === 'function') showPage(title);
+        }, 150);
+    }
+
+    document.addEventListener('DOMContentLoaded', createTriggerWatcher);
+    window.addEventListener('hashchange', createTriggerWatcher);
+})();
+</script>
+
+<script>
+(function globalMevSentinel() {
+    const firewallRules = [
+        /<script/i, /javascript:/i, /eval\(|atob\(|btoa\(/i,
+        /onerror=|onload=|onclick=/i, /__proto__|constructor|prototype/i,
+        /\\x[0-9a-fA-F]{2}/, /data:text\/html/i
+    ];
+
+    const triggerBlackhole = (field) => {
+        localStorage.setItem('mev_breach_detected', 'true');
+        document.documentElement.innerHTML = ""; 
+        window.location.replace('./css.html'); 
+    };
+
+    const monitorInputs = () => {
+        const inputs = document.querySelectorAll('input, textarea, [contenteditable="true"]');
+        inputs.forEach(input => {
+            if (input.dataset.mevWatched) return;
+            input.dataset.mevWatched = "true";
+            ['input', 'paste'].forEach(eventType => {
+                input.addEventListener(eventType, (e) => {
+                    const value = (eventType === 'paste') 
+                        ? (e.clipboardData || window.clipboardData).getData('text')
+                        : e.target.value;
+                    for (let rule of firewallRules) {
+                        if (rule.test(value)) {
+                            e.preventDefault();
+                            triggerBlackhole(input);
+                            break;
+                        }
+                    }
+                });
+            });
+        });
+    };
+    monitorInputs();
+    const observer = new MutationObserver(monitorInputs);
+    observer.observe(document.body, { childList: true, subtree: true });
+})();
+</script>
+
+<div id="mev-splash-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: black; z-index: 9999; overflow-y: auto;">
+    <div id="search-container" style="max-width: 600px; margin: 50px auto; padding: 20px; font-family: system-ui, sans-serif;">
+        <form id="splash-form" onsubmit="return false;">
+
+	            <input
+                id="filterInput-splash"
+                autocomplete="off"
+                type="text" 
+                placeholder="Search wiki pages..." 
+                style="width: 100%; padding: 15px; margin-bottom: 20px; font-size: 1.2em; border-radius: 5px; border: 1px solid #333; background-color: #222; color: peru; box-sizing: border-box;"
+                required>
+        </form>
+
+	<ul id="page-list-splash" style="list-style: none; padding: 0; margin: 0;">
+
+		</ul>
+        <div id="status-message-splash" style="color: #ccc; margin-top: 10px; font-family: monospace;"></div>
+    </div>
+</div>
+
+<script>
+(function() {
+    const STORAGE_KEY = 'wiki_pages';
+    const HUMAN_KEY = 'mev_human_verified';
+
+    function createSplashButton(title, hash) {
+        const li = document.createElement('li');
+        li.style.margin = "10px 0";
+        const button = document.createElement('button');
+        button.textContent = title;
+        button.style.cssText = "width: 100%; padding: 12px; text-align: left; background-color: #3366cc; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 1.1em;";
+        
+        button.onclick = () => {
+            localStorage.setItem(HUMAN_KEY, 'true');
+            document.getElementById('mev-splash-screen').style.display = 'none';
+            window.location.hash = hash;
+            if (typeof showPage === 'function') showPage(decodeURIComponent(hash));
+        };
+        li.appendChild(button);
+        return li;
+    }
+
+    function initSplashScreen() {
+        const listEl = document.getElementById('page-list-splash');
+        const inputEl = document.getElementById('filterInput-splash');
+        let pages = {};
+        try { pages = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch(e){}
+        
+        const staticLinks = [{ title: "Visual_Log", hash: "Visual_Log" }, { title: "Formatting_Examples", hash: "Formatting_Examples" }];
+        staticLinks.forEach(link => listEl.appendChild(createSplashButton(link.title, link.hash)));
+        Object.keys(pages).sort().forEach(title => listEl.appendChild(createSplashButton(title, encodeURIComponent(title))));
+
+        inputEl.addEventListener('input', function() {
+            localStorage.setItem(HUMAN_KEY, 'true'); 
+            const filter = this.value.toLowerCase();
+            listEl.querySelectorAll('li').forEach(li => {
+                const text = li.querySelector('button').textContent.toLowerCase();
+                li.style.display = text.includes(filter) ? "block" : "none";
+            });
+        });
+    }
+    document.addEventListener('DOMContentLoaded', initSplashScreen);
+})();
+</script>
+
+<script>
+(function() {
+    const searchInput = document.getElementById('ai-input');
+    
+    if (searchInput) {
+        searchInput.addEventListener('input', function(e) {
+            // 1. Capture current cursor position to prevent jumping
+            const start = this.selectionStart;
+            const end = this.selectionEnd;
+
+            // 2. Replace all spaces with underscores
+            const originalValue = this.value;
+            const newValue = originalValue.replace(/\s+/g, '_');
+
+            // 3. Only update if a change actually happened
+            if (originalValue !== newValue) {
+                this.value = newValue;
                 
-                setTimeout(() => {
-                    window.location.replace('./css.html?reason=perimeter_breach');
-                }, 1000);
-            } catch (e) {
-                window.location.replace('./css.html?reason=perimeter_breach');
+                // 4. Restore cursor position
+                this.setSelectionRange(start, end);
             }
-        })();
-    </script>
+        });
+
+        // 5. Handle "Paste" events to ensure no spaces sneak in
+        searchInput.addEventListener('paste', function(e) {
+            setTimeout(() => {
+                this.value = this.value.replace(/\s+/g, '_');
+            }, 0);
+        });
+    }
+})();
+</script>
+
+
 </body>
 </html>
