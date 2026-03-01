@@ -60,34 +60,11 @@
 
     <button id="ai-button">OK</button>
   </div>
+  
+
+  
 </header>
 
-<noscript>
-<p id="noscript-warning" style="text-align: center; color: red; padding: 20px;">
-  This application requires JavaScript. <br>
-  Please enable JavaScript for MEV Wiki to function.
-</p>
-        <div class="menu-container">
-        <input type="checkbox" id="menu-toggle">
-        <label for="menu-toggle" class="search-label">click to browse keywords ▼</label>
-        
-        <ul class="dropdown-content">
-            <li><a href="#noscript">#noscript</a></li>		
-        </ul>
-		
-    </div>
-    <ul id="linkList">
-        <li class="titleInput" id="noscript">
-            <span class="article-text">
-                <h2>noscript</h2>
-                <a href="./index.html#search">
-                    <button>Turn on Javascript</button>
-                </a><br>
-            </span>
-        </li>
-    </ul>
-
-	</noscript>
 
 <div id="find-view">
     <div id="search-container">
@@ -120,6 +97,7 @@
       <a href="#profile" id="profile-link">My Profile</a><br>
       <a href="#logout" id="logout-link" class="hidden">Log Out</a> 
     </div>
+
     <hr/>
     <h3>Navigation Filters</h3>
     <ul id="quick-filters">
@@ -148,9 +126,11 @@
 </div>
 
 <footer>
-  <div id="status-indicator">🔴 Offline</div>
+  <div id="status-indicator">🔴 Offline
+  </div>
   <div id="ticker"><span id="ticker-content"></span></div>
     <span id="last-updated" style="margin-left: auto;"></span>
+
 </footer>
 
 <div id="auth-modal" class="modal-overlay">
@@ -173,7 +153,69 @@
 
 <div id="mev-splash-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: black; z-index: 9999; overflow-y: auto;">
     <div id="search-container" style="max-width: 600px; margin: 50px auto; padding: 20px; font-family: system-ui, sans-serif;">
-        <form id="splash-form" onsubmit="event.preventDefault();">
+ 
+   <center>  
+  <button id="theme-toggle-btn" class="mev-button" style="width: auto; margin-left: 10px; padding: 5px 10px;">
+    Toggle "Less" Theme
+  </button>
+</br>
+</center>
+ 
+ <noscript>
+   <!-- <meta http-equiv="refresh" content="0;url=css.html"> -->
+<p id="noscript-warning" style="text-align: center; color: red; padding: 20px;">
+  This application requires JavaScript. <br>
+  Please enable JavaScript for MEV Wiki to function.
+</p>
+        <div class="menu-container">
+        <input type="checkbox" id="menu-toggle">
+        <label for="menu-toggle" class="search-label">click to browse keywords ▼</label>
+        
+        <ul class="dropdown-content">
+		<li><a href="#main">#main</a></li>
+		<li><a href="#about">#about</a></li>	
+		<li><a href="#privacy">#privacy</a></li>
+        </ul>
+		
+    </div>
+
+    <ul id="linkList">
+	
+<li class="titleInput" id="main">
+    <span class="article-text">
+Main
+</span>
+</li>
+
+
+<li class="titleInput" id="about">
+    <span class="article-text">
+About
+		</span>	
+</li>
+
+
+<li class="titleInput" id="privacy">
+    <span class="article-text">
+    <h1>Privacy</h1>
+    <p>The MEV project is built on the principle of <span class="highlight">Hardware-Software Sovereignty</span>. Unlike traditional web applications, your data does not belong to a cloud; it belongs to your machine.</p>
+
+    <h2>1. Local-First Storage</h2>
+    <p>We do not use tracking cookies. We utilize <span class="highlight">Web Storage (localStorage)</span> to maintain your session state, humanity verification, and security flags. This data never leaves your browser and is never transmitted to a central server.</p>
+
+    <h2>2. Zero Third-Party Dependencies</h2>
+    <p>This application is built from scratch. No external trackers, analytics, or third-party scripts are permitted to touch your internal "Subconscious" brain. The only external entity allowed is the maintainer's whitelist for software updates.</p>
+
+    <h2>3. Your Right to Delete</h2>
+    <p>To wipe all trace of this application, simply clear your browser's "Site Data." Since we hold no copies of your data on a server, your local deletion is final and absolute.</p>
+		</span>
+</li>
+</ul>
+	</noscript>
+  
+
+  
+	   <form id="splash-form" onsubmit="event.preventDefault();">
 
 	            <input
                  id="filterInput-splash" 
@@ -184,7 +226,6 @@
         </form>
 
 	<ul id="page-list-splash" style="list-style: none; padding: 0; margin: 0;">
-
 		</ul>
         <div id="status-message-splash" style="color: #ccc; margin-top: 10px; font-family: monospace;"></div>
     </div>

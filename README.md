@@ -28,8 +28,9 @@
 ---
 
 ## 🚀 Recent Activity (v1.2.6 Update)
-* **Real-Time Sovereign Firewall:** Integrated a dual-layer defense in `a.js`. All inputs are scrubbed via `DOMPurify` on every keystroke (`input` and `blur` events) to block script injection.
-* **Perimeter Handshake:** Finalized the logic between the "Conscious" search (`index.html`) and the "Subconscious" recovery terminal (`css.html`).
+* **Real-Time Sovereign Firewall:** Integrated a dual-layer defense in `a.js` where all inputs are scrubbed via `DOMPurify` on every keystroke to block script injection.
+* **Persistent UI Themes:** Added a "Standard" vs. "Less" theme toggle that saves your visual preference locally.
+* **Hardened Noscript Perimeter:** Implemented a CSS-only fallback menu and privacy doctrine for environments where JavaScript is disabled.
 * **Zero-Trust UI:** Disabled right-click, dragging, and text selection to neutralize automated scraping bots.
 
 ## 📘 Quick Start
