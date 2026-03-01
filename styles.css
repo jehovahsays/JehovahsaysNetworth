@@ -401,3 +401,14 @@ body.less-mode .banner {
 }
 
 
+#filterInput-splash {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 20px;
+    font-size: 1.2em;
+    border-radius: 5px;
+    border: 1px solid #333;
+    background-color: #222;
+    color: peru;
+    box-sizing: border-box;
+}

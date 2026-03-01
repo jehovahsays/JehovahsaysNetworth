@@ -1,37 +1,78 @@
 
 
-// ====== localhost SECURITY LAYER (Moved from inline script) ======
+
+/*! @license DOMPurify 3.3.1 | (c) Cure53 and other contributors | Released under the Apache license 2.0 and Mozilla Public License 2.0 | github.com/cure53/DOMPurify/blob/3.3.1/LICENSE */
+!function(e,t){"object"==typeof exports&&"undefined"!=typeof module?module.exports=t():"function"==typeof define&&define.amd?define(t):(e="undefined"!=typeof globalThis?globalThis:e||self).DOMPurify=t()}(this,(function(){"use strict";const{entries:e,setPrototypeOf:t,isFrozen:n,getPrototypeOf:o,getOwnPropertyDescriptor:r}=Object;let{freeze:i,seal:a,create:l}=Object,{apply:c,construct:s}="undefined"!=typeof Reflect&&Reflect;i||(i=function(e){return e}),a||(a=function(e){return e}),c||(c=function(e,t){for(var n=arguments.length,o=new Array(n>2?n-2:0),r=2;r<n;r++)o[r-2]=arguments[r];return e.apply(t,o)}),s||(s=function(e){for(var t=arguments.length,n=new Array(t>1?t-1:0),o=1;o<t;o++)n[o-1]=arguments[o];return new e(...n)});const u=D(Array.prototype.forEach),m=D(Array.prototype.lastIndexOf),p=D(Array.prototype.pop),f=D(Array.prototype.push),d=D(Array.prototype.splice),h=D(String.prototype.toLowerCase),g=D(String.prototype.toString),T=D(String.prototype.match),y=D(String.prototype.replace),E=D(String.prototype.indexOf),A=D(String.prototype.trim),_=D(Object.prototype.hasOwnProperty),b=D(RegExp.prototype.test),S=(N=TypeError,function(){for(var e=arguments.length,t=new Array(e),n=0;n<e;n++)t[n]=arguments[n];return s(N,t)});var N;function D(e){return function(t){t instanceof RegExp&&(t.lastIndex=0);for(var n=arguments.length,o=new Array(n>1?n-1:0),r=1;r<n;r++)o[r-1]=arguments[r];return c(e,t,o)}}function R(e,o){let r=arguments.length>2&&void 0!==arguments[2]?arguments[2]:h;t&&t(e,null);let i=o.length;for(;i--;){let t=o[i];if("string"==typeof t){const e=r(t);e!==t&&(n(o)||(o[i]=e),t=e)}e[t]=!0}return e}function w(e){for(let t=0;t<e.length;t++){_(e,t)||(e[t]=null)}return e}function C(t){const n=l(null);for(const[o,r]of e(t)){_(t,o)&&(Array.isArray(r)?n[o]=w(r):r&&"object"==typeof r&&r.constructor===Object?n[o]=C(r):n[o]=r)}return n}function O(e,t){for(;null!==e;){const n=r(e,t);if(n){if(n.get)return D(n.get);if("function"==typeof n.value)return D(n.value)}e=o(e)}return function(){return null}}const v=i(["a","abbr","acronym","address","area","article","aside","audio","b","bdi","bdo","big","blink","blockquote","body","br","button","canvas","caption","center","cite","code","col","colgroup","content","data","datalist","dd","decorator","del","details","dfn","dialog","dir","div","dl","dt","element","em","fieldset","figcaption","figure","font","footer","form","h1","h2","h3","h4","h5","h6","head","header","hgroup","hr","html","i","img","input","ins","kbd","label","legend","li","main","map","mark","marquee","menu","menuitem","meter","nav","nobr","ol","optgroup","option","output","p","picture","pre","progress","q","rp","rt","ruby","s","samp","search","section","select","shadow","slot","small","source","spacer","span","strike","strong","style","sub","summary","sup","table","tbody","td","template","textarea","tfoot","th","thead","time","tr","track","tt","u","ul","var","video","wbr"]),x=i(["svg","a","altglyph","altglyphdef","altglyphitem","animatecolor","animatemotion","animatetransform","circle","clippath","defs","desc","ellipse","enterkeyhint","exportparts","filter","font","g","glyph","glyphref","hkern","image","inputmode","line","lineargradient","marker","mask","metadata","mpath","part","path","pattern","polygon","polyline","radialgradient","rect","stop","style","switch","symbol","text","textpath","title","tref","tspan","view","vkern"]),L=i(["feBlend","feColorMatrix","feComponentTransfer","feComposite","feConvolveMatrix","feDiffuseLighting","feDisplacementMap","feDistantLight","feDropShadow","feFlood","feFuncA","feFuncB","feFuncG","feFuncR","feGaussianBlur","feImage","feMerge","feMergeNode","feMorphology","feOffset","fePointLight","feSpecularLighting","feSpotLight","feTile","feTurbulence"]),k=i(["animate","color-profile","cursor","discard","font-face","font-face-format","font-face-name","font-face-src","font-face-uri","foreignobject","hatch","hatchpath","mesh","meshgradient","meshpatch","meshrow","missing-glyph","script","set","solidcolor","unknown","use"]),I=i(["math","menclose","merror","mfenced","mfrac","mglyph","mi","mlabeledtr","mmultiscripts","mn","mo","mover","mpadded","mphantom","mroot","mrow","ms","mspace","msqrt","mstyle","msub","msup","msubsup","mtable","mtd","mtext","mtr","munder","munderover","mprescripts"]),M=i(["maction","maligngroup","malignmark","mlongdiv","mscarries","mscarry","msgroup","mstack","msline","msrow","semantics","annotation","annotation-xml","mprescripts","none"]),U=i(["#text"]),z=i(["accept","action","align","alt","autocapitalize","autocomplete","autopictureinpicture","autoplay","background","bgcolor","border","capture","cellpadding","cellspacing","checked","cite","class","clear","color","cols","colspan","controls","controlslist","coords","crossorigin","datetime","decoding","default","dir","disabled","disablepictureinpicture","disableremoteplayback","download","draggable","enctype","enterkeyhint","exportparts","face","for","headers","height","hidden","high","href","hreflang","id","inert","inputmode","integrity","ismap","kind","label","lang","list","loading","loop","low","max","maxlength","media","method","min","minlength","multiple","muted","name","nonce","noshade","novalidate","nowrap","open","optimum","part","pattern","placeholder","playsinline","popover","popovertarget","popovertargetaction","poster","preload","pubdate","radiogroup","readonly","rel","required","rev","reversed","role","rows","rowspan","spellcheck","scope","selected","shape","size","sizes","slot","span","srclang","start","src","srcset","step","style","summary","tabindex","title","translate","type","usemap","valign","value","width","wrap","xmlns","slot"]),P=i(["accent-height","accumulate","additive","alignment-baseline","amplitude","ascent","attributename","attributetype","azimuth","basefrequency","baseline-shift","begin","bias","by","class","clip","clippathunits","clip-path","clip-rule","color","color-interpolation","color-interpolation-filters","color-profile","color-rendering","cx","cy","d","dx","dy","diffuseconstant","direction","display","divisor","dur","edgemode","elevation","end","exponent","fill","fill-opacity","fill-rule","filter","filterunits","flood-color","flood-opacity","font-family","font-size","font-size-adjust","font-stretch","font-style","font-variant","font-weight","fx","fy","g1","g2","glyph-name","glyphref","gradientunits","gradienttransform","height","href","id","image-rendering","in","in2","intercept","k","k1","k2","k3","k4","kerning","keypoints","keysplines","keytimes","lang","lengthadjust","letter-spacing","kernelmatrix","kernelunitlength","lighting-color","local","marker-end","marker-mid","marker-start","markerheight","markerunits","markerwidth","maskcontentunits","maskunits","max","mask","mask-type","media","method","mode","min","name","numoctaves","offset","operator","opacity","order","orient","orientation","origin","overflow","paint-order","path","pathlength","patterncontentunits","patterntransform","patternunits","points","preservealpha","preserveaspectratio","primitiveunits","r","rx","ry","radius","refx","refy","repeatcount","repeatdur","restart","result","rotate","scale","seed","shape-rendering","slope","specularconstant","specularexponent","spreadmethod","startoffset","stddeviation","stitchtiles","stop-color","stop-opacity","stroke-dasharray","stroke-dashoffset","stroke-linecap","stroke-linejoin","stroke-miterlimit","stroke-opacity","stroke","stroke-width","style","surfacescale","systemlanguage","tabindex","tablevalues","targetx","targety","transform","transform-origin","text-anchor","text-decoration","text-rendering","textlength","type","u1","u2","unicode","values","viewbox","visibility","version","vert-adv-y","vert-origin-x","vert-origin-y","width","word-spacing","wrap","writing-mode","xchannelselector","ychannelselector","x","x1","x2","xmlns","y","y1","y2","z","zoomandpan"]),F=i(["accent","accentunder","align","bevelled","close","columnsalign","columnlines","columnspan","denomalign","depth","dir","display","displaystyle","encoding","fence","frame","height","href","id","largeop","length","linethickness","lspace","lquote","mathbackground","mathcolor","mathsize","mathvariant","maxsize","minsize","movablelimits","notation","numalign","open","rowalign","rowlines","rowspacing","rowspan","rspace","rquote","scriptlevel","scriptminsize","scriptsizemultiplier","selection","separator","separators","stretchy","subscriptshift","supscriptshift","symmetric","voffset","width","xmlns"]),H=i(["xlink:href","xml:id","xlink:title","xml:space","xmlns:xlink"]),B=a(/\{\{[\w\W]*|[\w\W]*\}\}/gm),G=a(/<%[\w\W]*|[\w\W]*%>/gm),W=a(/\$\{[\w\W]*/gm),Y=a(/^data-[\-\w.\u00B7-\uFFFF]+$/),j=a(/^aria-[\-\w]+$/),X=a(/^(?:(?:(?:f|ht)tps?|mailto|tel|callto|sms|cid|xmpp|matrix):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i),q=a(/^(?:\w+script|data):/i),$=a(/[\u0000-\u0020\u00A0\u1680\u180E\u2000-\u2029\u205F\u3000]/g),K=a(/^html$/i),V=a(/^[a-z][.\w]*(-[.\w]+)+$/i);var Z=Object.freeze({__proto__:null,ARIA_ATTR:j,ATTR_WHITESPACE:$,CUSTOM_ELEMENT:V,DATA_ATTR:Y,DOCTYPE_NAME:K,ERB_EXPR:G,IS_ALLOWED_URI:X,IS_SCRIPT_OR_DATA:q,MUSTACHE_EXPR:B,TMPLIT_EXPR:W});const J=1,Q=3,ee=7,te=8,ne=9,oe=function(){return"undefined"==typeof window?null:window};var re=function t(){let n=arguments.length>0&&void 0!==arguments[0]?arguments[0]:oe();const o=e=>t(e);if(o.version="3.3.1",o.removed=[],!n||!n.document||n.document.nodeType!==ne||!n.Element)return o.isSupported=!1,o;let{document:r}=n;const a=r,c=a.currentScript,{DocumentFragment:s,HTMLTemplateElement:N,Node:D,Element:w,NodeFilter:B,NamedNodeMap:G=n.NamedNodeMap||n.MozNamedAttrMap,HTMLFormElement:W,DOMParser:Y,trustedTypes:j}=n,q=w.prototype,$=O(q,"cloneNode"),V=O(q,"remove"),re=O(q,"nextSibling"),ie=O(q,"childNodes"),ae=O(q,"parentNode");if("function"==typeof N){const e=r.createElement("template");e.content&&e.content.ownerDocument&&(r=e.content.ownerDocument)}let le,ce="";const{implementation:se,createNodeIterator:ue,createDocumentFragment:me,getElementsByTagName:pe}=r,{importNode:fe}=a;let de={afterSanitizeAttributes:[],afterSanitizeElements:[],afterSanitizeShadowDOM:[],beforeSanitizeAttributes:[],beforeSanitizeElements:[],beforeSanitizeShadowDOM:[],uponSanitizeAttribute:[],uponSanitizeElement:[],uponSanitizeShadowNode:[]};o.isSupported="function"==typeof e&&"function"==typeof ae&&se&&void 0!==se.createHTMLDocument;const{MUSTACHE_EXPR:he,ERB_EXPR:ge,TMPLIT_EXPR:Te,DATA_ATTR:ye,ARIA_ATTR:Ee,IS_SCRIPT_OR_DATA:Ae,ATTR_WHITESPACE:_e,CUSTOM_ELEMENT:be}=Z;let{IS_ALLOWED_URI:Se}=Z,Ne=null;const De=R({},[...v,...x,...L,...I,...U]);let Re=null;const we=R({},[...z,...P,...F,...H]);let Ce=Object.seal(l(null,{tagNameCheck:{writable:!0,configurable:!1,enumerable:!0,value:null},attributeNameCheck:{writable:!0,configurable:!1,enumerable:!0,value:null},allowCustomizedBuiltInElements:{writable:!0,configurable:!1,enumerable:!0,value:!1}})),Oe=null,ve=null;const xe=Object.seal(l(null,{tagCheck:{writable:!0,configurable:!1,enumerable:!0,value:null},attributeCheck:{writable:!0,configurable:!1,enumerable:!0,value:null}}));let Le=!0,ke=!0,Ie=!1,Me=!0,Ue=!1,ze=!0,Pe=!1,Fe=!1,He=!1,Be=!1,Ge=!1,We=!1,Ye=!0,je=!1,Xe=!0,qe=!1,$e={},Ke=null;const Ve=R({},["annotation-xml","audio","colgroup","desc","foreignobject","head","iframe","math","mi","mn","mo","ms","mtext","noembed","noframes","noscript","plaintext","script","style","svg","template","thead","title","video","xmp"]);let Ze=null;const Je=R({},["audio","video","img","source","image","track"]);let Qe=null;const et=R({},["alt","class","for","id","label","name","pattern","placeholder","role","summary","title","value","style","xmlns"]),tt="http://www.w3.org/1998/Math/MathML",nt="http://www.w3.org/2000/svg",ot="http://www.w3.org/1999/xhtml";let rt=ot,it=!1,at=null;const lt=R({},[tt,nt,ot],g);let ct=R({},["mi","mo","mn","ms","mtext"]),st=R({},["annotation-xml"]);const ut=R({},["title","style","font","a","script"]);let mt=null;const pt=["application/xhtml+xml","text/html"];let ft=null,dt=null;const ht=r.createElement("form"),gt=function(e){return e instanceof RegExp||e instanceof Function},Tt=function(){let e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{};if(!dt||dt!==e){if(e&&"object"==typeof e||(e={}),e=C(e),mt=-1===pt.indexOf(e.PARSER_MEDIA_TYPE)?"text/html":e.PARSER_MEDIA_TYPE,ft="application/xhtml+xml"===mt?g:h,Ne=_(e,"ALLOWED_TAGS")?R({},e.ALLOWED_TAGS,ft):De,Re=_(e,"ALLOWED_ATTR")?R({},e.ALLOWED_ATTR,ft):we,at=_(e,"ALLOWED_NAMESPACES")?R({},e.ALLOWED_NAMESPACES,g):lt,Qe=_(e,"ADD_URI_SAFE_ATTR")?R(C(et),e.ADD_URI_SAFE_ATTR,ft):et,Ze=_(e,"ADD_DATA_URI_TAGS")?R(C(Je),e.ADD_DATA_URI_TAGS,ft):Je,Ke=_(e,"FORBID_CONTENTS")?R({},e.FORBID_CONTENTS,ft):Ve,Oe=_(e,"FORBID_TAGS")?R({},e.FORBID_TAGS,ft):C({}),ve=_(e,"FORBID_ATTR")?R({},e.FORBID_ATTR,ft):C({}),$e=!!_(e,"USE_PROFILES")&&e.USE_PROFILES,Le=!1!==e.ALLOW_ARIA_ATTR,ke=!1!==e.ALLOW_DATA_ATTR,Ie=e.ALLOW_UNKNOWN_PROTOCOLS||!1,Me=!1!==e.ALLOW_SELF_CLOSE_IN_ATTR,Ue=e.SAFE_FOR_TEMPLATES||!1,ze=!1!==e.SAFE_FOR_XML,Pe=e.WHOLE_DOCUMENT||!1,Be=e.RETURN_DOM||!1,Ge=e.RETURN_DOM_FRAGMENT||!1,We=e.RETURN_TRUSTED_TYPE||!1,He=e.FORCE_BODY||!1,Ye=!1!==e.SANITIZE_DOM,je=e.SANITIZE_NAMED_PROPS||!1,Xe=!1!==e.KEEP_CONTENT,qe=e.IN_PLACE||!1,Se=e.ALLOWED_URI_REGEXP||X,rt=e.NAMESPACE||ot,ct=e.MATHML_TEXT_INTEGRATION_POINTS||ct,st=e.HTML_INTEGRATION_POINTS||st,Ce=e.CUSTOM_ELEMENT_HANDLING||{},e.CUSTOM_ELEMENT_HANDLING&&gt(e.CUSTOM_ELEMENT_HANDLING.tagNameCheck)&&(Ce.tagNameCheck=e.CUSTOM_ELEMENT_HANDLING.tagNameCheck),e.CUSTOM_ELEMENT_HANDLING&&gt(e.CUSTOM_ELEMENT_HANDLING.attributeNameCheck)&&(Ce.attributeNameCheck=e.CUSTOM_ELEMENT_HANDLING.attributeNameCheck),e.CUSTOM_ELEMENT_HANDLING&&"boolean"==typeof e.CUSTOM_ELEMENT_HANDLING.allowCustomizedBuiltInElements&&(Ce.allowCustomizedBuiltInElements=e.CUSTOM_ELEMENT_HANDLING.allowCustomizedBuiltInElements),Ue&&(ke=!1),Ge&&(Be=!0),$e&&(Ne=R({},U),Re=[],!0===$e.html&&(R(Ne,v),R(Re,z)),!0===$e.svg&&(R(Ne,x),R(Re,P),R(Re,H)),!0===$e.svgFilters&&(R(Ne,L),R(Re,P),R(Re,H)),!0===$e.mathMl&&(R(Ne,I),R(Re,F),R(Re,H))),e.ADD_TAGS&&("function"==typeof e.ADD_TAGS?xe.tagCheck=e.ADD_TAGS:(Ne===De&&(Ne=C(Ne)),R(Ne,e.ADD_TAGS,ft))),e.ADD_ATTR&&("function"==typeof e.ADD_ATTR?xe.attributeCheck=e.ADD_ATTR:(Re===we&&(Re=C(Re)),R(Re,e.ADD_ATTR,ft))),e.ADD_URI_SAFE_ATTR&&R(Qe,e.ADD_URI_SAFE_ATTR,ft),e.FORBID_CONTENTS&&(Ke===Ve&&(Ke=C(Ke)),R(Ke,e.FORBID_CONTENTS,ft)),e.ADD_FORBID_CONTENTS&&(Ke===Ve&&(Ke=C(Ke)),R(Ke,e.ADD_FORBID_CONTENTS,ft)),Xe&&(Ne["#text"]=!0),Pe&&R(Ne,["html","head","body"]),Ne.table&&(R(Ne,["tbody"]),delete Oe.tbody),e.TRUSTED_TYPES_POLICY){if("function"!=typeof e.TRUSTED_TYPES_POLICY.createHTML)throw S('TRUSTED_TYPES_POLICY configuration option must provide a "createHTML" hook.');if("function"!=typeof e.TRUSTED_TYPES_POLICY.createScriptURL)throw S('TRUSTED_TYPES_POLICY configuration option must provide a "createScriptURL" hook.');le=e.TRUSTED_TYPES_POLICY,ce=le.createHTML("")}else void 0===le&&(le=function(e,t){if("object"!=typeof e||"function"!=typeof e.createPolicy)return null;let n=null;const o="data-tt-policy-suffix";t&&t.hasAttribute(o)&&(n=t.getAttribute(o));const r="dompurify"+(n?"#"+n:"");try{return e.createPolicy(r,{createHTML:e=>e,createScriptURL:e=>e})}catch(e){return console.warn("TrustedTypes policy "+r+" could not be created."),null}}(j,c)),null!==le&&"string"==typeof ce&&(ce=le.createHTML(""));i&&i(e),dt=e}},yt=R({},[...x,...L,...k]),Et=R({},[...I,...M]),At=function(e){f(o.removed,{element:e});try{ae(e).removeChild(e)}catch(t){V(e)}},_t=function(e,t){try{f(o.removed,{attribute:t.getAttributeNode(e),from:t})}catch(e){f(o.removed,{attribute:null,from:t})}if(t.removeAttribute(e),"is"===e)if(Be||Ge)try{At(t)}catch(e){}else try{t.setAttribute(e,"")}catch(e){}},bt=function(e){let t=null,n=null;if(He)e="<remove></remove>"+e;else{const t=T(e,/^[\r\n\t ]+/);n=t&&t[0]}"application/xhtml+xml"===mt&&rt===ot&&(e='<html xmlns="http://www.w3.org/1999/xhtml"><head></head><body>'+e+"</body></html>");const o=le?le.createHTML(e):e;if(rt===ot)try{t=(new Y).parseFromString(o,mt)}catch(e){}if(!t||!t.documentElement){t=se.createDocument(rt,"template",null);try{t.documentElement.innerHTML=it?ce:o}catch(e){}}const i=t.body||t.documentElement;return e&&n&&i.insertBefore(r.createTextNode(n),i.childNodes[0]||null),rt===ot?pe.call(t,Pe?"html":"body")[0]:Pe?t.documentElement:i},St=function(e){return ue.call(e.ownerDocument||e,e,B.SHOW_ELEMENT|B.SHOW_COMMENT|B.SHOW_TEXT|B.SHOW_PROCESSING_INSTRUCTION|B.SHOW_CDATA_SECTION,null)},Nt=function(e){return e instanceof W&&("string"!=typeof e.nodeName||"string"!=typeof e.textContent||"function"!=typeof e.removeChild||!(e.attributes instanceof G)||"function"!=typeof e.removeAttribute||"function"!=typeof e.setAttribute||"string"!=typeof e.namespaceURI||"function"!=typeof e.insertBefore||"function"!=typeof e.hasChildNodes)},Dt=function(e){return"function"==typeof D&&e instanceof D};function Rt(e,t,n){u(e,(e=>{e.call(o,t,n,dt)}))}const wt=function(e){let t=null;if(Rt(de.beforeSanitizeElements,e,null),Nt(e))return At(e),!0;const n=ft(e.nodeName);if(Rt(de.uponSanitizeElement,e,{tagName:n,allowedTags:Ne}),ze&&e.hasChildNodes()&&!Dt(e.firstElementChild)&&b(/<[/\w!]/g,e.innerHTML)&&b(/<[/\w!]/g,e.textContent))return At(e),!0;if(e.nodeType===ee)return At(e),!0;if(ze&&e.nodeType===te&&b(/<[/\w]/g,e.data))return At(e),!0;if(!(xe.tagCheck instanceof Function&&xe.tagCheck(n))&&(!Ne[n]||Oe[n])){if(!Oe[n]&&Ot(n)){if(Ce.tagNameCheck instanceof RegExp&&b(Ce.tagNameCheck,n))return!1;if(Ce.tagNameCheck instanceof Function&&Ce.tagNameCheck(n))return!1}if(Xe&&!Ke[n]){const t=ae(e)||e.parentNode,n=ie(e)||e.childNodes;if(n&&t){for(let o=n.length-1;o>=0;--o){const r=$(n[o],!0);r.__removalCount=(e.__removalCount||0)+1,t.insertBefore(r,re(e))}}}return At(e),!0}return e instanceof w&&!function(e){let t=ae(e);t&&t.tagName||(t={namespaceURI:rt,tagName:"template"});const n=h(e.tagName),o=h(t.tagName);return!!at[e.namespaceURI]&&(e.namespaceURI===nt?t.namespaceURI===ot?"svg"===n:t.namespaceURI===tt?"svg"===n&&("annotation-xml"===o||ct[o]):Boolean(yt[n]):e.namespaceURI===tt?t.namespaceURI===ot?"math"===n:t.namespaceURI===nt?"math"===n&&st[o]:Boolean(Et[n]):e.namespaceURI===ot?!(t.namespaceURI===nt&&!st[o])&&!(t.namespaceURI===tt&&!ct[o])&&!Et[n]&&(ut[n]||!yt[n]):!("application/xhtml+xml"!==mt||!at[e.namespaceURI]))}(e)?(At(e),!0):"noscript"!==n&&"noembed"!==n&&"noframes"!==n||!b(/<\/no(script|embed|frames)/i,e.innerHTML)?(Ue&&e.nodeType===Q&&(t=e.textContent,u([he,ge,Te],(e=>{t=y(t,e," ")})),e.textContent!==t&&(f(o.removed,{element:e.cloneNode()}),e.textContent=t)),Rt(de.afterSanitizeElements,e,null),!1):(At(e),!0)},Ct=function(e,t,n){if(Ye&&("id"===t||"name"===t)&&(n in r||n in ht))return!1;if(ke&&!ve[t]&&b(ye,t));else if(Le&&b(Ee,t));else if(xe.attributeCheck instanceof Function&&xe.attributeCheck(t,e));else if(!Re[t]||ve[t]){if(!(Ot(e)&&(Ce.tagNameCheck instanceof RegExp&&b(Ce.tagNameCheck,e)||Ce.tagNameCheck instanceof Function&&Ce.tagNameCheck(e))&&(Ce.attributeNameCheck instanceof RegExp&&b(Ce.attributeNameCheck,t)||Ce.attributeNameCheck instanceof Function&&Ce.attributeNameCheck(t,e))||"is"===t&&Ce.allowCustomizedBuiltInElements&&(Ce.tagNameCheck instanceof RegExp&&b(Ce.tagNameCheck,n)||Ce.tagNameCheck instanceof Function&&Ce.tagNameCheck(n))))return!1}else if(Qe[t]);else if(b(Se,y(n,_e,"")));else if("src"!==t&&"xlink:href"!==t&&"href"!==t||"script"===e||0!==E(n,"data:")||!Ze[e]){if(Ie&&!b(Ae,y(n,_e,"")));else if(n)return!1}else;return!0},Ot=function(e){return"annotation-xml"!==e&&T(e,be)},vt=function(e){Rt(de.beforeSanitizeAttributes,e,null);const{attributes:t}=e;if(!t||Nt(e))return;const n={attrName:"",attrValue:"",keepAttr:!0,allowedAttributes:Re,forceKeepAttr:void 0};let r=t.length;for(;r--;){const i=t[r],{name:a,namespaceURI:l,value:c}=i,s=ft(a),m=c;let f="value"===a?m:A(m);if(n.attrName=s,n.attrValue=f,n.keepAttr=!0,n.forceKeepAttr=void 0,Rt(de.uponSanitizeAttribute,e,n),f=n.attrValue,!je||"id"!==s&&"name"!==s||(_t(a,e),f="user-content-"+f),ze&&b(/((--!?|])>)|<\/(style|title|textarea)/i,f)){_t(a,e);continue}if("attributename"===s&&T(f,"href")){_t(a,e);continue}if(n.forceKeepAttr)continue;if(!n.keepAttr){_t(a,e);continue}if(!Me&&b(/\/>/i,f)){_t(a,e);continue}Ue&&u([he,ge,Te],(e=>{f=y(f,e," ")}));const d=ft(e.nodeName);if(Ct(d,s,f)){if(le&&"object"==typeof j&&"function"==typeof j.getAttributeType)if(l);else switch(j.getAttributeType(d,s)){case"TrustedHTML":f=le.createHTML(f);break;case"TrustedScriptURL":f=le.createScriptURL(f)}if(f!==m)try{l?e.setAttributeNS(l,a,f):e.setAttribute(a,f),Nt(e)?At(e):p(o.removed)}catch(t){_t(a,e)}}else _t(a,e)}Rt(de.afterSanitizeAttributes,e,null)},xt=function e(t){let n=null;const o=St(t);for(Rt(de.beforeSanitizeShadowDOM,t,null);n=o.nextNode();)Rt(de.uponSanitizeShadowNode,n,null),wt(n),vt(n),n.content instanceof s&&e(n.content);Rt(de.afterSanitizeShadowDOM,t,null)};return o.sanitize=function(e){let t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{},n=null,r=null,i=null,l=null;if(it=!e,it&&(e="\x3c!--\x3e"),"string"!=typeof e&&!Dt(e)){if("function"!=typeof e.toString)throw S("toString is not a function");if("string"!=typeof(e=e.toString()))throw S("dirty is not a string, aborting")}if(!o.isSupported)return e;if(Fe||Tt(t),o.removed=[],"string"==typeof e&&(qe=!1),qe){if(e.nodeName){const t=ft(e.nodeName);if(!Ne[t]||Oe[t])throw S("root node is forbidden and cannot be sanitized in-place")}}else if(e instanceof D)n=bt("\x3c!----\x3e"),r=n.ownerDocument.importNode(e,!0),r.nodeType===J&&"BODY"===r.nodeName||"HTML"===r.nodeName?n=r:n.appendChild(r);else{if(!Be&&!Ue&&!Pe&&-1===e.indexOf("<"))return le&&We?le.createHTML(e):e;if(n=bt(e),!n)return Be?null:We?ce:""}n&&He&&At(n.firstChild);const c=St(qe?e:n);for(;i=c.nextNode();)wt(i),vt(i),i.content instanceof s&&xt(i.content);if(qe)return e;if(Be){if(Ge)for(l=me.call(n.ownerDocument);n.firstChild;)l.appendChild(n.firstChild);else l=n;return(Re.shadowroot||Re.shadowrootmode)&&(l=fe.call(a,l,!0)),l}let m=Pe?n.outerHTML:n.innerHTML;return Pe&&Ne["!doctype"]&&n.ownerDocument&&n.ownerDocument.doctype&&n.ownerDocument.doctype.name&&b(K,n.ownerDocument.doctype.name)&&(m="<!DOCTYPE "+n.ownerDocument.doctype.name+">\n"+m),Ue&&u([he,ge,Te],(e=>{m=y(m,e," ")})),le&&We?le.createHTML(m):m},o.setConfig=function(){Tt(arguments.length>0&&void 0!==arguments[0]?arguments[0]:{}),Fe=!0},o.clearConfig=function(){dt=null,Fe=!1},o.isValidAttribute=function(e,t,n){dt||Tt({});const o=ft(e),r=ft(t);return Ct(o,r,n)},o.addHook=function(e,t){"function"==typeof t&&f(de[e],t)},o.removeHook=function(e,t){if(void 0!==t){const n=m(de[e],t);return-1===n?void 0:d(de[e],n,1)[0]}return p(de[e])},o.removeHooks=function(e){de[e]=[]},o.removeAllHooks=function(){de={afterSanitizeAttributes:[],afterSanitizeElements:[],afterSanitizeShadowDOM:[],beforeSanitizeAttributes:[],beforeSanitizeElements:[],beforeSanitizeShadowDOM:[],uponSanitizeAttribute:[],uponSanitizeElement:[],uponSanitizeShadowNode:[]}},o}();return re}));
+//# sourceMappingURL=purify.min.js.map
+
+
+// 1. The Debounce Helper (The "Firewall" for rapid input)
+function debounce(func, delay) {
+    let timeoutId;
+    return (...args) => {
+        // If a new keystroke comes in before the delay is over, 
+        // we kill the previous timer and start a new one.
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+            func.apply(null, args);
+        }, delay);
+    };
+}
+
+/**
+ * Actual Wiki Filtering Logic
+ * This is where the perimeter hands off the "Cleaned" input to the UI
+ */
+function performWikiSearch(query) {
+    console.log(`🔍 Wiki is now searching for: ${query}`);
+    // Add your logic here to filter through your page list or content
+}
+
+
+// 2. The Search Logic (Sanitized and Protected)
+const handleSearch = (event) => {
+    const rawInput = event.target.value;
+    
+    // Shielding: Only process if the input is clean
+    const cleanInput = DOMPurify.sanitize(rawInput).trim();
+    
+    if (cleanInput.length > 0) {
+        console.log(`[Perimeter] Processing sanitized search: ${cleanInput}`);
+  
+       // Your actual filtering logic goes here
+        performWikiSearch(cleanInput); 
+    }
+};
+
+// 3. Attach with 300ms Cooldown
+const searchInput = document.getElementById('filterInput-splash');
+if (searchInput) {
+    searchInput.addEventListener('input', debounce(handleSearch, 300));
+}
+
+
+
+// ====== UPDATED SOVEREIGN FIREWALL (Real-Time) ======
 (function secureClientApp() {
-    // These methods of blocking are less reliable than CSP, but provide defense-in-depth.
+    const sanitize = (el) => {
+        if (el.value) {
+            // Real-time scrubbing using DOMPurify
+            const clean = DOMPurify.sanitize(el.value);
+            if (el.value !== clean) {
+                el.value = clean;
+                console.warn("⚠️ MEV Firewall: Blocked potential script injection.");
+            }
+        }
+    };
+
+    // Listen for every keystroke and every time the user leaves the field
+    document.addEventListener("input", (e) => sanitize(e.target));
+    document.addEventListener("blur", (e) => sanitize(e.target));
+
+    // Defense-in-Depth UI Protections
     document.addEventListener("contextmenu", e => e.preventDefault());
     document.addEventListener("dragstart", e => e.preventDefault());
     document.addEventListener("selectstart", e => e.preventDefault());
-
-    // Basic function overriding for security (though this is often circumventable)
-    // NOTE: This now relies on the Content-Security-Policy to truly block 'unsafe-eval'
-    window.eval = () => console.warn('eval blocked');
-    window.Function = function() { console.warn('Function constructor blocked'); };
-
-    const originalSetTimeout = window.setTimeout;
-    window.setTimeout = function(fn, delay) {
-      if (typeof fn === 'string') {
-        console.warn('setTimeout(string) blocked');
-        return;
-      }
-      return originalSetTimeout(fn, delay);
-    };
-
-    if (document.head) {
-      // Adding meta tags that are not redundant with the SW headers
-      document.head.insertAdjacentHTML("beforeend", `
-          <meta http-equiv="Referrer-Policy" content="no-referrer">
-          <meta http-equiv="Permissions-Policy" content="microphone=(), camera=(), geolocation=()">
-      `);
-    }
-
-    if (!location.hostname.includes('localhost')) {
-      // console.log = console.warn = console.error = () => {}; 
-    }
 })();
 
 const STORAGE_KEYS = {
@@ -45,6 +86,11 @@ const STORAGE_KEYS = {
     cryptoParams: 'wiki_crypto_params'
 };
 
+const MEV_VERSION = "1.2.6-PerimeterFinal";
+
+
+/* ... Remainder of your a.js Crypto and Recovery Logic ... */
+
 // 🔒 GLOBAL IN-MEMORY ENCRYPTION KEY (Non-persistent storage)
 let encryptionKey = null;
 window.userCrypto = null; // Stored user crypto parameters
@@ -54,7 +100,7 @@ window.userCrypto = null; // Stored user crypto parameters
 // ==========================================================
 
 const CRYPTO_CONFIG = {
-    iterations: 100000,
+    iterations: 600000,
     saltLength: 16,
     ivLength: 12,
     algo: 'AES-GCM',
@@ -157,7 +203,7 @@ async function saveData(key, data) {
                 __encrypted: true,
                 data: encrypted
             });
-            console.log(`✅ Data for ${key} saved (Encrypted).`);
+            // console.log(`✅ Data for ${key} saved (Encrypted).`);
         } else {
             valueToStore = rawJson;
         }
@@ -476,93 +522,66 @@ async function showAbout() {
 }
 
 
-// [ ... The rest of the core functions (parseWiki, updateStorageBar, setMainView, etc.)
-//     remain the same, but are now called from app.js instead of the inline script. ]
 
 
-// 1. Fix: Escaped the / in the regex with \/
+// Ensure this remains safe for your CSP
 const htmlEscapes = {
-  '&': '&amp;',
-  '<': '&lt;',
-  '>': '&gt;',
-  '"': '&quot;',
-  "'": '&#039;',
-  '/': '&#x2F;'
+  '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;', '/': '&#x2F;'
 };
 
 function escapeHTML(str) {
-  // \x22 is " and \x27 is '
-  // This prevents the JS file from breaking while still catching the symbols
+  if (!str) return '';
   return str.replace(/[&<>\x22\x27\/]/g, match => htmlEscapes[match]);
-}
-
-// 2. Fix: Template Literals for variable injection
-async function runFirewall() {
-  const visitorIP = "127.0.0.1"; // Placeholder for your logic
-  // Using backticks (`) allows the ${} to work correctly
-  console.log(`Checking identity: ${visitorIP}`);
-  
-  const searchInput = document.getElementById('ai-input');
-  if (searchInput) {
-    searchInput.value = escapeHTML(searchInput.value);
-  }
 }
 
 function parseWiki(text) {
   if (!text) return '';
 
-  let result = escapeHTML(text);
-
-  // Headings
-  result = result.replace(/^={2,6}\s*(.+?)\s*={2,6}$/gm, (m, p1) => {
-    const lvl = m.match(/^=+/)[0].length;
-    return `<h${lvl}>${p1}</h${lvl}>`;
-  });
-  // Bold and Italic
-  result = result.replace(/'''(.*?)'''/g, '<strong>$1</strong>');
-  result = result.replace(/''(.*?)''/g, '<em>$1</em>');
-  //  Links (CSP-SAFE: Event handler removed, replaced with data attribute)
-  result = result.replace(/\[\[([^\]]+)\]\]/g, (_, t) =>
-    `<a href="#" data-page-link="${t}">${escapeHTML(t)}</a>`
-  );
-  // Code blocks
-  result = result.replace(/```([\s\S]*?)```/g, (m, p1) =>
-      `<pre style="background: #eee; padding: 10px; border-radius: 4px; overflow-x: auto;">${escapeHTML(p1).trim()}</pre>`
-  );
-  // Inline code
-  result = result.replace(/`([^`]+)`/g, '<code>$1</code>');
-
-  // List parsing
+  let lines = text.split('\n');
   let finalHtml = '';
   let inUL = false;
   let inOL = false;
 
-  result.split('\n').forEach(line => {
+  lines.forEach(line => {
+    // Check for Lists first
     if (/^\*\s+/.test(line)) {
       if (inOL) { finalHtml += '</ol>'; inOL = false; }
       if (!inUL) { finalHtml += '<ul>'; inUL = true; }
-      finalHtml += `<li>${line.replace(/^\*\s+/, '')}</li>`;
+      finalHtml += `<li>${inlineParse(line.replace(/^\*\s+/, ''))}</li>`;
     } else if (/^\#\s+/.test(line)) {
       if (inUL) { finalHtml += '</ul>'; inUL = false; }
       if (!inOL) { finalHtml += '<ol>'; inOL = true; }
-      finalHtml += `<li>${line.replace(/^\#\s+/, '')}</li>`;
+      finalHtml += `<li>${inlineParse(line.replace(/^\#\s+/, ''))}</li>`;
     } else {
+      // Close open lists
       if (inUL) { finalHtml += '</ul>'; inUL = false; }
       if (inOL) { finalHtml += '</ol>'; inOL = false; }
+      
       if (line.trim() !== '') {
-          finalHtml += line + '<br>';
+        finalHtml += inlineParse(line) + '<br>';
       } else {
-          finalHtml += '<br>';
+        finalHtml += '<br>';
       }
     }
   });
 
   if (inUL) finalHtml += '</ul>';
-  if (inOL) finalHtml += '</ul>';
-
-  finalHtml += `<div class="semantic-status">✔️ Semantic HTML Enabled</div><br>`;
+  if (inOL) finalHtml += '</ol>';
   return finalHtml;
 }
+
+// Sub-function to handle formatting inside lines
+function inlineParse(str) {
+  // Bold/Italic
+  str = str.replace(/'''(.*?)'''/g, '<strong>$1</strong>');
+  str = str.replace(/''(.*?)''/g, '<em>$1</em>');
+  // Wiki Links - Escape display text, but keep attribute functional
+  str = str.replace(/\[\[([^\]]+)\]\]/g, (_, t) => `<a href="#" data-page-link="${escapeHTML(t)}">${escapeHTML(t)}</a>`);
+  // Inline Code
+  str = str.replace(/`([^`]+)`/g, (m, p1) => `<code>${escapeHTML(p1)}</code>`);
+  return str;
+}
+
 
 function updateStorageBar() {
     const bar = document.getElementById('storage-bar-inner');
@@ -761,7 +780,7 @@ function setupAuth() {
     updateAuthUI();
     updateUserStatus();
     updateStorageBar();
-    await showPage("Main-Page");
+    await showPage("Main_Page");
   }
   
   function logout() {
@@ -828,7 +847,7 @@ async function createPage(titleFromSearch = null) {
   if (protectedKeywords.includes(lowerTitle)) {
       console.warn("Unauthorized property manipulation attempt detected.");
       localStorage.setItem('mev_breach_detected', 'true');
-      location.href = './index.html#search'; 
+      location.href = './css.html'; 
       return;
   }
   
@@ -886,7 +905,7 @@ async function savePage(title) {
   if (typeof title !== 'string' || !title.trim() || protectedKeywords.includes(title.toLowerCase())) {
       console.warn("STOP! Unauthorized property manipulation attempt detected.");
       localStorage.setItem('mev_breach_detected', 'true');
-      location.href = './index.html#search'; 
+      location.href = './css.html'; 
       return;
   }
 
@@ -1057,7 +1076,7 @@ async function showPage(title) {
   document.getElementById('edit-btn')?.addEventListener('click', () => editPage(title));
   document.getElementById('delete-btn')?.addEventListener('click', () => deletePage(title));
   
-  if (title === "Main-Page") {
+  if (title === "Main_Page") {
       location.hash = "#main";
   } else {
       location.hash = `#${encodeURIComponent(title)}`;
@@ -1143,7 +1162,7 @@ async function savePage(title) {
   if (protectedKeywords.includes(cleanTitle)) {
       console.warn("STOP! Unauthorized property manipulation attempt detected.");
       localStorage.setItem('mev_breach_detected', 'true');
-      location.href = './index.html#search'; 
+      location.href = './css.html'; 
       return;
   }
 
@@ -1254,8 +1273,8 @@ Use the '=' symbol at the start and end of a line to create headings:
 
 === Internal Links ===
 Link to another page in the localhost using double square brackets:
-[[Main-Page]]
-[[User Guide: Getting Started]]
+[[Main_Page]]
+[[Formatting_Examples]]
 
 === Code Blocks ===
 Inline code: Use a backtick \` to wrap short code snippets. Example: \`const x = 5;\`
@@ -1273,52 +1292,29 @@ function exampleCode() {
   console.log("✅ Example localhost page created.");
 }
 
-// ✅ UPDATED: Content for Main-Page.
+// ✅ UPDATED: Content for Main_Page.
 async function ensureMainPage() {
   const pages = await loadData(STORAGE_KEYS.pages, {}); 
-  if (!pages["Main-Page"]) {
-    pages["Main-Page"] = {
-      title: "Main-Page",
-      content: "== Welcome to localhost  ==\n\nAn offline‑first encyclopedia powered by your browser. No tracking, no server. You can search the localhost using the bar above, or check the [[User Guide: Getting Started]] page to learn more. You can also create a new page now!",
+  if (!pages["Main_Page"]) {
+    pages["Main_Page"] = {
+      title: "Main_Page",
+      content: "== Welcome to localhost  ==\n\nAn offline‑first encyclopedia powered by your browser. No tracking, no server. You can search the localhost using the bar above, or check the [[Formatting_Examples]] page to learn more. You can also create a new page now!",
       lastEdited: new Date().toISOString(),
       createdBy: "System"
     };
     await saveData(STORAGE_KEYS.pages, pages); 
-    console.log("✅ Main-Page created.");
+    console.log("✅ Main_Page created.");
   }
 }
 
-// ✅ NEW FUNCTION: To create the localhost page for log.html.
-async function ensureVisualLogPage() {
-    const title = "Visual_Log";
-    const pages = await loadData(STORAGE_KEYS.pages, {});
-    if (pages[title]) return;
-    
-    const content = `
-== Visual Log and Change History ==
 
-This page provides access to the project historical change visualization tool.
-
-=== 3D Log Visualization ===
-The **3D Log Viewer** is an advanced tool for seeing user and page edit trails in a spatial environment. It uses the file named '''log.html''' which must be opened directly.
-
-You will need to open the external file directly from your browser.
-File Path: \`log.html\`
-
-=== Recent Edits ===
-For a simple, chronological list of the last 50 edits directly within the localhost, visit the [[Recent Changes]] page.
-`;
-    pages[title] = { title, content, createdBy:'System', lastEdited:new Date().toISOString() };
-    await saveData(STORAGE_KEYS.pages, pages); 
-    console.log("✅ Visual Log localhost page created.");
-}
 
 async function answerAI(query) {
   setMainView(true); 
   console.log("Search query:", query);
   const txt = query.trim();
   if (!txt) {
-      await showPage("Main-Page"); 
+      await showPage("Main_Page"); 
       return;
   }
   
@@ -1363,7 +1359,7 @@ async function generatePageButtonsFindView() {
   listEl.innerHTML = '';
   
   const staticLinks = [
-      { title: "Main-Page", hash: "main" },
+      { title: "Main_Page", hash: "main" },
       { title: "Recent Changes", hash: "recent" },
       { title: "Settings", hash: "settings" },
       { title: "About", hash: "about" }
@@ -1609,7 +1605,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Create/Ensure essential localhost pages
   await createExampleWikiPage(); 
   await ensureMainPage(); 
-  await ensureVisualLogPage(); 
   
   await updatePageListSidebar(); 
   await generatePageButtonsFindView(); 
@@ -1622,7 +1617,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Hash Change Listener (remains functional)
   window.addEventListener('hashchange', async () => { 
     const hash = decodeURIComponent(location.hash.slice(1));
-    if (hash === "main") await showPage("Main-Page");
+    if (hash === "main") await showPage("Main_Page");
     else if (hash === "settings") await showSettings();
     else if (hash === "about") await showAbout();
     else if (hash === "recent") await showRecent();
@@ -1632,16 +1627,42 @@ document.addEventListener('DOMContentLoaded', async () => {
     else if (hash) { 
         await showPage(hash); 
     } else {
-        await showPage("Main-Page"); 
+        await showPage("Main_Page"); 
     }
   });
 
   // CSP-SAFE Event Listeners (Instead of inline handlers)
 
-  // 1. Menu and Search Controls
-  document.getElementById('menu-btn')?.addEventListener('click', toggleSidebar);
-  document.getElementById('ai-input')?.addEventListener('input', titleInputSidebar); // Filter sidebar on input
-  document.getElementById('filterInput-find')?.addEventListener('input', titleInputFindView); // Filter find view on input
+// 1. Menu and Search Controls
+document.getElementById('menu-btn')?.addEventListener('click', toggleSidebar);
+
+const searchInput = document.getElementById('ai-input');
+if (searchInput) {
+    // A. Original sidebar filtering logic
+    searchInput.addEventListener('input', titleInputSidebar); 
+
+    // B. Hardened Underscore Logic (moved from index.html)
+    searchInput.addEventListener('input', function(e) {
+        const start = this.selectionStart;
+        const end = this.selectionEnd;
+        const originalValue = this.value;
+        const newValue = originalValue.replace(/\s+/g, '_');
+
+        if (originalValue !== newValue) {
+            this.value = newValue;
+            this.setSelectionRange(start, end);
+        }
+    });
+
+    // C. Handle "Paste" events
+    searchInput.addEventListener('paste', function(e) {
+        setTimeout(() => {
+            this.value = this.value.replace(/\s+/g, '_');
+        }, 0);
+    });
+}
+
+document.getElementById('filterInput-find')?.addEventListener('input', titleInputFindView);
   
   // 2. Search Button Action
   document.getElementById('ai-button')?.addEventListener('click', async () => {
@@ -1655,7 +1676,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (query) {
       await answerAI(query);
     } else {
-      await showPage("Main-Page");
+      await showPage("Main_Page");
     }
     
     // Clear search inputs after submission
@@ -1689,21 +1710,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 7. Settings Action Handler (Delegated)
   document.getElementById('page-container')?.addEventListener('click', handleSettingsAction);
 
-  // Initial load based on hash (skip if CLI action already loaded a specific view)
-  if (!cliActionHandled) {
-    const initialHash = decodeURIComponent(location.hash.slice(1));
-    if (initialHash && initialHash !== "search" && initialHash !== "notfound") {
-      if (initialHash === "main") await showPage("Main-Page");
-      else if (initialHash === "settings") await showSettings();
-      else if (initialHash === "about") await showAbout();
-      else if (initialHash === "recent") await showRecent();
-      else if (initialHash === "profile") showProfile();
-      else if (initialHash === "Import_Data") await showPage("Import_Data"); // Added for initial load
-      else await showPage(initialHash); 
-    } else {
-        await showPage("Main-Page");
-    }
-  }
 
 // SW Registration (Hardened Physical File)
 if ('serviceWorker' in navigator) {
@@ -1741,3 +1747,167 @@ if (navigator.storage && navigator.storage.persist) {
     }
   });
 }
+
+
+
+// ====== SPLASH SCREEN & SEARCH INITIALIZATION (CSP-SAFE) ======
+(function initSovereignSplash() {
+    const HUMAN_KEY = 'mev_human_verified';
+
+    // Helper to hide splash and navigate
+    function exitSplash(hash) {
+        localStorage.setItem(HUMAN_KEY, 'true');
+        const splash = document.getElementById('mev-splash-screen');
+        if (splash) splash.style.display = 'none';
+        
+        // Ensure proper hash formatting
+        const targetHash = hash.startsWith('#') ? hash : `#${hash}`;
+        window.location.hash = targetHash;
+        
+        if (typeof window.showPage === 'function') {
+            window.showPage(decodeURIComponent(targetHash.substring(1)));
+        }
+    }
+
+    function createSplashButton(title, hash) {
+        const li = document.createElement('li');
+        const button = document.createElement('button');
+        button.textContent = title.replace(/_/g, ' ');
+        button.className = 'mev-button';
+        button.type = 'button'; // Prevents button from submitting forms
+        
+        button.addEventListener('click', () => exitSplash(hash));
+        
+        li.appendChild(button);
+        return li;
+    }
+
+    async function setupSplash() {
+        const listEl = document.getElementById('page-list-splash');
+        const inputEl = document.getElementById('filterInput-splash');
+        const formEl = document.getElementById('splash-form');
+        if (!listEl) return;
+
+        // 1. Clear and Load Data
+        listEl.innerHTML = '';
+        const pages = await loadData(STORAGE_KEYS.pages, {});
+        const fragment = document.createDocumentFragment();
+
+        // 2. Add Static & Dynamic Links to a Fragment (Performance Boost)
+        const staticLinks = [{ title: "Main_Page", hash: "Main_Page" }];
+        const titles = Object.keys(pages).sort();
+
+        staticLinks.forEach(link => fragment.appendChild(createSplashButton(link.title, link.hash)));
+        titles.forEach(title => fragment.appendChild(createSplashButton(title, title)));
+
+        listEl.appendChild(fragment);
+
+        // 3. Fix the "Enter Key" Refresh (Form Submission)
+        formEl?.addEventListener('submit', (e) => {
+            e.preventDefault(); // Stop the page refresh
+            const firstVisible = listEl.querySelector('li:not([style*="display: none"]) button');
+            if (firstVisible) {
+                firstVisible.click(); // Open the first result found
+            }
+        });
+
+        // 4. Search Filter Logic
+        inputEl?.addEventListener('input', function() {
+            const filter = this.value.toLowerCase();
+            const items = listEl.querySelectorAll('li');
+            
+            items.forEach(li => {
+                const text = li.textContent.toLowerCase();
+                li.style.display = text.includes(filter) ? "block" : "none";
+            });
+        });
+    }
+
+    // Initialize
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setupSplash);
+    } else {
+        setupSplash();
+    }
+})();
+
+
+// ====== SOVEREIGN CONTROLLER: THEME & DATA (CSP-SAFE) ======
+document.addEventListener('click', async (e) => {
+    // 1. Handle "Less" Theme Toggle
+    if (e.target && e.target.id === 'toggle-theme-btn') {
+        const isLess = document.body.classList.toggle('less-mode');
+        localStorage.setItem('wiki_theme_less', isLess ? 'enabled' : 'disabled');
+        e.target.textContent = isLess ? '🌖 Switch to Full Theme' : '🌗 Toggle Less Theme';
+    }
+
+    // 2. Handle Import Data Button Trigger
+    if (e.target && e.target.id === 'import-trigger-btn') {
+        document.getElementById('import-file-input')?.click();
+    }
+
+    // 3. Handle Export Data Button
+    if (e.target && e.target.id === 'export-data-btn') {
+        const pages = await loadData(STORAGE_KEYS.pages, {});
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({pages}));
+        const downloadAnchor = document.createElement('a');
+        downloadAnchor.setAttribute("href", dataStr);
+        downloadAnchor.setAttribute("download", "mev_sovereign_backup.json");
+        document.body.appendChild(downloadAnchor);
+        downloadAnchor.click();
+        downloadAnchor.remove();
+    }
+});
+
+// 4. Handle File Processing for Import
+document.addEventListener('change', (e) => {
+    if (e.target && e.target.id === 'import-file-input') {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = async (event) => {
+            try {
+                const data = JSON.parse(event.target.result);
+                await saveData(STORAGE_KEYS.pages, data.pages || {});
+                alert("Data Imported Successfully into the Subconscious.");
+                window.location.reload();
+            } catch (err) {
+                alert("Error: Invalid Backup File.");
+            }
+        };
+        reader.readAsText(file);
+    }
+});
+
+// 5. Apply Theme State on Startup
+(function initThemeState() {
+    if (localStorage.getItem('wiki_theme_less') === 'enabled') {
+        document.body.classList.add('less-mode');
+    }
+})();
+
+// ====== RECOVERY PERIMETER CONTROLLER (HARDENED) ======
+document.addEventListener('click', (e) => {
+    if (e.target && e.target.id === 'restore-perimeter-btn') {
+        const BREACH_KEY = 'mev_breach_detected';
+        
+        // Manual Challenge to verify human/partner intent
+        const challenge = prompt("Perimeter Locked. Enter 'RESTORE' to return to the conscious state:");
+        
+        if (challenge === 'RESTORE') {
+            // 1. Clear the breach flags
+            localStorage.removeItem(BREACH_KEY);
+            localStorage.setItem('mev_human_verified', 'true');
+            
+            alert("Perimeter Restored. Redirecting...");
+            
+            // 2. FIXED: Redirect to index.html (Conscious State)
+            window.location.href = './index.html#search';
+        } else {
+            alert("Verification failed. Perimeter remains locked.");
+        }
+    }
+});
+
+// Ensure your existing Debounce and DOMPurify logic remains below or above this!
+
