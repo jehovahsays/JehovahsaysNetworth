@@ -1043,7 +1043,7 @@ async function showPage(title) {
   }
   
   const finalSafeHTML = parseWiki(page.content); 
-  // IMPORTANT: For the single file, the URL will always be index.html.
+  // IMPORTANT: For the single file, the URL will always be index.htm.
   const pageUrl = `${location.origin}#${encodeURIComponent(page.title)}`; 
   const dateMod = new Date(page.lastEdited).toISOString();
   const authorName = escapeHTML(page.createdBy || 'Guest');
@@ -1642,7 +1642,7 @@ if (searchInput) {
     // A. Original sidebar filtering logic
     searchInput.addEventListener('input', titleInputSidebar); 
 
-    // B. Hardened Underscore Logic (moved from index.html)
+    // B. Hardened Underscore Logic (moved from index.htm)
     searchInput.addEventListener('input', function(e) {
         const start = this.selectionStart;
         const end = this.selectionEnd;
@@ -1927,7 +1927,7 @@ document.addEventListener('click', (e) => {
             alert("Perimeter Restored. Redirecting...");
             
             // 2. FIXED: Redirect to index.html (Conscious State)
-            window.location.href = './index.html#search';
+            window.location.href = './index.htm#search';
         } else {
             alert("Verification failed. Perimeter remains locked.");
         }
@@ -1936,3 +1936,5 @@ document.addEventListener('click', (e) => {
 
 // Ensure your existing Debounce and DOMPurify logic remains below or above this!
 
+ // three js video game mobile browser touch screen
+ 

@@ -3,7 +3,7 @@ const CACHE = "localhost-wiki-v1.2.3";
 
 const FILES = [
   "./",
-  "./index.html",
+  "./index.htm",
   "./css.html",
   "./a.js",      
   "./styles.css", 
