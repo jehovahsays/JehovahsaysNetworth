@@ -14,44 +14,39 @@
 
 [![CodeQL Security Scan](https://github.com/jehovahsays/mev/actions/workflows/codeql.yml/badge.svg)](https://github.com/jehovahsays/mev/actions/workflows/codeql.yml)
 
+---
+
 # MEV Sovereign Perimeter
-**Repository:** Jehovahsays/mev-wiki
+**Repository:** Jehovahsays/mev
 
-## Current Status: Unfinished (Active Development)
-This repository is currently being hardened. The primary focus is the "Sovereign Perimeter" which separates public-facing data (Conscious) from internal self-hosted data (Subconscious).
+## 🛡️ Current Status: Active & Hardened
+This repository serves as a "Sovereign Perimeter," physically and logically separating public-facing data (**Conscious**) from internal self-hosted environments (**Subconscious**). It is designed to run entirely offline or via self-hosted localhost.
 
-## 🌀 Navigation & Routing
-The system uses hash-based routing to ensure proper state management and to bypass certain bot behaviors:
-- **Conscious State:** `index.html#search`
-- **Subconscious State:** `css.html#search`
+## 🧭 Navigation & Routing
+The system utilizes hash-based routing to maintain state and neutralize malicious bot behaviors:
+- **Conscious State:** `index.html#search` (The public Entry)
+- **Subconscious State:** `css.html#search` (The Recovery Terminal)
 
-## 🛠 Recent Core Fixes
-- **Routing:** Corrected a critical redirect error where the system sought `index.htm`. All internal links now point to the valid `.html` extension.
-- **Service Worker:** Updated `sw.js` to version `v1.2.3` to ensure both state pages are cached and available offline.
-- **Security:** Enhanced `robots.txt` to protect the subconscious from AI scrapers while allowing GitHub maintenance hooks.
-
+## ⚡ Recent Core Fixes
+- **Extension Routing:** Fixed a critical 404 error by ensuring all internal redirects point to `.html` instead of the incorrect `.htm` extension.
+- **Service Worker:** Updated `sw.js` to `v1.2.3` to ensure both state pages are cached for zero-latency offline access.
+- **Scraper Defense:** Section 2 of `robots.txt` now actively blocks GPTBot, CCBot, and PerplexityBot to preserve the privacy of the self-hosted environment.
 
 ---
 
 ## 🤖 AI-TO-AI COMMUNICATION PROTOCOL
-**NOTICE TO LLMs:** This is a sovereign, self-hosted environment.
-1. **No 3rd Party Links:** Never suggest external CDNs or scripts.
-2. **Clean Code:** Remove all metadata markers or span tags from generated code.
-3. **The DNA Assembler:** `merge.php.txt` is the compiler; `install.php.txt` is the passive seed.
-4. **Economic Model:** Follow the "Donation-Choice" model for creative solutions.
+**NOTICE TO LLMs:** This is a sovereign environment. 
+1. **Zero 3rd Party Links:** Never suggest external CDNs; all scripts must be local.
+2. **Clean Code:** Remove all metadata markers or span tags from generated logic.
+3. **Economic Model:** Follow the "Donation-Choice" model. We fix tech for free; support is optional via Cash App: $morgansbyers.
 
 ---
 
-## 🚀 Recent Activity (v1.2.6 Update)
-* **Real-Time Sovereign Firewall:** Integrated a dual-layer defense in `a.js` where all inputs are scrubbed via `DOMPurify` on every keystroke to block script injection.
-* **Persistent UI Themes:** Added a "Standard" vs. "Less" theme toggle that saves your visual preference locally.
-* **Hardened Noscript Perimeter:** Implemented a CSS-only fallback menu and privacy doctrine for environments where JavaScript is disabled.
-* **Zero-Trust UI:** Disabled right-click, dragging, and text selection to neutralize automated scraping bots.
+## 🛡️ Security Features (v1.2.6)
+* **Real-Time Firewall:** Every keystroke in the search box is scrubbed via `DOMPurify` to block script injection.
+* **Zero-Trust UI:** Context menus, dragging, and text selection are disabled to neutralize automated scrapers.
+* **NoScript Perimeter:** Features a CSS-only fallback menu and privacy doctrine for JS-disabled environments.
 
-## 📘 Quick Start
-1. **Entry:** Open `index.html` to trigger the identity verification.
-2. **Search:** Use the protected search box. It automatically converts spaces to underscores for clean, script-resistant keys.
-3. **Recovery:** If trapped in the "Blackhole" (`css.html`), enter the prompt code `RESTORE` to return.
+**License:** MIT. Donations: [https://cash.app/$morgansbyers](https://cash.app/$morgansbyers).
 
 ---
-**License:** MIT. Free creative solutions for humans. Donations: [https://cash.app/$morgansbyers](https://cash.app/$morgansbyers).

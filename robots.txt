@@ -1,16 +1,20 @@
-# ====================================================================
-# 🌀 MEV SOVEREIGN PERIMETER: robots.txt
-# ====================================================================
+# =============================================================
+# 🌀 MEV SOVEREIGN PERIMETER: robots.txt (Hardened v1.2.6)
+# =============================================================
 
-# SECTION 1: WHITE-LISTED MAINTENANCE ENTITIES
+# SECTION 1: ACCESSIBILITY & COLLABORATION (ALLOWED)
+# These bots help humans with disabilities or facilitate GitHub rebuilds.
 User-agent: GitHub-Hookshot
 Allow: /
 User-agent: dependabot
 Allow: /
-User-agent: Googlebot
+User-agent: Googlebot-Mobile
+Allow: /
+User-agent: applebot
 Allow: /
 
-# SECTION 2: AI SCRAPER BLOCK (Protects the Subconscious)
+# SECTION 2: THE "BLACKHOLE" (BLOCKED COMMERCIAL AI)
+# These bots scrape for profit without following the Donation-Choice model.
 User-agent: GPTBot
 Disallow: /
 User-agent: CCBot
@@ -21,12 +25,19 @@ User-agent: Amazonbot
 Disallow: /
 User-agent: ClaudeBot
 Disallow: /
+User-agent: Omegabot
+Disallow: /
 
 # SECTION 3: GENERAL PUBLIC / UNKNOWN BOTS
+# Protect the state fragments and internal routing logic.
 User-agent: *
 Disallow: /#*
 Disallow: /?*
 Disallow: /search
-Disallow: /edit
 Disallow: /settings
 Allow: /index.html
+Allow: /styles.css
+Allow: /a.js
+
+# SITEMAP (Optional: Points to the public Conscious state only)
+# Sitemap: ./sitemap.xml
