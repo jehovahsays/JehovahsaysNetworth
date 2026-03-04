@@ -1,0 +1,11 @@
+# Standard Python Server (run_wiki.py uses built-in libraries)
+# No extra install needed for standard Python gateway.
+
+# Quantum Gateway (run_wiki_quantum.py)
+qiskit==1.0.2
+qiskit-aer==0.14.1
+
+# Note for other environments:
+# Ruby: Requires 'webrick' (gem install webrick)
+# Rust: Requires 'warp' and 'tokio' (handled via Cargo.toml)
+# Node.js: Uses built-in 'http', 'fs', and 'path' modules.

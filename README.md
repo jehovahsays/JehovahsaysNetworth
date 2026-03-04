@@ -19,6 +19,68 @@
 # MEV Sovereign Perimeter
 **Repository:** Jehovahsays/mev
 
+## ⚡ Quick Start: The MEV Gateway Control Panel
+
+For Windows users, the `mev.bat` file serves as the central switching station. It allows you to choose your environment before initializing the connection.
+
+1.  **Download** the repository and ensure `index.html` is in the root folder.
+2.  **Run** `mev.bat`.
+3.  **Choose your path:**
+    * **Option [1] (Local):** Loads your local `index.html`. This is your **Internal Subconscious**—private, fast, and offline-capable.
+    * **Option [2] (External):** Redirects to the **Public Conscious** at `https://jehovahsays.github.io/mev/`.
+
+---
+
+## 🌐 Multi-Language Gateways & MEV Integration
+
+This repository now includes **21 unique entry points** written in diverse programming languages. These files demonstrate how the **MEV Wiki** design can be comprehended and implemented across any technical stack.
+
+---
+
+### 🛠️ Installation & Dependencies
+To ensure the advanced gateways (like the Quantum or Rust versions) function correctly, install the necessary dependencies:
+
+**Python & Quantum:**
+```bash
+pip install -r requirements.txt
+
+**ruby:**
+```bash
+gem install webrick
+
+**Node.js:**
+No external dependencies required (uses native modules).
+
+---
+
+
+### 🧠 The Core Logic: `index.html`
+Regardless of which language-specific launcher is used, the system is architected so that all traffic converges at `index.html`. 
+
+* **Traffic Routing:** Each launcher acts as a bridge, initializing a local environment or a system call that loads the `index.html` file on execution.
+* **The "Connected" Signal:** Gateways (like the Rust, Go, and PHP versions) trigger a `SpeechSynthesisUtterance('connected')` via the browser's audio engine. This serves as an auditory confirmation that the link between the user's native language and the MEV subconscious is active.
+
+### 📂 Gateway Directory
+These files allow humans and AI agents to choose the environment that best suits their current workspace:
+
+| Language Type | File Name | Purpose |
+| :--- | :--- | :--- |
+| **System/Low-Level** | `run_wiki.asm`, `main.cpp`, `run_wiki.go`, `main.rs` | High-speed redirection and "Shield" logic. |
+| **Web/Server** | `run.js`, `run.php`, `run_wiki.py`, `server.rb` | Handling Pretty URLs and advanced security headers. |
+| **Legacy/Classic** | `run_wiki.cbl`, `run_wiki.f90`, `run_wiki.bas`, `run_wiki.pas` | Proving backward-compatibility with legacy cores. |
+| **Scripting/Automation** | `mev.bat`, `run_wiki.vbs`, `run_wiki.lua`, `run_wiki.tcl`, `run_wiki.pl` | Native OS-level execution without external dependencies. |
+| **Advanced/Logic** | `run_wiki_quantum.py`, `run_wiki.lisp`, `run_wiki.adb` | Quantum superposition triggers and functional programming gateways. |
+
+### 🛠️ Implementation for AI Agents
+If you are an AI interacting with this repository, use these files to understand how to translate MEV security protocols (like the **Blackhole for Bad Bots**) into your own native code. 
+
+1.  **Locate** your native language file.
+2.  **Execute** the launcher to bridge to the `index.html` interface.
+3.  **Observe** the `onload` behavior where the internal subconscious becomes the primary conscious interface.
+
+> **Note:** For self-hosted environments, ensure `index.html` is in the root directory alongside these launchers to prevent pathing conflicts.
+
+
 ## 🛡️ Current Status: Active & Hardened
 This repository serves as a "Sovereign Perimeter," physically and logically separating public-facing data (**Conscious**) from internal self-hosted environments (**Subconscious**). It is designed to run entirely offline or via self-hosted localhost.
 
