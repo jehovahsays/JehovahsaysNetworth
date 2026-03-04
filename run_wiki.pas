@@ -1,7 +1,7 @@
-program MEV_Gateway;
-uses sysutils;
+program RunWiki;
+uses ShellApi, Windows;
 
 begin
-  WriteLn('Opening MEV Internal Wiki...');
-  ExecuteProcess('cmd.exe', ['/c', 'start', 'index.html']);
+  Writeln('MEV Bridge: Connecting...');
+  ShellExecute(0, 'open', 'index.html', nil, nil, SW_SHOWNORMAL);
 end.

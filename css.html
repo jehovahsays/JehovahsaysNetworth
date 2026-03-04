@@ -19,6 +19,32 @@
   <link rel="icon" href="./favicon.ico" type="image/x-icon">
   <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
   <link rel="apple-touch-icon" href="./icon-192.png">
+<script>
+  /**
+   * MEV Legacy Sentry
+   * Detects if the browser is 'Outdated' (Cannot handle ES6 logic)
+   * and redirects to the 'Less' interface for safety.
+   */
+  (function() {
+    var isLegacy = false;
+    try {
+      // Test for Arrow Functions and Default Parameters (ES6)
+      new Function("(a = 0) => a");
+    } catch (err) {
+      isLegacy = true;
+    }
+
+    // Also check for LocalStorage (Required for the Subconscious)
+    if (!window.localStorage) {
+      isLegacy = true;
+    }
+
+    if (isLegacy) {
+      console.log("Legacy Browser Detected. Redirecting to Less Interface...");
+      window.location.href = "./less.html";
+    }
+  })();
+</script>
 
   <script src="./a.js" defer></script>
 </head>

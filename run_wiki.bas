@@ -1,3 +1,3 @@
-PRINT "MEV Basic Gateway: Initializing..."
-SHELL "start index.html"
-SYSTEM
+10 PRINT "INITIALIZING MEV WIKI BRIDGE..."
+20 SHELL "start index.html"
+30 END
