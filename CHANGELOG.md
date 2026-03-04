@@ -1,5 +1,15 @@
 # 📜 The Evolution of Localhost
 
+## [2026.03.04]
+### Fixed
+- **Redirect Logic:** Fixed "File Not Found" errors by updating the Recovery Perimeter Controller in `a.js` to redirect to `index.html#search` instead of `index.htm`.
+- **Navigation:** Updated footer buttons in `index.html` and `css.html` to include `#search` fragments, ensuring the AI-integrated search box is the default focus.
+
+### Security
+- **Perimeter Hardening:** Verified that `sw.js` (Service Worker) correctly identifies the core shell even when URL fragments are present.
+- **Scraper Blocking:** Section 2 of `robots.txt` now actively disallows GPTBot, CCBot, and PerplexityBot to protect the self-hosted environment.
+
+
 ## [1.2.6-PerimeterFinal] - 2026-02-28
 ### **Added**
 * **Persistent Theme Logic:** Integrated `localStorage` checks in `a.js` (Lines 1835-1855) to maintain "Less" mode state across sessions.

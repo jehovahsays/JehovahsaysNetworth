@@ -3,7 +3,7 @@
   "short_name": "MEV-S",
   "description": "Sovereign AI Internal Subconscious (Localhost Edition)",
   "version": "2026.02.28",
-  "start_url": "index.htm#search",
+  "start_url": "index.html#search",
   "display": "standalone",
   "scope": "./",
   "icons": [

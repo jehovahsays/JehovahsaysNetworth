@@ -54,12 +54,23 @@ if (searchInput) {
 
 
 
-// ====== UPDATED SOVEREIGN FIREWALL (Real-Time) ======
+/* ====== MEV SOVEREIGN FIREWALL & CORE LOGIC ====== */
+
+// 1. ACTIVE IMMUNE SYSTEM (Real-Time Scrubbing)
 (function secureClientApp() {
     const sanitize = (el) => {
-        if (el.value) {
+        if (el && el.value) {
+            // Check against the HTML pattern attribute first for a "fast fail"
+            if (el.pattern && !new RegExp(el.pattern).test(el.value)) {
+                console.warn("⚠️ MEV Firewall: Regex Pattern Mismatch.");
+            }
+            
             // Real-time scrubbing using DOMPurify
-            const clean = DOMPurify.sanitize(el.value);
+            const clean = DOMPurify.sanitize(el.value, {
+                ALLOWED_TAGS: [], // In the subconscious search/auth, we allow NO tags
+                ALLOWED_ATTR: []
+            });
+
             if (el.value !== clean) {
                 el.value = clean;
                 console.warn("⚠️ MEV Firewall: Blocked potential script injection.");
@@ -67,16 +78,43 @@ if (searchInput) {
         }
     };
 
-    // Listen for every keystroke and every time the user leaves the field
     document.addEventListener("input", (e) => sanitize(e.target));
     document.addEventListener("blur", (e) => sanitize(e.target));
 
-    // Defense-in-Depth UI Protections
+    // Disable invasive browser behaviors to protect the "Subconscious" UI
     document.addEventListener("contextmenu", e => e.preventDefault());
     document.addEventListener("dragstart", e => e.preventDefault());
-    document.addEventListener("selectstart", e => e.preventDefault());
 })();
 
+// 2. HARDENED DATA IMPORT (Firewall for External Files)
+document.getElementById('import-input')?.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            try {
+                // Pre-scan the entire file string before parsing JSON
+                const rawData = event.target.result;
+                const sanitizedData = DOMPurify.sanitize(rawData);
+                
+                if (rawData !== sanitizedData) {
+                    throw new Error("Malicious script detected in backup file.");
+                }
+
+                const data = JSON.parse(sanitizedData);
+                // logic to merge data...
+                alert("Data Imported Successfully into the Subconscious.");
+                window.location.reload();
+            } catch (err) {
+                alert("Security Alert: " + err.message);
+                console.error("Import blocked by Sovereign Perimeter.");
+            }
+        };
+        reader.readAsText(file);
+    }
+});
+
+// 3. STORAGE & CRYPTO CONFIG
 const STORAGE_KEYS = {
     pages: 'wiki_pages',
     users: 'wiki_users',
@@ -88,25 +126,43 @@ const STORAGE_KEYS = {
     cryptoParams: 'wiki_crypto_params'
 };
 
-
-
-/* ... Remainder of your a.js Crypto and Recovery Logic ... */
-
-// 🔒 GLOBAL IN-MEMORY ENCRYPTION KEY (Non-persistent storage)
-let encryptionKey = null;
-window.userCrypto = null; // Stored user crypto parameters
-
-// ==========================================================
-// 🔑 CRYPTO UTILITIES (Web Crypto API)
-// ==========================================================
-
 const CRYPTO_CONFIG = {
-    iterations: 600000,
+    iterations: 600000, // High iteration count to resist brute-force
     saltLength: 16,
     ivLength: 12,
     algo: 'AES-GCM',
     hash: 'SHA-256'
 };
+
+let encryptionKey = null;
+
+// 4. THEME & STATUS INITIALIZATION
+(function initSubconscious() {
+    // Apply "Less" mode if enabled
+    if (localStorage.getItem('wiki_theme_less') === 'enabled') {
+        document.body.classList.add('less-mode');
+    }
+    
+    // Update the status indicator in the footer
+    const indicator = document.getElementById('status-indicator');
+    if (indicator) {
+        indicator.innerText = navigator.onLine ? '🟢 Online' : '🔴 Offline';
+        indicator.style.color = navigator.onLine ? '#4caf50' : '#f44336';
+    }
+})();
+
+// 5. RECOVERY PERIMETER (Verification)
+document.addEventListener('click', (e) => {
+    if (e.target && e.target.id === 'restore-perimeter-btn') {
+        const challenge = prompt("Perimeter Locked. Enter 'RESTORE' to return to conscious state:");
+        // Only allow exact match, no whitespace/scripts
+        if (challenge?.trim() === 'RESTORE') {
+            localStorage.removeItem('mev_breach_detected');
+            localStorage.setItem('mev_human_verified', 'true');
+            window.location.href = './index.html#search';
+        }
+    }
+});
 
 function base64ToArrayBuffer(base64) {
     const binary_string = window.atob(base64);
@@ -848,7 +904,7 @@ async function createPage(titleFromSearch = null) {
   if (protectedKeywords.includes(lowerTitle)) {
       console.warn("Unauthorized property manipulation attempt detected.");
       localStorage.setItem('mev_breach_detected', 'true');
-      location.href = './css.html'; 
+      location.href = './css.html#search'; 
       return;
   }
   
@@ -906,7 +962,7 @@ async function savePage(title) {
   if (typeof title !== 'string' || !title.trim() || protectedKeywords.includes(title.toLowerCase())) {
       console.warn("STOP! Unauthorized property manipulation attempt detected.");
       localStorage.setItem('mev_breach_detected', 'true');
-      location.href = './css.html'; 
+      location.href = './css.html#search'; 
       return;
   }
 
@@ -1043,7 +1099,7 @@ async function showPage(title) {
   }
   
   const finalSafeHTML = parseWiki(page.content); 
-  // IMPORTANT: For the single file, the URL will always be index.htm.
+  // IMPORTANT: For the single file, the URL will always be index.html.
   const pageUrl = `${location.origin}#${encodeURIComponent(page.title)}`; 
   const dateMod = new Date(page.lastEdited).toISOString();
   const authorName = escapeHTML(page.createdBy || 'Guest');
@@ -1163,7 +1219,7 @@ async function savePage(title) {
   if (protectedKeywords.includes(cleanTitle)) {
       console.warn("STOP! Unauthorized property manipulation attempt detected.");
       localStorage.setItem('mev_breach_detected', 'true');
-      location.href = './css.html'; 
+      location.href = './css.html#search'; 
       return;
   }
 
@@ -1642,7 +1698,7 @@ if (searchInput) {
     // A. Original sidebar filtering logic
     searchInput.addEventListener('input', titleInputSidebar); 
 
-    // B. Hardened Underscore Logic (moved from index.htm)
+    // B. Hardened Underscore Logic (moved from index.html)
     searchInput.addEventListener('input', function(e) {
         const start = this.selectionStart;
         const end = this.selectionEnd;
@@ -1927,7 +1983,7 @@ document.addEventListener('click', (e) => {
             alert("Perimeter Restored. Redirecting...");
             
             // 2. FIXED: Redirect to index.html (Conscious State)
-            window.location.href = './index.htm#search';
+            window.location.href = './index.html#search';
         } else {
             alert("Verification failed. Perimeter remains locked.");
         }

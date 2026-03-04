@@ -1,7 +1,5 @@
 #mev
 
-# 🌀 MEV: The Sovereign Digital Subconscious
-
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![Version: 1.2.6](https://img.shields.io/badge/Version-1.2.6--PerimeterFinal-green.svg)](./CHANGELOG.md)
 [![Sovereignty: Localhost](https://img.shields.io/badge/Sovereignty-Localhost-blue.svg)](./MOTIVATION.md)
@@ -15,6 +13,23 @@
 [![Dependabot Updates](https://github.com/jehovahsays/mev/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/jehovahsays/mev/actions/workflows/dependabot/dependabot-updates)
 
 [![CodeQL Security Scan](https://github.com/jehovahsays/mev/actions/workflows/codeql.yml/badge.svg)](https://github.com/jehovahsays/mev/actions/workflows/codeql.yml)
+
+# MEV Sovereign Perimeter
+**Repository:** Jehovahsays/mev-wiki
+
+## Current Status: Unfinished (Active Development)
+This repository is currently being hardened. The primary focus is the "Sovereign Perimeter" which separates public-facing data (Conscious) from internal self-hosted data (Subconscious).
+
+## 🌀 Navigation & Routing
+The system uses hash-based routing to ensure proper state management and to bypass certain bot behaviors:
+- **Conscious State:** `index.html#search`
+- **Subconscious State:** `css.html#search`
+
+## 🛠 Recent Core Fixes
+- **Routing:** Corrected a critical redirect error where the system sought `index.htm`. All internal links now point to the valid `.html` extension.
+- **Service Worker:** Updated `sw.js` to version `v1.2.3` to ensure both state pages are cached and available offline.
+- **Security:** Enhanced `robots.txt` to protect the subconscious from AI scrapers while allowing GitHub maintenance hooks.
+
 
 ---
 
