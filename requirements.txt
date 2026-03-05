@@ -2,7 +2,7 @@
 # No extra install needed for standard Python gateway.
 
 # Quantum Gateway (run_wiki_quantum.py)
-qiskit==1.0.2
+qiskit==1.4.2
 qiskit-aer==0.14.1
 
 # Note for other environments:
