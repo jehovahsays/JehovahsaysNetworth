@@ -18,5 +18,5 @@ updates:
     open-pull-requests-limit: 5
     # Protect against breaking proto issues
     ignore:
-      - dependency-name: "protobufjs"
-        versions: [">= 7.0.0"]
+    #  - dependency-name: "protobufjs"
+    #    versions: [">= 7.0.0"]
