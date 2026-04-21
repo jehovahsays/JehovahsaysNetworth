@@ -17,6 +17,6 @@ updates:
       interval: "weekly"
     open-pull-requests-limit: 5
     # Protect against breaking proto issues
-    ignore:
+    # ignore:
     #  - dependency-name: "protobufjs"
     #    versions: [">= 7.0.0"]
