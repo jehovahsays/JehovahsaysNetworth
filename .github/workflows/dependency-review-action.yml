@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Run dependency review
-        uses: actions/dependency-review-action@v4
+        uses: actions/dependency-review-action@v5
         with:
           # FIXED: 'security-severity-threshold' is now 'fail-on-severity'
           fail-on-severity: 'high'
