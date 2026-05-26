@@ -10,6 +10,6 @@
   "author": "MorgansByers",
   "license": "MIT",
   "dependencies": {
-    "protobufjs": "^8.3.0"
+    "protobufjs": "^8.4.0"
   }
 }
