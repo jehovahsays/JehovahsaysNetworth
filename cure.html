@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Microscopic Node Tactical Arena</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+        }
+        
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #0d1b2a;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+        }
+
+        #game-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            z-index: 1;
+        }
+
+        /* Top HUD displaying stage and controls */
+        #hud-container {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            text-align: center;
+            pointer-events: none;
+            width: 90%;
+        }
+
+        .hud-title {
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+            margin-bottom: 5px;
+        }
+
+        .hud-instructions {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 12px;
+            font-weight: 500;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Game Over / Victory Overlays */
+        #overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 20, 30, 0.85);
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        #overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .overlay-title {
+            font-size: 32px;
+            font-weight: 900;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .overlay-btn {
+            background: #ffffff;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: 700;
+            border-radius: 25px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: transform 0.2s;
+        }
+
+        .overlay-btn:active {
+            transform: scale(0.95);
+        }
+
+        .status-win { color: #00ffcc; text-shadow: 0 0 15px rgba(0, 255, 204, 0.4); }
+        .status-lose { color: #ff3344; text-shadow: 0 0 15px rgba(255, 51, 68, 0.4); }
+
+        #home-menu {
+            position: absolute;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+
+        .home-btn {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-decoration: none;
+            letter-spacing: 1px;
+            display: inline-block;
+            backdrop-filter: blur(4px);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="hud-container">
+        <div class="hud-title" id="stage-name">STAGE MATRIX</div>
+        <div class="hud-instructions">Drag from your blue cell to the red virus cell to capture it</div>
+    </div>
+
+    <div id="home-menu">
+        <a href="./index.html#search" class="home-btn">HOME</a>
+    </div>
+
+    <canvas id="game-canvas"></canvas>
+
+    <div id="overlay">
+        <div class="overlay-title" id="overlay-msg">Eradicated</div>
+        <button class="overlay-btn" id="action-btn" onclick="resetGame()">Next Stage</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('game-canvas');
+        const ctx = canvas.getContext('2d');
+        const stageText = document.getElementById('stage-name');
+        const overlay = document.getElementById('overlay');
+        const overlayMsg = document.getElementById('overlay-msg');
+        const actionBtn = document.getElementById('action-btn');
+
+        // Game Configuration Metrics
+        let systemState = {
+            level: 0,
+            active: true,
+            dragStartNode: null,
+            currentTouchPos: null,
+            nodes: [],
+            marchingDots: [],
+            idleTimer: 0,
+            lastTime: 0,
+            clouds: [
+                {x: 10, y: 80, speed: 15, scale: 0.6},
+                {x: 40, y: 40, speed: 8, scale: 0.9},
+                {x: 75, y: 110, speed: 12, scale: 0.7}
+            ]
+        };
+
+        const DISEASE_LEVELS = [
+            { name: "Common Cold Node", virusMax: 100, idleThreshold: 3.5 },
+            { name: "Influenza Core Cluster", virusMax: 120, idleThreshold: 2.5 },
+            { name: "Malignant Pathology Node", virusMax: 150, idleThreshold: 1.8 }
+        ];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            if (systemState.nodes.length === 0) setupLevel();
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+
+        class Node {
+            constructor(x, y, radius, type, initialUnits) {
+                this.x = x;
+                this.y = y;
+                this.radius = radius;
+                this.type = type; // 'immune', 'virus'
+                this.units = initialUnits;
+                this.pulse = 0;
+                this.spawnTimer = 0;
+            }
+
+            update(dt) {
+                this.pulse += dt * 3.5;
+                this.spawnTimer += dt;
+                if (this.spawnTimer >= 0.8) {
+                    this.spawnTimer = 0;
+                    if (this.type === 'immune' && this.units < 150) {
+                        this.units += 1;
+                    } else if (this.type === 'virus') {
+                        const currentLvl = DISEASE_LEVELS[systemState.level % DISEASE_LEVELS.length];
+                        if (this.units < currentLvl.virusMax) this.units += 1;
+                    }
+                }
+            }
+
+            draw() {
+                ctx.save();
+                
+                let baseColor, glowColor;
+                if (this.type === 'immune') {
+                    baseColor = '#0055ff';
+                    glowColor = 'rgba(0, 150, 255, 0.3)';
+                } else {
+                    baseColor = '#ff2244';
+                    glowColor = 'rgba(255, 34, 68, 0.3)';
+                }
+
+                const sizeMod = Math.sin(this.pulse) * 2.5;
+                const currentRadius = this.radius + sizeMod;
+
+                // Outer aura
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, currentRadius + 12, 0, Math.PI * 2);
+                ctx.fillStyle = glowColor;
+                ctx.fill();
+
+                // Core Node Capsule
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, currentRadius, 0, Math.PI * 2);
+                ctx.fillStyle = baseColor;
+                ctx.lineWidth = 3;
+                ctx.strokeStyle = '#ffffff';
+                ctx.stroke();
+                ctx.fill();
+
+                // Inner specular highlight
+                ctx.beginPath();
+                ctx.arc(this.x - currentRadius*0.2, this.y - currentRadius*0.2, currentRadius * 0.3, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+                ctx.fill();
+
+                // Score Indicator Text
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 20px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.shadowColor = 'rgba(0,0,0,0.5)';
+                ctx.shadowBlur = 4;
+                ctx.fillText(Math.floor(this.units), this.x, this.y);
+
+                ctx.restore();
+            }
+
+            checkTouchIntersection(px, py) {
+                const dist = Math.hypot(px - this.x, py - this.y);
+                return dist < this.radius + 15;
+            }
+        }
+
+        class MarchingDot {
+            constructor(startX, startY, targetNode, originType) {
+                this.x = startX;
+                this.y = startY;
+                this.target = targetNode;
+                this.originType = originType;
+                this.speed = 210;
+                this.offsetX = (Math.random() - 0.5) * 16;
+                this.offsetY = (Math.random() - 0.5) * 16;
+            }
+
+            update(dt) {
+                const dx = this.target.x - this.x;
+                const dy = this.target.y - this.y;
+                const distance = Math.hypot(dx, dy);
+
+                if (distance < 12) {
+                    if (this.originType === this.target.type) {
+                        this.target.units += 1;
+                    } else {
+                        this.target.units -= 1;
+                        if (this.target.units < 0) {
+                            this.target.units = Math.abs(this.target.units);
+                            this.target.type = this.originType; 
+                            checkGameEndState();
+                        }
+                    }
+                    return false;
+                }
+
+                this.x += (dx / distance) * this.speed * dt;
+                this.y += (dy / distance) * this.speed * dt;
+                return true;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(this.x + this.offsetX, this.y + this.offsetY, 6, 0, Math.PI * 2);
+                ctx.fillStyle = this.originType === 'immune' ? '#00ffff' : '#ffaa00';
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        // Draws the environment elements (Sky, Sun, Mountains, Clouds, Chessboard)
+        function drawBackground3D(elapsed) {
+            const h = canvas.height;
+            const w = canvas.width;
+            const horizon = h * 0.45; // Horizon dividing line
+
+            // 1. SKY GRADIENT
+            const skyGrad = ctx.createLinearGradient(0, 0, 0, horizon);
+            skyGrad.addColorStop(0, '#1b4965');
+            skyGrad.addColorStop(0.6, '#62b6cb');
+            skyGrad.addColorStop(1, '#bee9e8');
+            ctx.fillStyle = skyGrad;
+            ctx.fillRect(0, 0, w, horizon);
+
+            // 2. SUN
+            ctx.save();
+            ctx.beginPath();
+            const sunY = horizon - 30 + Math.sin(elapsed * 0.2) * 5; // Slow animated float
+            ctx.arc(w * 0.5, sunY, 55, 0, Math.PI * 2);
+            const sunGlow = ctx.createRadialGradient(w*0.5, sunY, 0, w*0.5, sunY, 55);
+            sunGlow.addColorStop(0, '#fffdf0');
+            sunGlow.addColorStop(0.3, '#ffe49e');
+            sunGlow.addColorStop(1, 'rgba(255, 228, 158, 0)');
+            ctx.fillStyle = sunGlow;
+            ctx.fill();
+            ctx.restore();
+
+            // 3. ANGILED BACKDROP MOUNTAINS
+            ctx.save();
+            ctx.fillStyle = '#4a5759';
+            ctx.beginPath();
+            ctx.moveTo(0, horizon);
+            ctx.lineTo(w * 0.15, horizon - 110);
+            ctx.lineTo(w * 0.35, horizon - 40);
+            ctx.lineTo(w * 0.6, horizon - 160);
+            ctx.lineTo(w * 0.8, horizon - 60);
+            ctx.lineTo(w, horizon);
+            ctx.closePath();
+            ctx.fill();
+
+            // Midground lighter mountain layer
+            ctx.fillStyle = '#dedbd2';
+            ctx.beginPath();
+            ctx.moveTo(0, horizon);
+            ctx.lineTo(w * 0.25, horizon - 60);
+            ctx.lineTo(w * 0.5, horizon - 100);
+            ctx.lineTo(w * 0.75, horizon - 30);
+            ctx.lineTo(w, horizon);
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+
+            // 4. ANIMATED CLOUDS
+            ctx.save();
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+            systemState.clouds.forEach(cloud => {
+                cloud.x += cloud.speed * (1/60); // Approximated tick movement step
+                if (cloud.x > w + 100) cloud.x = -100;
+
+                ctx.beginPath();
+                const cx = cloud.x;
+                const cy = cloud.y;
+                const s = cloud.scale;
+                ctx.arc(cx, cy, 25 * s, 0, Math.PI * 2);
+                ctx.arc(cx + 20 * s, cy - 10 * s, 30 * s, 0, Math.PI * 2);
+                ctx.arc(cx + 45 * s, cy, 20 * s, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.fill();
+            });
+            ctx.restore();
+
+            // 5. PERSPECTIVE CHESSBOARD GROUND
+            // We use standard mathematical ray-scan projection over the flat 2D viewport
+            const groundY = horizon;
+            const groundH = h - horizon;
+
+            ctx.save();
+            // Clear ground section base
+            ctx.fillStyle = '#22333b';
+            ctx.fillRect(0, groundY, w, groundH);
+
+            const totalRows = 24;
+            const segmentsX = 32;
+
+            for (let row = 0; row < totalRows; row++) {
+                // Perspective spacing compression: closer lines are spaced further apart
+                const ty1 = row / totalRows;
+                const ty2 = (row + 1) / totalRows;
+
+                // Non-linear mapping to create depth perspective curve matrix
+                const py1 = groundY + (Math.pow(ty1, 2.5) * groundH);
+                const py2 = groundY + (Math.pow(ty2, 2.5) * groundH);
+
+                for (let col = 0; col < segmentsX; col++) {
+                    // Alternating tile parity logic pattern
+                    if ((row + col) % 2 === 0) {
+                        ctx.fillStyle = '#eae0d5'; // Light square tile
+                    } else {
+                        ctx.fillStyle = '#5c677d'; // Dark square tile
+                    }
+
+                    // Perspective interpolation projection logic from vanishing midpoint
+                    const getX = (t, c) => {
+                        const vanishingX = w * 0.5;
+                        const screenX = (c / segmentsX) * w * 3 - w; // Scale out width dramatically at bottom
+                        return vanishingX + (screenX - vanishingX) * t;
+                    };
+
+                    ctx.beginPath();
+                    ctx.moveTo(getX(ty1, col), py1);
+                    ctx.lineTo(getX(ty1, col + 1), py1);
+                    ctx.lineTo(getX(ty2, col + 1), py2);
+                    ctx.lineTo(getX(ty2, col), py2);
+                    ctx.closePath();
+                    ctx.fill();
+                }
+            }
+            ctx.restore();
+        }
+
+        function setupLevel() {
+            systemState.nodes = [];
+            systemState.marchingDots = [];
+            systemState.idleTimer = 0;
+            systemState.active = true;
+
+            const currentLvl = DISEASE_LEVELS[systemState.level % DISEASE_LEVELS.length];
+            stageText.innerText = currentLvl.name;
+
+            const w = canvas.width;
+            const h = canvas.height;
+
+            // Positioning nodes comfortably across the ground view grid space plane
+            const centerY = h * 0.68;
+            const playerNode = new Node(w * 0.25, centerY, 42, 'immune', 100);
+            const virusNode = new Node(w * 0.75, centerY, 46, 'virus', currentLvl.virusMax);
+
+            systemState.nodes.push(playerNode);
+            systemState.nodes.push(virusNode);
+        }
+
+        function launchForcesStream(source, target) {
+            if (source === target || source.units <= 1) return;
+            
+            const unitsToSend = Math.floor(source.units / 2);
+            source.units -= unitsToSend;
+
+            let delayCount = 0;
+            for (let i = 0; i < unitsToSend; i++) {
+                setTimeout(() => {
+                    if (!systemState.active) return;
+                    systemState.marchingDots.push(new MarchingDot(source.x, source.y, target, source.type));
+                }, delayCount * 60);
+                delayCount++;
+            }
+        }
+
+        function executeVirusRetaliation() {
+            const virusNode = systemState.nodes.find(n => n.type === 'virus');
+            const playerNode = systemState.nodes.find(n => n.type === 'immune');
+
+            if (virusNode && playerNode && virusNode.units > 15) {
+                launchForcesStream(virusNode, playerNode);
+            }
+        }
+
+        function checkGameEndState() {
+            const hasVirus = systemState.nodes.some(n => n.type === 'virus');
+            const hasImmune = systemState.nodes.some(n => n.type === 'immune');
+
+            if (!hasVirus) {
+                systemState.active = false;
+                overlayMsg.innerText = "System Stabilized!";
+                overlay.className = "active status-win";
+                actionBtn.innerText = "Next Target";
+            } else if (!hasImmune) {
+                systemState.active = false;
+                overlayMsg.innerText = "Infection Spread";
+                overlay.className = "active status-lose";
+                actionBtn.innerText = "Retry Matrix";
+            }
+        }
+
+        function resetGame() {
+            overlay.className = "";
+            if (overlayMsg.innerText === "System Stabilized!") {
+                systemState.level++;
+            }
+            setupLevel();
+        }
+
+        function getCanvasTouchCoords(e) {
+            const t = e.touches[0] || e.changedTouches[0];
+            const rect = canvas.getBoundingClientRect();
+            return {
+                x: t.clientX - rect.left,
+                y: t.clientY - rect.top
+            };
+        }
+
+        function handleStart(posX, posY) {
+            if (!systemState.active) return;
+            for (let node of systemState.nodes) {
+                if (node.type === 'immune' && node.checkTouchIntersection(posX, posY)) {
+                    systemState.dragStartNode = node;
+                    systemState.currentTouchPos = { x: posX, y: posY };
+                    systemState.idleTimer = 0;
+                    break;
+                }
+            }
+        }
+
+        function handleMove(posX, posY) {
+            if (systemState.dragStartNode) {
+                systemState.currentTouchPos = { x: posX, y: posY };
+            }
+        }
+
+        function handleEnd() {
+            if (systemState.dragStartNode && systemState.currentTouchPos) {
+                for (let targetNode of systemState.nodes) {
+                    if (targetNode.checkTouchIntersection(systemState.currentTouchPos.x, systemState.currentTouchPos.y)) {
+                        launchForcesStream(systemState.dragStartNode, targetNode);
+                        break;
+                    }
+                }
+            }
+            systemState.dragStartNode = null;
+            systemState.currentTouchPos = null;
+        }
+
+        // Event hooks layout structure setup
+        canvas.addEventListener('touchstart', (e) => { e.preventDefault(); const p = getCanvasTouchCoords(e); handleStart(p.x, p.y); }, {passive:false});
+        canvas.addEventListener('touchmove', (e) => { e.preventDefault(); const p = getCanvasTouchCoords(e); handleMove(p.x, p.y); }, {passive:false});
+        canvas.addEventListener('touchend', (e) => { e.preventDefault(); handleEnd(); }, {passive:false});
+
+        canvas.addEventListener('mousedown', (e) => handleStart(e.clientX, e.clientY));
+        canvas.addEventListener('mousemove', (e) => handleMove(e.clientX, e.clientY));
+        canvas.addEventListener('mouseup', () => handleEnd());
+
+        function gameLoopTick(timestamp) {
+            if (!systemState.lastTime) systemState.lastTime = timestamp;
+            let dt = (timestamp - systemState.lastTime) / 1000;
+            systemState.lastTime = timestamp;
+
+            if (dt > 0.1) dt = 0.1;
+
+            // Render environmental backdrop layer space
+            drawBackground3D(timestamp * 0.001);
+
+            if (systemState.active) {
+                if (!systemState.dragStartNode) {
+                    systemState.idleTimer += dt;
+                    const stageConfig = DISEASE_LEVELS[systemState.level % DISEASE_LEVELS.length];
+                    if (systemState.idleTimer >= stageConfig.idleThreshold) {
+                        systemState.idleTimer = 0;
+                        executeVirusRetaliation();
+                    }
+                } else {
+                    systemState.idleTimer = 0;
+                }
+            }
+
+            // Target direction dash projection vector path trace line setup
+            if (systemState.dragStartNode && systemState.currentTouchPos) {
+                ctx.save();
+                ctx.beginPath();
+                ctx.moveTo(systemState.dragStartNode.x, systemState.dragStartNode.y);
+                ctx.lineTo(systemState.currentTouchPos.x, systemState.currentTouchPos.y);
+                ctx.strokeStyle = '#00ffff';
+                ctx.lineWidth = 5;
+                ctx.lineCap = 'round';
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = '#00ffff';
+                ctx.setLineDash([10, 8]);
+                ctx.stroke();
+                ctx.restore();
+            }
+
+            // Draw game nodes
+            systemState.nodes.forEach(node => {
+                if (systemState.active) node.update(dt);
+                node.draw();
+            });
+
+            // Draw swarming particles 
+            for (let i = systemState.marchingDots.length - 1; i >= 0; i--) {
+                const dot = systemState.marchingDots[i];
+                const keep = dot.update(dt);
+                if (!keep) {
+                    systemState.marchingDots.splice(i, 1);
+                } else {
+                    dot.draw();
+                }
+            }
+
+            requestAnimationFrame(gameLoopTick);
+        }
+
+        resizeCanvas();
+        requestAnimationFrame(gameLoopTick);
+    </script>
+</body>
+</html>
