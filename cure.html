@@ -13,7 +13,7 @@
             user-select: none;
             -webkit-user-select: none;
             -webkit-touch-callout: none;
-            touch-action: none; /* Prevents default mobile double-tap zoom delays */
+            touch-action: none;
         }
         
         body, html {
@@ -190,7 +190,7 @@
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-            setupLevel();
+            setupLevel(true); // Flag true tells engine to dynamically rescue active counts
         }
 
         window.addEventListener('resize', resizeCanvas);
@@ -262,7 +262,6 @@
                 ctx.restore();
             }
 
-            // Generous touch buffer padding for small device touch-down execution
             checkTouchIntersection(px, py, padding = 25) {
                 const dist = Math.hypot(px - this.x, py - this.y);
                 return dist < this.radius + padding;
@@ -367,7 +366,7 @@
             ctx.fill();
             ctx.restore();
 
-            // 4. CLOUDS (Bound to dt tick changes for high-Hz support)
+            // 4. CLOUDS
             ctx.save();
             ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
             systemState.clouds.forEach(cloud => {
@@ -429,12 +428,15 @@
             ctx.restore();
         }
 
-        function setupLevel() {
-            // Retain nodes tracking stats across view recalculations safely
-            const savedUnits = systemState.nodes.map(n => ({ type: n.type, val: n.units }));
+        function setupLevel(isResize = false) {
+            let savedUnits = [];
+            if (isResize && systemState.nodes.length === 2) {
+                savedUnits = systemState.nodes.map(n => ({ type: n.type, val: n.units }));
+            }
             
             systemState.nodes = [];
-            systemState.marchingDots = [];
+            // Keep active projectile dots on screen resizing, otherwise reset
+            if (!isResize) systemState.marchingDots = [];
 
             const currentLvl = DISEASE_LEVELS[systemState.level % DISEASE_LEVELS.length];
             stageText.innerText = currentLvl.name;
@@ -462,7 +464,9 @@
             for (let i = 0; i < unitsToSend; i++) {
                 setTimeout(() => {
                     if (!systemState.active) return;
-                    systemState.marchingDots.push(new MarchingDot(source.x, source.y, target, source.type));
+                    // Dynamically map old targets to newly built references if screen resized mid-flight
+                    const correctTarget = systemState.nodes.find(n => n.x === target.x || (n.type === target.type && systemState.nodes.indexOf(n) === systemState.nodes.indexOf(target)));
+                    systemState.marchingDots.push(new MarchingDot(source.x, source.y, correctTarget || target, source.type));
                 }, delayCount * 60);
                 delayCount++;
             }
@@ -499,9 +503,8 @@
             if (overlayMsg.innerText === "System Stabilized!") {
                 systemState.level++;
             }
-            // Wipe units cache array completely to ensure a fresh stage reset
             systemState.nodes = [];
-            setupLevel();
+            setupLevel(false);
             systemState.active = true;
             systemState.idleTimer = 0;
         }
@@ -518,7 +521,6 @@
         function handleStart(posX, posY) {
             if (!systemState.active) return;
             for (let node of systemState.nodes) {
-                // Pass extra intersection check padding buffer on finger drop actions
                 if (node.type === 'immune' && node.checkTouchIntersection(posX, posY, 25)) {
                     systemState.dragStartNode = node;
                     systemState.currentTouchPos = { x: posX, y: posY };
