@@ -322,11 +322,10 @@
             }
         }
 
-        // Draws the environment elements (Sky, Sun, Mountains, Clouds, Chessboard)
         function drawBackground3D(elapsed) {
             const h = canvas.height;
             const w = canvas.width;
-            const horizon = h * 0.45; // Horizon dividing line
+            const horizon = h * 0.45;
 
             // 1. SKY GRADIENT
             const skyGrad = ctx.createLinearGradient(0, 0, 0, horizon);
@@ -339,7 +338,7 @@
             // 2. SUN
             ctx.save();
             ctx.beginPath();
-            const sunY = horizon - 30 + Math.sin(elapsed * 0.2) * 5; // Slow animated float
+            const sunY = horizon - 30 + Math.sin(elapsed * 0.2) * 5;
             ctx.arc(w * 0.5, sunY, 55, 0, Math.PI * 2);
             const sunGlow = ctx.createRadialGradient(w*0.5, sunY, 0, w*0.5, sunY, 55);
             sunGlow.addColorStop(0, '#fffdf0');
@@ -349,7 +348,7 @@
             ctx.fill();
             ctx.restore();
 
-            // 3. ANGILED BACKDROP MOUNTAINS
+            // 3. MOUNTAINS
             ctx.save();
             ctx.fillStyle = '#4a5759';
             ctx.beginPath();
@@ -362,7 +361,6 @@
             ctx.closePath();
             ctx.fill();
 
-            // Midground lighter mountain layer
             ctx.fillStyle = '#dedbd2';
             ctx.beginPath();
             ctx.moveTo(0, horizon);
@@ -374,11 +372,11 @@
             ctx.fill();
             ctx.restore();
 
-            // 4. ANIMATED CLOUDS
+            // 4. CLOUDS
             ctx.save();
             ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
             systemState.clouds.forEach(cloud => {
-                cloud.x += cloud.speed * (1/60); // Approximated tick movement step
+                cloud.x += cloud.speed * (1/60);
                 if (cloud.x > w + 100) cloud.x = -100;
 
                 ctx.beginPath();
@@ -393,13 +391,11 @@
             });
             ctx.restore();
 
-            // 5. PERSPECTIVE CHESSBOARD GROUND
-            // We use standard mathematical ray-scan projection over the flat 2D viewport
+            // 5. CHESSBOARD GROUND
             const groundY = horizon;
             const groundH = h - horizon;
 
             ctx.save();
-            // Clear ground section base
             ctx.fillStyle = '#22333b';
             ctx.fillRect(0, groundY, w, groundH);
 
@@ -407,26 +403,22 @@
             const segmentsX = 32;
 
             for (let row = 0; row < totalRows; row++) {
-                // Perspective spacing compression: closer lines are spaced further apart
                 const ty1 = row / totalRows;
                 const ty2 = (row + 1) / totalRows;
 
-                // Non-linear mapping to create depth perspective curve matrix
                 const py1 = groundY + (Math.pow(ty1, 2.5) * groundH);
                 const py2 = groundY + (Math.pow(ty2, 2.5) * groundH);
 
                 for (let col = 0; col < segmentsX; col++) {
-                    // Alternating tile parity logic pattern
                     if ((row + col) % 2 === 0) {
-                        ctx.fillStyle = '#eae0d5'; // Light square tile
+                        ctx.fillStyle = '#eae0d5';
                     } else {
-                        ctx.fillStyle = '#5c677d'; // Dark square tile
+                        ctx.fillStyle = '#5c677d';
                     }
 
-                    // Perspective interpolation projection logic from vanishing midpoint
                     const getX = (t, c) => {
                         const vanishingX = w * 0.5;
-                        const screenX = (c / segmentsX) * w * 3 - w; // Scale out width dramatically at bottom
+                        const screenX = (c / segmentsX) * w * 3 - w;
                         return vanishingX + (screenX - vanishingX) * t;
                     };
 
@@ -454,7 +446,6 @@
             const w = canvas.width;
             const h = canvas.height;
 
-            // Positioning nodes comfortably across the ground view grid space plane
             const centerY = h * 0.68;
             const playerNode = new Node(w * 0.25, centerY, 42, 'immune', 100);
             const virusNode = new Node(w * 0.75, centerY, 46, 'virus', currentLvl.virusMax);
@@ -553,7 +544,6 @@
             systemState.currentTouchPos = null;
         }
 
-        // Event hooks layout structure setup
         canvas.addEventListener('touchstart', (e) => { e.preventDefault(); const p = getCanvasTouchCoords(e); handleStart(p.x, p.y); }, {passive:false});
         canvas.addEventListener('touchmove', (e) => { e.preventDefault(); const p = getCanvasTouchCoords(e); handleMove(p.x, p.y); }, {passive:false});
         canvas.addEventListener('touchend', (e) => { e.preventDefault(); handleEnd(); }, {passive:false});
@@ -569,7 +559,6 @@
 
             if (dt > 0.1) dt = 0.1;
 
-            // Render environmental backdrop layer space
             drawBackground3D(timestamp * 0.001);
 
             if (systemState.active) {
@@ -585,7 +574,6 @@
                 }
             }
 
-            // Target direction dash projection vector path trace line setup
             if (systemState.dragStartNode && systemState.currentTouchPos) {
                 ctx.save();
                 ctx.beginPath();
@@ -601,13 +589,11 @@
                 ctx.restore();
             }
 
-            // Draw game nodes
             systemState.nodes.forEach(node => {
                 if (systemState.active) node.update(dt);
                 node.draw();
             });
 
-            // Draw swarming particles 
             for (let i = systemState.marchingDots.length - 1; i >= 0; i--) {
                 const dot = systemState.marchingDots[i];
                 const keep = dot.update(dt);
