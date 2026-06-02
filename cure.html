@@ -5,6 +5,7 @@
     <title>Microscopic Node Tactical Arena</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     <style>
         * {
@@ -12,6 +13,7 @@
             user-select: none;
             -webkit-user-select: none;
             -webkit-touch-callout: none;
+            touch-action: none; /* Prevents default mobile double-tap zoom delays */
         }
         
         body, html {
@@ -34,10 +36,9 @@
             z-index: 1;
         }
 
-        /* Top HUD displaying stage and controls */
         #hud-container {
             position: absolute;
-            top: 20px;
+            top: 25px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 10;
@@ -63,7 +64,6 @@
             text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
         }
 
-        /* Game Over / Victory Overlays */
         #overlay {
             position: absolute;
             top: 0;
@@ -135,6 +135,7 @@
             letter-spacing: 1px;
             display: inline-block;
             backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
         }
     </style>
 </head>
@@ -164,7 +165,6 @@
         const overlayMsg = document.getElementById('overlay-msg');
         const actionBtn = document.getElementById('action-btn');
 
-        // Game Configuration Metrics
         let systemState = {
             level: 0,
             active: true,
@@ -176,8 +176,8 @@
             lastTime: 0,
             clouds: [
                 {x: 10, y: 80, speed: 15, scale: 0.6},
-                {x: 40, y: 40, speed: 8, scale: 0.9},
-                {x: 75, y: 110, speed: 12, scale: 0.7}
+                {x: 140, y: 40, speed: 8, scale: 0.9},
+                {x: 275, y: 110, speed: 12, scale: 0.7}
             ]
         };
 
@@ -190,7 +190,7 @@
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-            if (systemState.nodes.length === 0) setupLevel();
+            setupLevel();
         }
 
         window.addEventListener('resize', resizeCanvas);
@@ -200,7 +200,7 @@
                 this.x = x;
                 this.y = y;
                 this.radius = radius;
-                this.type = type; // 'immune', 'virus'
+                this.type = type;
                 this.units = initialUnits;
                 this.pulse = 0;
                 this.spawnTimer = 0;
@@ -222,7 +222,6 @@
 
             draw() {
                 ctx.save();
-                
                 let baseColor, glowColor;
                 if (this.type === 'immune') {
                     baseColor = '#0055ff';
@@ -235,13 +234,11 @@
                 const sizeMod = Math.sin(this.pulse) * 2.5;
                 const currentRadius = this.radius + sizeMod;
 
-                // Outer aura
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, currentRadius + 12, 0, Math.PI * 2);
                 ctx.fillStyle = glowColor;
                 ctx.fill();
 
-                // Core Node Capsule
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, currentRadius, 0, Math.PI * 2);
                 ctx.fillStyle = baseColor;
@@ -250,13 +247,11 @@
                 ctx.stroke();
                 ctx.fill();
 
-                // Inner specular highlight
                 ctx.beginPath();
                 ctx.arc(this.x - currentRadius*0.2, this.y - currentRadius*0.2, currentRadius * 0.3, 0, Math.PI * 2);
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
                 ctx.fill();
 
-                // Score Indicator Text
                 ctx.fillStyle = '#ffffff';
                 ctx.font = 'bold 20px sans-serif';
                 ctx.textAlign = 'center';
@@ -264,13 +259,13 @@
                 ctx.shadowColor = 'rgba(0,0,0,0.5)';
                 ctx.shadowBlur = 4;
                 ctx.fillText(Math.floor(this.units), this.x, this.y);
-
                 ctx.restore();
             }
 
-            checkTouchIntersection(px, py) {
+            // Generous touch buffer padding for small device touch-down execution
+            checkTouchIntersection(px, py, padding = 25) {
                 const dist = Math.hypot(px - this.x, py - this.y);
-                return dist < this.radius + 15;
+                return dist < this.radius + padding;
             }
         }
 
@@ -322,7 +317,7 @@
             }
         }
 
-        function drawBackground3D(elapsed) {
+        function drawBackground3D(elapsed, dt) {
             const h = canvas.height;
             const w = canvas.width;
             const horizon = h * 0.45;
@@ -372,11 +367,11 @@
             ctx.fill();
             ctx.restore();
 
-            // 4. CLOUDS
+            // 4. CLOUDS (Bound to dt tick changes for high-Hz support)
             ctx.save();
             ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
             systemState.clouds.forEach(cloud => {
-                cloud.x += cloud.speed * (1/60);
+                cloud.x += cloud.speed * dt;
                 if (cloud.x > w + 100) cloud.x = -100;
 
                 ctx.beginPath();
@@ -391,7 +386,7 @@
             });
             ctx.restore();
 
-            // 5. CHESSBOARD GROUND
+            // 5. PERSPECTIVE CHESSBOARD
             const groundY = horizon;
             const groundH = h - horizon;
 
@@ -435,23 +430,26 @@
         }
 
         function setupLevel() {
+            // Retain nodes tracking stats across view recalculations safely
+            const savedUnits = systemState.nodes.map(n => ({ type: n.type, val: n.units }));
+            
             systemState.nodes = [];
             systemState.marchingDots = [];
-            systemState.idleTimer = 0;
-            systemState.active = true;
 
             const currentLvl = DISEASE_LEVELS[systemState.level % DISEASE_LEVELS.length];
             stageText.innerText = currentLvl.name;
 
             const w = canvas.width;
             const h = canvas.height;
-
             const centerY = h * 0.68;
-            const playerNode = new Node(w * 0.25, centerY, 42, 'immune', 100);
-            const virusNode = new Node(w * 0.75, centerY, 46, 'virus', currentLvl.virusMax);
 
-            systemState.nodes.push(playerNode);
-            systemState.nodes.push(virusNode);
+            const pUnits = savedUnits.length ? savedUnits[0].val : 100;
+            const vUnits = savedUnits.length ? savedUnits[1].val : currentLvl.virusMax;
+            const pType  = savedUnits.length ? savedUnits[0].type : 'immune';
+            const vType  = savedUnits.length ? savedUnits[1].type : 'virus';
+
+            systemState.nodes.push(new Node(w * 0.25, centerY, 42, pType, pUnits));
+            systemState.nodes.push(new Node(w * 0.75, centerY, 46, vType, vUnits));
         }
 
         function launchForcesStream(source, target) {
@@ -501,7 +499,11 @@
             if (overlayMsg.innerText === "System Stabilized!") {
                 systemState.level++;
             }
+            // Wipe units cache array completely to ensure a fresh stage reset
+            systemState.nodes = [];
             setupLevel();
+            systemState.active = true;
+            systemState.idleTimer = 0;
         }
 
         function getCanvasTouchCoords(e) {
@@ -516,7 +518,8 @@
         function handleStart(posX, posY) {
             if (!systemState.active) return;
             for (let node of systemState.nodes) {
-                if (node.type === 'immune' && node.checkTouchIntersection(posX, posY)) {
+                // Pass extra intersection check padding buffer on finger drop actions
+                if (node.type === 'immune' && node.checkTouchIntersection(posX, posY, 25)) {
                     systemState.dragStartNode = node;
                     systemState.currentTouchPos = { x: posX, y: posY };
                     systemState.idleTimer = 0;
@@ -534,7 +537,7 @@
         function handleEnd() {
             if (systemState.dragStartNode && systemState.currentTouchPos) {
                 for (let targetNode of systemState.nodes) {
-                    if (targetNode.checkTouchIntersection(systemState.currentTouchPos.x, systemState.currentTouchPos.y)) {
+                    if (targetNode.checkTouchIntersection(systemState.currentTouchPos.x, systemState.currentTouchPos.y, 25)) {
                         launchForcesStream(systemState.dragStartNode, targetNode);
                         break;
                     }
@@ -559,7 +562,7 @@
 
             if (dt > 0.1) dt = 0.1;
 
-            drawBackground3D(timestamp * 0.001);
+            drawBackground3D(timestamp * 0.001, dt);
 
             if (systemState.active) {
                 if (!systemState.dragStartNode) {
