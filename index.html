@@ -7,8 +7,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self' 'unsafe-inline' blob:; connect-src 'self' https://api.open-meteo.com; object-src 'none'; style-src 'self' 'unsafe-inline'; worker-src 'self' blob:; base-uri 'self'; form-action 'self';">
 
-<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self' 'unsafe-inline' blob:; object-src 'none'; style-src 'self' 'unsafe-inline'; worker-src 'self' blob:; base-uri 'self'; form-action 'self';">
 
  
   <style>
@@ -40,6 +40,8 @@
 	
 	    .map-loader { position: fixed; top: 300px; left: 50%; transform: translateX(-50%); z-index: 10; }
 
+        .weather-loader { position: fixed; top: 350px; left: 50%; transform: translateX(-50%); z-index: 10; background: #000; color: #00ffcc; border: 1px solid #00ffcc; padding: 6px 12px; cursor: pointer; font-family: monospace; font-weight: bold; border-radius: 2px; }
+        .weather-loader:hover { background: #00ffcc; color: #000; }
 </style>
 <script>
 (function () {
@@ -88,7 +90,8 @@
 		    <a href="./play.html" target="_blank" rel="noopener"><button class="infobox">PLAY</button></a>
 			<br>
 			    <a href="./index.htm#search" target="_blank" rel="noopener"><button class="map-loader">Search</button></a>
-		
+            <br>
+                <button id="weather-btn" class="weather-loader">Weather Map</button>
 		</div>
 
 		<script type="importmap">
@@ -103,6 +106,94 @@
 		</script>
 
 		<script type="module">
+		// --- DYNAMIC REAL-TIME WEATHER MODULE ---
+async function syncRealWorldWeather() {
+    if (!navigator.geolocation) return;
+
+    const btn = document.getElementById('weather-btn');
+    btn.innerText = "Syncing...";
+
+    navigator.geolocation.getCurrentPosition(async (position) => {
+        const { latitude, longitude } = position.coords;
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=weather_code,cloud_cover`;
+
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+            const weatherCode = data.current.weather_code;
+            const cloudCover = data.current.cloud_cover; // 0 to 100
+
+            console.log(`Weather Synced: Code ${weatherCode}, Clouds ${cloudCover}%`);
+            
+            let typeDetected = 'clear';
+
+            // 2. Map WMO Weather Interpretation Codes to your Particle FX
+            // Codes 51-67: Rain/Drizzle | Codes 71-77: Snow | Codes 80-82: Showers
+            if ((weatherCode >= 51 && weatherCode <= 67) || (weatherCode >= 80 && weatherCode <= 82)) {
+                typeDetected = 'rain';
+                triggerPrecipitationEngine('rain');
+            } else if (weatherCode >= 71 && weatherCode <= 77) {
+                typeDetected = 'snow';
+                triggerPrecipitationEngine('snow');
+            } else {
+                if (weatherParticles) scene.remove(weatherParticles);
+                weatherParticles = null;
+            }
+
+            btn.innerText = `Weather: ${typeDetected.toUpperCase()}`;
+
+        } catch (error) {
+            console.error("Weather console hook failed to map parameters:", error);
+            btn.innerText = "Sync Failed";
+        }
+    }, (err) => {
+        console.log("Weather synchronization skipped by user configuration.");
+        btn.innerText = "Access Denied";
+    });
+}
+
+let weatherParticles = null; // Track our active animation system
+
+function triggerPrecipitationEngine(type) {
+    console.log(`Ambient FX Engine swapping profile to: ${type}`);
+    if (weatherParticles) scene.remove(weatherParticles);
+
+    const particleCount = type === 'rain' ? 3000 : 1500;
+    const geometry = new THREE.BufferGeometry();
+    const positions = new Float32Array(particleCount * 3);
+    const velocities = [];
+
+    for (let i = 0; i < particleCount * 3; i += 3) {
+        positions[i] = Math.random() * 800 - 400; 
+        positions[i + 1] = Math.random() * 300 + 10; // Spawn high over city
+        positions[i + 2] = Math.random() * 800 - 400;
+
+        if (type === 'rain') {
+            velocities.push(0, -(Math.random() * 4 + 4), 0); // Fast drop
+        } else {
+            velocities.push((Math.random() - 0.5) * 0.3, -(Math.random() * 0.4 + 0.3), (Math.random() - 0.5) * 0.3); // Drift
+        }
+    }
+
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+    const mat = new THREE.PointsMaterial({
+        color: type === 'rain' ? 0x00dfff : 0xffffff,
+        size: type === 'rain' ? 0.7 : 1.6,
+        transparent: true,
+        opacity: 0.6,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending
+    });
+
+    weatherParticles = new THREE.Points(geometry, mat);
+    weatherParticles.userData = { velocities: velocities, type: type };
+    scene.add(weatherParticles);
+}
+
+// Attach event listener directly to the dashboard button layout
+document.getElementById('weather-btn').addEventListener('click', syncRealWorldWeather);
+
 			import * as THREE from 'three';
 			import { color, fog, float, positionWorld, triNoise3D, positionView, normalWorld, uniform, mix } from 'three/tsl';
 			import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -254,7 +345,7 @@
 				scene.add( visibleSun );
                 window.visibleSun = visibleSun;
 
-                const visibleMoon = new THREE.Mesh( new THREE.SphereGeometry(12, 32, 32), new THREE.MeshBasicMaterial({ color: 0xeeeeee, fog: false }) );
+				const visibleMoon = new THREE.Mesh( new THREE.SphereGeometry(12, 32, 32), new THREE.MeshBasicMaterial({ color: 0xeeeeee, fog: false }) );
                 scene.add(visibleMoon);
                 window.visibleMoon = visibleMoon;
 
@@ -332,6 +423,32 @@
                 for (let i = fireworks.length - 1; i >= 0; i--) {
                     fireworks[i].update();
                     if (fireworks[i].done) fireworks.splice(i, 1);
+                }
+
+                // --- WEATHER VELOCITY ENGINE ---
+                if (weatherParticles) {
+                    const positions = weatherParticles.geometry.attributes.position.array;
+                    const v = weatherParticles.userData.velocities;
+                    const pType = weatherParticles.userData.type;
+
+                    for (let i = 0; i < positions.length; i += 3) {
+                        positions[i] += v[i];     // Move X
+                        positions[i + 1] += v[i + 1]; // Move Y (Gravity)
+                        positions[i + 2] += v[i + 2]; // Move Z
+
+                        // If particle hits the ground, recycle it back to the clouds
+                        if (positions[i + 1] < 0) {
+                            positions[i] = Math.random() * 800 - 400;
+                            positions[i + 1] = 300; 
+                            positions[i + 2] = Math.random() * 800 - 400;
+                        }
+                    }
+                    weatherParticles.geometry.attributes.position.needsUpdate = true;
+                    
+                    // Darken sky slightly during active storms
+                    if (window.nightFactorNode) {
+                        window.nightFactorNode.value = Math.max(window.nightFactorNode.value, pType === 'rain' ? 0.35 : 0.15);
+                    }
                 }
 
 				controls.update();
