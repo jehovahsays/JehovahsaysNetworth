@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>index</title>
+		<title>map</title>
 		<meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -36,12 +36,47 @@
         width: 100%;
         cursor: pointer;
     }
-    .infobox { position: fixed; top: 250px; left: 50%; transform: translateX(-50%); z-index: 10; }
-	
-	    .map-loader { position: fixed; top: 300px; left: 50%; transform: translateX(-50%); z-index: 10; }
+    /* --- Master Alignment Rule --- */
+    .infobox, .map-loader, .weather-loader {
+        position: fixed;
+        right: 20px; /* Securely pins the button stack to the right edge */
+        background: rgba(0, 0, 0, 0.8);
+        color: #0f0;
+        padding: 12px 18px;
+        border: 1px solid #0f0;
+        border-radius: 5px;
+        font-family: 'Courier New', monospace;
+        font-weight: bold;
+        font-size: 14px;
+        cursor: pointer;
+        width: 140px; /* Makes element dimensions matching and uniform */
+        text-align: center;
+        box-shadow: 0 0 10px rgba(0, 255, 0, 0.1);
+        white-space: nowrap; /* Prevents text from breaking or wrapping when tilted */
+        z-index: 1000;
+        transition: all 0.2s ease;
+    }
 
-        .weather-loader { position: fixed; top: 350px; left: 50%; transform: translateX(-50%); z-index: 10; background: #000; color: #00ffcc; border: 1px solid #00ffcc; padding: 6px 12px; cursor: pointer; font-family: monospace; font-weight: bold; border-radius: 2px; }
-        .weather-loader:hover { background: #00ffcc; color: #000; }
+    /* --- Precise Measured Vertical Increments --- */
+    .infobox {
+        top: 150px;
+    }
+
+    .map-loader {
+        top: 200px;
+    }
+
+    .weather-loader {
+        top: 250px;
+    }
+
+    /* --- Interactive Action States --- */
+    .infobox:hover, .map-loader:hover, .weather-loader:hover {
+        background: #0f0;
+        color: #000;
+        box-shadow: 0 0 15px rgba(0, 255, 0, 0.4);
+    }
+		
 </style>
 <script>
 (function () {
@@ -87,12 +122,11 @@
         </div>
 
 		<div id="info">
-		    <a href="./play.html" target="_blank" rel="noopener"><button class="infobox">PLAY</button></a>
-			<br>
-			    <a href="./index.html#search" target="_blank" rel="noopener"><button class="map-loader">Search</button></a>
-            <br>
-                <button id="weather-btn" class="weather-loader">Weather Map</button>
+    <a href="./play.html" target="_blank" rel="noopener"><button class="infobox">PLAY</button></a>
+    <a href="./index.html#search" target="_blank" rel="noopener"><button class="map-loader">Exit</button></a>
+    <button id="weather-btn" class="weather-loader">Weather Map</button>
 		</div>
+
 
 		<script type="importmap">
 			{

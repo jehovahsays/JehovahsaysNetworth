@@ -2,9 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-  <title>localhost knowledge base</title>
-  <meta name="description" content="localhost knowledge base" />
-	
     <http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
@@ -13,24 +10,6 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <meta http-equiv="Clear-Site-Data" content="*">
-  
-  
-<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self' blob:; object-src 'none'; style-src 'self' 'unsafe-inline'; worker-src 'self' blob:; base-uri 'self'; form-action 'self';">
-<meta http-equiv="Referrer-Policy" content="no-referrer">
-
-<meta http-equiv="Permissions-Policy" content="microphone=(), camera=(), geolocation=()">
-
-  <link rel="manifest" href="./manifest.json">
-  
-  <link rel="stylesheet" href="./styles.css" type="text/css">
-  
-  <link rel="icon" href="./favicon.ico" type="image/x-icon">
-<link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
-<link rel="icon" href="./icon-192.png" type="image/png" sizes="192x192">
-<link rel="apple-touch-icon" href="./icon-192.png">
-    <meta name="theme-color" content="#3366cc" />
-  <meta name="color-scheme" content="light dark" />
-
   
     <style>
         body { margin: 0; overflow: hidden; touch-action: none; }
@@ -104,9 +83,29 @@
                 bottom: 0px;
             }
         }
+		
+		    #user-status-display {
+        position: fixed;
+        right: 20px;
+        top: 110px; /* Sits perfectly balanced right above the PLAY link wrapper */
+        width: 140px;
+        text-align: center;
+        font-family: 'Courier New', monospace;
+        font-size: 12px;
+        color: #0f0;
+        text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+        z-index: 1000;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis; /* Gracefully truncates long handles */
+    }
+	
+
+
+
     </style>
 	
-	
+    <title>play</title>	
     <script>
     (function () {
       function showError(msg) {
@@ -134,16 +133,47 @@
         document.addEventListener('DOMContentLoaded', () => showError('WebGPU not supported.'));
       }
     })();
-    </script>	
 	
-	  <script src="./a.js" defer></script>  
+	// Run instantly on load to populate the user's name
+document.addEventListener("DOMContentLoaded", () => {
+    updateUserStatus();
+});
 
+    </script>
+
+	
 </head>
 
+<script src="./dompurify.js" defer></script>
+<script src="./a.js" defer></script>
+
+
+
+
 <body>  
+
+<div id="container">
+  <nav id="sidebar">
+
+  <div id="user-status-display" style="font-family: 'Courier New', monospace; color: #0f0; font-weight: bold;"></div>
+
+
+  <main id="main-content-wrapper" itemscope itemtype="https://schema.org/WebPage">
+    <meta itemprop="url" content="https://jehovahsays.github.io/jehovahsaysnetworth/">
+    <div id="page-container"></div> 
+  </main>
+
+
+
+
+
+
+
+
+
     <div id="info"></div>
     <div id="orbit-controls-info">
-        <a href="./index.html#search" target="_blank" rel="noopener"><button class="infobox">home</button></a>
+        <a href="./map.html" target="_blank" rel="noopener"><button class="infobox">Exit</button></a>
     </div>
         
     <div id="joystick-left" class="joystick-container"><div id="handle-left" class="handle"></div></div>
@@ -169,7 +199,7 @@
         let container, clock, gui, mixer, actions, activeAction, previousAction, camera, scene, renderer, model;
         let moveX = 0, moveZ = 0, lookX = 0, lookY = 0, characterRotationY = 0; 
         let orbitControls, orbitMode = false;
-        let playerScore = 0, playerHealth = 3, playerSize = 1.0;
+        let playerScore = 0, playerHealth = 10, playerSize = 1.0;
         let bullets = [], boss = null, bossHealth = 5, bossAttackTimer = 0, gameActive = true;
 
         const api = { state: 'Walking' };
@@ -177,38 +207,73 @@
         function loadout() {
             window.location.href = './map.html';
         }
-		
-function createUsername(text, color) {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = 256; canvas.height = 64;
-    ctx.font = 'Bold 40px Arial';
-    ctx.fillStyle = color;
-    ctx.textAlign = 'center';
-    ctx.fillText(text, 128, 45);
-    const texture = new THREE.CanvasTexture(canvas);
-    const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture }));
-    sprite.scale.set(4, 1, 1);
-    return sprite;
-}
-		
+
+        function createUsername(text, color) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 256; canvas.height = 64;
+            ctx.font = 'Bold 40px Arial';
+            ctx.fillStyle = color;
+            ctx.textAlign = 'center';
+            ctx.fillText(text, 128, 45);
+            const texture = new THREE.CanvasTexture(canvas);
+            const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture }));
+            sprite.scale.set(4, 1, 1);
+            return sprite;
+        }
+
+        // Sovereign Profile & Recent Changes Sync System
+        function getActiveUsername() {
+            try {
+                // Connect directly to your local user storage profiles
+                const storedUser = localStorage.getItem('mev_wiki_auth_key') || localStorage.getItem('mev_active_session');
+                if (storedUser && storedUser.trim() !== '') {
+                    return storedUser.split(':')[0]; // Safely strip Packed hashes
+                }
+            } catch (e) {
+                console.error('Failed reading security perimeter token:', e);
+            }
+            return 'Guest';
+        }
+
+        async function logScoreToRecentChanges() {
+            const currentName = getActiveUsername();
+            const storageKey = 'mev_wiki_changes'; // Bound directly to your changes ledger array
+            
+            try {
+                let currentChanges = [];
+                const rawData = localStorage.getItem(storageKey);
+                if (rawData) {
+                    currentChanges = JSON.parse(rawData);
+                }
+                
+                // Formats a custom event matching the layout of your wiki changes timeline
+                const gameChangeEntry = {
+                    title: `🎯 Game High Score: ${playerScore} pts (${currentName})`,
+                    timestamp: new Date().toISOString(),
+                    type: 'Update'
+                };
+                
+                currentChanges.unshift(gameChangeEntry);
+                localStorage.setItem(storageKey, JSON.stringify(currentChanges));
+                console.log('✅ Game transaction safely recorded in Recent Changes ledger.');
+            } catch (err) {
+                console.error('Failed writing tracking token to database stack:', err);
+            }
+        }
 
         function createBoss() {
             const geometry = new THREE.BoxGeometry(5, 5, 5);
             const material = new THREE.MeshPhongMaterial({ color: 0xff0000 });
             boss = new THREE.Mesh(geometry, material);
             boss.position.set(0, 5, -20);
-			
-    const label = createUsername('a.js', '#ff0000');
-    label.position.y = 4; // Positions it above the cube
-    boss.add(label);
-			
+            const label = createUsername('a.js', '#ff0000');
+            label.position.y = 4;
+            boss.add(label);
             scene.add(boss);
             bossHealth = 5;
         }
 
-  		
-		
         function createBullet(position, direction) {
             const geometry = new THREE.SphereGeometry(0.5, 8, 8);
             const material = new THREE.MeshBasicMaterial({ color: 0x00ffff });
@@ -233,53 +298,46 @@ function createUsername(text, color) {
             bullets.push(bullet);
         }
 
-function updateBullets(deltaTime) {
-    for (let i = bullets.length - 1; i >= 0; i--) {
-        const bullet = bullets[i];
-        bullet.position.addScaledVector(bullet.direction, bullet.speed);
-        
-        if (model && bullet.position.distanceTo(model.position) > 100) {
-            scene.remove(bullet);
-            bullets.splice(i, 1);
-            continue;
-        }
-        
-        if (bullet.isPlayerBullet) {
-            if (boss && bullet.position.distanceTo(boss.position) < 3) {
-                bossHealth--;
-                scene.remove(bullet);
-                bullets.splice(i, 1);
+        function updateBullets(deltaTime) {
+            for (let i = bullets.length - 1; i >= 0; i--) {
+                const bullet = bullets[i];
+                bullet.position.addScaledVector(bullet.direction, bullet.speed);
                 
-                if (bossHealth <= 0) {
-                    // Start Win Sequence
-                    gameActive = false; 
-                    scene.remove(boss);
-                    boss = null;
-                    
-                    playerScore += 10;
-                    updateUI(); // Ensure final score is displayed
-                    
-                    showNotification("Victory! Redirecting...");
-                    
-                    // Redirect to index.html
-                    setTimeout(() => {
-                        window.location.href = './index.html#search';
-                    }, 2000); 
+                if (model && bullet.position.distanceTo(model.position) > 100) {
+                    scene.remove(bullet);
+                    bullets.splice(i, 1);
+                    continue;
                 }
-            }
-        } else {
-            if (model && bullet.position.distanceTo(model.position) < 2) {
-                playerHealth--;
-                scene.remove(bullet);
-                bullets.splice(i, 1);
-                if (playerHealth <= 0) {
-                    gameActive = false;
-                    loadout(); 
+                
+                if (bullet.isPlayerBullet) {
+                    if (boss && bullet.position.distanceTo(boss.position) < 3) {
+                        bossHealth--;
+                        scene.remove(bullet);
+                        bullets.splice(i, 1);
+                        if (bossHealth <= 0) {
+                            scene.remove(boss);
+                            boss = null;
+                            playerScore += 10;
+                            logScoreToRecentChanges();
+                            playerSize += 0.2;
+                            updatePlayerSize();
+                            showNotification("Boss Defeated! +10");
+                            setTimeout(createBoss, 5000);
+                        }
+                    }
+                } else {
+                    if (model && bullet.position.distanceTo(model.position) < 2) {
+                        playerHealth--;
+                        scene.remove(bullet);
+                        bullets.splice(i, 1);
+                        if (playerHealth <= 0) {
+                            gameActive = false;
+                            loadout(); 
+                        }
+                    }
                 }
             }
         }
-    }
-}
 
         function updateBoss(deltaTime) {
             if (!boss || !gameActive || !model) return;
@@ -298,17 +356,22 @@ function updateBullets(deltaTime) {
         }
 
         function createUI() {
-            const uiStyle = "position:absolute; color:white; font-family:Arial; font-weight:bold;";
+            const uiStyle = "position:absolute; color:white; font-family:Arial; font-weight:bold; background:rgba(0,0,0,0.7); padding:12px 20px; border-radius:10px;";
+            
             const score = document.createElement('div');
-            score.id = 'scoreDisplay'; score.style = uiStyle + "top:10px; left:10px; font-size:18px;";
+            score.id = 'scoreDisplay'; 
+            score.style = uiStyle + "top:10px; left:10px; font-size:18px;";
             document.body.appendChild(score);
             
             const health = document.createElement('div');
-            health.id = 'healthDisplay'; health.style = uiStyle + "top:40px; left:10px; font-size:18px;";
+            health.id = 'healthDisplay'; 
+            // Shifted down to top:70px to clear the score container's padding box cleanly
+            health.style = uiStyle + "top:70px; left:10px; font-size:18px;";
             document.body.appendChild(health);
             
             const notify = document.createElement('div');
-            notify.id = 'notification'; notify.style = uiStyle + "top:50%; left:50%; transform:translate(-50%,-50%); display:none; background:rgba(0,0,0,0.7); padding:20px; border-radius:10px;";
+            notify.id = 'notification'; 
+            notify.style = "position:absolute; color:white; font-family:Arial; font-weight:bold; top:50%; left:50%; transform:translate(-50%,-50%); display:none; background:rgba(0,0,0,0.7); padding:20px; border-radius:10px;";
             document.body.appendChild(notify);
         }
 
@@ -366,21 +429,15 @@ function updateBullets(deltaTime) {
                 model = gltf.scene;
                 scene.add(model);
                 createGUI(model, gltf.animations);
+	
+                // Dynamically extract name from your Local Storage profile
+                const currentSessionName = getActiveUsername();
+                const playerLabel = createUsername(currentSessionName, '#0033ff');
+                playerLabel.position.y = 6;
+                model.add(playerLabel);
                 orbitControls = new OrbitControls(camera, renderer.domElement);
                 orbitControls.enabled = false;
-	
-			// ADD THIS:
-    const label = createUsername('Guest', '#0033ff');
-    label.position.y = 6; // Positions it above the robot's head
-    model.add(label);
-	
-				
             });
-
-
-
-
-		
 
             renderer = new THREE.WebGLRenderer({ antialias: false });
             renderer.setPixelRatio(window.devicePixelRatio);
@@ -439,10 +496,15 @@ function updateBullets(deltaTime) {
                     action.loop = THREE.LoopOnce;
                 }
             });
+			
 
-            const sf = gui.addFolder('States');
+const sf = gui.addFolder('States');
+sf.close(); // Forces the States control folder to be closed on page load
+
             sf.add(api, 'state').options(states).onChange(() => fadeToAction(api.state, 0.5));
-            const ef = gui.addFolder('Emotes');
+const ef = gui.addFolder('Emotes');
+ef.close();
+gui.close();
             emotes.forEach(name => {
                 api[name] = () => { fadeToAction(name, 0.2); mixer.addEventListener('finished', function restore() {
                     mixer.removeEventListener('finished', restore); fadeToAction(api.state, 0.2);
@@ -486,10 +548,5 @@ function updateBullets(deltaTime) {
 
         init();
     </script>
-	
-    
-
-
-
 </body>
 </html>
