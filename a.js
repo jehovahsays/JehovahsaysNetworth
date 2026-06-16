@@ -711,42 +711,67 @@ async function hashPin(pin) {
   return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
-// SETUP AUTH FUNCTION WRAPPED TO EXPOSE LOGOUT
+// ==========================================================
+// 👤 HARDENED AUTHENTICATION UTILITIES
+// ==========================================================
 function setupAuth() {
   const s = {
-    modal: 'auth-modal', username: 'auth-username', pin: 'auth-pin', 
-    title: 'auth-modal-title', createLink: 'create-account-link',
-    loginLink: 'login-link', logoutLink: 'logout-link', userStatus: 'user-status',
-    submitBtn: 'submit-auth', cancelBtn: 'cancel-auth'
+    modal: 'auth-modal', 
+    username: 'auth-username', 
+    pin: 'auth-pin', 
+    title: 'auth-modal-title', 
+    createLink: 'create-account-link',
+    loginLink: 'login-link', 
+    logoutLink: 'logout-link', 
+    userStatus: 'user-status',
+    submitBtn: 'submit-auth', 
+    cancelBtn: 'cancel-auth'
   };
 
-  async function getAllUsers() { return await loadData(STORAGE_KEYS.users, []); }
-  async function saveAllUsers(users) { await saveData(STORAGE_KEYS.users, users); }
+  async function getAllUsers() { 
+    return await loadData(STORAGE_KEYS.users, []); 
+  }
+  
+  async function saveAllUsers(users) { 
+    await saveData(STORAGE_KEYS.users, users); 
+  }
   
   function updateUserStatus() {
     const user = getCurrentUser();
     const el = document.getElementById(s.userStatus);
-    if (el) el.textContent = user ? `Logged in as ${user.name}` : 'Not logged in';
+    if (el) {
+      el.textContent = user ? `Logged in as ${user.name}` : 'Not logged in';
+    }
   }
+
   function updateAuthUI() {
     const user = getCurrentUser();
-    // CSP-SAFE: Using classList.add/remove('hidden') instead of manipulating .style.display
     document.getElementById(s.createLink)?.classList.toggle('hidden', !!user);
     document.getElementById(s.loginLink)?.classList.toggle('hidden', !!user);
     document.getElementById(s.logoutLink)?.classList.toggle('hidden', !user);
+    
     const profileLink = document.getElementById('profile-link');
-    if (profileLink) profileLink.classList.toggle('hidden', !user);
+    if (profileLink) {
+      profileLink.classList.toggle('hidden', !user);
+    }
   }
+
   function showModal(isLogin = false) {
     const modal = document.getElementById(s.modal);
     const usernameInput = document.getElementById(s.username);
     const pinInput = document.getElementById(s.pin);
-    document.getElementById(s.title).textContent = isLogin ? "Log In" : "Create Account";
+    const titleEl = document.getElementById(s.title);
+    
+    if (titleEl) {
+      titleEl.textContent = isLogin ? "Log In" : "Create Account";
+    }
     if (usernameInput) usernameInput.value = "";
     if (pinInput) pinInput.value = ""; 
     if (modal) modal.style.display = 'block';
+    
     setTimeout(() => document.getElementById(s.username)?.focus(), 50);
   }
+
   function closeModal() {
     const modal = document.getElementById(s.modal);
     if (modal) modal.style.display = 'none';
@@ -765,96 +790,101 @@ function setupAuth() {
     }
     
     const enteredPinHash = await hashPin(pin);
-    if (!enteredPinHash) { console.error("Hashing failed."); speak("Error: Pin hashing failed."); return; }
+    if (!enteredPinHash) { 
+      console.error("Hashing failed."); 
+      speak("Error: Pin hashing failed."); 
+      return; 
+    }
 
-    let users = await getAllUsers();
+    const users = await getAllUsers();
+    let selectedUser = null;
     
-    let user = users.find(u => u.name.toLowerCase() === name.toLowerCase());
-    
-    // Hardened Local Vault Fallback Gate
-    if (!user) {
-        const structuralBackup = localStorage.getItem('mev_wiki_user_' + name.toLowerCase());
-        if (structuralBackup) {
-            try {
-                user = JSON.parse(structuralBackup);
-                users.push(user);
-                await saveAllUsers(users);
-                console.log('📦 Profile synchronization restored from localized secondary storage.');
-            } catch (err) {
-                console.error('Failed to parse synchronized backup registry:', err);
-            }
-        }
+    // Programmatic verification loop
+    for (let i = 0; i < users.length; i++) {
+      if (users[i] && users[i].name && users[i].name.toLowerCase() === name.toLowerCase()) {
+        selectedUser = users[i];
+        break;
+      }
     }
     
-    // Explicitly verify the current modal intent context before allowing creation branches
-    const isExplicitRegister = document.getElementById('auth-modal-title')?.textContent === 'Create Account';
+    // Localized Secondary Vault Synchronization 
+    if (!selectedUser) {
+      const structuralBackup = localStorage.getItem('mev_wiki_user_' + name.toLowerCase());
+      if (structuralBackup) {
+        try {
+          selectedUser = JSON.parse(structuralBackup);
+          users.push(selectedUser);
+          await saveAllUsers(users);
+          console.log('📦 Profile synchronization restored from localized secondary storage.');
+        } catch (err) {
+          console.error('Failed to parse synchronized backup registry:', err);
+        }
+      }
+    }
     
+    const titleContext = document.getElementById('auth-modal-title');
+    const isExplicitCreateAction = titleContext && titleContext.textContent === 'Create Account';
+    
+    if (!selectedUser && !isExplicitCreateAction) {
+      console.error('❌ Checkpoint: Login attempt on an unrecognized local state profile.');
+      speak('Account not found. Please verify your username entry.');
+      return;
+    }
+
     let saltArrayBuffer;
     let isNewUser = false;
-    
-    
-    // Sovereign Verification Gate: Prevent accidental profile recreation paths
-    const isExplicitCreateAction = document.getElementById('auth-modal-title')?.textContent === 'Create Account';
-    
-    if (!user && !isExplicitCreateAction) {
-        console.error('❌ Checkpoint: Login attempt on an unrecognized local state profile.');
-        speak('Account not found. Please verify your username entry.');
-        return;
-    }
 
-    if (!user) {
-      // --- ACCOUNT CREATION ---
+    if (!selectedUser) {
+      // --- UNIFIED PROFILE CREATION ---
       isNewUser = true;
-      
       const salt = crypto.getRandomValues(new Uint8Array(CRYPTO_CONFIG.saltLength));
       saltArrayBuffer = salt.buffer;
       const saltB64 = arrayBufferToBase64(saltArrayBuffer);
       
-      user = { 
-          name, 
-          joined: new Date().toISOString(), 
-          edits: [],
-          pinHash: enteredPinHash, 
-          crypto: { salt: saltB64 } 
+      selectedUser = { 
+        name: name, 
+        joined: new Date().toISOString(), 
+        edits: [],
+        pinHash: enteredPinHash, 
+        crypto: { salt: saltB64 } 
       }; 
-      users.push(user);
-      
+      users.push(selectedUser);
     } else {
-      // --- ACCOUNT LOGIN ---
-      if (!user.pinHash || user.pinHash !== enteredPinHash) {
+      // --- UNIFIED PROFILE LOGIN ---
+      if (!selectedUser.pinHash || selectedUser.pinHash !== enteredPinHash) {
         console.error("❌ Invalid PIN."); 
         speak("Invalid PIN."); 
         return; 
       }
-      if (!user.crypto || !user.crypto.salt) {
-           console.error("❌ User found but missing crypto parameters. Data may be unrecoverable."); 
-           speak("User data is incomplete. Please contact support.");
-           return;
-      }
-      saltArrayBuffer = base64ToArrayBuffer(user.crypto.salt);
-    }
-    
-    // 3. DERIVE SESSION ENCRYPTION KEY
-    try {
-        const key = await deriveKey(pin, saltArrayBuffer);
-        encryptionKey = key; 
-        console.log("✅ Encryption key derived and set for session.");
-    } catch(e) {
-        console.error("❌ Key derivation failed:", e);
-        speak("Critical error during key derivation. Cannot log in.");
-        encryptionKey = null;
+      if (!selectedUser.crypto || !selectedUser.crypto.salt) {
+        console.error("❌ User found but missing crypto parameters."); 
+        speak("User data is incomplete.");
         return;
+      }
+      saltArrayBuffer = base64ToArrayBuffer(selectedUser.crypto.salt);
     }
     
-    // 4. SAVE
+    // --- PROGRAMMATIC ENCRYPTION KEY DERIVATION ---
+    try {
+      const key = await deriveKey(pin, saltArrayBuffer);
+      encryptionKey = key; 
+      console.log("✅ Encryption key derived and set for session.");
+    } catch(e) {
+      console.error("❌ Key derivation failed:", e);
+      speak("Critical error during key derivation. Cannot log in.");
+      encryptionKey = null;
+      return;
+    }
+    
+    // --- PERSISTENCE STATE SYNCHRONIZATION ---
     if (isNewUser) {
       await saveAllUsers(users); 
+      localStorage.setItem('mev_wiki_user_' + name.toLowerCase(), JSON.stringify(selectedUser));
       console.log(`✅ Account created and encrypted storage initiated for ${name}`);
       speak(`Account created and encrypted storage initiated for ${name}.`);
     }
     
-    // 5. FINISH LOGIN
-    localStorage.setItem(STORAGE_KEYS.currentUser, JSON.stringify(user));
+    localStorage.setItem(STORAGE_KEYS.currentUser, JSON.stringify(selectedUser));
     closeModal();
     updateAuthUI();
     updateUserStatus();
@@ -873,22 +903,25 @@ function setupAuth() {
     showAbout();
   }
   
-  // CSP-SAFE: Attaching event listeners instead of inline 'onclick'
+  // CSP-Safe Navigation Event Mappings
   document.getElementById(s.createLink)?.addEventListener('click', e => { e.preventDefault(); showModal(false); });
   document.getElementById(s.loginLink)?.addEventListener('click', e => { e.preventDefault(); showModal(true); });
   document.getElementById(s.logoutLink)?.addEventListener('click', e => { e.preventDefault(); logout(); });
   document.getElementById(s.submitBtn)?.addEventListener('click', e => { e.preventDefault(); submitAuth(); }); 
   document.getElementById(s.cancelBtn)?.addEventListener('click', e => { e.preventDefault(); closeModal(); });
+  
   document.addEventListener('keydown', e => { 
-      if (e.key === 'Escape' && document.getElementById(s.modal)?.style.display === 'block') closeModal(); 
+    if (e.key === 'Escape' && document.getElementById(s.modal)?.style.display === 'block') {
+      closeModal(); 
+    }
   });
 
   updateUserStatus();
   updateAuthUI();
   
-  // EXPOSE LOGOUT FUNCTIONALITY FOR DYNAMICALLY CREATED BUTTONS
   return { logout: logout };
 }
+
 
 // Attach the Auth functions to the global scope for dynamic button binding (e.g., in showProfile)
 setupAuth.getAuthFunctions = setupAuth;
