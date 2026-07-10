@@ -1,3 +1,0 @@
-10 PRINT "INITIALIZING MEV WIKI BRIDGE..."
-20 SHELL "start index.html"
-30 END

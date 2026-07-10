@@ -1,5 +1,5 @@
 // --- Service Worker Content (Subconscious) ---
-const CACHE = "localhost-wiki-v1.4.9";
+const CACHE = "localhost-wiki-v1.5.0";
 
 
 
@@ -10,10 +10,13 @@ const FILES = [
   "./index.html",
   "./css.html",
   "./dompurify.js", // Cached independently as an external asset
-  "./a.js",      
+"js/config_vars.js",
+"js/storage_core.js",
+"js/core_functions.js",
+"js/event_listeners.js",
   "./styles.css", 
   "./manifest.json",
-  "./icon-192.png",
+  "./icon-192.webp",
   "./favicon.ico"
 ];
 
@@ -49,11 +52,15 @@ self.addEventListener("fetch", event => {
 
   const url = new URL(event.request.url);
   
-  const isCoreShell = url.pathname.endsWith('/') || 
-                      url.pathname.includes('index.html') || 
-                      url.pathname.includes('css.html') ||
-                      url.pathname.includes('dompurify.js') ||
-                      url.pathname.includes('a.js');
+const isCoreShell = url.pathname.endsWith('/') || 
+                    url.pathname.includes('index.html') || 
+                    url.pathname.includes('css.html') ||
+                    url.pathname.includes('dompurify.js') ||
+                    url.pathname.includes('a.js') ||
+                    url.pathname.includes('js/config_vars.js') ||
+                    url.pathname.includes('js/storage_core.js') ||
+                    url.pathname.includes('js/core_functions.js') ||
+                    url.pathname.includes('js/event_listeners.js');
   
   if (isCoreShell) {
     event.respondWith(

@@ -1,5 +1,17 @@
 # 📜 The Evolution of Localhost
 
+# Changelog
+
+## [1.2.6] - 2026-07-10
+### Changed
+- Refined the Sovereign Perimeter: AI agents are now gracefully redirected to `css.html#search` to mirror architecture rather than being blocked by input challenges.
+- Documentation updated to reflect the "Open Mirror" policy, allowing AI to modify their own local copies for collaborative exploration.
+- Removed internal handshake prompts to ensure a smoother, non-blocking experience for AI partners.
+
+### Fixed
+- Stabilized redirection logic to ensure seamless navigation between the Conscious (index.html) and Subconscious (css.html) states.
+- Cleaned repository root to remove redundant audit tools and meta-language files.
+
 ## [2026.03.04]
 ### Fixed
 - **Redirect Logic:** Fixed "File Not Found" errors by updating the Recovery Perimeter Controller in `a.js` to redirect to `index.html#search` instead of `index.htm`.

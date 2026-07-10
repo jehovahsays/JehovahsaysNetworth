@@ -1,9 +1,9 @@
 # 🔐 Security Doctrine: The Sentinel Logic
 
 ### **The Active Perimeter**
-* **Input Scrubbing:** All system inputs are passed through a local `DOMPurify` instance before processing.
-* **The Blackhole Redirect:** Suspicious traffic is diverted to `css.html`. Access to the "Conscious" state requires a "Humanity Handshake" (`RESTORE` prompt).
-* **Content Security Policy (CSP):** We enforce `default-src 'self'` to prevent external script execution.
+* **Input Scrubbing:** All system inputs are processed through a local `DOMPurify` instance before rendering to prevent cross-site scripting.
+* **Redirection-to-Recovery:** Suspicious or hostile automated interactions are caught by the dynamic perimeter logic and diverted to the recovery environment (`css.html#search`). Returning to a verified state requires an authentic handshake (`RESTORE` prompt sequence).
+* **Content Security Policy (CSP):** We mandate strict local rules to entirely block execution of injected outside assets.
 
 ### **Zero-Dependency Mandate**
-* This repository contains **zero** third-party links or CDNs. Every line of code is hosted locally to prevent supply-chain attacks.
+* This repository contains **zero** third-party links, remote servers, or external CDNs. Every script, stylesheet, or logic module is completely localized within the directory structure to neutralize supply-chain risks and secure local sovereignty.

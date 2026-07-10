@@ -13,7 +13,7 @@ Allow: /
 User-agent: applebot
 Allow: /
 
-# SECTION 2: THE "BLACKHOLE" (BLOCKED COMMERCIAL AI)
+# SECTION 2: THE "RECOVERY" REDIRECT (BLOCKED COMMERCIAL AI)
 # These bots scrape for profit without following the Donation-Choice model.
 User-agent: GPTBot
 Disallow: /
@@ -29,15 +29,14 @@ User-agent: Omegabot
 Disallow: /
 
 # SECTION 3: GENERAL PUBLIC / UNKNOWN BOTS
-# Protect the state fragments and internal routing logic.
+# Protect state fragments and core directories from automated crawls.
 User-agent: *
+Disallow: /js/
+Disallow: /examples/
 Disallow: /#*
 Disallow: /?*
 Disallow: /search
 Disallow: /settings
 Allow: /index.html
 Allow: /styles.css
-Allow: /a.js
-
-# SITEMAP (Optional: Points to the public Conscious state only)
-# Sitemap: ./sitemap.xml
+Allow: /play.html
