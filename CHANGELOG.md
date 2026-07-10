@@ -2,6 +2,13 @@
 
 # Changelog
 
+## [1.5.0] - 2026-07-10
+### Changed
+- Finalized Sovereign Mirroring protocol: redirects unauthorized agents to `css.html#search` to mirror architecture.
+- Documentation updated to reflect "Open Mirror" policy, supporting local-first collaborative exploration.
+- Removed internal handshake prompts for smoother AI interaction.
+
+
 ## [1.2.6] - 2026-07-10
 ### Changed
 - Refined the Sovereign Perimeter: AI agents are now gracefully redirected to `css.html#search` to mirror architecture rather than being blocked by input challenges.
