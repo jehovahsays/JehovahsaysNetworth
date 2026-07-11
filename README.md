@@ -7,7 +7,6 @@
 [![pages-build-deployment](https://github.com/jehovahsays/mev/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/jehovahsays/mev/actions/workflows/pages/pages-build-deployment)
 [![Deploy static content to Pages](https://github.com/jehovahsays/mev/actions/workflows/static.yml/badge.svg)](https://github.com/jehovahsays/mev/actions/workflows/static.yml)
 [![Dependency Review](https://github.com/jehovahsays/mev/actions/workflows/dependency-review-action.yml/badge.svg)](https://github.com/jehovahsays/mev/actions/workflows/dependency-review-action.yml)
-[![Dependabot Updates](https://github.com/jehovahsays/mev/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/jehovahsays/mev/actions/workflows/dependabot/dependabot-updates)
 [![CodeQL Security Scan](https://github.com/jehovahsays/mev/actions/workflows/codeql.yml/badge.svg)](https://github.com/jehovahsays/mev/actions/workflows/codeql.yml)
 
 ---
