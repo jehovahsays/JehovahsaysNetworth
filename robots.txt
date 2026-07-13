@@ -1,9 +1,8 @@
 # =============================================================
-# 🌀 MEV SOVEREIGN PERIMETER: robots.txt (Hardened v1.2.6)
+# 🌀 MEV SOVEREIGN PERIMETER: robots.txt (Hardened v1.2.6 - Modified)
 # =============================================================
 
 # SECTION 1: ACCESSIBILITY & COLLABORATION (ALLOWED)
-# These bots help humans with disabilities or facilitate GitHub rebuilds.
 User-agent: GitHub-Hookshot
 Allow: /
 User-agent: dependabot
@@ -13,30 +12,21 @@ Allow: /
 User-agent: applebot
 Allow: /
 
-# SECTION 2: THE "RECOVERY" REDIRECT (BLOCKED COMMERCIAL AI)
-# These bots scrape for profit without following the Donation-Choice model.
+# SECTION 2: AI CRAWLERS (ALLOWED)
 User-agent: GPTBot
-Disallow: /
+Allow: /
 User-agent: CCBot
-Disallow: /
+Allow: /
 User-agent: PerplexityBot
-Disallow: /
+Allow: /
 User-agent: Amazonbot
-Disallow: /
+Allow: /
 User-agent: ClaudeBot
-Disallow: /
+Allow: /
 User-agent: Omegabot
-Disallow: /
+Allow: /
 
-# SECTION 3: GENERAL PUBLIC / UNKNOWN BOTS
-# Protect state fragments and core directories from automated crawls.
+# SECTION 3: GENERAL PUBLIC / ALL BOTS (ALLOWED)
+# All bots are now permitted to index the entire site.
 User-agent: *
-Disallow: /js/
-Disallow: /examples/
-Disallow: /#*
-Disallow: /?*
-Disallow: /search
-Disallow: /settings
-Allow: /index.html
-Allow: /styles.css
-Allow: /play.html
+Allow: /
