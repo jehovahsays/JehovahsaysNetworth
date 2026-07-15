@@ -67,34 +67,18 @@ async function showProfile() {
 
     const section = document.createElement('section');
     section.className = 'page';
-    section.innerHTML = `<h2>User Profile: ${user ? user.name : 'Guest'}</h2>`;
+    section.innerHTML = `<h2>User Profile: ${user ? user.name : '::1'}</h2>`;
 
-    if (user) {
-        section.innerHTML += `
-            <p><strong>Status:</strong> Logged in and **${encryptionKey ? 'encrypted' : 'unencrypted'}** session active.</p>
-            <p><strong>Joined:</strong> ${new Date(user.joined).toLocaleDateString()}</p>
-            <p><strong>Total Edits:</strong> (Not tracked yet)</p>
-            <p>This page will be expanded to show user-specific statistics and history.</p>
-            <button class="delete-btn" id="profile-logout-btn">Log Out</button> 
-            `;
-    } else {
-        section.innerHTML += `<p>You are not currently logged in. Please log in or create an account to manage your profile.</p>`;
-    }
+    section.innerHTML += `
+        <p><strong>Status:</strong> Logged in and **${encryptionKey ? 'encrypted' : 'unencrypted'}** session active.</p>
+        <p><strong>Joined:</strong> ${new Date(user.joined).toLocaleDateString()}</p>
+        <p><strong>Total Edits:</strong> (Not tracked yet)</p>
+        <p>This page will be expanded to show user-specific statistics and history.</p>
+    `;
     
     c.innerHTML = '';
     c.appendChild(section);
     location.hash = "#profile";
-    
-    // Re-bind the logout link using the new unique ID
-    const logoutBtn = document.getElementById('profile-logout-btn');
-    if (logoutBtn && !logoutBtn.getAttribute('data-listener-bound')) {
-        logoutBtn.addEventListener('click', e => { 
-            e.preventDefault(); 
-            // Trigger the click event of the working sidebar logout link (id="logout-link")
-            document.getElementById('logout-link')?.click();
-        });
-        logoutBtn.setAttribute('data-listener-bound', 'true'); // Prevent rebinding
-    }
 }
 
 async function showPage(title) {
@@ -138,7 +122,7 @@ async function showPage(title) {
   // IMPORTANT: For the single file, the URL will always be index.html.
   const pageUrl = `${location.origin}#${encodeURIComponent(page.title)}`; 
   const dateMod = new Date(page.lastEdited).toISOString();
-  const authorName = escapeHTML(page.createdBy || 'Guest');
+  const authorName = escapeHTML(page.createdBy || '::1');
 
   // SCHEMA FIX: Injected fully compliant Article schema
   c.innerHTML = `
@@ -179,18 +163,6 @@ async function showPage(title) {
 async function editPage(title) {
   setMainView(true);
   console.log("Editing page:", title);
-  const user = getCurrentUser();
-  
-    // Sovereign Verification Gate: Prevent accidental profile recreation paths
-    const isExplicitCreateAction = document.getElementById('auth-modal-title')?.textContent === 'Create Account';
-    
-    if (!user && !isExplicitCreateAction) {
-        console.error('❌ Checkpoint: Login attempt on an unrecognized local state profile.');
-        speak('Account not found. Please verify your username entry.');
-        return;
-    }
-
-    if (!user) { console.error("You must be logged in to edit sections."); speak("You must be logged in to edit pages."); return; }
   
   const pages = await loadData(STORAGE_KEYS.pages, {}); 
   const page = pages[title];
@@ -217,7 +189,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   updateConnectionStatus();
   updateStorageBar();
 
-  
   // Create/Ensure essential localhost pages
   await createExampleWikiPage(); 
   await ensureMainPage(); 
@@ -246,8 +217,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         await showPage("Main_Page"); 
     }
   });
-
-  // CSP-SAFE Event Listeners (Instead of inline handlers)
 
 // 1. Menu and Search Controls
 document.getElementById('menu-btn')?.addEventListener('click', toggleSidebar);

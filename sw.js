@@ -1,5 +1,5 @@
 // --- Service Worker Content (Subconscious) ---
-const CACHE = "localhost-wiki-v1.5.1";
+const CACHE = "localhost-wiki-v1.5.2";
 
 
 

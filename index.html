@@ -125,13 +125,7 @@
 
 <div id="container">
   <nav id="sidebar">
-    <div id="auth-links">
-      <div id="user-status">Not logged in</div>
-      <a href="#create" id="create-account-link">Create Account</a><br>
-      <a href="#login" id="login-link">Log In</a><br>
-      <a href="#profile" id="profile-link">My Profile</a><br>
-      <a href="#logout" id="logout-link" class="hidden">Log Out</a> 
-    </div>
+
     <br>
         <center>  
             <button id="theme-toggle-btn" class="mev-button" style="width: auto; margin-left: 10px; padding: 5px 10px;">
@@ -148,19 +142,6 @@
         <li class="titleInput"><button data-nav-target="about">About</button></li>
         <li class="titleInput"><button data-page-target="Formatting_Examples">Wiki Formatting Help</button></li>
     </ul>
-	
-<div id="data-tools" style="margin-top: 20px; border-top: 1px solid #444; padding-top: 10px;">
-  <input type="file" id="import-file-input" style="display:none;" />
-  <button id="import-btn" class="mev-button" onclick="document.getElementById('import-file-input').click()">Import Data</button>
-  
-  <button id="export-btn" class="mev-button" onclick="window.switchSovereignView('json')">Export Data</button>
-  
-  <a href="#rss" class="mev-button">RSS Feed</a>
-  <a href="#json" class="mev-button">JSON Export</a>
-</div>
-
-
-	
 	
 
     <hr />
@@ -188,26 +169,12 @@
 
 </footer>
 
-<div id="auth-modal" class="modal-overlay">
-  <div class="modal-box">
-    <h2 id="auth-modal-title">Enter Username</h2>
-    <label for="auth-username">Username:</label>
-    <input id="auth-username" type="text" autocomplete="username" /><br><br>
-    
-    <label for="auth-pin">PIN/Passphrase (4-12 characters recommended):</label>
-    <input id="auth-pin" type="password" maxlength="12" autocomplete="current-password" />
-    <p style="font-size: 0.8em; color: red; margin-top: 10px;">⚠️ If you set a PIN/Passphrase, **all your data will be encrypted**.</p>
-    
-    <div class="modal-actions">
-      <button id="submit-auth">Submit</button>
-      <button id="cancel-auth">Cancel</button>
-    </div>
-  </div>
-</div>
+
 
 
 <div id="mev-splash-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: black; z-index: 9999; overflow: hidden;">
     <div id="info" style="position: absolute; top: 10px; width: 100%; text-align: center; color: white; z-index: 100; pointer-events: none;"></div>
+
 	
 	
 	<a href="./less.html">
