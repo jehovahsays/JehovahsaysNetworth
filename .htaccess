@@ -1,0 +1,22 @@
+# Enable MIME type for WebP images
+<IfModule mod_mime.c>
+  AddType image/webp .webp
+</IfModule>
+
+# Content Negotiation: Serve WebP if the browser supports it
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # Check if browser accepts WebP
+  RewriteCond %{HTTP_ACCEPT} image/webp
+  # Check if the requested file is a JPG/PNG
+  RewriteCond %{REQUEST_FILENAME} (.*)\.(jpe?g|png)$
+  # Check if the WebP version exists
+  RewriteCond %1.webp -f
+  # Rewrite the request to the WebP file
+  RewriteRule (.+)\.(jpe?g|png)$ $1.webp [T=image/webp,E=accept:1]
+</IfModule>
+
+# Force Vary header so proxies know the content depends on the Accept header
+<IfModule mod_headers.c>
+  Header append Vary Accept env=accept
+</IfModule>
