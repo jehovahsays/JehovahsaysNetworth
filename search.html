@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="viewport" content="width=device-width, height=device-height, user-scalable=yes, initial-scale=1.0, maximum-scale=1.0">
+<meta http-equiv="Cache-Control" content="private, no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Clear-Site-Data" content="*">
+<meta http-equiv="X-Frame-Options" content="DENY">
+<meta http-equiv="X-XSS-Protection" content="1; mode=block">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<style>
+input[type="text"] {
+  font-family: monospace;
+  font-size: 10px;
+  color: peru;
+}
+#filterList {
+        list-style: none;
+        padding: 0px;
+        margin: 0px;
+		position: fixed;
+	    top: 0px;
+        left: 0px;			
+}
+
+.titleInput {
+        margin: 0px;
+	    position: absolute;		
+	    top: 100px;
+        left: 15px;
+        font-size: 1.0em;
+        padding: 0px;
+        animation: fadeIn 0.5s ease-in-out;
+} 
+
+.titleInput:last-child {        
+        margin: 0px;
+	    position: absolute;		
+	    top: 100px;
+        left: 15px;
+        font-size: 1.0em;
+        padding: 0px;
+        border-bottom: none;
+}
+
+@keyframes fadeIn {
+   from {
+        opacity: 0;
+        transform: translateY(-10px);
+}
+   to   {
+        opacity: 1;
+        transform: translateY(0);
+}
+  }
+ 
+</style>
+
+<title>
+search
+</title>
+	
+	  <link rel="manifest" href="./manifest.json">
+  
+    <link rel="icon" href="./favicon.ico" type="image/x-icon">
+
+  <link rel="icon" href="./icon-192.webp" type="image/webp" sizes="192x192">
+  <link rel="apple-touch-icon" href="./icon-192.webp">
+
+  <script src="./dompurify.js" defer></script>
+
+<script src="js/config_vars.js" defer></script>
+<script src="js/storage_core.js" defer></script>
+<script src="js/core_functions.js" defer></script>
+<script src="js/event_listeners.js" defer></script>
+
+
+
+</head>
+
+
+<body style="background-color:black;">
+
+
+<br>
+<div id="inputWrapper">
+
+<div id="inputWrapperInner">
+<input
+style="position:absolute;top:100px;left:100px;width:150px;"
+id="filterInput"
+onkeyup="debouncedTitleInput()"
+autocomplete="true"
+autocorrect="off"  
+autocapitalize="off" 
+spellcheck="true"
+type="text" 
+maxlength="524288" 
+value=""
+aria-label="search"  
+placeholder="search database" 
+x-webkit-speech
+required>
+</div>		
+
+    
+		 
+    
+
+<script>
+// Firewall: Debounce to prevent bot flooding and browser crashing
+let debounceTimer;
+function debouncedTitleInput() {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+        titleInput();
+    }, 300); // Waits 300ms after the last keystroke before executing
+}
+
+// Firewall: Input sanitization to neutralize script injections
+function sanitizeInput(str) {
+    // Only allows alphanumeric characters, spaces, periods, hyphens, and underscores
+    return str.replace(/[^\w\s\.\-\_]/gi, ''); 
+}
+
+function titleInput() {
+  let rawInput = document.getElementById('filterInput').value;
+  
+  // Apply sanitization filter before processing
+  let input = sanitizeInput(rawInput).toLowerCase();
+
+  let x = document.getElementsByClassName('titleInput');
+ 
+  for (let i = 0; i < x.length; i++) {
+    if (!x[i].innerHTML.toLowerCase().includes(input)) {
+      x[i].style.display = "none";
+    }
+    else {
+      x[i].style.display = "list-item";
+    }
+  }
+  
+  // Prevents the API from attempting to speak empty strings or filtered malicious characters
+  if (input.trim() !== "") {
+      var msg = new SpeechSynthesisUtterance(input); 
+      window.speechSynthesis.speak(msg);   
+  }
+}
+
+// Add an event listener to the search input to handle Enter key navigation
+document.getElementById('filterInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        let query = sanitizeInput(this.value).toLowerCase().trim();
+        
+        if (query) {
+            // Automatically target the matching hash element if it exists
+            window.location.hash = query;
+        }
+    }
+});
+
+</script>
+
+
+
+<script>
+'use strict';
+
+(function() {
+    // 1. Disable Right-Click Context Menu
+    document.addEventListener('contextmenu', event => event.preventDefault());
+
+    // 2. Disable Inspection Keyboard Shortcuts
+    document.addEventListener('keydown', function(e) {
+        if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || (e.ctrlKey && e.keyCode === 85)) {
+            e.preventDefault();
+            console.warn("Security: Inspection shortcuts are restricted.");
+        }
+    });
+
+    // 3. The STOP! Security Warning
+    const warningTitle = "STOP!";
+    const warningText = "This is a developer feature. Copy-pasting code here is a scam and will compromise your data.";
+    console.log(`%c${warningTitle}`, "color: red; font-size: 50px; font-weight: bold; -webkit-text-stroke: 1px black;");
+    console.log(`%c${warningText}`, "color: peru; font-size: 16px; font-family: monospace;");
+})();
+
+// 4. URL Cleanup Logic
+if (window.location.pathname.endsWith('.html') || window.location.pathname.endsWith('.html')) {
+    const cleanURL = window.location.href.replace(/index\.(html|htm)/, '');
+    window.history.replaceState(null, '', cleanURL);
+}
+
+// 5. Initial State Load
+window.addEventListener('load', () => {
+    if (!window.location.hash || window.location.hash === '#search') {
+        window.location.hash = 'search';
+        console.log("External Conscious Initialized.");
+    }
+});
+</script>										
+
+
+<ul id="filterList">
+
+<li><a href="./#search" class="titleInput"><button>search</button></a></li>
+</ul>
+   
+
+</body>
+</html>
