@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <! --<meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
 
     <meta http-equiv="Cache-Control" content="private, no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0" />
     <meta http-equiv="Pragma" content="no-cache" />
@@ -95,6 +94,58 @@
             z-index: 100;
         }
 
+        /* Clock Menu Toggle Button */
+        #clock-menu-btn {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            width: 42px;
+            height: 42px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #0f0;
+            border-radius: 8px;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1001;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+            user-select: none;
+        }
+
+        /* Imported Time / Calendar Container from map.html */
+        #time-container {
+            display: none;
+            position: fixed;
+            top: 65px;
+            left: 15px;
+            background: rgba(0, 0, 0, 0.9);
+            color: #0f0;
+            padding: 15px;
+            border: 1px solid #0f0;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            z-index: 1000;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+            width: 220px;
+        }
+
+        #time-container.open {
+            display: block;
+        }
+
+        #time-container input {
+            background: #111;
+            border: 1px solid #0f0;
+            color: #0f0;
+            margin-top: 5px;
+            padding: 5px;
+            width: 100%;
+            cursor: pointer;
+            box-sizing: border-box;
+        }
+
         /* Top Center Responsive Minimap */
         #minimap-ui {
             position: fixed;
@@ -173,15 +224,21 @@
 	});
     </script>
 	
-	
 </head>
-
 
 <body>  
 <div id="container">
   <nav id="sidebar"></nav>
 
   <div id="user-status-display" style="font-family: 'Courier New', monospace; color: #0f0; font-weight: bold;"></div>
+
+  <!-- Clock Button & Calendar Dropdown Container (Imported from map.html) -->
+  <button id="clock-menu-btn" title="Toggle Game Clock">⏰</button>
+  <div id="time-container">
+      <strong>GAME CLOCK</strong>
+      <input type="datetime-local" id="ai-datetime">
+      <div id="display-time" style="margin-top:10px; font-size: 11px;">Syncing data...</div>
+  </div>
 
   <main id="main-content-wrapper" itemscope itemtype="https://schema.org/WebPage">
     <meta itemprop="url" content="https://jehovahsays.github.io/jehovahsaysnetworth/">
@@ -205,19 +262,16 @@
         <button id="camera-mode-btn" class="cam-btn">CAM: 3RD</button>
     </div>
 	
-	<!-- Add this inside your HTML body or style overlay area -->
-<div id="controller-selector" style="position: fixed; top: 55px; left: 125px; z-index: 1000; background: rgba(0,0,0,0.7); padding: 8px; border-radius: 5px; color: white; font-family: Arial;">
-    <label>Controller Mode: </label>
-    <select id="inputModeSelect" style="background: #222; color: #fff; padding: 4px; border-radius: 4px;">
-        <option value="auto">Auto-Detect / Multi-Input</option>
-        <option value="touch">Touchscreen Joysticks</option>
-        <option value="keyboard">Keyboard & Mouse (WASD)</option>
-        <option value="gamepad">Bluetooth Gamepad</option>
-    </select>
-</div>
+    <div id="controller-selector" style="position: fixed; top: 55px; left: 125px; z-index: 1000; background: rgba(0,0,0,0.7); padding: 8px; border-radius: 5px; color: white; font-family: Arial;">
+        <label>Controller Mode: </label>
+        <select id="inputModeSelect" style="background: #222; color: #fff; padding: 4px; border-radius: 4px;">
+            <option value="auto">Auto-Detect / Multi-Input</option>
+            <option value="touch">Touchscreen Joysticks</option>
+            <option value="keyboard">Keyboard & Mouse (WASD)</option>
+            <option value="gamepad">Bluetooth Gamepad</option>
+        </select>
+    </div>
 
-	
-	
     <script type="importmap">
         {
             "imports": {
@@ -234,121 +288,138 @@
         import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 		
-		// --- MULTI-CONTROLLER INPUT STATE ---
-const inputConfig = {
-    mode: 'auto',
-    keys: { KeyW: false, KeyS: false, KeyA: false, KeyD: false },
-    mouseLookActive: false
-};
+        // --- MULTI-CONTROLLER INPUT STATE ---
+        const inputConfig = {
+            mode: 'auto',
+            keys: { KeyW: false, KeyS: false, KeyA: false, KeyD: false },
+            mouseLookActive: false
+        };
 
-// Camera State Controls
-let isZoomed = false;
-let cameraModeIndex = 0; // 0: 3rd Person, 1: 1st Person, 2: Top-Down
-const cameraModes = ['3RD', '1ST', 'TOP'];
+        // Camera State Controls
+        let isZoomed = false;
+        let cameraModeIndex = 0; // 0: 3rd Person, 1: 1st Person, 2: Top-Down
+        const cameraModes = ['3RD', '1ST', 'TOP'];
 
-// Listen for mode changes from user UI
-document.getElementById('inputModeSelect')?.addEventListener('change', (e) => {
-    inputConfig.mode = e.target.value;
-});
+        // --- GAME CLOCK & CALENDAR STATE (Imported from map.html) ---
+        let simulationTime = new Date();
+        const timeInput = document.getElementById('ai-datetime');
+        const timeDisplay = document.getElementById('display-time');
+        const clockBtn = document.getElementById('clock-menu-btn');
+        const timeContainer = document.getElementById('time-container');
 
-function toggleZoom() {
-    isZoomed = !isZoomed;
-    const btn = document.getElementById('zoom-toggle-btn');
-    if (btn) btn.textContent = `ZOOM: ${isZoomed ? 'ON' : 'OFF'}`;
-}
+        // Toggle calendar drop menu on single click
+        clockBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            timeContainer.classList.toggle('open');
+        });
 
-function cycleCameraMode() {
-    cameraModeIndex = (cameraModeIndex + 1) % cameraModes.length;
-    const btn = document.getElementById('camera-mode-btn');
-    if (btn) btn.textContent = `CAM: ${cameraModes[cameraModeIndex]}`;
-}
-
-document.getElementById('zoom-toggle-btn')?.addEventListener('click', (e) => { e.preventDefault(); toggleZoom(); });
-document.getElementById('camera-mode-btn')?.addEventListener('click', (e) => { e.preventDefault(); cycleCameraMode(); });
-
-// A. Keyboard & Mouse Controller Logic
-window.addEventListener('keydown', (e) => {
-    if (inputConfig.mode === 'touch') return;
-    if (inputConfig.keys.hasOwnProperty(e.code)) inputConfig.keys[e.code] = true;
-    if (e.code === 'Space') handlePlayerShoot();
-    if (e.code === 'KeyZ') toggleZoom();
-    if (e.code === 'KeyC') cycleCameraMode();
-});
-
-window.addEventListener('keyup', (e) => {
-    if (inputConfig.keys.hasOwnProperty(e.code)) inputConfig.keys[e.code] = false;
-});
-
-window.addEventListener('mousedown', (e) => {
-    if (inputConfig.mode === 'touch') return;
-    if (e.target.tagName !== 'BUTTON' && !e.target.closest('.joystick-container') && !e.target.closest('.lil-gui') && !e.target.closest('#camera-controls-ui')) {
-        renderer.domElement.requestPointerLock();
-        inputConfig.mouseLookActive = true;
-    }
-});
-
-document.addEventListener('mousemove', (e) => {
-    if ((inputConfig.mode === 'keyboard' || inputConfig.mode === 'auto') && document.pointerLockElement === renderer.domElement) {
-        lookX = e.movementX * 0.01;
-    }
-});
-
-// B. Bluetooth Gamepad Controller Poll Engine
-function pollBluetoothControllers() {
-    if (inputConfig.mode === 'touch') return;
-    
-    const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
-    for (let i = 0; i < gamepads.length; i++) {
-        const gp = gamepads[i];
-        if (!gp) continue;
-
-        const deadzone = 0.15;
-        // Left analog stick for movement
-        let axisX = gp.axes[0];
-        let axisZ = gp.axes[1];
-        if (Math.abs(axisX) > deadzone) moveX = axisX;
-        if (Math.abs(axisZ) > deadzone) moveZ = axisZ;
-
-        // Right analog stick for looking/steering
-        let rightAxisX = gp.axes[2];
-        if (Math.abs(rightAxisX) > deadzone) {
-            lookX = rightAxisX * 0.5;
+        // Initialize input date time value
+        const now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        if (timeInput) {
+            timeInput.value = now.toISOString().slice(0, 16);
+            timeInput.addEventListener('change', (e) => { 
+                simulationTime = new Date(e.target.value); 
+            });
         }
 
-        // Button 0 (X / A button) fires weapon
-        if (gp.buttons[0] && gp.buttons[0].pressed) {
-            if (!window.gpFirePressed) {
-                handlePlayerShoot();
-                window.gpFirePressed = true;
+        // Listen for mode changes from user UI
+        document.getElementById('inputModeSelect')?.addEventListener('change', (e) => {
+            inputConfig.mode = e.target.value;
+        });
+
+        function toggleZoom() {
+            isZoomed = !isZoomed;
+            const btn = document.getElementById('zoom-toggle-btn');
+            if (btn) btn.textContent = `ZOOM: ${isZoomed ? 'ON' : 'OFF'}`;
+        }
+
+        function cycleCameraMode() {
+            cameraModeIndex = (cameraModeIndex + 1) % cameraModes.length;
+            const btn = document.getElementById('camera-mode-btn');
+            if (btn) btn.textContent = `CAM: ${cameraModes[cameraModeIndex]}`;
+        }
+
+        document.getElementById('zoom-toggle-btn')?.addEventListener('click', (e) => { e.preventDefault(); toggleZoom(); });
+        document.getElementById('camera-mode-btn')?.addEventListener('click', (e) => { e.preventDefault(); cycleCameraMode(); });
+
+        // A. Keyboard & Mouse Controller Logic
+        window.addEventListener('keydown', (e) => {
+            if (inputConfig.mode === 'touch') return;
+            if (inputConfig.keys.hasOwnProperty(e.code)) inputConfig.keys[e.code] = true;
+            if (e.code === 'Space') handlePlayerShoot();
+            if (e.code === 'KeyZ') toggleZoom();
+            if (e.code === 'KeyC') cycleCameraMode();
+        });
+
+        window.addEventListener('keyup', (e) => {
+            if (inputConfig.keys.hasOwnProperty(e.code)) inputConfig.keys[e.code] = false;
+        });
+
+        window.addEventListener('mousedown', (e) => {
+            if (inputConfig.mode === 'touch') return;
+            if (e.target.tagName !== 'BUTTON' && !e.target.closest('#clock-menu-btn') && !e.target.closest('#time-container') && !e.target.closest('.joystick-container') && !e.target.closest('.lil-gui') && !e.target.closest('#camera-controls-ui')) {
+                renderer.domElement.requestPointerLock();
+                inputConfig.mouseLookActive = true;
             }
-        } else {
-            window.gpFirePressed = false;
-        }
+        });
 
-        // Button 6 (PlayStation L2 Trigger) toggles Zoom
-        if (gp.buttons[6] && gp.buttons[6].pressed) {
-            if (!window.gpL2Pressed) {
-                toggleZoom();
-                window.gpL2Pressed = true;
+        document.addEventListener('mousemove', (e) => {
+            if ((inputConfig.mode === 'keyboard' || inputConfig.mode === 'auto') && document.pointerLockElement === renderer.domElement) {
+                lookX = e.movementX * 0.01;
             }
-        } else {
-            window.gpL2Pressed = false;
-        }
+        });
 
-        // Button 3 (Triangle button) cycles camera modes
-        if (gp.buttons[3] && gp.buttons[3].pressed) {
-            if (!window.gpTrianglePressed) {
-                cycleCameraMode();
-                window.gpTrianglePressed = true;
+        // B. Bluetooth Gamepad Controller Poll Engine
+        function pollBluetoothControllers() {
+            if (inputConfig.mode === 'touch') return;
+            
+            const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+            for (let i = 0; i < gamepads.length; i++) {
+                const gp = gamepads[i];
+                if (!gp) continue;
+
+                const deadzone = 0.15;
+                let axisX = gp.axes[0];
+                let axisZ = gp.axes[1];
+                if (Math.abs(axisX) > deadzone) moveX = axisX;
+                if (Math.abs(axisZ) > deadzone) moveZ = axisZ;
+
+                let rightAxisX = gp.axes[2];
+                if (Math.abs(rightAxisX) > deadzone) {
+                    lookX = rightAxisX * 0.5;
+                }
+
+                if (gp.buttons[0] && gp.buttons[0].pressed) {
+                    if (!window.gpFirePressed) {
+                        handlePlayerShoot();
+                        window.gpFirePressed = true;
+                    }
+                } else {
+                    window.gpFirePressed = false;
+                }
+
+                if (gp.buttons[6] && gp.buttons[6].pressed) {
+                    if (!window.gpL2Pressed) {
+                        toggleZoom();
+                        window.gpL2Pressed = true;
+                    }
+                } else {
+                    window.gpL2Pressed = false;
+                }
+
+                if (gp.buttons[3] && gp.buttons[3].pressed) {
+                    if (!window.gpTrianglePressed) {
+                        cycleCameraMode();
+                        window.gpTrianglePressed = true;
+                    }
+                } else {
+                    window.gpTrianglePressed = false;
+                }
+
+                break;
             }
-        } else {
-            window.gpTrianglePressed = false;
         }
-
-        break;
-    }
-}
-
 
         let container, clock, gui, mixer, actions, activeAction, previousAction, camera, scene, renderer, model;
         let moveX = 0, moveZ = 0, lookX = 0, lookY = 0, characterRotationY = 0; 
@@ -406,7 +477,7 @@ function pollBluetoothControllers() {
                     currentChanges = JSON.parse(rawData);
                 }
                 const gameChangeEntry = {
-                    title: `🎮 Game High Score: ${playerScore} pts (${currentName})`,
+                    title: ` Game High Score: ${playerScore} pts (${currentName})`,
                     timestamp: new Date().toISOString(),
                     type: 'Update'
                 };
@@ -417,7 +488,6 @@ function pollBluetoothControllers() {
             }
         }
 
-        // Drop dynamic 🏥 item upon boss removal
         function spawnHealthPackage(position) {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
@@ -425,7 +495,7 @@ function pollBluetoothControllers() {
             ctx.font = '48px Arial';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText('🏥', 32, 32);
+            ctx.fillText('❤️', 32, 32);
 
             const texture = new THREE.CanvasTexture(canvas);
             const material = new THREE.SpriteMaterial({ map: texture });
@@ -565,10 +635,9 @@ function pollBluetoothControllers() {
                 const pkg = healthPackages[i];
                 pkg.position.y = 1.5 + Math.sin(Date.now() * 0.003 + i) * 0.2;
                 
-                // Detection collision radius
                 if(model.position.distanceTo(pkg.position) < 3.0) {
                     playerHealth += 25;
-                    showNotification("Collected Care Package! +25 HP 🏥");
+                    showNotification("Collected Care Package! +25 HP ❤️");
                     scene.remove(pkg);
                     healthPackages.splice(i, 1);
                 }
@@ -784,7 +853,7 @@ function pollBluetoothControllers() {
 
             document.addEventListener('keydown', (e) => { if(e.code === 'Space') handlePlayerShoot(); });
             document.addEventListener('mousedown', (e) => {
-                if (e.target.tagName !== 'BUTTON' && !e.target.closest('.joystick-container') && !e.target.closest('#camera-controls-ui')) handlePlayerShoot();
+                if (e.target.tagName !== 'BUTTON' && !e.target.closest('#clock-menu-btn') && !e.target.closest('#time-container') && !e.target.closest('.joystick-container') && !e.target.closest('#camera-controls-ui')) handlePlayerShoot();
             });
         }
 
@@ -861,6 +930,12 @@ function pollBluetoothControllers() {
             const dt = clock.getDelta();
             if (mixer) mixer.update(dt);
 
+            // Update Game Clock & Display Time (Imported from map.html)
+            if (simulationTime && timeDisplay) {
+                simulationTime.setSeconds(simulationTime.getSeconds() + dt);
+                timeDisplay.innerText = "GAME CLOCK: " + simulationTime.toLocaleString();
+            }
+
             pollBluetoothControllers();
 
             let computedMoveX = moveX + (inputConfig.keys.KeyD ? 1 : 0) - (inputConfig.keys.KeyA ? 1 : 0);
@@ -877,28 +952,23 @@ function pollBluetoothControllers() {
                 model.position.add(fwd.multiplyScalar(computedMoveZ * dt * -15))
                              .add(side.multiplyScalar(computedMoveX * dt * -15));
                 
-                // Dynamic FOV Zoom Logic
                 const targetFOV = isZoomed ? 20 : 65;
                 if (Math.abs(camera.fov - targetFOV) > 0.1) {
                     camera.fov = THREE.MathUtils.lerp(camera.fov, targetFOV, 0.15);
                     camera.updateProjectionMatrix();
                 }
 
-                // Dynamic Camera Perspective Offset Matrix
                 let cameraOffset;
                 if (cameraModeIndex === 1) { 
-                    // 1st Person: Head level tracking
                     cameraOffset = new THREE.Vector3(0, 2.8, 0.5).applyAxisAngle(new THREE.Vector3(0, 1, 0), characterRotationY);
                     camera.position.lerp(model.position.clone().add(cameraOffset), 0.2);
                     const lookTarget = model.position.clone().add(fwd.clone().multiplyScalar(20)).add(new THREE.Vector3(0, 2.5, 0));
                     camera.lookAt(lookTarget);
                 } else if (cameraModeIndex === 2) { 
-                    // High Top-Down View
                     cameraOffset = new THREE.Vector3(0, 45, -5).applyAxisAngle(new THREE.Vector3(0, 1, 0), characterRotationY);
                     camera.position.lerp(model.position.clone().add(cameraOffset), 0.1);
                     camera.lookAt(model.position.x, model.position.y, model.position.z);
                 } else { 
-                    // Standard 3rd Person View
                     cameraOffset = new THREE.Vector3(0, 5, -15).applyAxisAngle(new THREE.Vector3(0, 1, 0), characterRotationY);
                     camera.position.lerp(model.position.clone().add(cameraOffset), 0.1);
                     camera.lookAt(model.position.x, model.position.y + 2, model.position.z);

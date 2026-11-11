@@ -525,110 +525,55 @@ async function createPage(titleFromSearch = null) {
   await showPage(cleanTitle);
 }
 
-async function savePage(title) {
-  // 🛡️ HARDENED SECURITY: Remediates CodeQL Alert #51
-  const protectedKeywords = ['__proto__', 'constructor', 'prototype'];
-
-  // 1. Validate type and content BEFORE any assignment
-  if (typeof title !== 'string' || !title.trim() || protectedKeywords.includes(title.toLowerCase())) {
-      console.warn("STOP! Unauthorized property manipulation attempt detected.");
-      localStorage.setItem('mev_breach_detected', 'true');
-      location.href = './css.html#search'; 
-      return;
-  }
-
-  // 2. Use a sanitized variable name
-  const safeTitle = title.trim();
-
-  const pages = await loadData(STORAGE_KEYS.pages, {}); 
-  const user = getCurrentUser();
-  const editor = document.querySelector('.editor');
-  if (!editor) return;
-  
-  const rawContent = editor.value;
-
-  // 3. Assignment is now safe because safeTitle is validated
-  if (!pages[safeTitle]) pages[safeTitle] = {}; 
-  
-  pages[safeTitle].content = rawContent;
-  pages[safeTitle].lastEdited = new Date().toISOString();
-  pages[safeTitle].createdBy = user ? user.name : 'Guest';
-  
-  await saveData(STORAGE_KEYS.pages, pages); 
-
-  const newChangeEntry = { 
-    type: 'edit', title: safeTitle, time: new Date().toISOString(), user: user ? user.name : 'Guest' 
-  };
-  
-  const changes = await loadData(STORAGE_KEYS.changes, []); 
-  changes.unshift(newChangeEntry);
-  await saveData(STORAGE_KEYS.changes, changes); 
-  
-  await updatePageListSidebar(); 
-  window.location.hash = encodeURIComponent(safeTitle);
-  await showPage(safeTitle);
-}
-
 async function deletePage(title) {
   console.log("Deleting page:", title);
   const pages = await loadData(STORAGE_KEYS.pages, {}); 
   const changes = await loadData(STORAGE_KEYS.changes, []); 
   const user = getCurrentUser();
   
-  // Custom modal UI should be used here instead of confirm() for a proper PWA
   if (!window.confirm(`Are you sure you want to delete the page "${title}"? This cannot be undone.`)) { return; }
   
+  if (!pages[title]) {
+      speak(`Page ${title} not found.`);
+      return;
+  }
   
-    if (!pages[title]) {
-        speak(`Page ${title} not found.`);
-        return;
-    }
-    
-    // Remove page
-    delete pages[title];
-    await saveData(STORAGE_KEYS.pages, pages);
+  delete pages[title];
+  await saveData(STORAGE_KEYS.pages, pages);
 
-    // 1. Define the change entry
-    const newChangeEntry = { 
-        type:'delete', 
-        title, 
-        time:new Date().toISOString(), 
-        user:user ? user.name : 'Guest' 
-    };
-    
-    // 2. Log to global changes array
-    changes.unshift(newChangeEntry);
-    await saveData(STORAGE_KEYS.changes, changes);
-
-    if (user) {
-        let users = await loadData(STORAGE_KEYS.users, []);
-        const userIndex = users.findIndex(u => u.name === user.name);
-
-        if (userIndex !== -1) {
-            let userToUpdate = users[userIndex];
-            
-            // Initialize 'edits' if it doesn't exist
-            if (!userToUpdate.edits) userToUpdate.edits = [];
-            
-            // Add the new deletion entry to the user's personal history
-            userToUpdate.edits.unshift(newChangeEntry); 
-            
-            // Save the full user list back to storage
-            await saveData(STORAGE_KEYS.users, users);
-            
-            // Update the currentUser session key
-            localStorage.setItem(STORAGE_KEYS.currentUser, JSON.stringify(userToUpdate));
-        }
-    }
-    
+  const newChangeEntry = { 
+      type:'delete', 
+      title, 
+      time:new Date().toISOString(), 
+      user:user ? user.name : 'Guest' 
+  };
   
+  changes.unshift(newChangeEntry);
+  await saveData(STORAGE_KEYS.changes, changes);
+
+  if (user) {
+      let users = await loadData(STORAGE_KEYS.users, []);
+      const userIndex = users.findIndex(u => u.name === user.name);
+
+      if (userIndex !== -1) {
+          let userToUpdate = users[userIndex];
+          if (!userToUpdate.edits) userToUpdate.edits = [];
+          userToUpdate.edits.unshift(newChangeEntry); 
+          await saveData(STORAGE_KEYS.users, users);
+          localStorage.setItem(STORAGE_KEYS.currentUser, JSON.stringify(userToUpdate));
+      }
+  }
   
   await updatePageListSidebar(); 
-  await generatePageButtonsFindView();
+  if (typeof generatePageButtonsFindView === 'function') {
+      await generatePageButtonsFindView();
+  }
+  
   console.log(`✅ Page "${title}" deleted.`);
   speak(`Page ${title} deleted.`);
   await showRecent();
 }
+
 
 async function savePage(title) {
   console.log("Saving page:", title);
