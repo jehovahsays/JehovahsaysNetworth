@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Gource Network Map</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self' 'unsafe-inline' blob:; connect-src 'self' https://api.open-meteo.com; object-src 'none'; style-src 'self' 'unsafe-inline'; worker-src 'self' blob:; base-uri 'self'; form-action 'self';">
+
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #121212; font-family: 'Courier New', monospace; }
+        
+        #time-container {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(18, 18, 18, 0.9);
+            color: #00ffcc;
+            padding: 15px;
+            border: 1px solid #00ffcc;
+            border-radius: 8px;
+            z-index: 1000;
+            font-size: 14px;
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.2);
+        }
+        #time-container input {
+            background: #1e1e1e;
+            border: 1px solid #00ffcc;
+            color: #00ffcc;
+            margin-top: 5px;
+            padding: 6px;
+            width: 100%;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .infobox, .map-loader, .weather-loader {
+            position: fixed;
+            right: 20px;
+            background: rgba(18, 18, 18, 0.9);
+            color: #00ffcc;
+            padding: 14px 20px;
+            border: 1px solid #00ffcc;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+            width: 150px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0, 255, 204, 0.15);
+            white-space: nowrap;
+            z-index: 1000;
+            transition: all 0.2s ease;
+        }
+
+        .infobox { top: 150px; }
+        .map-loader { top: 210px; }
+        .weather-loader { top: 270px; }
+
+        .infobox:hover, .map-loader:hover, .weather-loader:hover {
+            background: #00ffcc;
+            color: #121212;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.5);
+        }
+
+        #controls {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            display: flex;
+            gap: 12px;
+            background: rgba(18, 18, 18, 0.9);
+            padding: 12px 24px;
+            border: 1px solid #00ffcc;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.2);
+        }
+        .ctrl-btn {
+            background: #1e1e1e;
+            border: 1px solid #00ffcc;
+            color: #00ffcc;
+            padding: 10px 18px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .ctrl-btn:hover {
+            background: #00ffcc;
+            color: #121212;
+        }
+
+        .gource-label {
+            position: absolute;
+            color: #ffffff;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 4px 8px;
+            border: 1px solid #00ffcc;
+            font-size: 13px;
+            font-family: 'Courier New', monospace;
+            border-radius: 4px;
+            pointer-events: none;
+            white-space: nowrap;
+            transform: translate(-50%, -150%);
+            z-index: 500;
+            box-shadow: 0 0 8px rgba(0, 255, 204, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div id="time-container">
+        <strong>GAME CLOCK</strong>
+        <input type="datetime-local" id="ai-datetime">
+        <div id="display-time" style="margin-top:8px; font-size: 12px;">Syncing data...</div>
+    </div>
+
+    <div id="info">
+        <a href="./play.html"><button class="infobox">PLAY</button></a>
+        <a href="./map.html"><button class="map-loader">Map View</button></a>
+        <button id="weather-btn" class="weather-loader">Weather Map</button>
+    </div>
+
+    <div id="controls">
+        <button class="ctrl-btn" id="rewind-btn">⏪ REWIND</button>
+        <button class="ctrl-btn" id="play-btn">▶ PLAY</button>
+        <button class="ctrl-btn" id="pause-btn">⏸ PAUSE</button>
+        <button class="ctrl-btn" id="ff-btn">⏩ FAST</button>
+    </div>
+
+    <div id="label-container"></div>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "./examples/build/three.webgpu.js",
+                "three/webgpu": "./examples/build/three.webgpu.js",
+                "three/tsl": "./examples/build/three.tsl.js",
+                "three/addons/": "./examples/jsm/"
+            }
+        }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { color, fog, float, positionWorld, triNoise3D, positionView, normalWorld, uniform, mix } from 'three/tsl';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        let camera, scene, renderer, controls, clock;
+        let simulationTime = new Date();
+        const timeInput = document.getElementById('ai-datetime');
+        const timeDisplay = document.getElementById('display-time');
+        const labelContainer = document.getElementById('label-container');
+
+        let visualNodes = [];
+        let animationQueue = [];
+        let animationProgress = 0;
+        let isPlaying = true;
+        let playDirection = 1;
+        let playSpeed = 0.8;
+
+        // Full Root Folder Structure & Networking Graph
+        const repoData = {
+            name: "Root Folder (/)",
+            type: "repo",
+            children: [
+                { name: "index.html (Hub)", type: "hub" },
+                { name: "map.html", type: "file" },
+                { name: "play.html", type: "file" },
+                { name: "streets.html", type: "file" },
+                { name: "zoom.html", type: "file" },
+                { name: "cars.html", type: "file" },
+                { name: "police.html", type: "file" },
+                { name: "suspect.html", type: "file" },
+                { name: "zombies.html", type: "file" },
+                { name: "eggs.html", type: "file" },
+                { name: "gource.html", type: "file" },
+                {
+                    name: "examples/",
+                    type: "directory",
+                    children: [
+                        {
+                            name: "build/",
+                            type: "directory",
+                            children: [
+                                { name: "three.module.js", type: "asset" },
+                                { name: "three.webgpu.js", type: "asset" },
+                                { name: "three.tsl.js", type: "asset" },
+                                { name: "three.core.js", type: "asset" }
+                            ]
+                        },
+                        {
+                            name: "jsm/",
+                            type: "directory",
+                            children: [
+                                { name: "OrbitControls.js", type: "asset" },
+                                { name: "GLTFLoader.js", type: "asset" },
+                                { name: "stats.module.js", type: "asset" },
+                                { name: "lil-gui.module.min.js", type: "asset" }
+                            ]
+                        },
+                        {
+                            name: "models/",
+                            type: "directory",
+                            children: [
+                                { name: "RobotExpressive.glb", type: "asset" }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name: "Network / APIs",
+                    type: "network",
+                    children: [
+                        { name: "api.open-meteo.com", type: "network" },
+                        { name: "localStorage (Session/Scores)", type: "network" }
+                    ]
+                }
+            ]
+        };
+
+        // Cross-file Networking Links: [sourceName, targetName, linkType]
+        const networkEdges = [
+            // Navigation links from index.html Hub
+            ["index.html (Hub)", "map.html", "nav"],
+            ["index.html (Hub)", "play.html", "nav"],
+            ["index.html (Hub)", "streets.html", "nav"],
+            ["index.html (Hub)", "zoom.html", "nav"],
+            ["index.html (Hub)", "cars.html", "nav"],
+            ["index.html (Hub)", "police.html", "nav"],
+            ["index.html (Hub)", "suspect.html", "nav"],
+            ["index.html (Hub)", "zombies.html", "nav"],
+            ["index.html (Hub)", "eggs.html", "nav"],
+            ["index.html (Hub)", "gource.html", "nav"],
+            // Cross-links between modes and map.html
+            ["map.html", "play.html", "nav"],
+            ["gource.html", "play.html", "nav"],
+            ["gource.html", "map.html", "nav"],
+            // Three.js WebGPU / TSL dependencies
+            ["map.html", "three.webgpu.js", "dep"],
+            ["map.html", "three.tsl.js", "dep"],
+            ["gource.html", "three.webgpu.js", "dep"],
+            ["gource.html", "three.tsl.js", "dep"],
+            // Three.js WebGL + GLTF dependencies
+            ["play.html", "three.module.js", "dep"],
+            ["play.html", "RobotExpressive.glb", "dep"],
+            ["streets.html", "three.module.js", "dep"],
+            ["zoom.html", "three.module.js", "dep"],
+            ["cars.html", "three.module.js", "dep"],
+            ["police.html", "three.module.js", "dep"],
+            ["suspect.html", "three.module.js", "dep"],
+            ["zombies.html", "three.module.js", "dep"],
+            ["eggs.html", "three.module.js", "dep"],
+            // External & LocalStorage Networking
+            ["map.html", "api.open-meteo.com", "api"],
+            ["gource.html", "api.open-meteo.com", "api"],
+            ["play.html", "localStorage (Session/Scores)", "api"],
+            ["police.html", "localStorage (Session/Scores)", "api"],
+            ["zombies.html", "localStorage (Session/Scores)", "api"]
+        ];
+
+        const nodeByName = {};
+        const networkLinks = [];
+
+        init();
+
+        function init() {
+            clock = new THREE.Clock();
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1500);
+            camera.position.set(0, 40, 120);
+
+            scene = new THREE.Scene();
+
+            const nightFactor = uniform(0);
+            const daySky = color(0x121212);
+            const nightSky = color(0x0a0a0a);
+            const currentSkyColor = mix(daySky, nightSky, nightFactor);
+
+            const dayGround = color(0x181818);
+            const nightGround = color(0x0d0d0d);
+            const currentGroundColor = mix(dayGround, nightGround, nightFactor);
+
+            const fogNoiseDistance = positionView.z.negate().smoothstep(0, camera.far - 300);
+            const distance = fogNoiseDistance.mul(20).max(4);
+            const alpha = .98;
+            const groundFogArea = float(distance).sub(positionWorld.y).div(distance).pow(3).saturate().mul(alpha);
+            
+            const timer = uniform(0).onFrameUpdate((frame) => frame.time);
+            const fogNoiseA = triNoise3D(positionWorld.mul(.005), 0.2, timer);
+            const fogNoiseB = triNoise3D(positionWorld.mul(.01), 0.2, timer.mul(1.2));
+            const fogNoise = fogNoiseA.add(fogNoiseB).mul(currentGroundColor);
+
+            scene.fogNode = fog(fogNoiseDistance.oneMinus().mix(currentGroundColor, fogNoise), groundFogArea);
+            scene.backgroundNode = normalWorld.y.max(0).mix(currentGroundColor, currentSkyColor);
+
+            const rootTree = buildVisualTree(repoData, null);
+            scene.add(rootTree);
+            buildNetworkLinks();
+
+            scene.add(new THREE.HemisphereLight(0xffffff, 0x444444, 0.6));
+            const sunLight = new THREE.DirectionalLight(0xffffff, 1.2);
+            sunLight.position.set(10, 50, 10);
+            scene.add(sunLight);
+            window.sunLight = sunLight;
+            window.nightFactorNode = nightFactor;
+
+            renderer = new THREE.WebGPURenderer({ antialias: true });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setAnimationLoop(animate);
+            document.body.appendChild(renderer.domElement);
+
+            controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            timeInput.value = now.toISOString().slice(0, 16);
+            timeInput.addEventListener('change', (e) => { simulationTime = new Date(e.target.value); });
+
+            document.getElementById('play-btn').addEventListener('click', () => { isPlaying = true; playDirection = 1; });
+            document.getElementById('pause-btn').addEventListener('click', () => { isPlaying = false; });
+            document.getElementById('rewind-btn').addEventListener('click', () => { isPlaying = true; playDirection = -1; });
+            document.getElementById('ff-btn').addEventListener('click', () => {
+                playSpeed = 3.0;
+                setTimeout(() => playSpeed = 0.5, 1000);
+            });
+            document.getElementById('weather-btn').addEventListener('click', syncRealWorldWeather);
+
+            window.addEventListener('resize', onWindowResize);
+        }
+
+        function getNodeColor(type) {
+            switch(type) {
+                case 'repo': return 0xff0055;      // Root Core
+                case 'hub': return 0xffd700;       // index.html Hub
+                case 'directory': return 0x3399ff; // Folder Cluster
+                case 'file': return 0x00ffcc;      // HTML Mode Page
+                case 'asset': return 0xc084fc;     // Three.js / Model Asset
+                case 'network': return 0x22c55e;   // External API / Storage
+                default: return 0xffffff;
+            }
+        }
+
+        function buildVisualTree(node, parentMesh, depth = 0, angleOffset = 0) {
+            const group = new THREE.Group();
+            const radius = node.type === 'repo' ? 2.8 : (node.type === 'directory' ? 1.4 : 0.7);
+            
+            const geo = new THREE.SphereGeometry(radius, 32, 32);
+            const mat = new THREE.MeshStandardMaterial({
+                color: getNodeColor(node.type),
+                emissive: getNodeColor(node.type),
+                emissiveIntensity: node.type === 'repo' ? 0.9 : 0.3,
+                roughness: 0.3,
+                metalness: 0.8,
+                transparent: true,
+                opacity: 0
+            });
+
+            const mesh = new THREE.Mesh(geo, mat);
+            
+            const label = document.createElement('div');
+            label.className = 'gource-label';
+            label.innerText = node.name;
+            label.style.opacity = '0';
+            labelContainer.appendChild(label);
+
+            mesh.userData = { name: node.name, type: node.type, label: label, parentMesh: parentMesh };
+
+            if (node.type === 'repo') {
+                mesh.position.set(0, 0, 0);
+            } else {
+                const radiusDist = 16 + (depth * 14);
+                const x = Math.cos(angleOffset) * radiusDist;
+                const z = Math.sin(angleOffset) * radiusDist;
+                const y = (depth * 6) - 4;
+                mesh.position.set(x, y, z);
+            }
+
+            group.add(mesh);
+            visualNodes.push(mesh);
+            animationQueue.push(mesh);
+            nodeByName[node.name] = mesh;
+
+            if (parentMesh && node.type !== 'repo') {
+                const lineGeo = new THREE.BufferGeometry().setFromPoints([parentMesh.position, mesh.position]);
+                const lineMat = new THREE.LineBasicMaterial({ color: 0x00ffcc, transparent: true, opacity: 0 });
+                const line = new THREE.Line(lineGeo, lineMat);
+                group.add(line);
+                mesh.userData.line = line;
+            }
+
+            if (node.children) {
+                node.children.forEach((child, index) => {
+                    const spread = depth === 0 ? (Math.PI * 2) : (Math.PI * 0.75);
+                    const childAngle = depth === 0
+                        ? (index / node.children.length) * Math.PI * 2
+                        : angleOffset + ((index - (node.children.length - 1) / 2) * (spread / Math.max(1, node.children.length)));
+                    const subGroup = buildVisualTree(child, mesh, depth + 1, childAngle);
+                    group.add(subGroup);
+                });
+            }
+
+            return group;
+        }
+
+
+        function buildNetworkLinks() {
+            const linkColors = { nav: 0xffd700, dep: 0xc084fc, api: 0x22c55e };
+            networkEdges.forEach(([srcName, dstName, lType]) => {
+                const src = nodeByName[srcName];
+                const dst = nodeByName[dstName];
+                if (!src || !dst) return;
+
+                const col = linkColors[lType] || 0x00ffcc;
+                const lineGeo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]);
+                const lineMat = new THREE.LineBasicMaterial({ color: col, transparent: true, opacity: 0.45 });
+                const line = new THREE.Line(lineGeo, lineMat);
+                scene.add(line);
+
+                const pulse = new THREE.Mesh(
+                    new THREE.SphereGeometry(0.28, 8, 8),
+                    new THREE.MeshBasicMaterial({ color: col })
+                );
+                scene.add(pulse);
+
+                networkLinks.push({
+                    src,
+                    dst,
+                    line,
+                    pulse,
+                    t: Math.random(),
+                    speed: 0.28 + Math.random() * 0.25
+                });
+            });
+        }
+
+        function updateNetworkLinks(dt) {
+            const pA = new THREE.Vector3();
+            const pB = new THREE.Vector3();
+            networkLinks.forEach(nl => {
+                const visible = nl.src.material.opacity > 0.2 && nl.dst.material.opacity > 0.2;
+                nl.line.visible = visible;
+                nl.pulse.visible = visible;
+                if (!visible) return;
+
+                nl.src.getWorldPosition(pA);
+                nl.dst.getWorldPosition(pB);
+
+                const pos = nl.line.geometry.attributes.position.array;
+                pos[0] = pA.x; pos[1] = pA.y; pos[2] = pA.z;
+                pos[3] = pB.x; pos[4] = pB.y; pos[5] = pB.z;
+                nl.line.geometry.attributes.position.needsUpdate = true;
+
+                nl.t = (nl.t + dt * nl.speed) % 1;
+                nl.pulse.position.lerpVectors(pA, pB, nl.t);
+            });
+        }
+
+        function syncRealWorldWeather() {
+            if (!navigator.geolocation) return;
+            const btn = document.getElementById('weather-btn');
+            btn.innerText = "Syncing...";
+            navigator.geolocation.getCurrentPosition(async (position) => {
+                const { latitude, longitude } = position.coords;
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=weather_code,cloud_cover`;
+                try {
+                    const response = await fetch(url);
+                    const data = await response.json();
+                    const weatherCode = data.current.weather_code;
+                    let type = (weatherCode >= 51 && weatherCode <= 67) ? 'rain' : 'clear';
+                    btn.innerText = `Weather: ${type.toUpperCase()}`;
+                } catch (e) {
+                    btn.innerText = "Sync Failed";
+                }
+            }, () => { btn.innerText = "Denied"; });
+        }
+
+        const tempVector = new THREE.Vector3();
+        function updateLinesAndLabels() {
+            visualNodes.forEach(node => {
+                if (node.material.opacity > 0.1) {
+                    // Update line positions dynamically from parent world position to current node position
+                    if (node.userData.line && node.userData.parentMesh) {
+                        const pPos = new THREE.Vector3();
+                        node.userData.parentMesh.getWorldPosition(pPos);
+                        const cPos = new THREE.Vector3();
+                        node.getWorldPosition(cPos);
+
+                        const positions = node.userData.line.geometry.attributes.position.array;
+                        positions[0] = pPos.x - node.parent.position.x; 
+                        positions[1] = pPos.y - node.parent.position.y; 
+                        positions[2] = pPos.z - node.parent.position.z;
+                        positions[3] = cPos.x - node.parent.position.x; 
+                        positions[4] = cPos.y - node.parent.position.y; 
+                        positions[5] = cPos.z - node.parent.position.z;
+                        node.userData.line.geometry.attributes.position.needsUpdate = true;
+                    }
+
+                    // Update label positions
+                    node.getWorldPosition(tempVector);
+                    tempVector.project(camera);
+
+                    const x = (tempVector.x *  .5 + .5) * window.innerWidth;
+                    const y = (tempVector.y * -.5 + .5) * window.innerHeight;
+
+                    node.userData.label.style.left = `${x}px`;
+                    node.userData.label.style.top = `${y}px`;
+                    node.userData.label.style.opacity = node.material.opacity;
+                } else {
+                    node.userData.label.style.opacity = '0';
+                }
+            });
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animate() {
+            const dt = clock.getDelta();
+            simulationTime.setSeconds(simulationTime.getSeconds() + dt);
+            timeDisplay.innerText = "GAME CLOCK: " + simulationTime.toLocaleString();
+
+            if (isPlaying) {
+                animationProgress += (dt * playSpeed) * playDirection;
+                animationProgress = Math.max(0, Math.min(1, animationProgress));
+                const threshold = animationProgress * animationQueue.length;
+
+                animationQueue.forEach((node, idx) => {
+                    if (animationProgress * animationQueue.length >= idx) {
+                        const localProgress = Math.min(1, Math.max(0, threshold - idx));
+                        node.scale.setScalar(localProgress);
+                        node.material.opacity = localProgress;
+                        if (node.userData.line) node.userData.line.material.opacity = localProgress * 0.7;
+                    } else {
+                        node.scale.setScalar(0);
+                        node.material.opacity = 0;
+                        if (node.userData.line) node.userData.line.material.opacity = 0;
+                        node.userData.label.style.opacity = '0';
+                    }
+                });
+            } else {
+                visualNodes.forEach(node => { node.rotation.y += 0.005; });
+            }
+
+            controls.update();
+            renderer.render(scene, camera);
+            updateLinesAndLabels();
+            updateNetworkLinks(dt);
+        }
+    </script>
+</body>
+</html>
